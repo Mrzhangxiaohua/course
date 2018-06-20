@@ -1,9 +1,11 @@
 package com.spc.model;
 
+import java.lang.Integer;
 import org.apache.ibatis.type.Alias;
 
 @Alias("UserDomain") //起别名
 public class UserDomain {
+
     private Integer userId;
 
     private String userName;
@@ -43,4 +45,5 @@ public class UserDomain {
     public void setPhone(String phone) {
         this.phone = phone == null ? null : phone.trim();
     }
+
 }

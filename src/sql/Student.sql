@@ -19,10 +19,10 @@
 -- Table structure for table `Student`
 --
 
-DROP TABLE IF EXISTS `Student`;
+DROP TABLE IF EXISTS Student;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Student` (
+CREATE TABLE Student (
   `stuId`   INT(11)      NOT NULL,
   `stuName` VARCHAR(200) NOT NULL,
   `stuPass` VARCHAR(200) NOT NULL,
@@ -39,10 +39,10 @@ CREATE TABLE `Student` (
 -- Dumping data for table `Student`
 --
 
-LOCK TABLES `Student` WRITE;
+LOCK TABLES Student WRITE;
 /*!40000 ALTER TABLE `Student`
   DISABLE KEYS */;
-INSERT INTO `Student`
+INSERT INTO Student
 VALUES (2018000001, '张三', '2018000001', 1005, '经济学院', 1), (2018000002, '李四', '2018000002', 1001, '信息科学技术学院', 2),
   (2018000003, '王五', '2018000003', 1005, '经济学院', 3), (2018000004, '赵六', '2018000004', 1005, '经济学院', 4),
   (2018000005, '孙七', '2018000005', 1004, '管理学院', 5), (2018000006, '周八', '2018000006', 1001, '信息科学技术学院',6),

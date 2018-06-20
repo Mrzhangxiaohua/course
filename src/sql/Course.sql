@@ -22,7 +22,7 @@
 DROP TABLE IF EXISTS `Course`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Course` (
+CREATE TABLE  Course (
   `classId`        INT(11)      NOT NULL AUTO_INCREMENT, # 课程id
   `className`      VARCHAR(200) NOT NULL,                # 课程名称
   `classNum`       INT(11)      NOT NULL,                # 课程数量
@@ -44,11 +44,10 @@ CREATE TABLE `Course` (
 -- Dumping data for table `Course`
 --
 
-LOCK TABLES `Course` WRITE;
+LOCK TABLES Course WRITE;
 /*!40000 ALTER TABLE `Course`
   DISABLE KEYS */;
-INSERT INTO `Course`
-VALUES (1001, 'c语言程序设计', 5, 2018100001,'1', 2,20,'周二上午三四节','B座701',2);
+INSERT INTO Course VALUES (1001, 'c语言程序设计', 5, 2018100001,'1', 2,20,'周二上午三四节','B座701',2);
 /*!40000 ALTER TABLE `Course`
   ENABLE KEYS */;
 UNLOCK TABLES;

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>这是所有的用户</h1>
+<table class="table">
+
+    <tbody>
+    <tr th:each="user: ${users}">
+        <td th:text="${user.userName}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
