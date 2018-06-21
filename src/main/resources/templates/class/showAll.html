@@ -10,23 +10,30 @@
 <body>
 <div class="container">
     <table class="table table-striped">
-        <caption>Your todos are</caption>
+        <caption>课程列表</caption>
         <thead>
         <tr>
-            <th>Description</th>
-            <th>Target Date</th>
-            <th>Is it Done?</th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th>课程名称</th>
+            <th>班次</th>
+            <th>老师</th>
+            <th>当前选课人数</th>
+            <th>选课人数上限</th>
+            <th>授课时间</th>
+            <th>授课地点</th>
+            <th>课程时长</th>
+            <th>课程所属模块</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>Todo 1</td>
-            <td>10/12/2017</td>
-            <td>No</td>
-            <td><a class="btn btn-warning" href="/edit-todo">Edit Todo</a></td>
-            <td><a class="btn btn-warning" href="/delete-todo">Delete Todo</a></td>
+        <tr th:each = "class: ${classes}">
+            <td th:text="${class.className}"></td>
+            <td th:text="${class.classNum}"></td>
+            <td th:text="${class.teaName}"></td>
+            <td th:text="${class.classChooseNum}"></td>
+            <td th:text="${class.classUpperLimit}"></td>
+            <td th:text="${class.classPlace}"></td>
+            <td th:text="${class.classLength}"></td>
+            <td th:text="${class.classModuleNum}"></td>
         </tr>
         </tbody>
     </table>
