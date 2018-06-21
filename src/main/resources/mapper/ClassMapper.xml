@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.ClassDao" >
+    <sql id="BASE_TABLE">
+        course
+    </sql>
+
+    <sql id="BASE_COLUMN">
+        classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
+        classPlace,classLength,classModuleNum
+    </sql>
+    <insert id="insert" parameterType="com.spc.model.ClassDomain">
+        insert into
+        <include refid="BASE_TABLE"/>
+        <trim suffix=" (" prefix=") ">
+            <include refid="BASE_COLUMN"/>
+        </trim>
+        values
+        <trim prefix="( " suffix=")">
+            #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
+            #{classPlace},#{classLength},#{classModuleNum}
+        </trim>
+    </insert>
+
+    <select id="selectClasses" resultType="com.spc.model.ClassDomain">
+        select
+        <include refid="BASE_COLUMN"/>
+        from
+        <include refid="BASE_TABLE"/>
+    </select>
+    
+</mapper>

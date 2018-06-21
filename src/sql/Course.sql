@@ -25,14 +25,15 @@ DROP TABLE IF EXISTS `Course`;
 CREATE TABLE  Course (
   `classId`        INT(11)      NOT NULL AUTO_INCREMENT, # 课程id
   `className`      VARCHAR(200) NOT NULL,                # 课程名称
-  `classNum`       INT(11)      NOT NULL,                # 课程数量
+  `classNum`       INT(11)      NOT NULL,                # 班次
   `teaId`          INT(11)      NOT NULL,                # 教师id （多个教师扩展？）
   `teaName`        VARCHAR(200) NOT NULL,                # 教师姓名
   `classChooseNum` INT(11)      NOT NULL,                # 当前选课人数
   `classUpperLimit`INT(11)      NOT NULL,                # 选课人数上限
-  `classDateDescription`      VARCHAR(200) NOT NULL,     # 课程日期藐视
-  `classPlace`     VARCHAR(200) NOT NULL,
-  `credit`         INT(11)      NOT NULL,
+  `classDateDescription`      VARCHAR(200) NOT NULL,     # 课程时间
+  `classPlace`     VARCHAR(200) NOT NULL,                # 课程地点
+  `classLength`    INT(11)      NOT NULL,                # 课程时长
+  `classModuleNum` INT(11)      NOT NULL,                # 课程所属模块编号
   PRIMARY KEY (`classId`)
 )
   ENGINE = InnoDB
@@ -47,7 +48,7 @@ CREATE TABLE  Course (
 LOCK TABLES Course WRITE;
 /*!40000 ALTER TABLE `Course`
   DISABLE KEYS */;
-INSERT INTO Course VALUES (1001, 'c语言程序设计', 5, 2018100001,'1', 2,20,'周二上午三四节','B座701',2);
+INSERT INTO Course VALUES (1001, 'c语言程序设计',1, 2018100001,'王五', 2,20,'周二上午三四节','B座701',2,1);
 /*!40000 ALTER TABLE `Course`
   ENABLE KEYS */;
 UNLOCK TABLES;

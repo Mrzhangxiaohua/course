@@ -41,7 +41,7 @@ public class UserController {
         List<UserDomain> users = userService.findAllUser(pageNum,pageSize);
 
         model.addAttribute("users",users);
-
+        System.out.println(users);
         return "hello";
     }
 }
