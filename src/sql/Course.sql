@@ -48,7 +48,8 @@ CREATE TABLE  Course (
 LOCK TABLES Course WRITE;
 /*!40000 ALTER TABLE `Course`
   DISABLE KEYS */;
-INSERT INTO Course VALUES (1001, 'c语言程序设计',1, 2018100001,'王五', 2,20,'周二上午三四节','B座701',2,1);
+INSERT INTO Course VALUES (1001, 'c语言程序设计',1, 2018100001,'王五', 2,20,'周二上午三四节','B座701',2,1),
+(1002, 'JAVA程序设计',2, 2018122001,'李四', 3,2,'周二上午一二节','B座703',2,1);
 /*!40000 ALTER TABLE `Course`
   ENABLE KEYS */;
 UNLOCK TABLES;
