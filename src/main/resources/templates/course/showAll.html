@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome</title>
+    <meta charset="utf-8"/>
+    <link href="static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="static/css/showAll.css" th:href="@{/css/showAll.css}" rel="stylesheet">
+    <script src="static/js/jquery.min.js" th:href="@{/js/jquery.min.js}"></script>
+    <script src="static/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
+
+</head>
+<body>
+<header>
+    <img src = "/graph/logo.png" th:attr="src=@{/graph/logo.png}"/>
+    <div class="header-txt">
+        <p class="header-txt-left">
+            <font size="5">研究生选课系统</font>
+            <b>
+                (&nbsp;<span>学生服务</span>&nbsp;)
+            </b>
+        </p>
+    </div>
+</header>
+
+
+<article class="container">
+    <section>
+        <div class="form-query">
+            <p class="form-query-h">
+                课程排课查询
+            </p>
+            <div class="form-query-h">
+                <button>返回</button>
+            </div>
+        </div>
+        <div class="form-query form-select">
+            <label class="" for="sel_search_orderstatus">院系：</label>
+            <select id="sel_search_orderstatus" class="query-select">
+                <option>--请选择--</option>
+                <option value="001">机械工程学院</option>
+
+            </select>
+            <label class="" for="sel_search_orderstatus">学期：</label>
+            <select id="sel_search_orderstatus_1" class="query-select">
+                <option value="1">学期未定</option>
+                <option value="39">2018秋</option>
+
+            </select>
+            <label class="number-name" for="sel_search_orderstatus">课程编号或名称：</label>
+            <input type="text" id="classId" name="className" style="width: 200px;">
+            <button type="button" onclick="javascript:loadGrid()">
+                <i class="icon-search bigger-110"></i>查询
+            </button>
+        </div>
+    </section>
+    <section>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>课程名称</th>
+                <th>班次</th>
+                <th>老师</th>
+                <th>当前选课人数</th>
+                <th>选课人数上限</th>
+                <th>授课时间</th>
+                <th>授课地点</th>
+                <th>课程时长</th>
+                <th>课程所属模块</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="class: ${classes}">
+                <td th:text="${class.className}"></td>
+                <td th:text="${class.classNum}"></td>
+                <td th:text="${class.teaName}"></td>
+                <td th:text="${class.classChooseNum}"></td>
+                <td th:text="${class.classUpperLimit}"></td>
+                <td th:text="${class.classPlace}"></td>
+                <td th:text="${class.classLength}"></td>
+                <td th:text="${class.classModuleNum}"></td>
+                <td th:text="${class.classModuleNum}"></td>
+            </tr>
+
+            </tbody>
+        </table>
+    </section>
+</article>
+
+
+
+
+<section id="footer">
+    <div class="container">
+        <div class="row text-center text-xs-center text-sm-left text-md-left">
+            <div class="col-xs-12 col-sm-4 col-md-4">
+                <h5>Quick links</h5>
+                <ul class="list-unstyled quick-links">
+                    <li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                    <li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>About</a></li>
+                    <li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4">
+                <h5>Quick links</h5>
+                <ul class="list-unstyled quick-links">
+                    <li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                    <li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>About</a></li>
+                    <li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>Get Started</a></li>
+                </ul>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-4">
+                <h5>Quick links</h5>
+                <ul class="list-unstyled quick-links">
+                    <li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                    <li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>About</a></li>
+                    <li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                <p>National Transaction Corporation is a Registered MSP/ISO of Elavon, Inc. Georgia [a wholly owned subsidiary of U.S. Bancorp, Minneapolis, MN]</p>
+                <p class="h6">&copy All right Reversed.<a class="text-green ml-2" href="https://www.sunlimetech.com" target="_blank">Sunlimetech</a></p>
+            </div>
+            </hr>
+        </div>
+    </div>
+</section>
+
+</body>
