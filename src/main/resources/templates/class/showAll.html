@@ -1,46 +1,303 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Welcome</title>
-<link href="static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <title>Welcome</title>
+    <meta charset="utf-8"/>
+    <link href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../../static/css/showAll.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js" th:href="@{/js/jquery.min.js}"></script>
+    <script src="../../static/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
 
-<script src="static/js/jquery.min.js" th:href="@{/js/jquery.min.js}" ></script>
-<script src="static/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
 </head>
-<body>
-<div class="container">
-    <table class="table table-striped">
-        <caption>课程列表</caption>
-        <thead>
-        <tr>
-            <th>课程名称</th>
-            <th>班次</th>
-            <th>老师</th>
-            <th>当前选课人数</th>
-            <th>选课人数上限</th>
-            <th>授课时间</th>
-            <th>授课地点</th>
-            <th>课程时长</th>
-            <th>课程所属模块</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each = "class: ${classes}">
-            <td th:text="${class.className}"></td>
-            <td th:text="${class.classNum}"></td>
-            <td th:text="${class.teaName}"></td>
-            <td th:text="${class.classChooseNum}"></td>
-            <td th:text="${class.classUpperLimit}"></td>
-            <td th:text="${class.classPlace}"></td>
-            <td th:text="${class.classLength}"></td>
-            <td th:text="${class.classModuleNum}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <div>
-        <a class="btn btn-default" href="/add-todo">Add a Todo</a>
-    </div>
+<style>
+    header {
+        width: 100%;
+        height: 80px;
+        line-height: 80px;
+        background: #4287ae;
+    }
+    header .header-txt,
+    header img{
+        display: inline-block;
+        height: 60px;
+        line-height: 60px;
+    }
+    header .header-txt .header-txt-left {
+        font-size: 16px;
+        color: #fff;
+    }
+    header .header-txt .header-txt-left b{
+        font-size: 14px;
+    }
+    header .header-txt .header-txt-left span {
+        color: #ede447;
+    }
+    header .header-txt .header-txt-right {
+        float: right;
+    }
 
+
+    article{
+        padding: 20px 0;
+    }
+    article .query-select {
+        margin-right: 20px;
+    }
+    article .form-query {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 0 0 10px;
+        display: flex;
+        border: 1px solid #c7c7c7;
+        background: #efefef;
+        color: #4287ae
+    }
+    article .form-query:nth-child(even) {
+        border-top: none;
+    }
+    article .form-query div.form-query-h {
+        width: 60px;
+        text-align: center;
+        border-left: 1px solid #c7c7c7;
+    }
+    article .form-query p.form-query-h {
+        flex: 1;
+        font-weight: bold;
+    }
+    article .form-query-h button {
+        width: 50px;
+        margin: auto;
+        height: 28px;
+        line-height: 28px;
+        vertical-align: middle;
+        border: none;
+        border-radius: 3px;
+        background: #4287ae;
+        color: #fff;
+    }
+    article .form-query.form-select select.query-select{
+        height: 30px;
+        line-height: 30px;
+        padding: 5px 10px;
+        margin-top: 5px;
+        color: #333;
+    }
+
+    article table {
+        border: 1px solid #c7c7c7;
+    }
+    article table th {
+        background: #eee;
+        color: #4287ae;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+    }
+    article table tr {
+        height: 30px;
+    }
+    article table tr:nth-child(odd) {
+        background: #fff;
+    }
+    article table tr:nth-child(even) {
+        background: #ebebeb;
+    }
+    article table td {
+        text-align: center;
+    }
+</style>
+<body>
+<header>
+    <img src="../../static/images/logo.png" alt="logo"/>
+    <div class="header-txt">
+        <p class="header-txt-left">
+            研究生选课系统
+            <b>
+                (&nbsp;<span>学生服务</span>&nbsp;)
+            </b>
+        </p>
+    </div>
+</header>
+<article class="container">
+    <section>
+        <div class="form-query">
+            <p class="form-query-h">
+                课程排课查询
+            </p>
+            <div class="form-query-h">
+                <button>返回</button>
+            </div>
+        </div>
+        <div class="form-query form-select">
+            <label class="" for="sel_search_orderstatus">院系：</label>
+            <select id="sel_search_orderstatus" class="query-select">
+                <option>--请选择--</option>
+                <option value="001">机械工程学院</option>
+                <option value="002">材料科学与工程学院</option>
+                <option value="003">能源与动力工程学院</option>
+                <option value="004">电气工程学院</option>
+                <option value="005">电子与信息工程学院</option>
+                <option value="006">航天航空学院</option>
+                <option value="007">数学与统计学院</option>
+                <option value="008">管理学院</option>
+                <option value="009">理学院</option>
+                <option value="010">人文社会科学学院</option>
+                <option value="011">软件学院</option>
+                <option value="012">外国语学院</option>
+                <option value="013">生命科学与技术学院</option>
+                <option value="014">马克思主义学院</option>
+                <option value="015">医学部</option>
+                <option value="016">化学工程与技术学院</option>
+                <option value="018">公共政策与管理学院</option>
+                <option value="019">经济与金融学院</option>
+                <option value="021">金禾经济研究中心</option>
+                <option value="022">人居环境与建筑工程学院</option>
+                <option value="023">继续教育学院</option>
+                <option value="024">法学院</option>
+                <option value="025">研究生院（苏州）</option>
+                <option value="026">MBA中心</option>
+                <option value="027">国际教育学院</option>
+                <option value="028">前沿科学技术研究院</option>
+                <option value="029">工程博士中心</option>
+                <option value="030">可持续发展学院</option>
+                <option value="031">体育中心</option>
+                <option value="099">研究生院</option>
+                <option value="998">其他</option>
+            </select>
+            <label class="" for="sel_search_orderstatus">学期：</label>
+            <select id="sel_search_orderstatus_1" class="query-select">
+                <option value="1">学期未定</option>
+                <option value="39">2018秋</option>
+                <option value="38">2018春</option>
+                <option value="37">2017秋</option>
+                <option value="36">2017春</option>
+                <option value="35">2016秋</option>
+                <option value="34">2016春</option>
+                <option value="33">2015秋</option>
+                <option value="32">2015春</option>
+                <option value="31">2014秋</option>
+                <option value="30">2014春</option>
+                <option value="29">2013秋</option>
+                <option value="28">2013春</option>
+                <option value="27">2012秋</option>
+                <option value="26">2012春</option>
+                <option value="25">2011秋</option>
+                <option value="24">2011春</option>
+                <option value="23">2010秋</option>
+                <option value="22">2010春</option>
+                <option value="21">2009秋</option>
+                <option value="20">2009春</option>
+                <option value="19">2008秋</option>
+                <option value="18">2008春</option>
+                <option value="17">2007秋</option>
+                <option value="16">2007春</option>
+                <option value="15">2006秋</option>
+                <option value="14">2006春</option>
+                <option value="13">2005秋</option>
+                <option value="12">2005春</option>
+                <option value="11">2004秋</option>
+                <option value="10">2004春</option>
+                <option value="9">2003秋</option>
+                <option value="8">2003春</option>
+                <option value="7">2002秋</option>
+                <option value="6">2002春</option>
+                <option value="5">2001秋</option>
+                <option value="4">2001春</option>
+                <option value="3">2000秋</option>
+                <option value="2">2000春</option>
+            </select>
+            <label class="number-name" for="sel_search_orderstatus">课程编号或名称：</label>
+            <input type="text" id="classId" name="className" style="width: 200px;">
+            <button type="button" onclick="javascript:loadGrid()">
+                <!--<button type="button" onclick="javascript:loadGrid()"-->
+                <!--id="search" class="btn btn-primary btn-sm"-->
+                <!--btn-options="btnCls:-->
+                <!--btn btn-primary btn-sm,-->
+                <!--iconFlag:before,-->
+                <!--iconCls:icon-search bigger-110,-->
+                <!--value:查询">-->
+                <i class="icon-search bigger-110"></i>查询
+            </button>
+        </div>
+    </section>
+    <section>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>课程名称</th>
+                <th>班次</th>
+                <th>老师</th>
+                <th>当前选课人数</th>
+                <th>选课人数上限</th>
+                <th>授课时间</th>
+                <th>授课地点</th>
+                <th>课程时长</th>
+                <th>课程所属模块</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="class: ${classes}">
+                <td th:text="${class.className}"></td>
+                <td th:text="${class.classNum}"></td>
+                <td th:text="${class.teaName}"></td>
+                <td th:text="${class.classChooseNum}"></td>
+                <td th:text="${class.classUpperLimit}"></td>
+                <td th:text="${class.classPlace}"></td>
+                <td th:text="${class.classLength}"></td>
+                <td th:text="${class.classModuleNum}"></td>
+                <td th:text="${class.classModuleNum}"></td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+                <td>22</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</article>
+
+<div>
+    <a class="btn btn-default" href="/add-todo">Add a Todo</a>
 </div>
 </body>
-</html>
