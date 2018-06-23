@@ -109,6 +109,9 @@ section .section-title {
 }
 #footer {
     background:#4287ae !important;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
 }
 #footer h5{
 	padding-left: 10px;
