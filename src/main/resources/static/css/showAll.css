@@ -83,7 +83,7 @@ article table th {
     text-align: center;
 }
 article table tr {
-    height: 30px;
+    height: 40px;
 }
 article table tr:nth-child(odd) {
     background: #fff;
