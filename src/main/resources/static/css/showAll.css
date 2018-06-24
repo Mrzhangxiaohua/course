@@ -41,6 +41,17 @@ article .form-query {
     background: #efefef;
     color: #4287ae
 }
+article .form-query.form-select .select-third {
+    min-width: 450px;
+}
+article .form-query.form-select .select-first,
+article .form-query.form-select .select-second,
+article .form-query.form-select .select-forth {
+flex: 1;
+}
+article .form-select .select-third input {
+    height: 30px;
+}
 article .form-query:nth-child(even) {
     border-top: none;
 }

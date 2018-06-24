@@ -34,32 +34,34 @@
                 <button>返回</button>
             </div>
         </div>
-        <div class="form-query form-select  ">
-            <div class="col-md-3">
+        <div class="form-query form-select">
+            <div class="select-first">
                 <label  for="sel_search_orderstatus">院系：</label>
                 <select id="sel_search_orderstatus" class="query-select">
                     <option>--请选择--</option>
                     <option value="001">机械工程学院</option>
                 </select>
             </div>
-            <div  class="col-md-3">
+            <div class="select-second">
                 <label for="sel_search_orderstatus">学期：</label>
                 <select id="sel_search_orderstatus_1" class="query-select">
                     <option value="1">学期未定</option>
                     <option value="39">2018秋</option>
-
                 </select>
             </div>
-            <div class="col-md-4">
-                <label class=" " for="sel_search_orderstatus">课程编号或名称：</label>
-                <input id="classId" name="className"  type="text"  height=""/>
+            <div class="select-third">
+                <label for="sel_search_orderstatus">课程编号或名称：
+                    <input id="classId" name="className"  type="text" class="query-select" />
+                </label>
+            </div>
+            <div class="select-forth">
+                <button type="button" onclick="javascript:loadGrid()" style="height: 30px;line-height:30px;margin-top: 5px;text-align: center">
+                    <!--<i class="icon-search query-select" ></i>-->
+                    查询
+                </button>
+                <button class="btn btn-primarily">ssss</button>
             </div>
 
-            <div class="col-md-2">
-                <button type="button" onclick="javascript:loadGrid()">
-                    <i class="icon-search"></i>查询
-                </button>
-            </div>
         </div>
     </section>
     <section>
@@ -111,6 +113,8 @@
 
     </section>
 </article>
+
+<!--<div th:include="footer :: copyright"></div>-->
 <section id="footer" >
     <div class="container"> <!--防止排版错误style="position: absolute;background: #4287ae;bottom: 0px;width: 100%" -->
         <div class="row text-center text-xs-center text-sm-left text-md-left">
