@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.DataDao" >
+    <sql id="BASE_COLUMN_DEPART">
+    departId,departName
+  </sql>
+
+    <select id="getDepart" resultType="hashmap">
+        select
+        departName
+        from
+        Department
+    </select>
+    
+</mapper>

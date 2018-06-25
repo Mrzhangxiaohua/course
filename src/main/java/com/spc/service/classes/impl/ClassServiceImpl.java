@@ -22,8 +22,8 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<ClassDomain> findAllClass(int pageNum, int pageSize) {
+    public List<ClassDomain> findAllClass(int pageNum, int pageSize,String depart,String className) {
         PageHelper.startPage(pageNum, pageSize);
-        return classDao.selectClasses();
+        return classDao.selectClasses(depart,className);
     }
 }

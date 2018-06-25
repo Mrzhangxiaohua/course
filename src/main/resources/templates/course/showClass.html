@@ -32,34 +32,34 @@
             </div>
         </div>
         <div class="form-query form-select">
-            <div class="col-md-3 ">
+            <div class="col-md-4 ">
             <div class="select-first">
                 <label  for="sel_search_orderstatus">院系：</label>
-                <select id="sel_search_orderstatus" class="query-select">
-                    <option>--请选择--</option>
-                    <option value="001">机械工程学院</option>
+                <select id="sel_search_orderstatus" class="query-select" placeholder="--请选择--">
+                    <option value ="">----请选择----</option>
+                    <!--<option value="001">机械工程学院</option>-->
                 </select>
             </div>
             </div>
-            <div class="col-md-3 ">
-            <div class="select-second">
-                <label for="sel_search_orderstatus">学期：</label>
-                <select id="sel_search_orderstatus_1" class="query-select">
-                    <option value="1">学期未定</option>
-                    <option value="39">2018秋</option>
-                </select>
-            </div>
-            </div>
-            <div class="col-md-4 ">
+            <!--<div class="col-md-3 ">-->
+            <!--<div class="select-second">-->
+                <!--<label for="sel_search_orderstatus">学期：</label>-->
+                <!--<select id="sel_search_orderstatus_1" class="query-select">-->
+                    <!--<option value="1">&#45;&#45;请选择&#45;&#45;</option>-->
+                    <!--<option value="39">2018秋</option>-->
+                <!--</select>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="col-md-6 ">
             <div class="select-third">
-                <label for="sel_search_orderstatus">课程编号或名称：
+                <label for="sel_search_orderstatus">课程名称：
                     <input id="classId" name="className"  type="text" class="query-select"  style="height: 30px;line-height:30px;margin-top: 5px;text-align: center"/>
                 </label>
             </div>
             </div>
                 <div class="col-md-2 ">
             <div class="select-forth">
-                <button type="button" id="find"  style="height: 30px;line-height:30px;margin-top: 5px;text-align: center">
+                <button type="button" id="find" class="find"    style="height: 30px;line-height:30px;margin-top: 5px;text-align: center">
                     <!--<i class="icon-search query-select" ></i>-->
                     查询
                 </button>
@@ -69,7 +69,7 @@
         </div>
     </section>
     <section>
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" id = "showInfo">
             <thead>
             <tr>
                 <th>课程名称</th>
@@ -83,18 +83,18 @@
                 <th>课程所属模块</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="class: ${classes}">
-                <td th:text="${class.className}"></td>
-                <td th:text="${class.classNum}"></td>
-                <td th:text="${class.teaName}"></td>
-                <td th:text="${class.classChooseNum}"></td>
-                <td th:text="${class.classUpperLimit}"></td>
-                <td th:text="${class.classDateDescription} "></td>
-                <td th:text="${class.classPlace}"></td>
-                <td th:text="${class.classLength} + '小时'"></td>
-                <td th:text="${class.classModuleNum}"></td>
-            </tr>
+            <tbody class="tbody">
+            <!--<tr th:each="class: ${classes}">-->
+                <!--<td th:text="${class.className}"></td>-->
+                <!--<td th:text="${class.classNum}"></td>-->
+                <!--<td th:text="${class.teaName}"></td>-->
+                <!--<td th:text="${class.classChooseNum}"></td>-->
+                <!--<td th:text="${class.classUpperLimit}"></td>-->
+                <!--<td th:text="${class.classDateDescription} "></td>-->
+                <!--<td th:text="${class.classPlace}"></td>-->
+                <!--<td th:text="${class.classLength} + '小时'"></td>-->
+                <!--<td th:text="${class.classModuleNum}"></td>-->
+            <!--</tr>-->
             </tbody>
         </table>
         <ul class="pagination">
@@ -146,6 +146,11 @@
 <!--<script type="text/javascript" th:src="@{/webjars/jquery/3.1.1/jquery.min.js/}"></script>-->
 <!--<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.5/js/bootstrap.min.js}"></script>-->
 <script th:src="@{/webjars/requirejs/2.2.0/require.js}" th:attr="data-main=@{/js/script/showClass.js}" ></script>
+<script type="text/javascript"  th:inline="javascript">
+    require(['/js/config.js'], function () {
+        require(['/js/script/showClass.js']);
+    });
+</script>
 </body>
 
 </html>

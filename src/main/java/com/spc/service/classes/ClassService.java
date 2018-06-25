@@ -11,6 +11,6 @@ public interface ClassService {
 
     int addClass(ClassDomain user);
 
-    List<ClassDomain> findAllClass(int pageNum, int pageSize);
+    List<ClassDomain> findAllClass(int pageNum, int pageSize,String depart,String className);
 
 }

@@ -27,7 +27,17 @@
         select
         <include refid="BASE_COLUMN"/>
         from
-        <include refid="BASE_TABLE"/>
+        <include refid="BASE_TABLE"/> a
+        left join  department b
+        on a.departId = b.departId
+        <where>
+          <if test="depart!=null and depart!='' ">
+              b.departName = #{depart}
+          </if>
+          <if test="className!=null and className!='' ">
+              a.className = #{className}
+          </if>
+        </where>
     </select>
     
 </mapper>
