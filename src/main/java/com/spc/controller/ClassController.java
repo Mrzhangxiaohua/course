@@ -31,7 +31,7 @@ public class ClassController {
 
         model.addAttribute("classes",classes);
         System.out.println(classes);
-        return "course/showAll";
+        return "course/showClass";
     }
 
 }
