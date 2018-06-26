@@ -9,7 +9,8 @@
     <link th:href="@{/css/pagination.css}"  rel="stylesheet">
 </head>
 <body>
-<header>
+<div th:fragment="starter">
+    <header>
     <img src = "/graph/logo.png" th:attr="src=@{/graph/logo.png}"/>
     <div class="header-txt">
         <p class="header-txt-left">
@@ -19,8 +20,8 @@
             </b>
         </p>
     </div>
-</header>
-
+    </header>
+</div>
 
 <article class="container">
 
@@ -88,7 +89,8 @@
 </article>
 
 <!--<div th:include="footer :: copyright"></div>-->
-<section id="footer" >
+<footer>
+<section  id="footer" >
     <div class="container"> <!--防止排版错误style="position: absolute;background: #4287ae;bottom: 0px;width: 100%" -->
         <div class="row text-center text-xs-center text-sm-left text-md-left">
 
@@ -112,6 +114,7 @@
         </div>
     </div>
 </section>
+</footer>
 <!--<script type="text/javascript" th:src="@{/webjars/jquery/3.1.1/jquery.min.js/}"></script>-->
 <!--<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.5/js/bootstrap.min.js}"></script>-->
 <!--<script th:src="@{/webjars/requirejs/2.2.0/require.js}" th:attr="data-main=@{/js/script/showClass.js}" ></script>-->

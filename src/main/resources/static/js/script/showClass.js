@@ -1,6 +1,5 @@
 function template(dataPart) {
     var html;
-
     for (var i = 0; i < dataPart.length; i++) {
         var temp = "<tr>\n" +
             "                <td>" + dataPart[i]["className"] + "</td>\n" +
