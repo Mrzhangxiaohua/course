@@ -21,20 +21,20 @@ public class MyData {
 
 
     @RequestMapping("/getDepart")
-    public String getDepart(){
+    public StringBuilder getDepart(){
         List<HashMap<Integer,String>>  li = dataService.getDepart();
         System.out.println("run heree");
-        String str = "[";
+        StringBuilder str = new StringBuilder("[");
         for(HashMap<Integer,String> sli : li) {
             try {
-                String jsons = new ObjectMapper().writeValueAsString(sli);
-                str += jsons;
-                str += ",";
+                StringBuilder jsons =new StringBuilder(new ObjectMapper().writeValueAsString(sli));
+                str.append(jsons);
+                str.append(",");
             } catch (Exception exception) {
             }
         }
-        str = str.substring(0,str.length()-1);
-        str +="]";
+        str.deleteCharAt(str.length()-1);
+        str.append("]");
         System.out.println(str);
         return str;
     }
