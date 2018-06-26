@@ -8,8 +8,9 @@
 
     <sql id="BASE_COLUMN">
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum
+        classPlace,classLength,modelsName
     </sql>
+
     <insert id="insert" parameterType="com.spc.model.ClassDomain">
         insert into
         <include refid="BASE_TABLE"/>
@@ -23,6 +24,7 @@
         </trim>
     </insert>
 
+
     <select id="selectClasses" resultType="com.spc.model.ClassDomain">
         select
         <include refid="BASE_COLUMN"/>
@@ -30,12 +32,15 @@
         <include refid="BASE_TABLE"/> a
         left join  department b
         on a.departId = b.departId
+        left join  models m
+        on a.classModuleNum = m.modelsId
+
         <where>
           <if test="depart!=null and depart!='' ">
               b.departName = #{depart}
           </if>
           <if test="className!=null and className!='' ">
-              a.className = #{className}
+              and a.className like  "%"#{className}"%"
           </if>
         </where>
     </select>

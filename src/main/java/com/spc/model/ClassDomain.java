@@ -15,7 +15,7 @@ public class ClassDomain {
     private String classDateDescription;
     private String classPlace;
     private Integer classLength;
-    private Integer classModuleNum;
+    private String modelsName;
 
     public Integer getClassId() {
         return classId;
@@ -97,11 +97,19 @@ public class ClassDomain {
         this.classLength = classLength;
     }
 
-    public Integer getClassModuleNum() {
-        return classModuleNum;
+//    public Integer getClassModuleNum() {
+//        return classModuleNum;
+//    }
+
+//    public void setClassModuleNum(Integer classModuleNum) {
+//        this.classModuleNum = classModuleNum;
+//    }
+
+    public String getModelsName() {
+        return modelsName;
     }
 
-    public void setClassModuleNum(Integer classModuleNum) {
-        this.classModuleNum = classModuleNum;
+    public void setModelsName(String modelsName) {
+        this.modelsName = modelsName;
     }
 }

@@ -1,5 +1,6 @@
 function template(dataPart) {
     var html;
+
     for (var i = 0; i < dataPart.length; i++) {
         var temp = "<tr>\n" +
             "                <td>" + dataPart[i]["className"] + "</td>\n" +
@@ -10,13 +11,13 @@ function template(dataPart) {
             "                <td>" + dataPart[i]["classDateDescription"] + "</td>\n" +
             "                <td>" + dataPart[i]["classPlace"] + "</td>\n" +
             "                <td>" + dataPart[i]["classLength"] + "</td>\n" +
-            "                <td>" + dataPart[i]["classModuleNum"] + "</td>\n" +
+            "                <td>" + dataPart[i]["modelsName"] + "</td>\n" +
             "            </tr>";
         html += temp;
     }
-    // console.log(html)
     return html;
 }
+
 require(['jquery'], function ($) {
     require(['paginationjs'], function (pagination) {
         $(document).ready(function () {
@@ -45,6 +46,7 @@ require(['jquery'], function ($) {
             //使用ajax 加载部门信息
             $.get("/data/getDepart", function (data) {
                 var data = JSON.parse(data);
+                console.log(data)
                 for (var i = 0; i < data.length; i++) {
                     $("#sel_search_orderstatus").append("<option value='" + data[i]["departName"] + "'>" + data[i]["departName"] + "</option>");
                 }
@@ -56,6 +58,7 @@ require(['jquery'], function ($) {
         $("#find").click(function () {
             var depart = $("#sel_search_orderstatus").val();
             var classname = $("#classId").val();
+            console.log(classname);
             $('#page').pagination({
                 dataSource: function (done) {
                     $.ajax({

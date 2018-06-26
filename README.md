@@ -10,7 +10,7 @@
 * maven| 3.3.9
 * alibaba Druid 数据库连接池|1.1.0
 * 数据库| mysql
-* 前端|thymeleaf , jquery , requirejs ,bootstrap
+* 前端|thymeleaf , jquery , requirejs ,bootstrap ,paginationjs
 * 后端|mybatis
 
 ### 功能实现：

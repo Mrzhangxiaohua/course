@@ -35,16 +35,10 @@ public class SelectClassController {
             @RequestParam(name = "classname", required = false, defaultValue = "")
                     String classname,
             Model model){
-        //开始分页
-//        Page<ClassDomain> page =PageHelper.startPage(pageNum,pageSize);
+
 
         List<ClassDomain> classes = classService.findAllClass(pageNum,pageSize,depart,classname);
         System.out.println(classes.size());
-//        System.out.println(page.getStartRow());
-//        System.out.println(page.getPageSize());
-//        System.out.println(page.getEndRow());
-//        System.out.println(page.getPageNum());
-
         return classes;
 
     }
