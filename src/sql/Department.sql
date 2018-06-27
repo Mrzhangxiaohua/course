@@ -10,7 +10,6 @@ CREATE TABLE  Department(
  DEFAULT CHARSET = utf8;
 
 
-  lock tables course write;
   insert into Department values
   (1,"机械工程学院"),
   (2,"材料科学与工程学院"),
@@ -40,9 +39,8 @@ CREATE TABLE  Department(
   (26,"体育中心"),
   (27,"前沿科学技术研究院"),
   (28,"工程博士中心"),
-  (29,"可持续发展学院"),
+  (29,"可持续发展学院");
 
-  unlock tables;
 
 
 
