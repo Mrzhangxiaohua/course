@@ -11,4 +11,10 @@ public class mainC {
     public  String classes(){
         return "course/showClass";
     }
+
+    @RequestMapping("/calendar")
+    public String showTimeTable(){
+        System.out.println("run here");
+        return "student/calendar";
+    }
 }
