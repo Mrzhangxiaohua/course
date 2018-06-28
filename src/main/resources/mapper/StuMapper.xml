@@ -3,7 +3,7 @@
 
 <mapper namespace="com.spc.dao.StudentDao" >
     <sql id="BASE_COLUMN">
-      stuId,className
+      stuId,className,classDateDescription
     </sql>
 
     <select id="findClasses" resultType="hashmap">

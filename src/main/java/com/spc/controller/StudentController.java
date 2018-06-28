@@ -22,11 +22,11 @@ public class StudentController {
             @RequestParam(name = "stuId", required = false) int stuId){
         System.out.println(stuId);
 
-        List<HashMap<String,String>> lis = studentService.findClasses(stuId);
+        String[][] lis = studentService.findClasses(stuId);
 
         System.out.println("run heree");
         StringBuilder str = new StringBuilder("[");
-        for(HashMap sli : lis) {
+        for(String[] sli : lis) {
             try {
                 StringBuilder jsons =new StringBuilder(new ObjectMapper().writeValueAsString(sli));
                 str.append(jsons);
@@ -38,6 +38,5 @@ public class StudentController {
         str.append("]");
         System.out.println(str);
         return str;
-
     }
 }

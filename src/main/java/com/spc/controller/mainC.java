@@ -15,7 +15,7 @@ public class mainC {
     @RequestMapping("/calendar")
     public String showTimeTable(){
         System.out.println("run here");
-        return "student/calendar";
+        return "student/calendar2";
     }
     @RequestMapping("/teacher_forms")
     public String teacherForms(){
