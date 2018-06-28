@@ -9,8 +9,8 @@
     <select id="findClasses" resultType="hashmap">
         select
         <include refid="BASE_COLUMN"/>
-        from course_choose a
-        left join course b
+        from Course_choose a
+        left join Course b
         on a.classId = b.classId
         <where>
             stuId = #{stuId}

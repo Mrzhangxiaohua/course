@@ -3,7 +3,7 @@
 
 <mapper namespace="com.spc.dao.ClassDao" >
     <sql id="BASE_TABLE">
-        course
+        Course
     </sql>
 
     <sql id="BASE_COLUMN">
@@ -30,7 +30,7 @@
         <include refid="BASE_COLUMN"/>
         from
         <include refid="BASE_TABLE"/> a
-        left join  department b
+        left join  Department b
         on a.departId = b.departId
         left join  models m
         on a.classModuleNum = m.modelsId
