@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/select")
-public class SelectClassController {
+public class ClassController {
     @Autowired
     private ClassService classService;
 
@@ -35,12 +35,11 @@ public class SelectClassController {
             @RequestParam(name = "classname", required = false, defaultValue = "")
                     String classname,
             Model model){
-
-
         List<ClassDomain> classes = classService.findAllClass(pageNum,pageSize,depart,classname);
         System.out.println(classes.size());
         return classes;
-
     }
+
+
 
 }

@@ -8,8 +8,7 @@ require.config({
         bootstrapTable : 'bootstrap-table/1.11.1/src/bootstrap-table',
         bootstrapTableCN : 'bootstrap-table/1.11.1/src/local/bootstrap-table-zh-CN',
         paginationjs : '../js/lib/pagination',
-        fullcalendar : '../js/lib/fullcalendar',
+        jqs : '../js/lib/jquery.schedule',
         moment : '../js/lib/moment.min',
-        zhcn : '../js/lib/zh-cn',
     }
 });

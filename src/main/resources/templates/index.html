@@ -5,134 +5,64 @@
     <meta charset="utf-8"/>
     <link href="static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link href="static/css/showAll.css" th:href="@{/css/showAll.css}" rel="stylesheet">
-    <script src="static/js/jquery.min.js" th:href="@{/js/jquery.min.js}"></script>
-    <script src="static/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
-    <script src="static/css/testone.css" th:href="@{/css/testone.css}" rel="stylesheet"></script>
+    <script th:href="@{/js/jquery.min.js}"></script>
+    <script th:href="@{/js/bootstrap.min.js}"></script>
+
+
+
 </head>
 
 
-<header class="bac" style="background-color: #468EB8">
-    <img src = "/graph/logo.png" th:attr="src=@{/graph/logo.png}"/>
-    <div class="header header-txt">
+<body>
+
+<header>
+    <img src="/graph/logo.png" th:attr="src=@{/graph/logo.png}"/>
+    <div class="header-txt">
         <p class="header-txt-left">
-            <font size="5">研究生选课系统</font>
-            <b>
-                (&nbsp;<span>学生服务</span>&nbsp;)
-            </b>
+            <font size="3">（学生端）</font>
+
         </p>
     </div>
 </header>
 
-<body>
-<div class="container" >
-    <div class="row clearfix" style="margin-top: 100px">
-        <div class="col-md-4 column "  style="border: #9d9d9d 1px solid;padding: 0px 0px;margin-top: 200px">
-
-            <div style="background-color: #F6F6F6;border-bottom: #9d9d9d 1px solid;font-size: 20px;margin-top: 0px;margin-left: 0px">
-                <div class="glyphicon glyphicon-comment" >个人信息</div>
-                <div style="float: right"><a href="#">查看</a></div>
-            </div>
-
-            <div class="row clearfix" style="padding: 10px 5px">
-
-                <div class="col-md-6 column">
-                    <img alt="140x140" src="/graph/aa.jpg" />
-                </div>
-                <div class="col-md-6 column" style="text-align: center">
-                    <!--此处为左侧图片的文字或者信息内容-->
-                    <p><strong>
-                        个人的信息<br>
-                        真的帅<br>
-                    </strong></p>
-                </div>
-            </div>
+<div style="background-image: url('graph/back.png');">
+    <div style=" height: 85vh;width: 60vw;margin-left:20vw;padding-top: 20vh;">
+        <div class="jumbotron"  >
+            <h1 class="display-4">选课系统 </h1>
+            <p class="lead"> This is an English special practice online course selection system.</p>
+            <hr class="my-4" >
+            <p>具体功能如下</p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="/student/classes" role="button">选课</a>
+                <a class="btn btn-primary btn-lg" href="#" role="button">改课</a>
+                <a class="btn btn-primary btn-lg" href="/student/calendar" role="button">课表查询</a>
+                <a class="btn btn-primary btn-lg" href="#" role="button">成绩查询</a>
+            </p>
         </div>
-
-        <div class="col-md-8 column" style="padding-left:150px;padding-top: 20px">
-
-                <div class="col-md-12 column" style="padding: 10px; border-bottom: #9d9d9d 1px solid">
-                    <div class="row clearfix">
-                        <div class="col-md-4 column">
-                            <img alt="140x140" src="/graph/aa.jpg" width="100" height="100" class="img-circle" />
-                        </div>
-                        <div class="col-md-8 column" >
-                            <h2>
-                                选课<br>       <!--此处为文字区域-->
-                            </h2>
-                            <p>
-                                <a class="btn" th:href="@{/student/classes}">View details »</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12 column" style="padding: 10px;border-bottom: #9d9d9d 1px solid">
-                    <div class="row clearfix">
-                        <div class="col-md-4 column">
-                            <img alt="140x140" src="/graph/aa.jpg" width="100" height="100" class="img-circle"/>
-                        </div>
-                        <div class="col-md-8 column">
-                            <h2>
-                                改课<br>       <!--此处为文字区域-->
-                            </h2>
-                            <p>
-                                <a class="btn" href="#">View details »</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        <!--<p style="font-size: 50px;text-align: center;color:red "> 选&nbsp;课&nbsp;系&nbsp;统</p>-->
 
 
-                <div class="col-md-12 column" style="padding: 10px; border-bottom: #9d9d9d 1px solid">
-                    <div class="row clearfix">
-                        <div class="col-md-4 column">
-                            <img alt="140x140" src="/graph/aa.jpg" width="100" height="100" class="img-circle"/>
-                        </div>
-                        <div class="col-md-8 column">
-                            <h2>
-                                查看课表<br>       <!--此处为文字区域-->
-                            </h2>
-                            <p>
-                                <a class="btn" th:href="@{/student/calendar}">View details </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        <!--<ul class="nav" style="margin-top: 10vh;text-align: center;font-size: 30px; ">-->
+            <!--<li class="nav-item" style="display: inline-block;">-->
+                <!--<a class="nav-link active" href="/student/classes" style="color: black">选课</a>-->
+            <!--</li>-->
+            <!--<li class="nav-item" style="display: inline-block;">-->
+                <!--<a class="nav-link" style="color: black" href="#">改课</a>-->
+            <!--</li>-->
+            <!--<li class="nav-item" style="display: inline-block;">-->
+                <!--<a class="nav-link" style="color: black" href="/student/calendar">课表查询</a>-->
 
-
-                <div class="col-md-12 column" style="padding: 10px;border-bottom: #9d9d9d 1px solid">
-                    <div class="row clearfix">
-                        <div class="col-md-4 column">
-                            <img alt="140x140" src="/graph/aa.jpg" width="100" height="100" class="img-circle"/>
-                        </div>
-                        <div class="col-md-8 column">
-                            <h2>
-                                成绩查询<br>       <!--此处为文字区域-->
-                            </h2>
-                            <p>
-                                <a class="btn" href="#">View details »</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-        </div>
+            <!--</li>-->
+            <!--<li class="nav-item" style="display: inline-block;">-->
+                <!--<a class="nav-link disabled" style="color: black" href="#">成绩查询</a>-->
+            <!--</li>-->
+        <!--</ul>-->
     </div>
 </div>
 
 
+<div th:include="course/showClass :: footer"></div>
 
 
-
-
-<section id="footer">
-    <div class="container">
-        <div class="row">
-            <div class="text-center text-white">
-                <p>西安交通大学研究生院 西安市咸宁西路28号</p>
-                <p class="h6">Copyright &nbsp;&&nbsp;All right Reversed.<a class="text-green ml-2" href="http://labs.xjtudlc.com/labs/cloud.html" target="_blank">税务大数据小组</a></p>
-            </div>
-        </div>
-    </div>
-</section>
 </body>
 </html>
