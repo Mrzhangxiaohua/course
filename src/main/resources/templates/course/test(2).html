@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome</title>
+    <meta charset="utf-8"/>
+    <link href="static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="static/css/showAll.css" th:href="@{/css/showAll.css}" rel="stylesheet">
+    <script src="static/js/jquery.min.js" th:href="@{/js/jquery.min.js}"></script>
+    <script src="static/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
+    <script src="static/css/style.css" th:href="@{/css/style.css}"></script>
+    <style type="text/css">
+        .table>tbody>tr>td{
+            padding: 8px;
+            line-height: 5;
+            vertical-align: top;
+            border-top: 1px solid #269abc;
+        }
+    </style>
+</head>
+
+<header class="bac" style="background-color: #468EB8">
+    <img src = "/graph/logo.png" th:attr="src=@{/graph/logo.png}"/>
+    <div class="header header-txt">
+        <p class="header-txt-left">
+            <font size="5">研究生选课系统</font>
+        </p>
+    </div>
+</header>
+
+
+<body>
+<article class="container">
+    <section>
+        <div class="form-query" style="font-size: 40px;height: 8vh;padding-top: 25px;">
+            <p class="form-query-h text-center" >
+                学生个人课表
+            </p>
+        </div>
+        <!--<div class="form-query form-select">-->
+            <!--<div class="col-md-4 ">-->
+                <!--<div class="select-first">-->
+                    <!--<label  for="sel_search_orderstatus">班级：</label>-->
+                    <!--<select id="sel_search_orderstatus" class="query-select" placeholder="&#45;&#45;请选择&#45;&#45;">-->
+                        <!--<option value ="">&#45;&#45;&#45;&#45;请选择&#45;&#45;&#45;&#45;</option>-->
+                        <!--&lt;!&ndash;<option value="001">机械工程学院</option>&ndash;&gt;-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="col-md-7"></div>-->
+            <!--<div class="col-md-1 ">-->
+                <!--<div class="select-forth">-->
+                    <!--<button class="btn btn-primary" id ="find"-->
+                            <!--style="background-color: #4287AE;width: 90%;height: 80%;padding-top: 4px;margin-top: -2px">-->
+                        <!--查询-->
+                    <!--</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    </section>
+
+    <section>
+        <table class="table table-hover table-striped table-bordered abc">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>节次</th>
+                    <th>星期一</th>
+                    <th>星期二</th>
+                    <th>星期三</th>
+                    <th>星期四</th>
+                    <th>星期五</th>
+                    <th>星期六</th>
+                    <th>星期日</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2">上午</td>
+                    <td>1-2</td>
+                    <td id = "r1c1"></td>
+                    <td id = "r1c2"></td>
+                    <td id = "r1c3"></td>
+                    <td id = "r1c4"></td>
+                    <td id = "r1c5"></td>
+                    <td id = "r1c6"></td>
+                    <td id = "r1c7"></td>
+                </tr>
+                <tr>
+                    <td>3-4</td>
+                    <td id = "r2c1"></td>
+                    <td id = "r2c2"></td>
+                    <td id = "r2c3"></td>
+                    <td id = "r2c4"></td>
+                    <td id = "r2c5"></td>
+                    <td id = "r2c6"></td>
+                    <td id = "r2c7"></td>
+                </tr>
+                <tr>
+                    <td rowspan="2">下午</td>
+                    <td>5-6</td>
+                    <td id = "r3c1"></td>
+                    <td id = "r3c2"></td>
+                    <td id = "r3c3"></td>
+                    <td id = "r3c4"></td>
+                    <td id = "r3c5"></td>
+                    <td id = "r3c6"></td>
+                    <td id = "r3c7"></td>
+                </tr>
+                <tr>
+                    <td>7-8</td>
+                    <td id = "r4c1"></td>
+                    <td id = "r4c2"></td>
+                    <td id = "r4c3"></td>
+                    <td id = "r4c4"></td>
+                    <td id = "r4c5"></td>
+                    <td id = "r4c6"></td>
+                    <td id = "r4c7"></td>
+                </tr>
+                <tr>
+                    <td>晚上</td>
+                    <td>9-10</td>
+                    <td id = "r5c1"></td>
+                    <td id = "r5c2"></td>
+                    <td id = "r5c3"></td>
+                    <td id = "r5c4"></td>
+                    <td id = "r5c5"></td>
+                    <td id = "r5c6"></td>
+                    <td id = "r5c7"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+
+</article>
+
+<section id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="text-center text-white">
+                <p>西安交通大学研究生院 西安市咸宁西路28号</p>
+                <p class="h6">Copyright &nbsp;&&nbsp;All right Reversed.<a class="text-green ml-2" href="http://labs.xjtudlc.com/labs/cloud.html" target="_blank">税务大数据小组</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
