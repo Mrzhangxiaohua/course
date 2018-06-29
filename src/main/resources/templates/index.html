@@ -15,17 +15,7 @@
 
 <body>
 
-<header>
-    <img src="/graph/logo.png" th:attr="src=@{/graph/logo.png}"/>
-    <div class="header-txt">
-        <p class="header-txt-left">
-            <font size="3">（学生端）</font>
-
-        </p>
-    </div>
-</header>
-
-<div style="background-image: url('graph/back.png');">
+<div>
     <div style=" height: 85vh;width: 60vw;margin-left:20vw;padding-top: 20vh;">
         <div class="jumbotron"  >
             <h1 class="display-4">选课系统 </h1>
@@ -61,7 +51,6 @@
 </div>
 
 
-<div th:include="course/showClass :: footer"></div>
 
 
 </body>
