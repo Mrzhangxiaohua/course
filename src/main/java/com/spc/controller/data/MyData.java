@@ -23,7 +23,7 @@ public class MyData {
     @RequestMapping("/getDepart")
     public StringBuilder getDepart(){
         List<HashMap<Integer,String>>  li = dataService.getDepart();
-        System.out.println("run heree");
+        System.out.println("run here");
         StringBuilder str = new StringBuilder("[");
         for(HashMap<Integer,String> sli : li) {
             try {
