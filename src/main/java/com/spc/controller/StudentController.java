@@ -24,7 +24,7 @@ public class StudentController {
 
         String[][] lis = studentService.findClasses(stuId);
 
-        System.out.println("run heree");
+        System.out.println("run here");
         StringBuilder str = new StringBuilder("[");
         for(String[] sli : lis) {
             try {
