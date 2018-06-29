@@ -17,21 +17,21 @@ public class ManagerController {
     }
     @RequestMapping("/profession")
     public String manager_profession(){
-        return "manager/manager_profession";
+        return "manager/profession";
     }
 
     @RequestMapping("/classes")
     public String manager_classes(){
-        return "manager/manager_classes";
+        return "manager/classes";
     }
 
     @RequestMapping("/students")
     public String manager_students(){
-        return "manager/manager_students";
+        return "manager/students";
     }
 
     @RequestMapping("/teachers")
     public String manager_teachers(){
-        return "manager/manager_teachers";
+        return "manager/teachers";
     }
 }

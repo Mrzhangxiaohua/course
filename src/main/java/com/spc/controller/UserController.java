@@ -1,6 +1,5 @@
 package com.spc.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.spc.model.UserDomain;
 import com.spc.service.user.UserService;
@@ -10,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2017/8/16.
