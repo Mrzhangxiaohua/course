@@ -3,10 +3,18 @@
 <head>
     <title>Welcome</title>
     <meta charset="utf-8"/>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;lang=en" />
+
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/showAll.css}"  rel="stylesheet">
     <link th:href="@{/css/bootstrap-table.css}"  rel="stylesheet">
     <link th:href="@{/css/pagination.css}"  rel="stylesheet">
+    <script type="text/css">
+        button{
+            margin-left: 10px;
+        }
+
+    </script>
 </head>
 <body>
 <div th:fragment="starter">
@@ -23,15 +31,14 @@
     </header>
 </div>
 
-<article class="container">
+<article class="container" th:fragment="classes">
 
     <section>
-        <div class="form-query">
-            <p class="form-query-h">
-                课程排课查询
-            </p>
+        <div class="form-query" align="center" style="background-color: white ;font-family: 'Open Sans',serif;">
+           <span style="margin-left: auto;margin-right: auto; letter-spacing: 10px" > <p class="glyphicon glyphicon-star" >选/择/课/程
+            </p></span>
         </div>
-        <div class="form-query form-select">
+        <div class="form-query form-select" style="background-color: white">
             <div class="col-md-4 ">
             <div class="select-first">
                 <label  for="sel_search_orderstatus">院系：</label>
@@ -42,25 +49,26 @@
             </div>
             </div>
 
-            <div class="col-md-7 ">
+            <div class="col-md-5 "  align="center">
             <div class="select-third">
                 <label for="sel_search_orderstatus">课程名称：
-                    <input id="classId" name="className"  type="text" class="query-select"  style="height: 30px;line-height:30px;margin-top: 5px;text-align: center"/>
+                    <input id="classId" name="className"  type="text" class="query-select"  style="height: 30px;line-height:30px;margin-top: 5px;text-align: center;margin-right: auto;margin-left: auto"/>
                 </label>
             </div>
             </div>
-                <div class="col-md-1 ">
-            <div class="select-forth">
-                <button class="btn btn-primary" id ="find"
-                        style="background-color: #4287AE;width: 90%;height: 80%;padding-top: 4px;margin-top: -2px">
+                <div class="col-md-3 ">
+            <div class="select-forth" align="right">
+                <button class="btn btn-primary glyphicon glyphicon-search" id ="find"
+                        style="background-color: #4287AE;height: 80%;padding-top: 4px;margin-top: -2px;margin-right: auto;margin-left: auto">
                     查询
                 </button>
             </div>
                 </div>
         </div>
     </section>
-    <section>
-        <table class="table table-striped table-hover" id = "showInfo">
+    <section >
+
+        <table class="table table-striped table-hover " id = "showInfo">
             <thead>
             <tr>
                 <th>课程名称</th>
@@ -72,7 +80,7 @@
                 <th>授课地点</th>
                 <th>课程时长</th>
                 <th>课程所属模块</th>
-                <th>选择</th>
+                <th>选课</th>
             </tr>
             </thead>
             <tbody class="tbody">
@@ -88,40 +96,12 @@
 
 
     <section>
-        <table class="table">
-            <thead>
-            <tr>
-                <th colspan="4">已选课程</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td style="text-align: left">
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计1</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计2</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计3</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计4</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计1</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计2</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计3</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计1</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计2</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计3</button>
-                    <button type="button" class="btn btn-primary btn-sm">c++程序设计3</button>
+        <div class="col-md-12 row" align="center"  >
+            <span colspan="4" style="letter-spacing: 10px;padding: 0px;color: #4587ad;margin-left: auto;margin-right: auto" class="glyphicon  glyphicon-star table">已/选/课/程</span>
+        </div>
+        <div id ="havenAdd"  class="col-md-12  btn-group " style="border: black 1px solid ;padding-top: 5px;padding-bottom: 7px" role="group" >
+        </div>
 
-                </td>
-                <!--<td style="text-align: left">于红薯-->
-                    <!--<button type="button" class="btn btn-primary btn-sm pull-right">取消</button>-->
-                <!--</td>-->
-                <!--<td style="text-align: left">于谦-->
-                    <!--<button type="button" class="btn btn-primary btn-sm pull-right">取消</button>-->
-                <!--</td>-->
-                <!--<td style="text-align: left">于谦-->
-                    <!--<button type="button" class="btn btn-primary btn-sm pull-right">取消</button>-->
-                <!--</td>-->
-            </tr>
-            </tbody>
-        </table>
     </section>
 
 </article>
