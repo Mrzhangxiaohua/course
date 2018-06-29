@@ -3,10 +3,10 @@
 <head>
     <title>Welcome</title>
     <meta charset="utf-8"/>
-    <link  th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/showAll.css}" rel="stylesheet">
     <style type="text/css">
-        .table>tbody>tr>td{
+        .table > tbody > tr > td {
             padding: 8px 2px;
             line-height: 5;
             vertical-align: top;
@@ -14,8 +14,8 @@
             /*width: 130px;*/
         }
 
-        pre{
-            padding:0px;
+        pre {
+            padding: 0px;
             margin: 0px;
             border: 0px solid #ccc;
             text-align: left;
@@ -24,21 +24,13 @@
     </style>
 </head>
 
-<header class="bac" style="background-color: #468EB8">
-    <img src = "/graph/logo.png" th:attr="src=@{/graph/logo.png}"/>
-    <div class="header header-txt">
-        <p class="header-txt-left">
-            <font size="5">研究生选课系统</font>
-        </p>
-    </div>
-</header>
-
+<div th:include="course/showClass :: starter"></div>
 
 <body>
 <article class="container">
     <section>
-        <div  style="font-size: 40px;height: 8vh;padding-top: 25px;">
-            <p class="text-center" style="color: #1b6d85" >
+        <div style="font-size: 40px;height: 8vh;padding-top: 25px;">
+            <p class="text-center" style="color: #1b6d85">
                 学生个人课表
             </p>
         </div>
@@ -48,72 +40,20 @@
     <section>
         <table class="table table-hover table-striped table-bordered abc">
             <thead>
-                <tr>
-                    <th style="width: 40px;"></th>
-                    <th>节次</th>
-                    <th>星期一</th>
-                    <th>星期二</th>
-                    <th>星期三</th>
-                    <th>星期四</th>
-                    <th>星期五</th>
-                    <th>星期六</th>
-                    <th>星期日</th>
-                </tr>
+            <tr>
+                <th style="width: 40px;"></th>
+                <th>节次</th>
+                <th>星期一</th>
+                <th>星期二</th>
+                <th>星期三</th>
+                <th>星期四</th>
+                <th>星期五</th>
+                <th>星期六</th>
+                <th>星期日</th>
+            </tr>
             </thead>
             <tbody id="tb">
-                <!--<tr id = "r1">-->
-                    <!--<td rowspan="2">上午</td>-->
-                    <!--<td>1-2</td>-->
-                    <!--<td id = "r1c1"></td>-->
-                    <!--<td id = "r1c2"></td>-->
-                    <!--<td id = "r1c3"></td>-->
-                    <!--<td id = "r1c4"></td>-->
-                    <!--<td id = "r1c5"></td>-->
-                    <!--<td id = "r1c6"></td>-->
-                    <!--<td id = "r1c7"></td>-->
-                <!--</tr>-->
-                <!--<tr id = "r2">-->
-                    <!--<td>3-4</td>-->
-                    <!--<td id = "r2c1"></td>-->
-                    <!--<td id = "r2c2"></td>-->
-                    <!--<td id = "r2c3"></td>-->
-                    <!--<td id = "r2c4"></td>-->
-                    <!--<td id = "r2c5"></td>-->
-                    <!--<td id = "r2c6"></td>-->
-                    <!--<td id = "r2c7"></td>-->
-                <!--</tr>-->
-                <!--<tr id = "r3">-->
-                    <!--&lt;!&ndash;<td rowspan="2">下午</td>&ndash;&gt;-->
-                    <!--<td>5-6</td>-->
-                    <!--<td id = "r3c1"></td>-->
-                    <!--<td id = "r3c2"></td>-->
-                    <!--<td id = "r3c3"></td>-->
-                    <!--<td id = "r3c4"></td>-->
-                    <!--<td id = "r3c5"></td>-->
-                    <!--<td id = "r3c6"></td>-->
-                    <!--<td id = "r3c7"></td>-->
-                <!--</tr>-->
-                <!--<tr id = "r4">-->
-                    <!--<td>7-8</td>-->
-                    <!--<td id = "r4c1"></td>-->
-                    <!--<td id = "r4c2"></td>-->
-                    <!--<td id = "r4c3"></td>-->
-                    <!--<td id = "r4c4"></td>-->
-                    <!--<td id = "r4c5"></td>-->
-                    <!--<td id = "r4c6"></td>-->
-                    <!--<td id = "r4c7"></td>-->
-                <!--</tr>-->
-                <!--<tr id = "r5">-->
-                    <!--&lt;!&ndash;<td>晚上</td>&ndash;&gt;-->
-                    <!--<td>9-10</td>-->
-                    <!--<td id = "r5c1"></td>-->
-                    <!--<td id = "r5c2"></td>-->
-                    <!--<td id = "r5c3"></td>-->
-                    <!--<td id = "r5c4"></td>-->
-                    <!--<td id = "r5c5"></td>-->
-                    <!--<td id = "r5c6"></td>-->
-                    <!--<td id = "r5c7"></td>-->
-                <!--</tr>-->
+
             </tbody>
         </table>
     </section>
@@ -123,8 +63,8 @@
 
 <div th:include="course/showClass :: footer"></div>
 </body>
-<script th:src="@{/js/lib/require.js}" th:attr="data-main=@{/js/script/calendar.js}" ></script>
-<script type="text/javascript"  th:inline="javascript">
+<script th:src="@{/js/lib/require.js}" th:attr="data-main=@{/js/script/calendar.js}"></script>
+<script type="text/javascript" th:inline="javascript">
     require(['/js/config.js'], function () {
         require(['/js/script/calendar.js']);
     });
