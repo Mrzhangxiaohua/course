@@ -1,4 +1,5 @@
-function template(dataPart) {
+function template(dataPart) {       //此处dataPart的数据从哪里得到
+    console.log("自动执行");
     var html;
     for (var i = 0; i < dataPart.length; i++) {
         var temp = "<tr>\n" +
@@ -11,17 +12,21 @@ function template(dataPart) {
             "                <td>" + dataPart[i]["classPlace"] + "</td>\n" +
             "                <td>" + dataPart[i]["classLength"] + "</td>\n" +
             "                <td>" + dataPart[i]["modelsName"] + "</td>\n" +
+            "                <td>" + "<input type=\"radio\" name=\"optionsRadios\" id=\"optionsRadios1\" \n" +
+            "         value=\"option1\" checked> 选项 1" + "</td>\n" +
             "            </tr>";
         html += temp;
     }
     return html;
 }
 
+
+
 require(['jquery'], function ($) {
     require(['paginationjs'], function (pagination) {
         $(document).ready(function () {
             //     console.log(dataPart)
-            $('#page').pagination({
+            $('#page').pagination({ ////////////////////////////////
                 dataSource: function (done) {
                     $.ajax({
                         type: 'GET',
