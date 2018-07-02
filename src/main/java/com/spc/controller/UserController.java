@@ -27,19 +27,18 @@ public class UserController {
     }
 
 
-    @RequestMapping("/all")
+    @RequestMapping("/find")
     public String findAllUser(
             @RequestParam(name = "pageNum", required = false, defaultValue = "1")
                     int pageNum,
             @RequestParam(name = "pageSize", required = false, defaultValue = "10")
                     int pageSize,
+            @RequestParam(name = "userId", required = true)
+                    String userId,
             Model model){
         //开始分页
-        PageHelper.startPage(pageNum,pageSize);
-        List<UserDomain> users = userService.findAllUser(pageNum,pageSize);
-
-        model.addAttribute("users",users);
-        System.out.println(users);
+        UserDomain user = userService.findUsersById(userId);
+        model.addAttribute("users",user);
         return "hello";
     }
 }

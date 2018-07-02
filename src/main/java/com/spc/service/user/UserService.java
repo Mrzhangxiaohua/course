@@ -11,6 +11,6 @@ public interface UserService {
 
     int addUser(UserDomain user);
 
-    List<UserDomain> findAllUser(int pageNum, int pageSize);
+    UserDomain findUsersById(String userId);
 
 }

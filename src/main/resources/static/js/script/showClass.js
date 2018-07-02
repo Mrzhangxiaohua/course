@@ -91,7 +91,7 @@ require(['jquery'], function ($) {
             var text = elem.innerHTML;
             console.log(text)
             var elem =  $("#havenAdd")
-            var strs = "<button type=\"button\" class=\"btn btn-primary have \" style='margin-right: 10px'>"+text+"</button>"
+            var strs = "<li type=\"button\" class=\"btn btn-primary have \" style='margin-right: 10px;display: inline-block;'>"+text+"</li>"
             elem.append(strs)
         });
 

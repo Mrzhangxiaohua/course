@@ -86,8 +86,6 @@
             <tbody class="tbody">
             </tbody>
         </table>
-
-
         <section>
             <div id="page">
             </div>
@@ -96,13 +94,17 @@
 
 
     <section>
-        <div class="col-md-12 row" align="center"  >
+        <div class="col-md-12 row " align="center"  >
             <span colspan="4" style="letter-spacing: 10px;padding: 0px;color: #4587ad;margin-left: auto;margin-right: auto" class="glyphicon  glyphicon-star table">已/选/课/程</span>
         </div>
-        <div id ="havenAdd"  class="col-md-12  btn-group " style="border-bottom: black 1px solid ;padding-top: 5px;padding-bottom: 7px" role="group" >
+        <div   class="col-md-11  btn-group  " style="padding-top: 5px;padding-bottom: 7px;" role="group" >
+            <ul id = "havenAdd" style="overflow-x: auto; list-style: none;white-space:nowrap;width: auto;">
+            </ul>
         </div>
-
+        <div class="col-md-1"><button class="btn btn-primary">提交</button></div>
     </section>
+
+
 
 </article>
 
@@ -110,19 +112,7 @@
 <footer>
 <section  id="footer" >
     <div class="container"> <!--防止排版错误style="position: absolute;background: #4287ae;bottom: 0px;width: 100%" -->
-        <!--<div class="row text-center text-xs-center text-sm-left text-md-left">-->
 
-            <!--&lt;!&ndash;<div class="col-xs-12 col-sm-4 col-md-4">&ndash;&gt;-->
-                <!--&lt;!&ndash;<h5>Quick links</h5>&ndash;&gt;-->
-            <!--<div>-->
-                <!--<ul class="list-unstyled quick-links">-->
-                    <!--<li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>Home</a></li>-->
-                    <!--&lt;!&ndash;<li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>About</a></li>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>Get Started</a></li>&ndash;&gt;-->
-                <!--</ul>-->
-            <!--</div>-->
-
-        <!--</div>-->
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
                 <p>西安交通大学研究生院 西安市咸宁西路28号</p>
@@ -133,9 +123,6 @@
     </div>
 </section>
 </footer>
-<!--<script type="text/javascript" th:src="@{/webjars/jquery/3.1.1/jquery.min.js/}"></script>-->
-<!--<script type="text/javascript" th:src="@{/webjars/bootstrap/3.3.5/js/bootstrap.min.js}"></script>-->
-<!--<script th:src="@{/webjars/requirejs/2.2.0/require.js}" th:attr="data-main=@{/js/script/showClass.js}" ></script>-->
 <script th:src="@{/js/lib/require.js}" th:attr="data-main=@{/js/script/showClass.js}" ></script>
 <script type="text/javascript"  th:inline="javascript">
     require(['/js/config.js'], function () {

@@ -2,12 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.spc.dao.UserDao" >
+
+  <resultMap id="userMap" type="com.spc.model.UserDomain">
+    <id property="userId" column="userId"/>
+    <result property="userName" column="userName"/>
+    <result property="password" column="password"/>
+    <association property="role"  column="userId" select="selectRole"/>
+  </resultMap>
+
+  <select id="selectRole" resultType="com.spc.model.RoleDomain">
+  select r.roleName,r.roleId
+  from
+  (select  u.userId,ru.roleId
+  from user u
+  left join Role_user ru
+  on u.userId = ru.userId
+  ) a
+  left join Role r
+  on a.roleId = r.roleId
+  where a.userId = #{id}
+  </select>
+
+
+
   <sql id="BASE_TABLE">
-    t_user
+    user
   </sql>
 
   <sql id="BASE_COLUMN">
-    userId,userName,password,phone
+    userId,userName,password
   </sql>
 
   <insert id="insert" parameterType="com.spc.model.UserDomain">
@@ -15,23 +38,19 @@
       <include refid="BASE_TABLE"/>
     <trim prefix="(" suffix=")" suffixOverrides=",">
       userName,password,
-      <if test="phone != null">
-        phone,
-      </if>
     </trim>
     <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
       #{userName, jdbcType=VARCHAR},#{password, jdbcType=VARCHAR},
-      <if test="phone != null">
-        #{phone, jdbcType=VARCHAR},
-      </if>
     </trim>
   </insert>
 
-  <select id="selectUsers" resultType="com.spc.model.UserDomain">
-      SELECT
-        <include refid="BASE_COLUMN"/>
+  <select id="selectUsersById" resultMap="userMap">
+      SELECT *
       FROM
         <include refid="BASE_TABLE"/>
+      <where>
+        userId = #{userId}
+      </where>
   </select>
 
 
