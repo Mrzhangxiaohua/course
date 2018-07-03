@@ -3,6 +3,8 @@ package com.spc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spc.service.student.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,16 +13,23 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/data/Student")
+@RequestMapping("/Student")
 public class StudentController {
 
     @Autowired
     private StudentService studentService;
 
+
+
     @RequestMapping("/select")
-    public StringBuilder selectClasses(
-            @RequestParam(name = "stuId", required = false) int stuId){
-        System.out.println(stuId);
+    public StringBuilder selectClasses(){
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String name =  authentication.getName();
+        System.out.printf("name%s",name);
+
+        Integer stuId = studentService.findNum(name);
 
         String[][] lis = studentService.findClasses(stuId);
 
@@ -39,4 +48,9 @@ public class StudentController {
         System.out.println(str);
         return str;
     }
+
+//    public int addCourse( @RequestParam(name = "courseLists") List<Integer> courseLists){
+//
+//    }
+
 }

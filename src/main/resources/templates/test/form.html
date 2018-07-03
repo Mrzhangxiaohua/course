@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>add user</title>
+</head>
+<body>
+
+<form action="/user/add" method="post">
+    姓名：<input type="text" name="userName" id="userName">
+    密码：<input type="text" name="password" id="password">
+    学号/工号：<input type="text" name="number" id="number">
+
+    <input type="radio" name="role" value="1" checked>学生
+    <input type="radio" name="role" value="2">教师
+    <input type="radio" name="role" value="3">管理员
+    <input type="submit" value="submit">
+    <input type="hidden"
+           name="${_csrf.parameterName}"
+           value="${_csrf.token}"/>
+</form>
+</body>
+</html>

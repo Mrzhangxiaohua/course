@@ -1,9 +1,9 @@
 package com.spc.model;
 
 public class RoleDomain {
-    private Integer roleId;
+    private Integer roleId;  //角色的id
 
-    private String roleName;
+    private String roleName; //角色的名称
 
 
     public Integer getRoleId() {

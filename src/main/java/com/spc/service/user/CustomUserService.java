@@ -18,18 +18,16 @@ public class CustomUserService  implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        UserDomain user = userService.findUsersById(s);
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+        UserDomain user = userService.findUsersByName(name);
         if (user==null){
             throw new UsernameNotFoundException("用户不存在");
         }
         //认证
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         RoleDomain role = user.getRole();
-        System.out.println(user);
-        System.out.println(role);
         authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-        System.out.println(role.getRoleName());
+        System.out.printf("run he%s",role.getRoleName());
         System.out.println(user.getPassword());
         return new org.springframework.security.core.userdetails.User(user.getUserName(),user.getPassword(), authorities);
     }

@@ -31,4 +31,9 @@ public class StudentServiceImpl  implements StudentService {
         }
         return temp;
     }
+
+    public  int findNum(String name){
+        return studentDao.findNum(name);
+    }
+
 }

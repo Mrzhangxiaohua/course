@@ -23,7 +23,7 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public List<ClassDomain> findAllClass(int pageNum, int pageSize,String depart,String className) {
-//        PageHelper.startPage(pageNum, pageSize);
+
         return classDao.selectClasses(depart,className);
     }
 }

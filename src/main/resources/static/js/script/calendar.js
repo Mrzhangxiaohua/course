@@ -2,7 +2,7 @@ require(['jquery'], function ($) {
 
     $(document).ready(function(){
 
-        $.get("/data/Student/select?stuId=2018000001",function(data){
+        $.get("/Student/select",function(data){
 
             var data = JSON.parse(data);
             // console.log(data);

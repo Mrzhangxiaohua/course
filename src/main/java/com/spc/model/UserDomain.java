@@ -7,22 +7,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Alias("UserDomain") //起别名
 public class UserDomain {
 
-    private String userId;
+    private Integer uid;
 
-    private String userName;
+    private String userName; //用户的名称
 
-    private String password;
+    private String password; //用户的密码
 
-    private RoleDomain role;
+    private RoleDomain role; //用户的角色
 
+    private Integer num;
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getUserName() {
         return userName;
@@ -49,5 +43,22 @@ public class UserDomain {
 
     public void setRole(RoleDomain role) {
         this.role = role;
+    }
+
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
     }
 }

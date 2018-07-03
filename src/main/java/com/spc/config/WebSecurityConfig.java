@@ -44,5 +44,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().permitAll(); //注销行为任意访问
 
+
     }
 }

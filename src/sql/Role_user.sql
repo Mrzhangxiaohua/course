@@ -5,11 +5,11 @@ DROP TABLE IF EXISTS Role_user;
 CREATE TABLE Role_user(
   Id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   roleId INT NOT NULL ,
-  userId VARCHAR(255)  NOT NULL
+  uId INT NOT NULL
 ) ENGINE=INNODB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
 
 lock tables Role_user write;
 
-insert into Role_user values (1,1,'0000000001'),(2,2,'0000000002');
+insert into Role_user values (1,1,1),(2,2,2);
 
 unlock tables;

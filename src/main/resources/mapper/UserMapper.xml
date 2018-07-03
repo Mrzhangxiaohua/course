@@ -4,54 +4,53 @@
 <mapper namespace="com.spc.dao.UserDao" >
 
   <resultMap id="userMap" type="com.spc.model.UserDomain">
-    <id property="userId" column="userId"/>
+    <id property="uid" column="uid"/>
     <result property="userName" column="userName"/>
     <result property="password" column="password"/>
-    <association property="role"  column="userId" select="selectRole"/>
+    <result property="number" column="number"/>
+    <association property="role"  column="uid" select="selectRole"/>
   </resultMap>
 
   <select id="selectRole" resultType="com.spc.model.RoleDomain">
   select r.roleName,r.roleId
   from
-  (select  u.userId,ru.roleId
-  from user u
+  (select  u.uid, ru.roleId
+  from User u
   left join Role_user ru
-  on u.userId = ru.userId
+  on u.uid = ru.uid
   ) a
   left join Role r
   on a.roleId = r.roleId
-  where a.userId = #{id}
+  where a.uid = #{id}
   </select>
 
 
 
   <sql id="BASE_TABLE">
-    user
+    User
   </sql>
 
   <sql id="BASE_COLUMN">
-    userId,userName,password
+    uid,userName,password,num
   </sql>
 
-  <insert id="insert" parameterType="com.spc.model.UserDomain">
-    INSERT INTO
-      <include refid="BASE_TABLE"/>
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      userName,password,
-    </trim>
-    <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
-      #{userName, jdbcType=VARCHAR},#{password, jdbcType=VARCHAR},
-    </trim>
-  </insert>
 
-  <select id="selectUsersById" resultMap="userMap">
+
+  <select id="findUsersByName" resultMap="userMap">
       SELECT *
       FROM
         <include refid="BASE_TABLE"/>
       <where>
-        userId = #{userId}
+        userName = #{userName}
       </where>
   </select>
+
+  <insert id = "insert" useGeneratedKeys="true" keyProperty="uid" parameterType="com.spc.model.UserDomain" keyColumn="uid">
+      insert  into  User (userName, password, num) values(#{userName}, #{password}, #{num})
+    <selectKey keyProperty="uid" resultType="int" order="AFTER">
+    SELECT LAST_INSERT_ID();
+  </selectKey>
+  </insert>
 
 
 </mapper>

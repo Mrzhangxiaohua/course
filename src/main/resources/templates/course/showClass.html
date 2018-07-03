@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>Welcome</title>
     <meta charset="utf-8"/>
@@ -26,7 +28,9 @@
             <b>
                 (&nbsp;<span>学生端</span>&nbsp;)
             </b>
+            <a href="/logout" >>退出</a>
         </p>
+
     </div>
     </header>
 </div>
@@ -44,7 +48,6 @@
                 <label  for="sel_search_orderstatus">院系：</label>
                 <select id="sel_search_orderstatus" class="query-select" placeholder="--请选择--">
                     <option value ="">----请选择----</option>
-                    <!--<option value="001">机械工程学院</option>-->
                 </select>
             </div>
             </div>
@@ -80,7 +83,9 @@
                 <th>授课地点</th>
                 <th>课程时长</th>
                 <th>课程所属模块</th>
+                <div sec:authorize="hasRole('学生')">
                 <th>选课</th>
+                </div>
             </tr>
             </thead>
             <tbody class="tbody">
@@ -92,6 +97,11 @@
         </section>
     </section>
 
+    <span sec:authorize="isAuthenticated()">
+                | Logged user: <span sec:authentication="name"></span> |
+                Roles: <span sec:authentication="principal.authorities"></span> |
+                <a th:href="@{/logout}">Sign Out</a>
+    </span>
 
     <section>
         <div class="col-md-12 row " align="center"  >
