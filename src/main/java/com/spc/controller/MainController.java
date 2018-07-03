@@ -1,6 +1,5 @@
 package com.spc.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -11,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-public class mainC {
+public class MainController {
 
     @RequestMapping("/")
     public  String index(){
@@ -23,7 +22,7 @@ public class mainC {
         }else if(auName.equals("学生")){
             return "index";
         }else{
-            return "index";
+            return "manager/index";
         }
     }
 
