@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>timetable</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/showAll.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-table.css}" rel="stylesheet">
+    <link th:href="@{/css/pagination.css}" rel="stylesheet">
+    <link th:href="@{/css/fullcalendar.css}" rel="stylesheet">
+    <link th:href="@{/css/main1.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<header>
+    <img src="/graph/logo.png" th:attr="src=@{/graph/logo.png}"/>
+    <div class="header-txt">
+        <p class="header-txt-left">
+            <font size="5">研究生选课系统</font>
+            <b>
+                (&nbsp;<span>管理员端</span>&nbsp;)
+            </b>
+        </p>
+    </div>
+</header>
+<div id="wrapper">
+    <nav>
+        <div class="brand">
+            <div id="navbar-menu"></div>
+        </div>
+    </nav>
+    <!-- END NAVBAR -->
+    <!-- LEFT SIDEBAR -->
+    <div id="sidebar-nav" class="sidebar">
+        <div class="sidebar-scroll">
+            <nav>
+                <ul class="nav">
+                    <li><a th:href="@{/manager/home}" class=""><i class="glyphicon glyphicon-home"></i> <span>主页</span></a></li>
+                    <li><a th:href="@{/manager/department}" class=""><i class="glyphicon glyphicon-leaf"></i> <span>院系管理</span></a></li>
+                    <li><a th:href="@{/manager/profession}" class=""><i class="glyphicon glyphicon-road"></i> <span>专业管理</span></a></li>
+                    <li><a th:href="@{/manager/classes}" class="active"><i class="glyphicon glyphicon-book"></i> <span>课程管理</span></a></li>
+                    <li><a th:href="@{/manager/students}" class=""><i class="glyphicon glyphicon-user"></i> <span>学生管理</span></a></li>
+
+                    <li><a th:href="@{/manager/teachers}" class=""><i class="glyphicon glyphicon-pencil"></i> <span>教师管理</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <article class="container">
+
+        <div class="row" style="margin-left: 5vw">
+            <div class="col-md-12">
+                <div th:include="course/showClass :: classes"></div>
+            </div>
+        </div>
+    </article>
+
+
+    <footer>
+        <section  id="footer" >
+            <div class="container"> <!--防止排版错误style="position: absolute;background: #4287ae;bottom: 0px;width: 100%" -->
+                <!--<div class="row text-center text-xs-center text-sm-left text-md-left">-->
+
+                <!--&lt;!&ndash;<div class="col-xs-12 col-sm-4 col-md-4">&ndash;&gt;-->
+                <!--&lt;!&ndash;<h5>Quick links</h5>&ndash;&gt;-->
+                <!--<div>-->
+                <!--<ul class="list-unstyled quick-links">-->
+                <!--<li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>Home</a></li>-->
+                <!--&lt;!&ndash;<li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>About</a></li>&ndash;&gt;-->
+                <!--&lt;!&ndash;<li><a href="javascript:void();"><i class="fa fa-angle-double-right"></i>Get Started</a></li>&ndash;&gt;-->
+                <!--</ul>-->
+                <!--</div>-->
+
+                <!--</div>-->
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                        <p>西安交通大学研究生院 西安市咸宁西路28号</p>
+                        <p class="h6">Copyright &nbsp;&&nbsp;All right Reversed.<a class="text-green ml-2" href="http://labs.xjtudlc.com/labs/cloud.html" target="_blank">税务大数据小组</a></p>
+                    </div>
+                    </hr>
+                </div>
+            </div>
+        </section>
+    </footer>
+
+</div>
+</body>
+
+<script th:src="@{/js/lib/require.js}" th:attr="data-main=@{/js/script/showClass.js}" ></script>
+<script type="text/javascript"  th:inline="javascript">
+    require(['/js/config.js'], function () {
+        require(['/js/script/showClass.js']);
+    });
+</script>
+
+</html>

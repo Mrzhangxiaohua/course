@@ -2,6 +2,7 @@ package com.spc.service.user;
 
 import com.spc.model.UserDomain;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -9,8 +10,8 @@ import java.util.List;
  */
 public interface UserService {
 
-    int addUser(UserDomain user);
+    boolean addUser(HttpServletRequest request);
 
-    List<UserDomain> findAllUser(int pageNum, int pageSize);
+    UserDomain findUsersByName(String name);
 
 }

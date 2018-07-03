@@ -44,9 +44,7 @@ public class ClassController {
         }
 
         res.put("data", data);
-
         return res;
     }
-
 
 }

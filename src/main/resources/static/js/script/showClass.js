@@ -1,6 +1,8 @@
-function template(dataPart) {
+function template(dataPart) {       //此处dataPart的数据从哪里得到
+    console.log("自动执行");
     var html;
     for (var i = 0; i < dataPart.length; i++) {
+        var id = "id" +i;
         var temp = "<tr>\n" +
             "                <td>" + dataPart[i]["className"] + "</td>\n" +
             "                <td>" + dataPart[i]["classNum"] + "</td>\n" +
@@ -11,17 +13,20 @@ function template(dataPart) {
             "                <td>" + dataPart[i]["classPlace"] + "</td>\n" +
             "                <td>" + dataPart[i]["classLength"] + "</td>\n" +
             "                <td>" + dataPart[i]["modelsName"] + "</td>\n" +
+            "                <td>" + "<button class='add  btn btn-primary btn-xs glyphicon glyphicon-plus' id = "+ id+"></button>" + "</td>\n" +
             "            </tr>";
         html += temp;
     }
     return html;
 }
 
+
+
 require(['jquery'], function ($) {
     require(['paginationjs'], function (pagination) {
         $(document).ready(function () {
-            //     console.log(dataPart)
-            $('#page').pagination({
+                        //     console.log(dataPart)
+            $('#page').pagination({ ////////////////////////////////
                 dataSource: function (done) {
                     $.ajax({
                         type: 'GET',
@@ -38,6 +43,7 @@ require(['jquery'], function ($) {
                     // template method of yourself
                     var html = template(data);
                     $(".tbody").empty();
+
                     $(".tbody").append(html);
                 }
             })
@@ -78,6 +84,20 @@ require(['jquery'], function ($) {
                     $(".tbody").append(html);
                 }
             })
+        })
+
+        $("body").on("click", ".add", function(s) {
+            var elem= $(this).parent().parent().children().get(0);
+            var text = elem.innerHTML;
+            console.log(text)
+            var elem =  $("#havenAdd")
+            var strs = "<li type=\"button\" class=\"btn btn-primary have \" style='margin-right: 10px;display: inline-block;'>"+text+"</li>"
+            elem.append(strs)
+        });
+
+        $("body").on("click",".have",function(){
+            $(this).remove();
+
         })
     })
 })

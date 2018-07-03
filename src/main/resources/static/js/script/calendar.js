@@ -2,7 +2,7 @@ require(['jquery'], function ($) {
 
     $(document).ready(function(){
 
-        $.get("/data/Student/select?stuId=2018000001",function(data){
+        $.get("/Student/select",function(data){
 
             var data = JSON.parse(data);
             // console.log(data);
@@ -25,7 +25,7 @@ require(['jquery'], function ($) {
                 for(var j = 0;j<data[i].length;j++){
                     if(data[i][j]!=null){
                         var v = data[i][j].split(",");
-                        var s ="<pre style='background-color: #92f4ee'>" + "课程:"+ v[0] + "</pre>" +"<pre style='background-color: #ffcef9'>" +"教室:"+ v[1] +"</pre>" +"<pre style='background-color: #e0f977'>"+"老师:"+v[2] +"</pre>" ;
+                        var s ="<pre style='background-color: #92f4ee; '>" + "课程:"+ v[0] + "</pre>" +"<pre style='background-color: #ffcef9'>" +"教室:"+ v[1] +"</pre>" +"<pre style='background-color: #e0f977'>"+"老师:"+v[2] +"</pre>" ;
                         console.log(s)
                         strs += "<td>" + s +"</td>";
                     }else{

@@ -8,11 +8,10 @@
 <h1>这是所有的用户</h1>
 <table class="table">
     <tbody>
-    <tr th:each="user: ${users}">
-        <td th:text="${user.userName}"></td>
-        <td th:text="${user.userId}"></td>
-        <td th:text="${user.phone}"></td>
-        <td th:text="${user.password}"></td>
+    <tr >
+        <td th:text="${users.userName}"></td>
+        <td th:text="${users.userId}"></td>
+        <td th:text="${users.password}"></td>
     </tr>
     </tbody>
 </table>

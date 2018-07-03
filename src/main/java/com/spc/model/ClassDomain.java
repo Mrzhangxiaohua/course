@@ -5,10 +5,10 @@ import org.apache.ibatis.type.Alias;
 
 @Alias("ClassDomain")
 public class ClassDomain {
-    private Integer classId;
+    private Integer classId; //学生的学号
     private String className;
-    private Integer classNum;
-    private Integer teaId;
+    private Integer classNum; //课程的班次
+    private Integer teaId; //老师的工号
     private String teaName;
     private Integer classChooseNum;
     private Integer classUpperLimit;

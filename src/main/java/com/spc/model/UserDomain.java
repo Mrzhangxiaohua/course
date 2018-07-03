@@ -2,25 +2,21 @@ package com.spc.model;
 
 import java.lang.Integer;
 import org.apache.ibatis.type.Alias;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Alias("UserDomain") //起别名
 public class UserDomain {
 
-    private Integer userId;
+    private Integer uid;
 
-    private String userName;
+    private String userName; //用户的名称
 
-    private String password;
+    private String password; //用户的密码
 
-    private String phone;
+    private RoleDomain role; //用户的角色
 
-    public Integer getUserId() {
-        return userId;
-    }
+    private Integer num;
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     public String getUserName() {
         return userName;
@@ -31,19 +27,38 @@ public class UserDomain {
     }
 
     public String getPassword() {
-        return password;
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encode = bCryptPasswordEncoder.encode(password);
+        return encode;
     }
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
     }
 
-    public String getPhone() {
-        return phone;
+
+    public RoleDomain getRole() {
+        return role;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
+    public void setRole(RoleDomain role) {
+        this.role = role;
     }
 
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
+    }
 }

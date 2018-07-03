@@ -17,4 +17,12 @@
         </where>
     </select>
 
+    <select id="findNum" resultType="int">
+        select num
+        from User
+        <where>
+            userName = #{name}
+        </where>
+    </select>
+
 </mapper>
