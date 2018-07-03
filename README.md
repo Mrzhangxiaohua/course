@@ -17,4 +17,13 @@
 
 ### Git操作
 
+1. 本地commit（IDEA工具，项目上右键）
+2. 获取master最新代码
+    git fetch origin master
+3. 合并master代码
+    git merge origin/master
+4. 如果有冲突，解决（查看version control，红色的文件）
+    解决冲突后，把红色的文件，右键 - git - add 
+    再次commit
+
 
