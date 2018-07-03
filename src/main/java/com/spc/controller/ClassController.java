@@ -35,6 +35,7 @@ public class ClassController {
             @RequestParam(name = "classname", required = false, defaultValue = "")
                     String classname,
             Model model){
+        PageHelper.startPage(pageNum, pageSize);
         List<ClassDomain> classes = classService.findAllClass(pageNum,pageSize,depart,classname);
         System.out.println(classes.size());
         return classes;
