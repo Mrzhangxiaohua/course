@@ -1,9 +1,9 @@
 package com.spc.service.data;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface DataService {
-     List<HashMap<Integer,String>> getDepart();
+     List<Map<String, String>> getDepart();
 
 }
