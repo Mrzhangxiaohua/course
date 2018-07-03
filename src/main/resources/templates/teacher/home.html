@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>timetable</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/showAll.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-table.css}" rel="stylesheet">
+    <link th:href="@{/css/pagination.css}" rel="stylesheet">
+    <link th:href="@{/css/fullcalendar.css}" rel="stylesheet">
+    <link th:href="@{/css/main1.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<header>
+    <img src="/graph/logo.png" th:attr="src=@{/graph/logo.png}"/>
+    <div class="header-txt">
+        <p class="header-txt-left">
+            <font size="5">研究生选课系统</font>
+            <b>
+                (&nbsp;<span>教师服务</span>&nbsp;)
+            </b>
+        </p>
+    </div>
+</header>
+<div id="wrapper">
+    <nav>
+        <div class="brand">
+            <div id="navbar-menu"></div>
+        </div>
+    </nav>
+    <!-- END NAVBAR -->
+    <!-- LEFT SIDEBAR -->
+    <div id="sidebar-nav" class="sidebar">
+        <div class="sidebar-scroll">
+            <nav>
+                <ul class="nav">
+                    <li><a th:href="@{/admin/home}" class="active"><i class="glyphicon glyphicon-home"></i> <span>主页</span></a></li>
+                    <li><a th:href="@{/admin/department}" class=""><i class="glyphicon glyphicon-leaf"></i> <span>院系管理</span></a></li>
+                    <li><a th:href="@{/admin/profession}" class=""><i class="glyphicon glyphicon-road"></i> <span>专业管理</span></a></li>
+                    <li><a th:href="@{/admin/classes}" class=""><i class="glyphicon glyphicon-book"></i> <span>课程管理</span></a></li>
+                    <li><a th:href="@{/admin/students}" class=""><i class="glyphicon glyphicon-user"></i> <span>学生管理</span></a></li>
+                    <!--<li><a href="notifications.html" class=""><i class="lnr lnr-alarm"></i>-->
+                    <!--<span>Notifications</span></a></li>-->
+                    <!--<li>-->
+                    <!--<a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i>-->
+                    <!--<span>Pages</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>-->
+                    <!--<div id="subPages" class="collapse ">-->
+                    <!--<ul class="nav">-->
+                    <!--<li><a href="page-profile.html" class="">Profile</a></li>-->
+                    <!--<li><a href="page-login.html" class="">Login</a></li>-->
+                    <!--<li><a href="page-lockscreen.html" class="">Lockscreen</a></li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+                    <!--</li>-->
+                    <li><a th:href="@{/admin/teachers}" class=""><i class="glyphicon glyphicon-pencil"></i> <span>教师管理</span></a></li>
+                    <!--<li><a href="typography.html" class=""><i class="lnr lnr-text-format"></i>-->
+                    <!--<span>Typography</span></a></li>-->
+                    <!--<li><a href="icons.html" class=""><i class="lnr lnr-linearicons"></i> <span>Icons</span></a></li>-->
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <article class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+
+            </div>
+        </div>
+    </article>
+
+
+
+
+    <footer>
+        <section  id="footer" >
+            <div class="container"> <!--防止排版错误style="position: absolute;background: #4287ae;bottom: 0px;width: 100%" -->
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                        <p>西安交通大学研究生院 西安市咸宁西路28号</p>
+                        <p class="h6">Copyright &nbsp;&&nbsp;All right Reversed.<a class="text-green ml-2" href="http://labs.xjtudlc.com/labs/cloud.html" target="_blank">税务大数据小组</a></p>
+                    </div>
+                    </hr>
+                </div>
+            </div>
+        </section>
+    </footer>
+
+</div>
+</body>
+
+<script th:src="@{/js/lib/require.js}" th:attr="data-main=@{/js/script/calendar.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    require(['/js/config.js'], function () {
+        require(['/js/script/calendar.js']);
+    });
+</script>
+
+</html>

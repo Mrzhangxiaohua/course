@@ -6,7 +6,7 @@
     departId,departName
   </sql>
 
-    <select id="getDepart" resultType="hashmap">
+    <select id="getDepart" resultType="map">
         select
         departName
         from

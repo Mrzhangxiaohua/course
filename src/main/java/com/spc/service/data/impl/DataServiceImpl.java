@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service(value = "dataService")
 public class DataServiceImpl implements DataService {
@@ -16,7 +17,7 @@ public class DataServiceImpl implements DataService {
     private DataDao dataDao; //会报错 但是并不影响
 
     @Override
-    public List<HashMap<Integer,String>>  getDepart() {
+    public List<Map<String, String>>  getDepart() {
         return dataDao.getDepart();
     }
 }
