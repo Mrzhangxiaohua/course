@@ -25,5 +25,9 @@
 4. 如果有冲突，解决（查看version control，红色的文件）
     解决冲突后，把红色的文件，右键 - git - add 
     再次commit
+5. push
+    git push
+    （如果提示，按照提示操作，如git push --set-upstream origin zhao）
+6. 发送merge请求（在浏览器上提交）
 
 
