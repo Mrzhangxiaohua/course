@@ -41,7 +41,7 @@ public class CourseController {
 
 
 
-        res.put("data", data);
+        res.put("data", classes);
         return res;
     }
 
