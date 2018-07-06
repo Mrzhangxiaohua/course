@@ -43,6 +43,7 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.spc.model #为包下的所有类起别名
+
 mapper:
   mappers:  com.spc.dao
   not-empty: false
@@ -56,3 +57,7 @@ pagehelper:
     params: count=countSql
     returnPageInfo: check
 
+# 打印sql
+logging:
+  level:
+    com.spc: DEBUG

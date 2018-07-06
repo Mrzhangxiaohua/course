@@ -62,8 +62,8 @@ public class StudentController {
     @RequestMapping("/select/grade")
     @ResponseBody
     public List<GradeDomain> selectGrade(
-            @RequestParam(required = false) int stuId,
-            @RequestParam(required = false) int classId){
+            @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
+            @RequestParam(required = false,defaultValue = "88888888") Integer classId){
 
         return gradeService.selectGrade(classId,stuId);
 

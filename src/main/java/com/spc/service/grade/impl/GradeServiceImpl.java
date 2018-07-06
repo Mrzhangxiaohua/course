@@ -19,6 +19,8 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public List<GradeDomain> selectGrade(Integer classId, Integer stuId) {
+        System.out.println(classId);
+        System.out.println(stuId);
         return gradeDao.selectGrade(classId,stuId);
     }
 }

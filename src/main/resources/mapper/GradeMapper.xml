@@ -7,7 +7,7 @@
     </sql>
 
 
-    <select id="selectGrade" resultType="com.spc.model.GradeDomain">
+    <select id="selectGrade" resultType="com.spc.model.GradeDomain" parameterType="int">
         select
         g.classId,g.id,g.score,g.stuId,c.className
         from
@@ -15,10 +15,10 @@
         left join Course c
         on g.classId = c.classId
         <where>
-            <if test="classId != null">
+            <if test="classId!= 88888888">
               and g.classId= #{classId}
             </if>
-            <if test="stuId != null">
+            <if test="stuId!= 88888888 ">
                 and g.stuId= #{stuId}
             </if>
         </where>
