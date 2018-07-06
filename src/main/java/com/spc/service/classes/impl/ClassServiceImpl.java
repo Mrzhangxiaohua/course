@@ -17,8 +17,8 @@ public class ClassServiceImpl implements ClassService {
     private ClassDao classDao;
 
     @Override
-    public int addClass(ClassDomain user) {
-        return classDao.insert(user);
+    public int addClass(ClassDomain classDomain) {
+        return classDao.insert(classDomain);
     }
 
     @Override

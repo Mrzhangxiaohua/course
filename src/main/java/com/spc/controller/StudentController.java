@@ -1,6 +1,8 @@
 package com.spc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spc.model.GradeDomain;
+import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,9 +22,12 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private GradeService gradeService;
 
 
-    @RequestMapping("/select")
+
+    @RequestMapping("/select/classes")
     @ResponseBody
     public String[][] selectClasses(){
 
@@ -52,8 +57,16 @@ public class StudentController {
         return studentService.findClasses(stuId);
     }
 
-//    public int addCourse( @RequestParam(name = "courseLists") List<Integer> courseLists){
-//
-//    }
+
+
+    @RequestMapping("/select/grade")
+    @ResponseBody
+    public List<GradeDomain> selectGrade(
+            @RequestParam(required = false) int stuId,
+            @RequestParam(required = false) int classId){
+
+        return gradeService.selectGrade(classId,stuId);
+
+    }
 
 }

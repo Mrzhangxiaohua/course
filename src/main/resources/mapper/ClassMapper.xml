@@ -8,7 +8,7 @@
 
     <sql id="BASE_COLUMN">
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,modelsName
+        classPlace,classLength,modelsName,teacherInfo,courseInfo
     </sql>
 
     <insert id="insert" parameterType="com.spc.model.ClassDomain">
@@ -20,7 +20,7 @@
         values
         <trim prefix="( " suffix=")">
             #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
-            #{classPlace},#{classLength},#{classModuleNum}
+            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo}
         </trim>
     </insert>
 

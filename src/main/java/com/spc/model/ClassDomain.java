@@ -5,9 +5,14 @@ import org.apache.ibatis.type.Alias;
 
 @Alias("ClassDomain")
 public class ClassDomain {
+    private String teacherInfo;
+    private String courseInfo;
+
     private Integer classId; //学生的学号
     private String className;
+
     private Integer classNum; //课程的班次
+
     private Integer teaId; //老师的工号
     private String teaName;
     private Integer classChooseNum;
@@ -16,6 +21,12 @@ public class ClassDomain {
     private String classPlace;
     private Integer classLength;
     private String modelsName;
+
+    private Integer departId;
+    private Integer classModuleNum;
+    private Integer classSemester;
+
+
 
     public Integer getClassId() {
         return classId;
@@ -111,5 +122,45 @@ public class ClassDomain {
 
     public void setModelsName(String modelsName) {
         this.modelsName = modelsName;
+    }
+
+    public String getCourseInfo() {
+        return courseInfo;
+    }
+
+    public void setCourseInfo(String courseInfo) {
+        this.courseInfo = courseInfo;
+    }
+
+    public Integer getDepartId() {
+        return departId;
+    }
+
+    public void setDepartId(Integer departId) {
+        this.departId = departId;
+    }
+
+    public Integer getClassModuleNum() {
+        return classModuleNum;
+    }
+
+    public void setClassModuleNum(Integer classModuleNum) {
+        this.classModuleNum = classModuleNum;
+    }
+
+    public Integer getClassSemester() {
+        return classSemester;
+    }
+
+    public void setClassSemester(Integer classSemester) {
+        this.classSemester = classSemester;
+    }
+
+    public String getTeacherInfo() {
+        return teacherInfo;
+    }
+
+    public void setTeacherInfo(String teacherInfo) {
+        this.teacherInfo = teacherInfo;
     }
 }

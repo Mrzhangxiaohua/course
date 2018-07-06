@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface ClassService {
 
-    int addClass(ClassDomain user);
+    int addClass(ClassDomain classDomain);
 
     List<ClassDomain> findAllClass(int pageNum, int pageSize,String depart,String className);
 
