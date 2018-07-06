@@ -1,6 +1,7 @@
 package com.spc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
 import com.spc.model.GradeDomain;
 import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
@@ -62,9 +63,12 @@ public class StudentController {
     @RequestMapping("/select/grade")
     @ResponseBody
     public List<GradeDomain> selectGrade(
+            @RequestParam(required = false,defaultValue = "1") Integer pageNum,
+            @RequestParam(required = false,defaultValue = "10") Integer pageSize,
             @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
             @RequestParam(required = false,defaultValue = "88888888") Integer classId){
 
+        PageHelper.startPage(pageNum,pageSize);
         return gradeService.selectGrade(classId,stuId);
 
     }

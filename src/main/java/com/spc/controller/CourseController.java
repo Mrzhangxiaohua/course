@@ -1,5 +1,6 @@
 package com.spc.controller;
 
+import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassDomain;
 import com.spc.service.classes.ClassService;
 import org.json.JSONObject;
@@ -22,12 +23,13 @@ public class CourseController {
     @RequestMapping("/classes")
     @ResponseBody
     public Map<String, Object> selectClassed(
-            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "1") int pageNum,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String depart,
             @RequestParam(required = false, defaultValue = "") String classname,
             Model model) {
-        List<ClassDomain> classes = classService.findAllClass(currentPage, pageSize, depart, classname);
+        PageHelper.startPage(pageNum,pageSize);
+        List<ClassDomain> classes = classService.findAllClass(depart, classname);
 
         Map<String, Object> res = new HashMap<>();
         res.put("status","SUCCESS");
@@ -35,13 +37,9 @@ public class CourseController {
         Map<String, Object> data = new HashMap<>();
         data.put("total", classes.size());
         data.put("pageSize", pageSize);
-        data.put("currentPage", currentPage);
+        data.put("currentPage", pageNum);
 
-        if (currentPage == 1) {
-            data.put("list", classes.subList(0, Math.min(10, classes.size())));
-        } else {
-            data.put("list", classes.subList(10,20));
-        }
+
 
         res.put("data", data);
         return res;

@@ -22,7 +22,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<ClassDomain> findAllClass(int pageNum, int pageSize,String depart,String className) {
+    public List<ClassDomain> findAllClass(String depart,String className) {
 
         return classDao.selectClasses(depart,className);
     }
