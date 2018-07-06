@@ -36,6 +36,7 @@ CREATE TABLE  Course (
   `classModuleNum` INT(11)      NOT NULL,                # 课程所属模块编号
   `departId`       INT(11)      NOT NULL,                # 学院id
   `classSemester`    VARCHAR(200)      NOT NULL,          # 所属学期
+#   `courseInfo`    VARCHAR(200)      NOT NULL,          # 课程信息
   PRIMARY KEY (`classId`)
 )
   ENGINE = InnoDB

@@ -1,8 +1,6 @@
 package com.spc.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spc.model.ClassDomain;
+
 import com.spc.util.RequestPayload;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +8,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.util.HashMap;
-import java.util.Map;
+
 
 @Controller
 public class MainController {
@@ -75,19 +70,19 @@ public class MainController {
     public String test(){
         return "test/form";
     }
-
-    @RequestMapping(value = "/course/add",method = RequestMethod.POST)
-    @ResponseBody
-    public String add(HttpServletRequest request){
-        try {
-            String json = requestPayload.getRequestPayload(request);
-            System.out.println(json);
-            JSONObject obj = new JSONObject(json);
-            String pageName = obj.getString("departId");
-            System.out.println(pageName);
-        }catch (Exception e){
-            System.out.println("error");
-        }
-        return "sfsfs";
-    }
+//
+//    @RequestMapping(value = "/course/add",method = RequestMethod.POST)
+//    @ResponseBody
+//    public String add(HttpServletRequest request){
+//        try {
+//            String json = requestPayload.getRequestPayload(request);
+//            System.out.println(json);
+//            JSONObject obj = new JSONObject(json);
+//            String pageName = obj.getString("teaName");
+//            System.out.println(pageName);
+//        }catch (Exception e){
+//            System.out.println("error");
+//        }
+//        return "sfsfs";
+//    }
 }

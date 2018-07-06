@@ -2,20 +2,20 @@ package com.spc.controller;
 
 import com.spc.model.ClassDomain;
 import com.spc.service.classes.ClassService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+
 @RequestMapping("/select")
-public class ClassController {
+@RestController
+public class CourseController {
     @Autowired
     private ClassService classService;
 
@@ -46,5 +46,6 @@ public class ClassController {
         res.put("data", data);
         return res;
     }
+
 
 }
