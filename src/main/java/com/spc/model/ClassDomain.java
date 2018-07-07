@@ -22,6 +22,7 @@ public class ClassDomain {
     private Integer classLength;
 //    private Integer
 
+    private String modelsName;
     private Integer departId;
     private Integer classModuleNum;
     private Integer classSemester;
@@ -155,5 +156,13 @@ public class ClassDomain {
 
     public void setTeacherInfo(String teacherInfo) {
         this.teacherInfo = teacherInfo;
+    }
+
+    public String getModelsName() {
+        return modelsName;
+    }
+
+    public void setModelsName(String modelsName) {
+        this.modelsName = modelsName;
     }
 }

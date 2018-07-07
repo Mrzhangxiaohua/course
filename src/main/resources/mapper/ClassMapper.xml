@@ -27,14 +27,14 @@
 
     <select id="selectClasses" resultType="com.spc.model.ClassDomain">
         select
-        <include refid="BASE_COLUMN"/>
+        classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
+        classPlace,classLength,classModuleNum,m.modelsName,teacherInfo,courseInfo,a.departId,classSemester
         from
         <include refid="BASE_TABLE"/> a
         left join  Department b
         on a.departId = b.departId
         left join  models m
         on a.classModuleNum = m.modelsId
-
         <where>
           <if test="depart!=null and depart!='' ">
               b.departName = #{depart}

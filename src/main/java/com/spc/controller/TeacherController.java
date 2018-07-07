@@ -53,6 +53,7 @@ public class TeacherController {
             classDomain.setDepartId(obj.getInt("departId"));
             classDomain.setClassModuleNum(obj.getInt("classModuleNum"));
             classDomain.setClassSemester(obj.getInt("classSemester"));
+            classDomain.setModelsName(" ");
 
             try{
                 classService.addClass(classDomain);
