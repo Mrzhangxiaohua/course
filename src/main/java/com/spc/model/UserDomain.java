@@ -15,7 +15,7 @@ public class UserDomain {
 
     private RoleDomain role; //用户的角色
 
-    private Integer num;
+    private Integer stuId;
 
 
     public String getUserName() {
@@ -54,11 +54,12 @@ public class UserDomain {
     }
 
 
-    public Integer getNum() {
-        return num;
+
+    public Integer getStuId() {
+        return stuId;
     }
 
-    public void setNum(Integer num) {
-        this.num = num;
+    public void setStuId(Integer stuId) {
+        this.stuId = stuId;
     }
 }

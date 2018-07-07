@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface UserService {
 
-    boolean addUser(HttpServletRequest request);
+    boolean addUser(UserDomain user,int role);
 
     UserDomain findUsersByName(String name);
 

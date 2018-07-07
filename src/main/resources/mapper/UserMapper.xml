@@ -7,7 +7,7 @@
     <id property="uid" column="uid"/>
     <result property="userName" column="userName"/>
     <result property="password" column="password"/>
-    <result property="number" column="number"/>
+    <result property="stuId" column="stuId"/>
     <association property="role"  column="uid" select="selectRole"/>
   </resultMap>
 
