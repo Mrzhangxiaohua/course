@@ -20,7 +20,7 @@ public class ClassDomain {
     private String classDateDescription;
     private String classPlace;
     private Integer classLength;
-    private String modelsName;
+//    private Integer
 
     private Integer departId;
     private Integer classModuleNum;
@@ -116,13 +116,6 @@ public class ClassDomain {
 //        this.classModuleNum = classModuleNum;
 //    }
 
-    public String getModelsName() {
-        return modelsName;
-    }
-
-    public void setModelsName(String modelsName) {
-        this.modelsName = modelsName;
-    }
 
     public String getCourseInfo() {
         return courseInfo;

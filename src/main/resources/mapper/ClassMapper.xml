@@ -8,19 +8,19 @@
 
     <sql id="BASE_COLUMN">
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,modelsName,teacherInfo,courseInfo
+        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,departId,classSemester
     </sql>
 
     <insert id="insert" parameterType="com.spc.model.ClassDomain">
         insert into
         <include refid="BASE_TABLE"/>
-        <trim suffix=" (" prefix=") ">
+        <trim prefix=" (" suffix=" )">
             <include refid="BASE_COLUMN"/>
         </trim>
         values
-        <trim prefix="( " suffix=")">
+        <trim prefix="( " suffix=" )">
             #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
-            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo}
+            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester}
         </trim>
     </insert>
 

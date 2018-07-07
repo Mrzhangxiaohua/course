@@ -38,9 +38,6 @@ public class CourseController {
         data.put("total", classes.size());
         data.put("pageSize", pageSize);
         data.put("currentPage", pageNum);
-
-
-
         res.put("data", classes);
         return res;
     }
