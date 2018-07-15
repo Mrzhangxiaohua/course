@@ -32,8 +32,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
-
     @ResponseBody
     @PostMapping(value = "/add")
     public boolean addUser(HttpServletRequest request) {
@@ -44,13 +42,16 @@ public class UserController {
 
             UserDomain userDomain= new UserDomain();
 
-            userDomain.setStuId(obj.getInt("stuId"));
-            userDomain.setPassword(obj.getString("password"));
-            userDomain.setUserName(obj.getString("userName"));
+            JSONObject sts = obj.getJSONObject("params").getJSONObject("values");
+
+            userDomain.setStuId(sts.getInt("stuId"));
+            userDomain.setPassword(sts.getString("password"));
+            userDomain.setUserName(sts.getString("userName"));
             userDomain.setRole(null);
 
-            Integer roleId = obj.getInt("roleId");
+            Integer roleId = sts.getInt("roleId");
 
+            //多表关联插入
             return userService.addUser(userDomain,roleId);
         } catch (JSONException e) {
             e.printStackTrace();

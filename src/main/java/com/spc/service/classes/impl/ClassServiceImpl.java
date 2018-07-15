@@ -22,8 +22,8 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<ClassDomain> findAllClass(String depart,String className) {
+    public List<ClassDomain> findAllClass(String depart,String className,int teaId) {
 
-        return classDao.selectClasses(depart,className);
+        return classDao.selectClasses(depart,className,teaId);
     }
 }

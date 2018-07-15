@@ -23,4 +23,11 @@ public class GradeServiceImpl implements GradeService {
         System.out.println(stuId);
         return gradeDao.selectGrade(classId,stuId);
     }
+
+    @Override
+    public int addScore(int classId, int stuId,int score) {
+        return gradeDao.addScore(stuId,classId,score);
+    }
+
+
 }

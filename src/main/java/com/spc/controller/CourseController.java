@@ -28,9 +28,10 @@ public class CourseController {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String depart,
             @RequestParam(required = false, defaultValue = "") String classname,
+            @RequestParam(required = false, defaultValue = "88888888") int teaId,
             Model model) {
         PageHelper.startPage(currentPage,pageSize);
-        List<ClassDomain> classes = classService.findAllClass(depart, classname);
+        List<ClassDomain> classes = classService.findAllClass(depart, classname , teaId);
 
         Map<String, Object> res = new HashMap<>();
         res.put("status","SUCCESS");

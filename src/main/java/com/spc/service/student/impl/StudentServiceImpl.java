@@ -38,4 +38,9 @@ public class StudentServiceImpl  implements StudentService {
         return studentDao.findNum(name);
     }
 
+    @Override
+    public int addCourse(int stuId, int classId) {
+        return studentDao.addChooseCourse(stuId,classId);
+    }
+
 }

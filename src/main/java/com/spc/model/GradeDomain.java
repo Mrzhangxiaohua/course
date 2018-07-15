@@ -1,19 +1,13 @@
 package com.spc.model;
 
 public class GradeDomain {
-    private Integer id;
+    private Integer chooseId;
     private Integer stuId;
     private String className;
     private Integer classId;
     private Integer score;
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Integer getStuId() {
         return stuId;
@@ -23,15 +17,6 @@ public class GradeDomain {
         this.stuId = stuId;
     }
 
-
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
 
     public String getClassName() {
         return className;
@@ -48,4 +33,22 @@ public class GradeDomain {
     public void setClassId(Integer classId) {
         this.classId = classId;
     }
+
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public Integer getChooseId() {
+        return chooseId;
+    }
+
+    public void setChooseId(Integer chooseId) {
+        this.chooseId = chooseId;
+    }
 }
+

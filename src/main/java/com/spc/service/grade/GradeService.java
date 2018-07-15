@@ -9,5 +9,6 @@ import java.util.List;
 public interface GradeService {
     public int insert(GradeDomain gradeDomain);
     public List<GradeDomain> selectGrade (Integer classId, Integer stuId);
+    public int addScore(int classId,int stuId,int score);
 
 }

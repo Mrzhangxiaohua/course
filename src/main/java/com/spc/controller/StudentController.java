@@ -1,23 +1,20 @@
 package com.spc.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.spc.model.GradeDomain;
 import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
+import com.spc.util.AuthMess;
+import com.spc.util.RequestPayload;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Student")
+@RequestMapping("/student")
 public class StudentController {
 
     @Autowired
@@ -26,6 +23,11 @@ public class StudentController {
     @Autowired
     private GradeService gradeService;
 
+    @Autowired
+    private RequestPayload requestPayload;
+
+    @Autowired
+    private AuthMess authMess;
 
 
     @RequestMapping("/select/classes")
@@ -58,7 +60,29 @@ public class StudentController {
         return studentService.findClasses(stuId);
     }
 
+    @RequestMapping(value = "/choose/course",method = RequestMethod.POST)
+    @ResponseBody
+    public int chooseCourse(HttpServletRequest request){
+        String json = requestPayload.getRequestPayload(request);
+        System.out.printf("添加课程的json = %s",json);
 
+        try {
+            JSONObject obj = new JSONObject(json);
+
+            Integer classId = obj.getInt("classId");
+
+            int stuId =authMess.UserId();
+
+            return studentService.addCourse(stuId,classId);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
 
     @RequestMapping("/select/grade")
     @ResponseBody

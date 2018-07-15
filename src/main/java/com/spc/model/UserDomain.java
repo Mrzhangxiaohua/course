@@ -53,8 +53,6 @@ public class UserDomain {
         this.uid = uid;
     }
 
-
-
     public Integer getStuId() {
         return stuId;
     }
