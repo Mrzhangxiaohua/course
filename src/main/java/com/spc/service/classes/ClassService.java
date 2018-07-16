@@ -11,6 +11,8 @@ public interface ClassService {
 
     int addClass(ClassDomain classDomain);
 
-    List<ClassDomain> findAllClass(String depart,String className,int teaId);
+    List<ClassDomain> findAllClass(Integer departId,String className,int teaId);
+
+    List findStudent(String className, int classId);
 
 }

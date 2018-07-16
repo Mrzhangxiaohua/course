@@ -9,6 +9,6 @@ public interface ClassDao {
 
     int insert(ClassDomain record);
 
-    List<ClassDomain> selectClasses(@Param("depart") String depart, @Param("className") String className,
+    List<ClassDomain> selectClasses(@Param("departId") Integer departId, @Param("className") String className,
     @Param("teaId") int teaId);
 }

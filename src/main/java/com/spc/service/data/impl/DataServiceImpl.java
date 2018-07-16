@@ -17,7 +17,7 @@ public class DataServiceImpl implements DataService {
     private DataDao dataDao; //会报错 但是并不影响
 
     @Override
-    public List<Map<String, String>>  getDepart() {
+    public List<Map<String, Object>>  getDepart() {
         return dataDao.getDepart();
     }
 }

@@ -18,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     @Bean
     UserDetailsService customUserService(){ //注册UserDetailsService 的bean
         return new CustomUserService();

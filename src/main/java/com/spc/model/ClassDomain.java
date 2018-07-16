@@ -5,6 +5,7 @@ import org.apache.ibatis.type.Alias;
 
 @Alias("ClassDomain")
 public class ClassDomain {
+
     private String teacherInfo;
     private String courseInfo;
 

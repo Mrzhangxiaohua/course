@@ -26,12 +26,12 @@ public class CourseController {
     public Map<String, Object> selectClassed(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false, defaultValue = "") String depart,
+            @RequestParam(required = false, defaultValue = "88888888") int departId,
             @RequestParam(required = false, defaultValue = "") String classname,
             @RequestParam(required = false, defaultValue = "88888888") int teaId,
             Model model) {
         PageHelper.startPage(currentPage,pageSize);
-        List<ClassDomain> classes = classService.findAllClass(depart, classname , teaId);
+        List<ClassDomain> classes = classService.findAllClass(departId, classname , teaId);
 
         Map<String, Object> res = new HashMap<>();
         res.put("status","SUCCESS");

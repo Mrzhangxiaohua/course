@@ -19,7 +19,7 @@ public class MyData {
 
     @RequestMapping("/getDepart")
     @ResponseBody
-    public List<Map<String, String>> getDepart(){
+    public List<Map<String, Object>> getDepart(){
         return dataService.getDepart();
     }
 }

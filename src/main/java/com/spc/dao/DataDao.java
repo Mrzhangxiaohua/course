@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface DataDao {
 
-    List<Map<String, String>>  getDepart();
+    List<Map<String, Object>>  getDepart();
 }

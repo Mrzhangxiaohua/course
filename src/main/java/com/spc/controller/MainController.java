@@ -25,11 +25,11 @@ public class MainController {
         String authName = authentication.getAuthorities().toArray()[0].toString();
         if (authName.equals("教师")){
             System.out.println("run here teacher");
-            return "manager/home";
-        }else if(authName.equals("学生")){
-            return "index";
-        }else{
             return "teacher/index";
+        }else if(authName.equals("学生")){
+            return "student/index";
+        }else{
+            return "manage/index";
         }
     }
 
@@ -55,10 +55,11 @@ public class MainController {
 
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if (auth != null) {
+//            new SecurityContextLogoutHandler().logout(request, response, auth);
+//        }
+        System.out.println("run login");
         return "login";
     }
 
@@ -67,19 +68,5 @@ public class MainController {
     public String test(){
         return "test/form";
     }
-//
-//    @RequestMapping(value = "/course/add",method = RequestMethod.POST)
-//    @ResponseBody
-//    public String add(HttpServletRequest request){
-//        try {
-//            String json = requestPayload.getRequestPayload(request);
-//            System.out.println(json);
-//            JSONObject obj = new JSONObject(json);
-//            String pageName = obj.getString("teaName");
-//            System.out.println(pageName);
-//        }catch (Exception e){
-//            System.out.println("error");
-//        }
-//        return "sfsfs";
-//    }
+
 }

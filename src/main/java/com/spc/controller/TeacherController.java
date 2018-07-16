@@ -1,5 +1,7 @@
 package com.spc.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.classes.ClassService;
@@ -11,11 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.spc.util.RequestPayload;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/teacher")
 @Controller
@@ -31,7 +36,6 @@ public class TeacherController {
 
     @Autowired
     AuthMess authMess;
-
 
     @RequestMapping(value ="/grade/add" ,method = RequestMethod.POST)
     @ResponseBody
@@ -54,18 +58,46 @@ public class TeacherController {
 
     @RequestMapping("teach/course")
     @ResponseBody
-    public List<String> getTeachCourse(){
+    public List<Map> getTeachCourse(){
         Integer teacherId = authMess.teacherId();
 
-        List<ClassDomain> classes =classService.findAllClass("","",teacherId);
+        List<ClassDomain> classes =classService.findAllClass(88888888,"",teacherId);
 
-        List<String> names = new ArrayList<String>();
+        List<Map> resList = new ArrayList<Map>();
 
         for(int i=0;i<classes.size();i++){
-            names.add(classes.get(i).getClassName());
+            Map<String, Object> res = new HashMap<>();
+            res.put("className",classes.get(i).getClassName());
+            res.put("classId",classes.get(i).getClassId());
+            resList.add(res);
         }
-        return names;
+        return resList;
     }
+
+    @RequestMapping("/find/student")
+    @ResponseBody
+    public Map<String, Object>  getStudent(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false,defaultValue = "") String className,
+            @RequestParam(required = false,defaultValue = "88888888") Integer classId){
+        PageHelper.startPage(currentPage,pageSize);
+
+        List students = classService.findStudent(className,classId);
+        System.out.printf("find student result:%s",students);
+        Map<String, Object> res = new HashMap<>();
+        res.put("status","SUCCESS");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", ((Page)students).getTotal());
+        System.out.printf("total = %s\n",((Page)students).getTotal());
+        data.put("pageSize", pageSize);
+        data.put("currentPage", currentPage);
+        data.put("list", students);
+        res.put("data", data);
+        return res;
+    }
+
 
     @RequestMapping(value = "/course/add",method = RequestMethod.POST)
     @ResponseBody
@@ -78,7 +110,7 @@ public class TeacherController {
             ClassDomain classDomain = new ClassDomain();
             classDomain.setTeacherInfo(obj.getString("teacherInfo"));
             classDomain.setCourseInfo(obj.getString("courseInfo"));
-            classDomain.setClassId(obj.getInt("classId"));
+//            classDomain.setClassId(obj.getInt("classId"));
             classDomain.setTeaName(obj.getString("teaName"));
             classDomain.setTeaId(obj.getInt("teaId"));
             classDomain.setClassUpperLimit(obj.getInt("classUpperLimit"));
