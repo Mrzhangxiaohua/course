@@ -34,8 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //那些资源需要拦截
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-//                .anyRequest().authenticated() //任何请求,登录后可以访问
-                .antMatchers("/nothing").authenticated()
+                .anyRequest().authenticated() //任何请求,登录后可以访问
+//                .antMatchers("/nothing").authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")//登录的默认界面

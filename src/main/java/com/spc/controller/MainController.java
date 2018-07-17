@@ -47,6 +47,8 @@ public class MainController {
     public String teacherForms(){
         return "teacher_forms";
     }
+
+
     @RequestMapping("/login")
     public String login(){
         System.out.println("login here");

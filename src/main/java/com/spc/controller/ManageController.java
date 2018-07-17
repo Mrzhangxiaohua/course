@@ -1,25 +1,18 @@
 package com.spc.controller;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+
 import com.spc.model.ClassDomain;
-import com.spc.model.GradeDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.student.StudentService;
 import com.spc.view.ManageTablePdfView;
-import com.spc.view.StudentScorePdfView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
