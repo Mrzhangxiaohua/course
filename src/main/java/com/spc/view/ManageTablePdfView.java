@@ -9,18 +9,14 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.spc.model.GradeDomain;
-import com.spc.util.AuthMess;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
-public class MyScorePdfView extends AbstractPdfView {
-
+public class ManageTablePdfView extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model,
@@ -28,16 +24,14 @@ public class MyScorePdfView extends AbstractPdfView {
                                     HttpServletResponse response) throws Exception {
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
-        String userId = (String) map.get("stuId");
-        String userName = (String) map.get("stuName");
+        List<Map> students = (List<Map>) map.get("students");
 
-        List<GradeDomain> scores = (List<GradeDomain>) map.get("scores");
+        System.out.println(students);
 
-
-        PdfPTable table = new PdfPTable(4);
+        PdfPTable table = new PdfPTable(6);
 
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{2, 2, 2, 2});
+        table.setWidths(new int[]{2,2, 2, 2, 2, 2});
 
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -48,68 +42,72 @@ public class MyScorePdfView extends AbstractPdfView {
 
         PdfPCell hcell;
 
-        hcell = new PdfPCell(new Phrase("成绩单", headFont));
-        hcell.setFixedHeight(20f);
-        hcell.setColspan(4);
+
+        hcell = new PdfPCell(new Phrase("姓名", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
         table.addCell(hcell);
 
-        hcell = new PdfPCell(new Phrase("学号:" + userId, headFont));
-        hcell.setFixedHeight(20f);
-        hcell.setColspan(2);
+        hcell = new PdfPCell(new Phrase("学号", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
         table.addCell(hcell);
 
-        hcell = new PdfPCell(new Phrase("姓名:" + userName, headFont));
-        hcell.setFixedHeight(20f);
-        hcell.setColspan(2);
+        hcell = new PdfPCell(new Phrase("所属学院", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
         table.addCell(hcell);
 
-        hcell = new PdfPCell(new Phrase("课程名称", headFont));
-        hcell.setFixedHeight(20f);
+        hcell = new PdfPCell(new Phrase("所属专业", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
         table.addCell(hcell);
 
-        hcell = new PdfPCell(new Phrase("课程学分", headFont));
-        hcell.setFixedHeight(20f);
+        hcell = new PdfPCell(new Phrase("导师", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(hcell);
-
-        hcell = new PdfPCell(new Phrase("选修学期", headFont));
         hcell.setFixedHeight(20f);
-        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(hcell);
 
         hcell = new PdfPCell(new Phrase("成绩", headFont));
-        hcell.setFixedHeight(20f);
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
         table.addCell(hcell);
 
+        System.out.println(students);
+        for (int i = 0; i < students.size(); i = i + 1) {
 
-        for (int i = 0; i < scores.size(); i++) {
-            GradeDomain gradeDomain = scores.get(i);
-//            System.out.println(t);
+            Map<String,Object> t = students.get(i);
             PdfPCell cell;
+//            System.out.println(t.get("teaName"));
 
-            cell = new PdfPCell(new Phrase(gradeDomain.getClassName(), textFont));
+            cell = new PdfPCell(new Phrase((String) t.get("stuName"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase(Integer.toString(gradeDomain.getClassGradePoint()), textFont));
+            cell = new PdfPCell(new Phrase(Integer.toString((Integer) t.get("stuId")), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase(gradeDomain.getClassSemester(), textFont));
+            cell = new PdfPCell(new Phrase((String) t.get("departName"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase(Integer.toString(gradeDomain.getScore()), textFont));
+            cell = new PdfPCell(new Phrase(" ", textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
+            cell = new PdfPCell(new Phrase(" ", textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase(Integer.toString((Integer) t.get("score")), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cell);
         }
+
         document.add(table);
     }
 }

@@ -6,8 +6,8 @@ import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
 import com.spc.util.AuthMess;
 import com.spc.util.RequestPayload;
-import com.spc.view.MyScorePdfView;
-import com.spc.view.MyTablePdfView;
+import com.spc.view.StudentScorePdfView;
+import com.spc.view.StudentTablePdfView;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -114,13 +114,12 @@ public class StudentController {
         int teaId = authMess.userId();
 
         String[][] tables = studentService.findClasses(teaId);
-
         Map res = new HashMap();
 
         res.put("tables", tables);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
-        return new ModelAndView(new MyTablePdfView(), model);
+        return new ModelAndView(new StudentTablePdfView(), model);
     };
 
     @RequestMapping("/download/score")
@@ -139,7 +138,7 @@ public class StudentController {
         res.put("stuName",authMess.userName());
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
-        return new ModelAndView(new MyScorePdfView(), model);
+        return new ModelAndView(new StudentScorePdfView(), model);
     }
 
 

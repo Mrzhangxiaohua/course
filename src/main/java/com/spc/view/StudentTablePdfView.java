@@ -15,7 +15,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MyTablePdfView extends AbstractPdfView {
+public class StudentTablePdfView extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model,
