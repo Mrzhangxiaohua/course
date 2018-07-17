@@ -36,11 +36,14 @@
         left join  models m
         on a.classModuleNum = m.modelsId
         <where>
-          <if test="depart!=null and depart!='' ">
-              b.departName = #{depart}
+          <if test="departId!=88888888 ">
+              b.departId = #{departId}
           </if>
           <if test="className!=null and className!='' ">
               and a.className like  "%"#{className}"%"
+          </if>
+          <if test="teaId!=88888888">
+              and a.teaId = #{teaId}
           </if>
         </where>
     </select>

@@ -25,4 +25,22 @@
         </where>
     </select>
 
+    <select id="findStudent" resultType="hashmap">
+        select
+        a.stuId,b.stuName,a.score,c.className
+        from Course_choose a
+        left join course.Student b
+        on a.stuId = b.stuId
+        left join course.Course c
+        on a.classId = c.classId
+        <where>
+            <if test="classId!=88888888">
+                a.classId = #{classId}
+            </if>
+            <if test="className !=null and className!=''">
+                and a.className = #{className}
+            </if>
+        </where>
+    </select>
+
 </mapper>
