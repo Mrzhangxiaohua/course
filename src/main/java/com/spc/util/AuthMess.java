@@ -7,19 +7,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @Configuration
 public class AuthMess {
 
-    private Authentication authentication;
+//    private Authentication authentication;
 
-    public AuthMess(){
-        authentication= SecurityContextHolder.getContext().getAuthentication();
-    }
+//    public AuthMess(){
+//        authentication= SecurityContextHolder.getContext().getAuthentication();
+//    }
 
-    public int UserId(){
+    public int userId(){
         return 2018000001;
 //        return authentication.getAuthorities().toArray()[0];
     }
 
     public int teacherId(){
         return 2018124001;
+    }
+
+    public String userName(){
+        return "于";
     }
 
 

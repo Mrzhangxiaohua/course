@@ -13,6 +13,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.AbstractView;
 
 public abstract class AbstractPdfView extends AbstractView {

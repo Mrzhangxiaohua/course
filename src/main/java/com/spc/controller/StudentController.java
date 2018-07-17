@@ -77,7 +77,7 @@ public class StudentController {
 
             Integer classId = obj.getInt("classId");
 
-            int stuId =authMess.UserId();
+            int stuId =authMess.userId();
 
             return studentService.addCourse(stuId,classId);
 
@@ -111,7 +111,7 @@ public class StudentController {
     @RequestMapping("/download/table")
     public ModelAndView downloadCourseTable(HttpServletResponse response) {
 
-        int teaId = authMess.UserId();
+        int teaId = authMess.userId();
 
         String[][] tables = studentService.findClasses(teaId);
 
@@ -127,11 +127,16 @@ public class StudentController {
     public ModelAndView downloadScore(HttpServletResponse response,
                               @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
                               @RequestParam(required = false,defaultValue = "88888888") Integer classId) {
-        stuId = authMess.UserId();
-        List scores = gradeService.selectGrade(classId,stuId);
+        stuId = authMess.userId();
+        stuId = 2018000006;
+
+        List<GradeDomain> scores = gradeService.selectGrade(classId,stuId);
+        System.out.println("tun here");
         Map res = new HashMap();
 
         res.put("scores", scores);
+        res.put("stuId",Integer.toString(stuId));
+        res.put("stuName",authMess.userName());
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         return new ModelAndView(new MyScorePdfView(), model);

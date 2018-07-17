@@ -7,6 +7,7 @@ public class GradeDomain {
     private Integer classId;
     private Integer score;
     private String classSemester;
+    private Integer classGradePoint;
 
 
 
@@ -58,6 +59,14 @@ public class GradeDomain {
 
     public void setClassSemester(String classSemester) {
         this.classSemester = classSemester;
+    }
+
+    public Integer getClassGradePoint() {
+        return classGradePoint;
+    }
+
+    public void setClassGradePoint(Integer classGradePoint) {
+        this.classGradePoint = classGradePoint;
     }
 }
 
