@@ -26,7 +26,7 @@
     </select>
 
     <select id="findStudent" resultType="hashmap">
-        select
+        select DISTINCT
         a.stuId,b.stuName,a.score,c.className,d.departName,c.teaName
         from Course_choose a
         left join course.Student b

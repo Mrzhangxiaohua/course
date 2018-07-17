@@ -1,5 +1,7 @@
 package com.spc.controller;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.classes.ClassService;
@@ -7,13 +9,17 @@ import com.spc.service.student.StudentService;
 import com.spc.view.ManageTablePdfView;
 import com.spc.view.StudentScorePdfView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +35,7 @@ public class ManageController {
 
     @Autowired
     private ClassService classService;
+
 
 
 
@@ -56,17 +63,14 @@ public class ManageController {
         return resList;
     }
 
-
-
     @RequestMapping("/download/table")
     public ModelAndView downloadTable(HttpServletResponse response,
                                       @RequestParam(required = false,defaultValue = "") String className,
-                                      @RequestParam(required = false,defaultValue = "88888888") Integer classId){
-
-
+                                      @RequestParam(required = false,defaultValue = "88888888") Integer classId
+                                     ){
+        System.out.printf("classId %d",classId);
         List students = classService.findStudent(className,classId);
-        Map res = new HashMap();
-        System.out.println("run here");
+        Map<String,Object> res = new HashMap<String, Object>();
 
         res.put("students", students);
         Map<String, Object> model = new HashMap<>();
