@@ -58,5 +58,15 @@
             teaId = #{teaId}
         </where>
     </select>
+    
+    <update id="updateScore">
+        UPDATE Course_choose c
+        INNER JOIN Course a
+        ON c.classId = a.classId
+        SET c.score = #{score}
+        WHERE a.className = #{className}
+        and c.stuId = #{stuId}
+
+    </update>
 
 </mapper>
