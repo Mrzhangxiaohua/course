@@ -17,8 +17,10 @@ public class ManageController {
     @RequestMapping("/select/classes")
     @ResponseBody
     public String[][] manageFindClasses(
-            @RequestParam(required = false,defaultValue = "88888888") Integer stuId
+            @RequestParam(required = false, defaultValue = "88888888") Integer stuId
         ){
-        return studentService.findClasses(stuId);
+        String[][] res = studentService.findClasses(stuId);
+        System.out.println(res);
+        return res;
     }
 }

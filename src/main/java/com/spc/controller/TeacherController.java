@@ -2,21 +2,28 @@ package com.spc.controller;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+
 import com.spc.model.ClassDomain;
-import com.spc.model.GradeDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
 import com.spc.util.AuthMess;
-import org.apache.ibatis.annotations.Param;
+
+import com.spc.view.MyPdfView;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.spc.util.RequestPayload;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +44,11 @@ public class TeacherController {
     @Autowired
     AuthMess authMess;
 
+    /**
+     * 教师端：录入分数
+     * @param request
+     * @return
+     */
     @RequestMapping(value ="/grade/add" ,method = RequestMethod.POST)
     @ResponseBody
     public int addGrade(HttpServletRequest request){
@@ -56,6 +68,10 @@ public class TeacherController {
         return 0;
     }
 
+    /**
+     * 教师端：根据老师teaId 查询所教的课程
+     * @return
+     */
     @RequestMapping("teach/course")
     @ResponseBody
     public List<Map> getTeachCourse(){
@@ -74,6 +90,14 @@ public class TeacherController {
         return resList;
     }
 
+    /**
+     * 教师端：根据课程信息查询选课的学生
+     * @param currentPage
+     * @param pageSize
+     * @param className 课程名称
+     * @param classId 课程id
+     * @return
+     */
     @RequestMapping("/find/student")
     @ResponseBody
     public Map<String, Object>  getStudent(
@@ -98,10 +122,25 @@ public class TeacherController {
         return res;
     }
 
+    /**
+     * 教师端：查询老师课表
+     * @return 返回的是课表信息的多维数组
+     */
+    @RequestMapping(value = "/course/table")
+    @ResponseBody
+    public String[][]  findCourseTable(){
+        int teaId = authMess.teacherId();
+        return classService.findCourseTable(teaId);
+    }
 
+    /**
+     * 教师端：添加课程
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/course/add",method = RequestMethod.POST)
     @ResponseBody
-    public String addCourse(HttpServletRequest request){
+    public int addCourse(HttpServletRequest request){
         try {
             String json = requestPayload.getRequestPayload(request);
             System.out.println(json);
@@ -140,6 +179,43 @@ public class TeacherController {
         }catch (Exception e){
             System.out.println(e);
         }
-        return "";
+        return 0;
+    }
+
+    /**
+     * 教师端 更新分数
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/update/score",method = RequestMethod.POST)
+    @ResponseBody
+    public int updateScore(HttpServletRequest request){
+        String json = requestPayload.getRequestPayload(request);
+        System.out.println(json);
+
+        try {
+            JSONObject obj = new JSONObject(json);
+            String className = obj.getString("className");
+            int stuId = obj.getInt("stuId");
+            int score = obj.getInt("score");
+            return classService.updateScore(className,stuId,score);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @RequestMapping("/download/courseTable")
+    public ModelAndView  downloadCourseTable(HttpServletResponse response){
+        int teaId = authMess.teacherId();
+        String[][] tables = classService.findCourseTable(teaId);
+
+        Map res = new HashMap();
+
+        res.put("tables", tables);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res",res);
+
+        return new ModelAndView(new MyPdfView(), model);
     }
 }

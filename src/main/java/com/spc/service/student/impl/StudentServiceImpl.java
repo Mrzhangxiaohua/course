@@ -26,7 +26,7 @@ public class StudentServiceImpl  implements StudentService {
             Integer r = ints[0].toCharArray()[0]- '0';
             Integer l = ints[1].toCharArray()[0]- '0';
 
-            System.out.println(li.get("className"));
+//            System.out.println(li.get("className"));
             String context = li.get("className") + ','+classPlace + ',' + teaName;
             temp[(r-1) *2][l-1] =context;
             temp[(r-1) *2 +1][l-1] =context;

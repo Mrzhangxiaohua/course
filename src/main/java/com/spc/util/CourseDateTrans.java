@@ -1,5 +1,9 @@
 package com.spc.util;
 
+import org.springframework.context.annotation.Configuration;
+
+
+@Configuration
 public class CourseDateTrans{
 
     public StringBuilder dateToString(Integer a ,Integer b){
@@ -55,5 +59,6 @@ public class CourseDateTrans{
         };
         return strs;
     }
+
 
 }

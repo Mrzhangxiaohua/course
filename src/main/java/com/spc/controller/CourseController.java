@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassDomain;
 import com.spc.service.classes.ClassService;
+import com.spc.util.CourseDateTrans;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -21,6 +22,19 @@ public class CourseController {
     @Autowired
     private ClassService classService;
 
+    @Autowired
+    private CourseDateTrans courseDateTrans;
+
+    /**
+     * 根据院系以及课程名称，老师名称查询课程
+     * @param currentPage
+     * @param pageSize
+     * @param departId
+     * @param classname
+     * @param teaId
+     * @param model
+     * @return
+     */
     @RequestMapping("/classes")
     @ResponseBody
     public Map<String, Object> selectClassed(
@@ -33,6 +47,12 @@ public class CourseController {
         PageHelper.startPage(currentPage,pageSize);
         List<ClassDomain> classes = classService.findAllClass(departId, classname , teaId);
 
+        for(ClassDomain l:classes){
+            String[] d = l.getClassDateDescription().split(":");
+            int a = Integer.parseInt(d[0]);
+            int b = Integer.parseInt(d[1]);
+            l.setClassDateDescription(new String(courseDateTrans.dateToString(a,b)));
+        }
         Map<String, Object> res = new HashMap<>();
         res.put("status","SUCCESS");
 

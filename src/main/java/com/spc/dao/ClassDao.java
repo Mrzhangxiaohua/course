@@ -3,6 +3,7 @@ package com.spc.dao;
 import com.spc.model.ClassDomain;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface ClassDao {
@@ -11,4 +12,9 @@ public interface ClassDao {
 
     List<ClassDomain> selectClasses(@Param("departId") Integer departId, @Param("className") String className,
     @Param("teaId") int teaId);
+
+    int updateScore(@Param("className") String className, @Param("stuId") int stuId,
+                    @Param("score") int score);
+
+    List<HashMap<String,String>> findCourseTable(@Param("teaId") Integer teaId);
 }

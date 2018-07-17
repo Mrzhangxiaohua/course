@@ -15,4 +15,8 @@ public interface ClassService {
 
     List findStudent(String className, int classId);
 
+    int updateScore(String className,int stuId,int score);
+
+    String[][] findCourseTable(int teaId);
+
 }

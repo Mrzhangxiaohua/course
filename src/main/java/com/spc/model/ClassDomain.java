@@ -28,8 +28,6 @@ public class ClassDomain {
     private Integer classModuleNum;
     private Integer classSemester;
 
-
-
     public Integer getClassId() {
         return classId;
     }
@@ -87,6 +85,7 @@ public class ClassDomain {
     }
 
     public String getClassDateDescription() {
+
         return classDateDescription;
     }
 
