@@ -8,7 +8,7 @@
 
     <select id="getDepart" resultType="map">
         select
-        departName
+        departName,departId
         from
         Department
     </select>

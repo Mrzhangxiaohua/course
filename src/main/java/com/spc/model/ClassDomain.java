@@ -9,7 +9,7 @@ public class ClassDomain {
     private String teacherInfo;
     private String courseInfo;
 
-    private Integer classId; //学生的学号
+    private Integer classId; //课程编号
     private String className;
 
     private Integer classNum; //课程的班次
@@ -27,6 +27,7 @@ public class ClassDomain {
     private Integer departId;
     private Integer classModuleNum;
     private Integer classSemester;
+    private Integer classGradePoint;
 
     public Integer getClassId() {
         return classId;
@@ -164,5 +165,13 @@ public class ClassDomain {
 
     public void setModelsName(String modelsName) {
         this.modelsName = modelsName;
+    }
+
+    public Integer getClassGradePoint() {
+        return classGradePoint;
+    }
+
+    public void setClassGradePoint(Integer classGradePoint) {
+        this.classGradePoint = classGradePoint;
     }
 }

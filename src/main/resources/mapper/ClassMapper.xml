@@ -8,7 +8,7 @@
 
     <sql id="BASE_COLUMN">
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,a.departId,classSemester
+        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint
     </sql>
 
     <insert id="insert" parameterType="com.spc.model.ClassDomain">
@@ -20,7 +20,7 @@
         values
         <trim prefix="( " suffix=" )">
             #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
-            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester}
+            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester} ,#{classGradePoint}
         </trim>
     </insert>
 
@@ -28,7 +28,7 @@
     <select id="selectClasses" resultType="com.spc.model.ClassDomain">
         select
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,m.modelsName,teacherInfo,courseInfo,a.departId,classSemester
+        classPlace,classLength,classModuleNum,m.modelsName,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint
         from
         <include refid="BASE_TABLE"/> a
         left join  Department b
@@ -44,5 +44,16 @@
           </if>
         </where>
     </select>
-    
+
+
+
+    <select id="findCourseTable" resultType="hashmap">
+        select
+        classDateDescription,teaName,classPlace
+        from  Course
+        <where>
+            teaId = #{teaId}
+        </where>
+    </select>
+
 </mapper>

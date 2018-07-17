@@ -8,7 +8,7 @@ import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
 import com.spc.util.AuthMess;
 
-import com.spc.view.MyPdfView;
+import com.spc.view.MyTablePdfView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -216,6 +216,6 @@ public class TeacherController {
         Map<String, Object> model = new HashMap<>();
         model.put("res",res);
 
-        return new ModelAndView(new MyPdfView(), model);
+        return new ModelAndView(new MyTablePdfView(), model);
     }
 }

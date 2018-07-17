@@ -6,12 +6,18 @@ import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
 import com.spc.util.AuthMess;
 import com.spc.util.RequestPayload;
+import com.spc.view.MyScorePdfView;
+import com.spc.view.MyTablePdfView;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/student")
@@ -83,7 +89,6 @@ public class StudentController {
         return 0;
 
     }
-
     @RequestMapping("/select/grade")
     @ResponseBody
     public List<GradeDomain> selectGrade(
@@ -92,9 +97,45 @@ public class StudentController {
             @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
             @RequestParam(required = false,defaultValue = "88888888") Integer classId){
 
-        PageHelper.startPage(pageNum,pageSize);
+//        PageHelper.startPage(pageNum,pageSize);
+//        stuId = authMess.UserId();
+        stuId = 2018000006;
         return gradeService.selectGrade(classId,stuId);
-
     }
+
+    /**
+     * 学生端：下载课表
+     * @param response
+     * @return
+     */
+    @RequestMapping("/download/table")
+    public ModelAndView downloadCourseTable(HttpServletResponse response) {
+
+        int teaId = authMess.UserId();
+
+        String[][] tables = studentService.findClasses(teaId);
+
+        Map res = new HashMap();
+
+        res.put("tables", tables);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        return new ModelAndView(new MyTablePdfView(), model);
+    };
+
+    @RequestMapping("/download/score")
+    public ModelAndView downloadScore(HttpServletResponse response,
+                              @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
+                              @RequestParam(required = false,defaultValue = "88888888") Integer classId) {
+        stuId = authMess.UserId();
+        List scores = gradeService.selectGrade(classId,stuId);
+        Map res = new HashMap();
+
+        res.put("scores", scores);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        return new ModelAndView(new MyScorePdfView(), model);
+    }
+
 
 }

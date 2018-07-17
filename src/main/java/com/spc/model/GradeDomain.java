@@ -6,6 +6,7 @@ public class GradeDomain {
     private String className;
     private Integer classId;
     private Integer score;
+    private String classSemester;
 
 
 
@@ -49,6 +50,14 @@ public class GradeDomain {
 
     public void setChooseId(Integer chooseId) {
         this.chooseId = chooseId;
+    }
+
+    public String getClassSemester() {
+        return classSemester;
+    }
+
+    public void setClassSemester(String classSemester) {
+        this.classSemester = classSemester;
     }
 }
 

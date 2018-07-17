@@ -9,10 +9,10 @@
 
     <select id="selectGrade" resultType="com.spc.model.GradeDomain" parameterType="int">
         select
-        g.classId,g.id,g.score,g.stuId,c.className
+        g.classId,g.score,g.stuId,c.className,c.classSemester,c.classGradePoint
         from
-        Grade g
-        left join Course c
+        Course_choose g
+        join Course c
         on g.classId = c.classId
         <where>
             <if test="classId!= 88888888">
