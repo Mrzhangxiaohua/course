@@ -1,10 +1,7 @@
 package com.spc.view;
 
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Element;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -21,6 +18,11 @@ public class StudentTablePdfView extends AbstractPdfView {
     protected void buildPdfDocument(Map<String, Object> model,
                                     Document document, PdfWriter writer, HttpServletRequest request,
                                     HttpServletResponse response) throws Exception {
+
+
+//        Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
+//        pageSize.rotate();
+//        document.setPageSize(pageSize);
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
         String[][] tables = (String[][]) map.get("tables");

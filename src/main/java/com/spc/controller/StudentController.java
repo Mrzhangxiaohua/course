@@ -71,24 +71,27 @@ public class StudentController {
     public int chooseCourse(HttpServletRequest request){
         String json = requestPayload.getRequestPayload(request);
         System.out.printf("添加课程的json = %s",json);
-
         try {
             JSONObject obj = new JSONObject(json);
-
             Integer classId = obj.getInt("classId");
 
             int stuId =authMess.userId();
 
             return studentService.addCourse(stuId,classId);
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
 
     }
+
+//    @RequestMapping("add/classes")
+//    @ResponseBody
+//    public int addClasses(HttpServletRequest request){
+//        String json = requestPayload.getRequestPayload(request);
+////        System.out.printf("添加课程的json = %s",json);
+//    }
+
     @RequestMapping("/select/grade")
     @ResponseBody
     public List<GradeDomain> selectGrade(

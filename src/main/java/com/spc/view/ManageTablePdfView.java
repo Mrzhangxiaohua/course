@@ -1,10 +1,7 @@
 package com.spc.view;
 
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -107,7 +104,6 @@ public class ManageTablePdfView extends AbstractPdfView {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
         }
-
         document.add(table);
     }
 }
