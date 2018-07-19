@@ -145,6 +145,7 @@ public class StudentController {
         res.put("tables", tables);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
+        model.put("style","higher");
         return new ModelAndView(new StudentTablePdfView(), model);
     };
 
@@ -171,6 +172,7 @@ public class StudentController {
         res.put("stuName",authMess.userName());
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
+        model.put("style","wider");
         return new ModelAndView(new StudentScorePdfView(), model);
     }
 
@@ -190,27 +192,29 @@ public class StudentController {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "88888888") int departId,
             @RequestParam(required = false, defaultValue = "") String classname,
-            @RequestParam(required = false, defaultValue = "88888888") int teaId) {
+            @RequestParam(required = false, defaultValue = "88888888") int teaId,
+            @RequestParam(required = false, defaultValue = "88888888") int startWeek,
+            @RequestParam(required = false, defaultValue = "88888888") int endWeek) {
 
         //获得学生id
         Integer stuId = authMess.userId();
         List<GradeDomain> gradeDomains = gradeService.selectGrade(88888888,stuId);
 
-        System.out.println("");
-        System.out.printf("size is %d",gradeDomains.size());
+        System.out.println("\n");
+        System.out.printf("startWeek = %d",startWeek);
+        System.out.printf("endWeek = %d",endWeek);
 
         PageHelper.startPage(currentPage,pageSize);
-        List<ClassDomain> classes = classService.findAllClass(departId, classname , teaId);
+        List<ClassDomain> classes = classService.findAllClass(departId, classname , teaId,endWeek,startWeek);
 
+        System.out.println(classes);
         if (!gradeDomains.isEmpty()){
             for(int j=0;j<gradeDomains.size();j++){
                 int id = gradeDomains.get(j).getClassId();
                 System.out.println("\n");
                 System.out.printf("id %d",id);
-
                 for (int i=0;i<classes.size();i++){
                     int classId = classes.get(i).getClassId();
-
                     if(classId == id){
                         classes.get(i).setAddOrNot(true);
                     }

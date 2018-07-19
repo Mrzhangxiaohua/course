@@ -92,52 +92,26 @@ public class StudentTablePdfView extends AbstractPdfView {
             String[] t = tables[i];
             PdfPCell cell;
             System.out.println(t);
-            for (int j = 0; j < t.length; j++) {
-                System.out.println(t[j]);
-            }
+
 
             cell = new PdfPCell(new Phrase(Integer.toString(i/2 +1)+"-"+ Integer.toString(i/2 +2)+"节", textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
+            for (int j = 0; j < t.length; j++) {
+                StringBuilder newStrs = null;
+                if(t[j]!=null){
+                    String[] strs = t[j].replace(",","\n ").split(" ");
+                    newStrs = new StringBuilder("课程:".concat(strs[0]).concat("地点:").concat(strs[1]).concat("教师:").concat(strs[2]));
+                }
 
-            cell = new PdfPCell(new Phrase(t[0] != null ? t[0].replace(",","\n") : " ", textFont));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
+                cell = new PdfPCell(new Phrase(t[j] != null ? newStrs.toString(): " ", textFont));
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setPaddingBottom(6);
+                table.addCell(cell);
+            }
 
-            cell = new PdfPCell(new Phrase(t[1] != null ? t[1].replace(",","\n") : " ", textFont));
-            cell.setPaddingLeft(5);
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(t[2] != null ? t[2].replace(",","\n") : " ", textFont));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(t[3] != null ? t[3].replace(",","\n") : " ", textFont));
-            cell.setPaddingLeft(5);
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            table.addCell(cell);
-            cell = new PdfPCell(new Phrase(t[4] != null ? t[4].replace(",","\n") : " ", textFont));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(t[5] != null ? t[5].replace(",","\n") : " ", textFont));
-            cell.setPaddingLeft(5);
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(t[6] != null ? t[6].replace(",","\n") : " ", textFont));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(cell);
         }
         document.add(table);
     }

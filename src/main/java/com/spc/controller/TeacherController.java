@@ -77,7 +77,7 @@ public class TeacherController {
     public List<Map> getTeachCourse(){
         Integer teacherId = authMess.teacherId();
 
-        List<ClassDomain> classes =classService.findAllClass(88888888,"",teacherId);
+        List<ClassDomain> classes =classService.findAllClass(88888888,"",teacherId,88888888,88888888);
 
         List<Map> resList = new ArrayList<Map>();
 

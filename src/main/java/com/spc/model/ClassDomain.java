@@ -8,12 +8,9 @@ public class ClassDomain {
 
     private String teacherInfo;
     private String courseInfo;
-
     private Integer classId; //课程编号
     private String className;
-
     private Integer classNum; //课程的班次
-
     private Integer teaId; //老师的工号
     private String teaName;
     private Integer classChooseNum;
@@ -26,7 +23,10 @@ public class ClassDomain {
     private Integer classModuleNum;
     private Integer classSemester;
     private Integer classGradePoint;
+    private Integer startWeek;
+    private Integer endWeek;
     private boolean addOrNot;//这个是某个学生是否添加了这个课程的字段
+    private Integer classTime;
 
     public Integer getClassId() {
         return classId;
@@ -171,5 +171,29 @@ public class ClassDomain {
 
     public void setAddOrNot(boolean addOrNot) {
         this.addOrNot = addOrNot;
+    }
+
+    public Integer getStartWeek() {
+        return startWeek;
+    }
+
+    public void setStartWeek(Integer startWeek) {
+        this.startWeek = startWeek;
+    }
+
+    public Integer getEndWeek() {
+        return endWeek;
+    }
+
+    public void setEndWeek(Integer endWeek) {
+        this.endWeek = endWeek;
+    }
+
+    public Integer getClassTime() {
+        return classTime;
+    }
+
+    public void setClassTime(Integer classTime) {
+        this.classTime = classTime;
     }
 }

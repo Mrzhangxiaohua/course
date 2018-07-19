@@ -8,7 +8,7 @@
 
     <sql id="BASE_COLUMN">
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint
+        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,classTime
     </sql>
 
     <insert id="insert" parameterType="com.spc.model.ClassDomain">
@@ -20,7 +20,7 @@
         values
         <trim prefix="( " suffix=" )">
             #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
-            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester} ,#{classGradePoint}
+            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester} ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime}
         </trim>
     </insert>
 
@@ -28,7 +28,7 @@
     <select id="selectClasses" resultType="com.spc.model.ClassDomain">
         select
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,m.modelsName,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint
+        classPlace,classLength,classModuleNum,m.modelsName,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,classTime
         from
         <include refid="BASE_TABLE"/> a
         left join  Department b
@@ -44,6 +44,12 @@
           </if>
           <if test="teaId!=88888888">
               and a.teaId = #{teaId}
+          </if>
+          <if test="startWeek!=88888888">
+              and a.startWeek >= #{startWeek}
+          </if>
+          <if test="endWeek!=88888888">
+              and #{endWeek} >= a.endWeek
           </if>
         </where>
     </select>

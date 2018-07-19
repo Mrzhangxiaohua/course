@@ -45,7 +45,7 @@ public class ManageController {
     @RequestMapping("/find/classes")
     @ResponseBody
     public List<Map> getAllCourse() {
-        List<ClassDomain> classes = classService.findAllClass(88888888, "", 88888888);
+        List<ClassDomain> classes = classService.findAllClass(88888888, "", 88888888,88888888,88888888);
         List<Map> resList = new ArrayList<Map>();
         for (int i = 0; i < classes.size(); i++) {
             Map<String, Object> res = new HashMap<>();
@@ -68,6 +68,7 @@ public class ManageController {
         res.put("students", students);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
+        model.put("style","wider");
         return new ModelAndView(new ManageTablePdfView(), model);
     }
 }

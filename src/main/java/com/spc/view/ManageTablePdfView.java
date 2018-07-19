@@ -80,28 +80,34 @@ public class ManageTablePdfView extends AbstractPdfView {
             cell = new PdfPCell(new Phrase((String) t.get("stuName"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
             table.addCell(cell);
             cell = new PdfPCell(new Phrase(Integer.toString((Integer) t.get("stuId")), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
             table.addCell(cell);
             cell = new PdfPCell(new Phrase((String) t.get("departName"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
             table.addCell(cell);
             cell = new PdfPCell(new Phrase(" ", textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
             table.addCell(cell);
 
             cell = new PdfPCell(new Phrase(" ", textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
             table.addCell(cell);
 
             cell = new PdfPCell(new Phrase(Integer.toString((Integer) t.get("score")), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
             table.addCell(cell);
         }
         document.add(table);

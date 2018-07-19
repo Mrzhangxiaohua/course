@@ -44,7 +44,7 @@ public class CourseController {
             Model model) {
 
         PageHelper.startPage(currentPage,pageSize);
-        List<ClassDomain> classes = classService.findAllClass(departId, classname , teaId);
+        List<ClassDomain> classes = classService.findAllClass(departId, classname , teaId,88888888,88888888);
 
 
         for(ClassDomain l:classes){

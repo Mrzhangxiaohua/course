@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.view.AbstractView;
 
 public abstract class AbstractPdfView extends AbstractView {
@@ -39,7 +39,16 @@ public abstract class AbstractPdfView extends AbstractView {
 
         ByteArrayOutputStream baos = createTemporaryOutputStream();
 
-        Document document = new Document(PageSize.A4);
+        Document document = new Document();
+        if(model.get("style").equals("wider")){
+            Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
+            pageSize.rotate();
+            document.setPageSize(pageSize);
+        }else{
+            Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
+            document.setPageSize(pageSize);
+        }
+
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         prepareWriter(model, writer, request);
         buildPdfMetadata(model, document, request);
