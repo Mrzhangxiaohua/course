@@ -5,12 +5,10 @@ import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.util.CourseDateTrans;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +42,10 @@ public class CourseController {
             @RequestParam(required = false, defaultValue = "") String classname,
             @RequestParam(required = false, defaultValue = "88888888") int teaId,
             Model model) {
+
         PageHelper.startPage(currentPage,pageSize);
         List<ClassDomain> classes = classService.findAllClass(departId, classname , teaId);
+
 
         for(ClassDomain l:classes){
             String[] d = l.getClassDateDescription().split(":");

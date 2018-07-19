@@ -34,13 +34,15 @@ public class StudentServiceImpl  implements StudentService {
         return temp;
     }
 
-    public  int findNum(String name){
-        return studentDao.findNum(name);
-    }
 
     @Override
     public int addCourse(int stuId, int classId) {
         return studentDao.addChooseCourse(stuId,classId);
+    }
+
+    @Override
+    public int deleteCourse(int stuId, int classId) {
+        return studentDao.deleteChooseCourse(stuId,classId);
     }
 
 }

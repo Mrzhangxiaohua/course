@@ -5,7 +5,6 @@ import com.spc.util.RequestPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -64,8 +63,6 @@ public class MainController {
         System.out.println("run login");
         return "login";
     }
-
-
     @RequestMapping("/test/form")
     public String test(){
         return "test/form";

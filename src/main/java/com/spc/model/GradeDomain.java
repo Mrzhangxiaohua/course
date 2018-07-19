@@ -9,8 +9,6 @@ public class GradeDomain {
     private String classSemester;
     private Integer classGradePoint;
 
-
-
     public Integer getStuId() {
         return stuId;
     }

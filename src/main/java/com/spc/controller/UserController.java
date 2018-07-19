@@ -1,21 +1,15 @@
 package com.spc.controller;
 
-import com.github.pagehelper.PageHelper;
-import com.spc.model.ClassDomain;
 import com.spc.model.UserDomain;
 import com.spc.service.user.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import com.spc.util.RequestPayload;
-import com.spc.model.UserDomain;
 
 /**
  * Created by Administrator on 2017/8/16.

@@ -21,13 +21,12 @@ public class ClassDomain {
     private String classDateDescription;
     private String classPlace;
     private Integer classLength;
-//    private Integer
-
     private String modelsName;
     private Integer departId;
     private Integer classModuleNum;
     private Integer classSemester;
     private Integer classGradePoint;
+    private boolean addOrNot;//这个是某个学生是否添加了这个课程的字段
 
     public Integer getClassId() {
         return classId;
@@ -110,15 +109,6 @@ public class ClassDomain {
         this.classLength = classLength;
     }
 
-//    public Integer getClassModuleNum() {
-//        return classModuleNum;
-//    }
-
-//    public void setClassModuleNum(Integer classModuleNum) {
-//        this.classModuleNum = classModuleNum;
-//    }
-
-
     public String getCourseInfo() {
         return courseInfo;
     }
@@ -173,5 +163,13 @@ public class ClassDomain {
 
     public void setClassGradePoint(Integer classGradePoint) {
         this.classGradePoint = classGradePoint;
+    }
+
+    public boolean getAddOrNot() {
+        return addOrNot;
+    }
+
+    public void setAddOrNot(boolean addOrNot) {
+        this.addOrNot = addOrNot;
     }
 }

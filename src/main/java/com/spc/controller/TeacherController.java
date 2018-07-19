@@ -157,6 +157,7 @@ public class TeacherController {
             classDomain.setClassName(obj.getString("className"));
             classDomain.setClassChooseNum(0);
             classDomain.setClassLength(obj.getInt("classLength"));
+            classDomain.setAddOrNot(false);
 
             Integer daseA = obj.getInt("classDateDescriptionA");
             Integer daseB = obj.getInt("classDateDescriptionB");
