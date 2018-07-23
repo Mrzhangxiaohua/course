@@ -9,7 +9,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 
 @SpringBootApplication
-//@EnableCasClient
 @EnableAutoConfiguration
 public class Springboot2MybatisDemoApplication extends SpringBootServletInitializer {
 

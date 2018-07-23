@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import javax.servlet.http.HttpSessionEvent;
 
 @Configuration
-public class CasSecurityConfig {
+public class MyCasSecurityConfig {
     //cas服务
     @Value("${cas.server.url:https://cas.xjtu.edu.cn/login}")
     private String casServerUrl;
@@ -30,7 +30,7 @@ public class CasSecurityConfig {
     public ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
         //本机服务，访问/login/cas时进行校验登录
-        serviceProperties.setService("http://localhost:8080/login/cas");
+        serviceProperties.setService("http://202.117.16.167:8080/psc/login/cas");
         serviceProperties.setSendRenew(false);
         return serviceProperties;
     }
@@ -61,7 +61,9 @@ public class CasSecurityConfig {
         provider.setServiceProperties(serviceProperties());
         provider.setTicketValidator(ticketValidator());
         //固定响应用户，在生产环境中需要额外设置用户映射
-        provider.setUserDetailsService(
+//        provider.setUserDetailsService(
+//                s -> new UserDomain(12,"auth-user", "123", null,3242, AuthorityUtils.createAuthorityList("ROLE_ADMIN")));
+        provider.setAuthenticationUserDetailsService(
                 s -> new UserDomain(12,"auth-user", "123", null,3242, AuthorityUtils.createAuthorityList("ROLE_ADMIN")));
         provider.setKey("CAS_PROVIDER_LOCALHOST_8123");
         return provider;

@@ -44,8 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests().antMatchers("/login/cas").permitAll()
                 .and()
-                .authorizeRequests().anyRequest().authenticated()
-                .and()
+//                .authorizeRequests().anyRequest().authenticated()
+//                .and()
                 .httpBasic().authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .logout().logoutSuccessUrl("/logout")
