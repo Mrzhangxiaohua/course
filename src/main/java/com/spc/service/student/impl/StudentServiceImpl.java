@@ -1,17 +1,39 @@
 package com.spc.service.student.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.spc.dao.ClassDao;
+import com.spc.dao.GradeDao;
+import com.spc.dao.StudentApplicationDao;
 import com.spc.dao.StudentDao;
+import com.spc.model.ClassDomain;
+import com.spc.model.GradeDomain;
 import com.spc.service.student.StudentService;
+import com.spc.util.CourseDateTrans;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service(value = "studentService")
 public class StudentServiceImpl  implements StudentService {
     @Autowired
     private StudentDao studentDao;
+
+    @Autowired
+    private ClassDao classDao;
+
+    @Autowired
+    private StudentApplicationDao studentApplicationDao;
+
+    @Autowired
+    private GradeDao gradeDao;
+
+    @Autowired
+    private CourseDateTrans courseDateTrans;
 
     @Override
     public String[][] findClasses(int stuId) {
@@ -45,4 +67,62 @@ public class StudentServiceImpl  implements StudentService {
         return studentDao.deleteChooseCourse(stuId,classId);
     }
 
+    @Override
+    public int addApplication(int stuId, int classId,int state) {
+        return studentApplicationDao.add(stuId,classId,state);
+    }
+
+    @Override
+    public List<ClassDomain> selectClassed(Map<String, Object> map) {
+
+
+
+        //获得学生id
+        Integer stuId = (Integer) map.get("stuId");
+        Integer currentPage = (Integer) map.get("currentPage");
+        Integer pageSize = (Integer) map.get("pageSize");
+        Integer startWeek = (Integer) map.get("startWeek");
+        Integer endWeek = (Integer) map.get("endWeek");
+        Integer departId = (Integer) map.get("departId");
+        Integer teaId = (Integer) map.get("teaId");
+        String classname= (String) map.get("classname");
+
+        List<GradeDomain> gradeDomains = gradeDao.selectGrade(88888888,stuId);
+
+        System.out.println("\n");
+        System.out.printf("startWeek = %d",startWeek);
+        System.out.printf("endWeek = %d",endWeek);
+
+        PageHelper.startPage(currentPage,pageSize);
+        List<ClassDomain> classes = classDao.selectClasses(departId, classname ,teaId,startWeek,endWeek);
+
+        System.out.println(classes);
+        if (!gradeDomains.isEmpty()){
+            for(int j=0;j<gradeDomains.size();j++){
+                int id = gradeDomains.get(j).getClassId();
+                System.out.println("\n");
+                System.out.printf("id %d",id);
+                for (int i=0;i<classes.size();i++){
+                    int classId = classes.get(i).getClassId();
+                    if(classId == id){
+                        classes.get(i).setShowDeleteButton(true);
+                        classes.get(i).setNotShowAddButton(true);
+                    }
+                }
+            }
+        }
+        for (ClassDomain classDomain :classes){
+            if (classDomain.getClassUpperLimit() == classDomain.getClassChooseNum()){
+                classDomain.setShowDeleteButton(false);
+                classDomain.setNotShowAddButton(true);
+            }
+            String[] d = classDomain.getClassDateDescription().split(":");
+            Integer a = Integer.parseInt(d[0]);
+            Integer b = Integer.parseInt(d[1]);
+            classDomain.setClassDateDescription(new String(courseDateTrans.dateToString(a,b)));
+        }
+
+        return classes;
+
+    }
 }

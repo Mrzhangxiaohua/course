@@ -50,7 +50,10 @@ public class MainController {
         return "teacher_forms";
     }
 
-
+    @RequestMapping("/login")
+    public String login(){
+        return "login";
+    }
 
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {

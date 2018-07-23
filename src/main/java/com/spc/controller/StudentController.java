@@ -11,6 +11,7 @@ import com.spc.util.AuthMess;
 import com.spc.util.RequestPayload;
 import com.spc.view.StudentScorePdfView;
 import com.spc.view.StudentTablePdfView;
+import org.apache.ibatis.annotations.Param;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +60,20 @@ public class StudentController {
         Integer stuId = authMess.userId();
 
         return studentService.findClasses(stuId);
+    }
+
+    /**
+     * 添加
+     * @param stuId
+     * @param classId
+     * @return
+     */
+    @RequestMapping("/add/application")
+    public int addApplcation(
+            @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
+            @RequestParam(required = false,defaultValue = "88888888") Integer classId
+    ){
+        return studentService.addApplication(stuId,classId,0);
     }
 
     /**
@@ -196,37 +211,19 @@ public class StudentController {
             @RequestParam(required = false, defaultValue = "88888888") int startWeek,
             @RequestParam(required = false, defaultValue = "88888888") int endWeek) {
 
-        //获得学生id
+        Map map = new HashMap<String,Object>();
+        map.put("currentPage",currentPage);
+        map.put("pageSize",pageSize);
+        map.put("departId",departId);
+        map.put("classname",classname);
+        map.put("teaId",teaId);
+        map.put("startWeek",startWeek);
+        map.put("endWeek",endWeek);
         Integer stuId = authMess.userId();
-        List<GradeDomain> gradeDomains = gradeService.selectGrade(88888888,stuId);
+        map.put("stuId",stuId);
 
-        System.out.println("\n");
-        System.out.printf("startWeek = %d",startWeek);
-        System.out.printf("endWeek = %d",endWeek);
+        List<ClassDomain> classes = studentService.selectClassed(map);
 
-        PageHelper.startPage(currentPage,pageSize);
-        List<ClassDomain> classes = classService.findAllClass(departId, classname , teaId,endWeek,startWeek);
-
-        System.out.println(classes);
-        if (!gradeDomains.isEmpty()){
-            for(int j=0;j<gradeDomains.size();j++){
-                int id = gradeDomains.get(j).getClassId();
-                System.out.println("\n");
-                System.out.printf("id %d",id);
-                for (int i=0;i<classes.size();i++){
-                    int classId = classes.get(i).getClassId();
-                    if(classId == id){
-                        classes.get(i).setAddOrNot(true);
-                    }
-                }
-            }
-        }
-        for (ClassDomain classDomain :classes){
-            String[] d = classDomain.getClassDateDescription().split(":");
-            Integer a = Integer.parseInt(d[0]);
-            Integer b = Integer.parseInt(d[1]);
-            classDomain.setClassDateDescription(new String(courseDateTrans.dateToString(a,b)));
-        }
         Map<String, Object> res = new HashMap<>();
         res.put("status","SUCCESS");
 

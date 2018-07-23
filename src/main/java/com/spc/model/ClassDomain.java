@@ -25,8 +25,9 @@ public class ClassDomain {
     private Integer classGradePoint;
     private Integer startWeek;
     private Integer endWeek;
-    private boolean addOrNot;//这个是某个学生是否添加了这个课程的字段
     private Integer classTime;
+    private boolean notShowAddButton;
+    private boolean showDeleteButton;
 
     public Integer getClassId() {
         return classId;
@@ -165,14 +166,6 @@ public class ClassDomain {
         this.classGradePoint = classGradePoint;
     }
 
-    public boolean getAddOrNot() {
-        return addOrNot;
-    }
-
-    public void setAddOrNot(boolean addOrNot) {
-        this.addOrNot = addOrNot;
-    }
-
     public Integer getStartWeek() {
         return startWeek;
     }
@@ -195,5 +188,21 @@ public class ClassDomain {
 
     public void setClassTime(Integer classTime) {
         this.classTime = classTime;
+    }
+
+    public boolean isNotShowAddButton() {
+        return notShowAddButton;
+    }
+
+    public void setNotShowAddButton(boolean notShowAddButton) {
+        this.notShowAddButton = notShowAddButton;
+    }
+
+    public boolean isShowDeleteButton() {
+        return showDeleteButton;
+    }
+
+    public void setShowDeleteButton(boolean showDeleteButton) {
+        this.showDeleteButton = showDeleteButton;
     }
 }
