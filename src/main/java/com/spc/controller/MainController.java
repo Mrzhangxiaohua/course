@@ -34,7 +34,6 @@ public class MainController {
             return "manage/index";
         }
     }
-
     @RequestMapping("/student/classes")
     public  String classes(){
         return "course/showClass";
@@ -50,9 +49,9 @@ public class MainController {
         return "teacher_forms";
     }
 
-    @RequestMapping("/login")
+    @RequestMapping("/login/cas")
     public String login(){
-        return "login";
+        return "index";
     }
 
     @RequestMapping("/logout")
