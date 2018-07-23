@@ -68,8 +68,8 @@ public class StudentServiceImpl  implements StudentService {
     }
 
     @Override
-    public int addApplication(int stuId, int classId,int state) {
-        return studentApplicationDao.add(stuId,classId,state);
+    public int addApplication(int stuId, int classId,int state,String reason) {
+        return studentApplicationDao.add(stuId,classId,state,reason);
     }
 
     @Override

@@ -12,7 +12,7 @@ public interface StudentService {
     public int addCourse(int stuId,int classId);
     public int deleteCourse(int stuId,int classId);
 
-    public int addApplication(int stuId,int classId,int state);
+    public int addApplication(int stuId,int classId,int state,String reason);
 
     public List<ClassDomain> selectClassed(Map<String,Object> map);
 }

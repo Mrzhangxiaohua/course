@@ -8,9 +8,9 @@
    <insert id="add">
        insert  into
        <include refid="BASE_TABLE"/>
-       classId,stuId,states
+       classId,stuId,states,reason
        values
-       #{classId}, #{stuId}, #{states},
+       #{classId}, #{stuId}, #{states},#{reason}
    </insert>
 
 </mapper>

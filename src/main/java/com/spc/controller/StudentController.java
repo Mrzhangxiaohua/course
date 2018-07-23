@@ -11,12 +11,10 @@ import com.spc.util.AuthMess;
 import com.spc.util.RequestPayload;
 import com.spc.view.StudentScorePdfView;
 import com.spc.view.StudentTablePdfView;
-import org.apache.ibatis.annotations.Param;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import com.spc.util.CourseDateTrans;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,8 +35,6 @@ public class StudentController {
     @Autowired
     private GradeService gradeService;
 
-    @Autowired
-    private ClassService classService;
 
     @Autowired
     private RequestPayload requestPayload;
@@ -46,8 +42,6 @@ public class StudentController {
     @Autowired
     private AuthMess authMess;
 
-    @Autowired
-    private CourseDateTrans courseDateTrans;
 
     /**
      * 根据学号查询学生选择的课程
@@ -71,9 +65,11 @@ public class StudentController {
     @RequestMapping("/add/application")
     public int addApplcation(
             @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
-            @RequestParam(required = false,defaultValue = "88888888") Integer classId
+            @RequestParam(required = false,defaultValue = "88888888") Integer classId,
+            @RequestParam(required = false,defaultValue = "88888888") Integer state,
+            @RequestParam(required = false,defaultValue = "") String reason
     ){
-        return studentService.addApplication(stuId,classId,0);
+        return studentService.addApplication(stuId,classId,0,reason);
     }
 
     /**
