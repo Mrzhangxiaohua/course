@@ -11,7 +11,7 @@ public interface ClassDao {
     int insert(ClassDomain record);
 
     List<ClassDomain> selectClasses(@Param("departId") Integer departId, @Param("className") String className,
-    @Param("teaId") int teaId,@Param("startWeek") int startWeek,@Param("endWeek") int endWeek);
+                                    @Param("teaName") String teaName, @Param("teaId") int teaId,@Param("startWeek") int startWeek,@Param("endWeek") int endWeek);
 
     int updateScore(@Param("className") String className, @Param("stuId") int stuId,
                     @Param("score") int score);

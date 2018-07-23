@@ -86,6 +86,7 @@ public class StudentServiceImpl  implements StudentService {
         Integer departId = (Integer) map.get("departId");
         Integer teaId = (Integer) map.get("teaId");
         String classname= (String) map.get("classname");
+        String teaname= (String) map.get("teaname");
 
         List<GradeDomain> gradeDomains = gradeDao.selectGrade(88888888,stuId);
 
@@ -94,7 +95,7 @@ public class StudentServiceImpl  implements StudentService {
         System.out.printf("endWeek = %d",endWeek);
 
         PageHelper.startPage(currentPage,pageSize);
-        List<ClassDomain> classes = classDao.selectClasses(departId, classname ,teaId,startWeek,endWeek);
+        List<ClassDomain> classes = classDao.selectClasses(departId, classname ,teaname,teaId,startWeek,endWeek);
 
         System.out.println(classes);
         if (!gradeDomains.isEmpty()){

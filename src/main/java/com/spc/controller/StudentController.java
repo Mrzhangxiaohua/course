@@ -207,6 +207,7 @@ public class StudentController {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "88888888") int departId,
             @RequestParam(required = false, defaultValue = "") String classname,
+            @RequestParam(required = false, defaultValue = "") String teaName,
             @RequestParam(required = false, defaultValue = "88888888") int teaId,
             @RequestParam(required = false, defaultValue = "88888888") int startWeek,
             @RequestParam(required = false, defaultValue = "88888888") int endWeek) {
@@ -216,6 +217,7 @@ public class StudentController {
         map.put("pageSize",pageSize);
         map.put("departId",departId);
         map.put("classname",classname);
+        map.put("teaname",teaName);
         map.put("teaId",teaId);
         map.put("startWeek",startWeek);
         map.put("endWeek",endWeek);

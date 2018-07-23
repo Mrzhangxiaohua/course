@@ -42,6 +42,9 @@
           <if test="className!=null and className!='' ">
               and a.className like  "%"#{className}"%"
           </if>
+          <if test="teaName!=null and teaName!='' ">
+              and a.teaName like  "%"#{teaName}"%"
+          </if>
           <if test="teaId!=88888888">
               and a.teaId = #{teaId}
           </if>
