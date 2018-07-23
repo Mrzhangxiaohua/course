@@ -29,6 +29,7 @@ public class UserDomain implements UserDetails {
     }
 
     public UserDomain(Integer uid, String userName, String password, RoleDomain role, Integer stuId, List<GrantedAuthority> authorityLists) {
+
         this.uid = uid;
         this.userName = userName;
         this.password = password;

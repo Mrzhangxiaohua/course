@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.file.attribute.UserPrincipal;
 
 
 @Controller
@@ -50,7 +51,9 @@ public class MainController {
     }
 
     @RequestMapping("/login/cas")
-    public String login(){
+    public String login(HttpServletRequest request){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getDetails());
         return "index";
     }
 
