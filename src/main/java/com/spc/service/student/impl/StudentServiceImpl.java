@@ -9,11 +9,13 @@ import com.spc.dao.StudentDao;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.student.StudentService;
+import com.spc.util.AuthMess;
 import com.spc.util.CourseDateTrans;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,8 @@ import java.util.Map;
 public class StudentServiceImpl  implements StudentService {
     @Autowired
     private StudentDao studentDao;
+
+
 
     @Autowired
     private ClassDao classDao;
@@ -34,6 +38,9 @@ public class StudentServiceImpl  implements StudentService {
 
     @Autowired
     private CourseDateTrans courseDateTrans;
+
+    @Autowired
+    private AuthMess authMess;
 
     @Override
     public String[][] findClasses(int stuId) {
@@ -68,14 +75,13 @@ public class StudentServiceImpl  implements StudentService {
     }
 
     @Override
-    public int addApplication(int stuId, int classId,int state,String reason) {
+    public int addApplication(int  classId,int state,String reason) {
+        int stuId =authMess.userId();
         return studentApplicationDao.add(stuId,classId,state,reason);
     }
 
     @Override
     public List<ClassDomain> selectClassed(Map<String, Object> map) {
-
-
 
         //获得学生id
         Integer stuId = (Integer) map.get("stuId");
@@ -125,5 +131,19 @@ public class StudentServiceImpl  implements StudentService {
 
         return classes;
 
+    }
+
+    @Override
+    public List<Map> allClassName() {
+        List<ClassDomain> classDomains = classDao.selectClasses(88888888,"","",88888888,88888888,88888888);
+        List<Map> li = new ArrayList<>();
+
+        for (ClassDomain classDomain:classDomains){
+            Map res = new HashMap<String,Object>();
+            res.put("className",classDomain.getClassName());
+            res.put("classId",classDomain.getClassId());
+            li.add(res);
+        }
+        return li;
     }
 }

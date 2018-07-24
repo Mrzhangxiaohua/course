@@ -3,7 +3,7 @@
 
 <mapper namespace="com.spc.dao.StudentApplicationDao" >
     <sql id="BASE_TABLE">
-        Course
+        StudentApplication
     </sql>
    <insert id="add">
        insert  into

@@ -19,10 +19,6 @@ public class StudentTablePdfView extends AbstractPdfView {
                                     HttpServletResponse response) throws Exception {
 
 
-//        Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
-//        pageSize.rotate();
-//        document.setPageSize(pageSize);
-
         Map<String, Object> map = (Map<String, Object>) model.get("res");
         String[][] tables = (String[][]) map.get("tables");
 

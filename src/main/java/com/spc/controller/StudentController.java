@@ -1,10 +1,8 @@
 package com.spc.controller;
 
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
-import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
 import com.spc.util.AuthMess;
@@ -56,20 +54,32 @@ public class StudentController {
         return studentService.findClasses(stuId);
     }
 
+    @RequestMapping("/all/className")
+    @ResponseBody
+    public List<Map> allClassName(){
+        return studentService.allClassName();
+    }
+
     /**
-     * 添加
-     * @param stuId
-     * @param classId
+     * 学生端 ：添加申请的函数
      * @return
      */
-    @RequestMapping("/add/application")
-    public int addApplcation(
-            @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
-            @RequestParam(required = false,defaultValue = "88888888") Integer classId,
-            @RequestParam(required = false,defaultValue = "88888888") Integer state,
-            @RequestParam(required = false,defaultValue = "") String reason
-    ){
-        return studentService.addApplication(stuId,classId,0,reason);
+    @RequestMapping(value = "/add/application",method = RequestMethod.POST)
+    public int addApplcation(HttpServletRequest request){
+        System.out.println("run here");
+        String json = requestPayload.getRequestPayload(request);
+        System.out.printf("添加申请的json = %s",json);
+        try {
+            JSONObject obj = new JSONObject(json);
+            Integer classId = obj.getInt("classId");
+            Integer state = obj.getInt("state");
+            String reason = obj.getString("reason");
+
+            return studentService.addApplication(classId,state,reason);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return 0;
     }
 
     /**

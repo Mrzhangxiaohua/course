@@ -1,11 +1,13 @@
 package com.spc.util;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @Configuration
 public class AuthMess {
+
 
 //    private Authentication authentication;
 
