@@ -3,14 +3,13 @@
 
 <mapper namespace="com.spc.dao.StudentApplicationDao" >
     <sql id="BASE_TABLE">
-        Course
+        StudentApplication
     </sql>
-   <insert id="add">
+   <insert id="add" useGeneratedKeys="true" keyProperty="id">
        insert  into
        <include refid="BASE_TABLE"/>
-       classId,stuId,states,reason
+       (classId,stuId,states,reason)
        values
-       #{classId}, #{stuId}, #{states},#{reason}
+       (#{classId}, #{stuId}, #{states},#{reason})
    </insert>
-
 </mapper>

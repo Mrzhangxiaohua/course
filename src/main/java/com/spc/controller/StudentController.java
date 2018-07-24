@@ -52,24 +52,42 @@ public class StudentController {
     public String[][] selectClasses(){
 
         Integer stuId = authMess.userId();
-
         return studentService.findClasses(stuId);
     }
 
     /**
-     * 添加
-     * @param stuId
-     * @param classId
+     *
      * @return
      */
-    @RequestMapping("/add/application")
+    @RequestMapping(value = "/find/allClassName")
+    public List<Map> findAllClassName(){
+        return studentService.findAllClassName();
+    }
+
+    /**
+     * 添加
+     * @return
+     */
+    @RequestMapping(value = "/add/application",method = RequestMethod.POST)
     public int addApplcation(
-            @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
-            @RequestParam(required = false,defaultValue = "88888888") Integer classId,
-            @RequestParam(required = false,defaultValue = "88888888") Integer state,
-            @RequestParam(required = false,defaultValue = "") String reason
+            HttpServletRequest request
     ){
-        return studentService.addApplication(stuId,classId,0,reason);
+        String json = requestPayload.getRequestPayload(request);
+        System.out.printf("添加课程的json = %s",json);
+        try {
+            JSONObject obj = new JSONObject(json);
+            Integer classId = obj.getInt("classId");
+            //states 为1 是增加课程
+            //states 为2 是调整班级
+            //states 为3 是重修班级
+            //states 为4 是退选计划
+            Integer state = obj.getInt("states");
+            String reason = obj.getString("reason");
+            return studentService.addApplication(classId,state,reason);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return 0;
     }
 
     /**

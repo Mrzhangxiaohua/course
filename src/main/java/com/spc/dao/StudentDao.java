@@ -5,10 +5,13 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface StudentDao {
 
     public List<HashMap<String,String>> findClasses(@Param("stuId")Integer stuId);
+
+    public List<Map> findAllClassName();
 
 
     //添加该学生选择的课程

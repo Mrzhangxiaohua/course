@@ -8,11 +8,12 @@ import java.util.Map;
 public interface StudentService {
     public String[][] findClasses(int stuId);
 
+    public List<Map> findAllClassName();
 
     public int addCourse(int stuId,int classId);
     public int deleteCourse(int stuId,int classId);
 
-    public int addApplication(int stuId,int classId,int state,String reason);
+    public int addApplication(int classId,int states,String reason);
 
     public List<ClassDomain> selectClassed(Map<String,Object> map);
 }

@@ -44,4 +44,9 @@
         </where>
     </select>
 
+    <select id="findAllClassName" resultType="map">
+        select distinct classId,className
+        from course.Course
+    </select>
+
 </mapper>

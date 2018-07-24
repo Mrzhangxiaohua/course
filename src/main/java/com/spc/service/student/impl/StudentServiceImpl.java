@@ -9,6 +9,7 @@ import com.spc.dao.StudentDao;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.student.StudentService;
+import com.spc.util.AuthMess;
 import com.spc.util.CourseDateTrans;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class StudentServiceImpl  implements StudentService {
 
     @Autowired
     private CourseDateTrans courseDateTrans;
+
+    @Autowired
+    private AuthMess authMess;
 
     @Override
     public String[][] findClasses(int stuId) {
@@ -68,8 +72,9 @@ public class StudentServiceImpl  implements StudentService {
     }
 
     @Override
-    public int addApplication(int stuId, int classId,int state,String reason) {
-        return studentApplicationDao.add(stuId,classId,state,reason);
+    public int addApplication(int classId,int states,String reason) {
+        int stuId =authMess.userId();
+        return studentApplicationDao.add(stuId,classId,states,reason);
     }
 
     @Override
@@ -125,5 +130,10 @@ public class StudentServiceImpl  implements StudentService {
 
         return classes;
 
+    }
+
+
+    public List<Map> findAllClassName(){
+        return studentDao.findAllClassName();
     }
 }
