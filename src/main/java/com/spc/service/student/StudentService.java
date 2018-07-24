@@ -1,6 +1,7 @@
 package com.spc.service.student;
 
 import com.spc.model.ClassDomain;
+import com.spc.model.StudentApplicationDomain;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ public interface StudentService {
 
     public int addCourse(int stuId,int classId);
     public int deleteCourse(int stuId,int classId);
+
+    public List<StudentApplicationDomain> checkedMessage();
 
     public int addApplication(int classId,int states,String reason);
 

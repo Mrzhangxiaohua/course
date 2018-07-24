@@ -2,6 +2,7 @@ package com.spc.controller;
 
 
 import com.spc.model.ClassDomain;
+import com.spc.model.StudentApplicationDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.student.StudentService;
 import com.spc.view.ManageTablePdfView;
@@ -13,10 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/manage")
 @Controller
@@ -39,6 +37,46 @@ public class ManageController {
     ) {
         String[][] res = studentService.findClasses(stuId);
         System.out.println(res);
+        return res;
+    }
+
+    @RequestMapping("/checked/message")
+    @ResponseBody
+    public Map<String,Object> checkedMessage(){
+
+        List<StudentApplicationDomain> maps = studentService.checkedMessage();
+
+        System.out.println(maps.size());
+        Map<String,Object> res = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
+        res.put("status","SUCCESS");
+
+        for(StudentApplicationDomain studentApplicationDomain:maps){
+            if(studentApplicationDomain.getChecked()==1 & !map.containsKey("1")){
+                System.out.println("run here");
+                List<StudentApplicationDomain> li = new ArrayList<>();
+                li.add(studentApplicationDomain);
+                map.put("1",li);
+            }else if(studentApplicationDomain.getChecked()==2 & !map.containsKey("2")){
+                List<StudentApplicationDomain> li = new ArrayList<>();
+                li.add(studentApplicationDomain);
+                map.put("2",li);
+            }
+            else if(studentApplicationDomain.getChecked()==3 & !map.containsKey("3")){
+                List<StudentApplicationDomain> li = new ArrayList<>();
+                li.add(studentApplicationDomain);
+                map.put("3",li);
+            }else{
+                String check = String.valueOf(studentApplicationDomain.getChecked());
+                List<StudentApplicationDomain> lis = (List<StudentApplicationDomain>) map.get(check);
+                lis.add(studentApplicationDomain);
+            }
+
+        }
+        System.out.println(map);
+        res.put("data",map);
+
+
         return res;
     }
 

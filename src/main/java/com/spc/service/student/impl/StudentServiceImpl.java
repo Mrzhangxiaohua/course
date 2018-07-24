@@ -8,6 +8,7 @@ import com.spc.dao.StudentApplicationDao;
 import com.spc.dao.StudentDao;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
+import com.spc.model.StudentApplicationDomain;
 import com.spc.service.student.StudentService;
 import com.spc.util.AuthMess;
 import com.spc.util.CourseDateTrans;
@@ -72,9 +73,14 @@ public class StudentServiceImpl  implements StudentService {
     }
 
     @Override
+    public List<StudentApplicationDomain> checkedMessage() {
+        return studentApplicationDao.findall();
+    }
+
+    @Override
     public int addApplication(int classId,int states,String reason) {
         int stuId =authMess.userId();
-        return studentApplicationDao.add(stuId,classId,states,reason);
+        return studentApplicationDao.add(stuId,classId,states,reason,1);
     }
 
     @Override

@@ -5,11 +5,27 @@
     <sql id="BASE_TABLE">
         StudentApplication
     </sql>
+    <sql id="BASE_COLS">
+        classId,stuId,states,reason,checked
+    </sql>
    <insert id="add" useGeneratedKeys="true" keyProperty="id">
        insert  into
        <include refid="BASE_TABLE"/>
-       (classId,stuId,states,reason)
+       (classId,stuId,states,reason,checked)
        values
-       (#{classId}, #{stuId}, #{states},#{reason})
+       (#{classId}, #{stuId}, #{states},#{reason},#{checked})
    </insert>
+
+    <select id="findall" resultType="com.spc.model.StudentApplicationDomain">
+        select s.id,s.stuId,s1.stuName,s.reason,s.mydate,a2.checkStr,a1.category,s.checked,c.className
+        from course.StudentApplication s
+        left join Application_Category a1
+        on s.states = a1.id
+        left join Application_Check a2
+        on s.checked = a2.id
+        left join course.Student s1
+        on s.stuId = s1.stuId
+        left join Course c
+        on s.classId = c.classId
+    </select>
 </mapper>
