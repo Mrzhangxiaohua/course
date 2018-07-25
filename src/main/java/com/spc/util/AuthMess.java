@@ -14,7 +14,7 @@ public class AuthMess {
 //    }
 
     public int userId(){
-        return 2018000001;
+        return 2018000006;
 //        return authentication.getAuthorities().toArray()[0];
     }
 

@@ -141,6 +141,15 @@ public class StudentController {
     }
 
     /**
+     * 返回学生的已选学分
+     * @return
+     */
+    @RequestMapping("get/gradePoint")
+    public Map getGradePoint(){
+        return studentService.getGradePoint();
+    }
+
+    /**
      * 学生端：根据验证的学生id下载课表
      * @param response
      * @return

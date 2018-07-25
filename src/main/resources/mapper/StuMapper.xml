@@ -48,5 +48,29 @@
         select distinct classId,className
         from course.Course
     </select>
+    
+    <select id="getWaiGradePoint" resultType="map">
+        select c.classGradePoint,c.className
+        from
+        (select classId
+        from course.Course_choose c2
+        where c2.stuId=#{stuId}
+        ) a
+        left  join course.Course c
+        on a.classId = c.classId
+        where c.departId = 12
+    </select>
+
+    <select id="getNotWaiGradePoint" resultType="map">
+        select c.classGradePoint,c.className
+        from
+        (select classId
+        from course.Course_choose c2
+        where c2.stuId=#{stuId}
+        ) a
+        left  join course.Course c
+        on a.classId = c.classId
+        where c.departId!=12
+    </select>
 
 </mapper>

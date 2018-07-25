@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.ClassApplicationDao" >
+    <sql id="BASE_TABLE">
+       ClassApplication
+    </sql>
+
+   <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.spc.model.ClassApplicationDomain">
+       insert  into
+       <include refid="BASE_TABLE"/>
+       (className,mainLecturer,teacherInfo,courseInfo,classTime,checked)
+       values
+       (#{className}, #{mainLecturer}, #{teacherInfo},#{courseInfo},#{classTime},#{checked})
+   </insert>
+
+</mapper>

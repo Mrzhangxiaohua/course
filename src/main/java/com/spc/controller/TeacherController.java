@@ -3,9 +3,11 @@ package com.spc.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
+import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
+import com.spc.service.teacher.TeacherService;
 import com.spc.util.AuthMess;
 
 import com.spc.view.StudentTablePdfView;
@@ -14,10 +16,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.spc.util.RequestPayload;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,6 +42,9 @@ public class TeacherController {
 
     @Autowired
     AuthMess authMess;
+
+    @Autowired
+    TeacherService teacherService;
 
     /**
      * 教师端：录入分数
@@ -217,5 +219,16 @@ public class TeacherController {
         model.put("res",res);
 
         return new ModelAndView(new StudentTablePdfView(), model);
+    }
+
+    @RequestMapping(value = "add/classApplication",method = RequestMethod.POST)
+    @ResponseBody
+    public int addClassApplication(@RequestBody  ClassApplicationDomain cad){
+        cad.setChecked(1);
+        cad.setTeaId(0);
+        System.out.println("================================");
+        System.out.println(cad.getClassTime());
+        System.out.println(cad.getClassName());
+        return teacherService.addClassApplication(cad);
     }
 }

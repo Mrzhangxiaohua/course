@@ -1,6 +1,5 @@
 package com.spc.dao;
 
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
@@ -19,4 +18,8 @@ public interface StudentDao {
     public int deleteChooseCourse(@Param("stuId") Integer stuId, @Param("classId") Integer classId);
 
     public List findStudent(@Param("className") String className, @Param("classId") Integer classId);
+
+    public List<Map<String,Object>> getWaiGradePoint(@Param("stuId") int stuId);
+    public List<Map<String,Object>> getNotWaiGradePoint(@Param("stuId") int stuId);
+
 }

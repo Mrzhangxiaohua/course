@@ -22,6 +22,7 @@ import java.util.Map;
 
 @Service(value = "studentService")
 public class StudentServiceImpl  implements StudentService {
+
     @Autowired
     private StudentDao studentDao;
 
@@ -59,7 +60,7 @@ public class StudentServiceImpl  implements StudentService {
             Integer r = ints[0].toCharArray()[0]- '0';
             Integer l = ints[1].toCharArray()[0]- '0';
 
-            String context = "☆课程：" +className+ ','+"教室："+classPlace + ',' +"教师："+ teaName +','+ "周次："+startWeek + "-"+ endWeek+ ','+"班次："+classNum;
+            String context = "★课程：" +className+ ','+"教室："+classPlace + ',' +"教师："+ teaName +','+ "周次："+startWeek + "-"+ endWeek+ ','+"班次："+classNum;
             temp[(r-1) *2][l-1] =context;
             temp[(r-1) *2 +1][l-1] =context;
         }
@@ -159,6 +160,29 @@ public class StudentServiceImpl  implements StudentService {
 
         return classes;
 
+    }
+
+    @Override
+    public Map getGradePoint() {
+        int stuId = authMess.userId();
+        List<Map<String,Object>> li1= studentDao.getWaiGradePoint(stuId);
+        List<Map<String,Object>> li2= studentDao.getNotWaiGradePoint(stuId);
+
+        int sum1 = 0;
+        for(Map<String,Object> l:li1){
+            int temp = (int) l.get("classGradePoint");
+            sum1 +=temp;
+        }
+        int sum2 = 0;
+        for(Map<String,Object> l:li2){
+            int temp = (int) l.get("classGradePoint");
+            sum2 +=temp;
+        }
+
+        Map<String,Object> res = new HashMap<>();
+        res.put("waiguoyu",sum1);
+        res.put("notwaiguoyu",sum2);
+        return res;
     }
 
 

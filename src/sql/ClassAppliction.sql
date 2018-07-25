@@ -1,17 +1,23 @@
 DROP TABLE IF EXISTS ClassApplication;
 -- auto-generated definition
-create Table ClassApplication
+-- auto-generated definition
+
+create table ClassApplication
 (
-  id      int auto_increment
+  id           int auto_increment
     primary key,
-  stuId   int          not null,
-  classId int          not null,
-  states  int          not null,
-  reason  varchar(200) not null,
-  mydate  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  checked int          not null,
-  constraint StudentApplication_id_uindex
-  unique (id)
+  className    varchar(200)                        not null,
+  mainLecturer varchar(200)                        not null,
+  teacherInfo  varchar(200)                        not null,
+  courseInfo   varchar(200)                        not null,
+  classTime    int                                 not null,
+  teaName      varchar(200)       not null default  "",
+  teaId        int                not null default  0,
+  checked      int                                 not null,
+  mydate       timestamp default CURRENT_TIMESTAMP not null
+  on update CURRENT_TIMESTAMP
 )
-  comment '存储学生的申请修改课程的情况';
+  comment '申请添加课程的表';
+
+
 

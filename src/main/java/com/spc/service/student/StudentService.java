@@ -19,4 +19,6 @@ public interface StudentService {
     public int addApplication(int classId,int states,String reason);
 
     public List<ClassDomain> selectClassed(Map<String,Object> map);
+
+    public Map getGradePoint();
 }
