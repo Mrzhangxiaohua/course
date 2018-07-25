@@ -29,7 +29,7 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public List<ClassDomain> findAllClass(Integer departId, String className, int teaId,int startWeek,int endWeek) {
 
-        return classDao.selectClasses(departId, className,"", teaId,startWeek,endWeek);
+        return classDao.selectClasses(departId, className,"", teaId,startWeek,endWeek,1);
     }
 
     @Override

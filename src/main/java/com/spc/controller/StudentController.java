@@ -11,6 +11,7 @@ import com.spc.util.AuthMess;
 import com.spc.util.RequestPayload;
 import com.spc.view.StudentScorePdfView;
 import com.spc.view.StudentTablePdfView;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,6 @@ public class StudentController {
     @Autowired
     private GradeService gradeService;
 
-
     @Autowired
     private RequestPayload requestPayload;
 
@@ -44,19 +44,17 @@ public class StudentController {
 
 
     /**
-     * 根据学号查询学生选择的课程
+     * 学生端：根据学号查询学生选择的课程,用做课表显示
      * @return
      */
     @RequestMapping("/select/classes")
     @ResponseBody
     public String[][] selectClasses(){
-
-        Integer stuId = authMess.userId();
-        return studentService.findClasses(stuId);
+        return studentService.findClasses();
     }
 
     /**
-     *
+     * 学生端：查询所有的课程名称
      * @return
      */
     @RequestMapping(value = "/find/allClassName")
@@ -65,13 +63,11 @@ public class StudentController {
     }
 
     /**
-     * 添加
+     * 学生端：添加课程申请
      * @return
      */
     @RequestMapping(value = "/add/application",method = RequestMethod.POST)
-    public int addApplcation(
-            HttpServletRequest request
-    ){
+    public int addApplcation(HttpServletRequest request){
         String json = requestPayload.getRequestPayload(request);
         System.out.printf("添加课程的json = %s",json);
         try {
@@ -99,22 +95,16 @@ public class StudentController {
     @ResponseBody
     public int chooseCourse(HttpServletRequest request){
         String json = requestPayload.getRequestPayload(request);
-        System.out.printf("添加课程的json = %s",json);
+        JSONObject obj = null;
         try {
-            JSONObject obj = new JSONObject(json);
+            obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
-
-            int stuId =authMess.userId();
-
-            if(gradeService.selectGrade(classId,stuId).isEmpty()!=true){
-                return 0;
-            }else{
-                return studentService.addCourse(stuId,classId);
-            }
-        } catch (Exception e) {
+            return studentService.addCourse(classId);
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return 0;
+
     }
 
     /**
@@ -126,18 +116,10 @@ public class StudentController {
     @ResponseBody
     public int deleteCourse(HttpServletRequest request){
         String json = requestPayload.getRequestPayload(request);
-        System.out.printf("添加课程的json = %s",json);
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
-
-            int stuId =authMess.userId();
-
-            if(gradeService.selectGrade(classId,stuId).isEmpty()!=true & classId!=null){
-                return studentService.deleteCourse(stuId,classId);
-            }else{
-                return 0;
-            }
+            return studentService.deleteCourse(classId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -166,9 +148,8 @@ public class StudentController {
     @RequestMapping("/download/table")
     public ModelAndView downloadCourseTable(HttpServletResponse response) {
 
-        int teaId = authMess.userId();
 
-        String[][] tables = studentService.findClasses(teaId);
+        String[][] tables = studentService.findClasses();
         Map res = new HashMap();
 
         res.put("tables", tables);
@@ -224,8 +205,8 @@ public class StudentController {
             @RequestParam(required = false, defaultValue = "") String teaName,
             @RequestParam(required = false, defaultValue = "88888888") int teaId,
             @RequestParam(required = false, defaultValue = "88888888") int startWeek,
-            @RequestParam(required = false, defaultValue = "88888888") int endWeek) {
-
+            @RequestParam(required = false, defaultValue = "88888888") int endWeek,
+            @RequestParam(required = false, defaultValue = "88888888") int hasWaiGuoYu) {
         Map map = new HashMap<String,Object>();
         map.put("currentPage",currentPage);
         map.put("pageSize",pageSize);
@@ -237,6 +218,7 @@ public class StudentController {
         map.put("endWeek",endWeek);
         Integer stuId = authMess.userId();
         map.put("stuId",stuId);
+        map.put("hasWaiGuoYu",hasWaiGuoYu);
 
         List<ClassDomain> classes = studentService.selectClassed(map);
 
@@ -251,5 +233,7 @@ public class StudentController {
         res.put("data", data);
         return res;
     }
+
+
 
 }

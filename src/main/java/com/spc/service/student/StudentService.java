@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface StudentService {
-    public String[][] findClasses(int stuId);
+    public String[][] findClasses();
 
     public List<Map> findAllClassName();
 
-    public int addCourse(int stuId,int classId);
-    public int deleteCourse(int stuId,int classId);
+    public int addCourse(int classId);
+    public int deleteCourse(int classId);
 
     public List<StudentApplicationDomain> checkedMessage();
 

@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface StudentDao {
 
-    public List<HashMap<String,String>> findClasses(@Param("stuId")Integer stuId);
+    public List<HashMap<String,Object>> findClasses(@Param("stuId")Integer stuId);
 
     public List<Map> findAllClassName();
 

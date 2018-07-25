@@ -103,7 +103,7 @@ public class StudentTablePdfView extends AbstractPdfView {
                 StringBuilder newStrs = null;
                 if(t[j]!=null){
                     String[] strs = t[j].replace(",","\n ").split(" ");
-                    newStrs = new StringBuilder("课程:".concat(strs[0]).concat("地点:").concat(strs[1]).concat("教师:").concat(strs[2]));
+                    newStrs = new StringBuilder(strs[0].concat(strs[1]).concat(strs[2]).concat(strs[3]).concat(strs[4]));
                 }
 
                 cell = new PdfPCell(new Phrase(t[j] != null ? newStrs.toString(): " ", textFont));

@@ -41,20 +41,25 @@ public class StudentServiceImpl  implements StudentService {
     private AuthMess authMess;
 
     @Override
-    public String[][] findClasses(int stuId) {
-        List<HashMap<String,String>> lis = studentDao.findClasses(stuId);
+    public String[][] findClasses() {
+        int stuId = authMess.userId();
+
+        List<HashMap<String,Object>> lis = studentDao.findClasses(stuId);
         String temp[][] = new String[10][7];
-        for (HashMap<String,String> li : lis){
-            String date = li.get("classDateDescription");
-            String classPlace = li.get("classPlace");
-            String teaName = li.get("teaName");
+        for (HashMap<String,Object> li : lis){
+            String date = (String) li.get("classDateDescription");
+            String classPlace = (String) li.get("classPlace");
+            String teaName = (String) li.get("teaName");
+            String startWeek = Integer.toString((Integer) li.get("startWeek"));
+            String endWeek = Integer.toString((Integer) li.get("endWeek"));
+            String classNum = Integer.toString((Integer) li.get("classNum"));
+            String className = (String) li.get("className");
 
             String[] ints = date.split(":");
             Integer r = ints[0].toCharArray()[0]- '0';
             Integer l = ints[1].toCharArray()[0]- '0';
 
-//            System.out.println(li.get("className"));
-            String context = li.get("className") + ','+classPlace + ',' + teaName;
+            String context = "☆课程：" +className+ ','+"教室："+classPlace + ',' +"教师："+ teaName +','+ "周次："+startWeek + "-"+ endWeek+ ','+"班次："+classNum;
             temp[(r-1) *2][l-1] =context;
             temp[(r-1) *2 +1][l-1] =context;
         }
@@ -63,13 +68,27 @@ public class StudentServiceImpl  implements StudentService {
 
 
     @Override
-    public int addCourse(int stuId, int classId) {
-        return studentDao.addChooseCourse(stuId,classId);
+    public int addCourse(int classId) {
+        //首先得到学生id
+        int stuId =authMess.userId();
+        if(gradeDao.selectGrade(classId,stuId).isEmpty()!=true){
+            return 0;
+        }else{
+            classDao.updateChooseNum(classId,1);
+            return studentDao.addChooseCourse(stuId,classId);
+        }
     }
 
     @Override
-    public int deleteCourse(int stuId, int classId) {
-        return studentDao.deleteChooseCourse(stuId,classId);
+    public int deleteCourse(int classId) {
+        int stuId =authMess.userId();
+        if(gradeDao.selectGrade(classId,stuId).isEmpty()!=true) {
+            classDao.updateChooseNum(classId,-1);
+            return studentDao.deleteChooseCourse(stuId, classId);
+        }else {
+            return 0;
+        }
+
     }
 
     @Override
@@ -98,6 +117,7 @@ public class StudentServiceImpl  implements StudentService {
         Integer teaId = (Integer) map.get("teaId");
         String classname= (String) map.get("classname");
         String teaname= (String) map.get("teaname");
+        Integer hasWaiGuoYu= (Integer) map.get("hasWaiGuoYu");
 
         List<GradeDomain> gradeDomains = gradeDao.selectGrade(88888888,stuId);
 
@@ -105,8 +125,11 @@ public class StudentServiceImpl  implements StudentService {
         System.out.printf("startWeek = %d",startWeek);
         System.out.printf("endWeek = %d",endWeek);
 
+
+
         PageHelper.startPage(currentPage,pageSize);
-        List<ClassDomain> classes = classDao.selectClasses(departId, classname ,teaname,teaId,startWeek,endWeek);
+        List<ClassDomain> classes = classDao.selectClasses(departId, classname ,teaname,teaId,startWeek,endWeek,hasWaiGuoYu);
+
 
         System.out.println(classes);
         if (!gradeDomains.isEmpty()){

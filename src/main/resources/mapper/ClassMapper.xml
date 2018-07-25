@@ -54,6 +54,9 @@
           <if test="endWeek!=88888888">
               and #{endWeek} >= a.endWeek
           </if>
+          <if test="hasWaiGuoYu != 1">
+              and a.departId != 12
+          </if>
         </where>
     </select>
 
@@ -76,5 +79,13 @@
         WHERE a.className = #{className}
         and c.stuId = #{stuId}
     </update>
+
+    <update id="updateChooseNum">
+        update course.Course a
+        set classChooseNum  = classChooseNum+#{num}
+        where classId = #{classId}
+    </update>
+
+
 
 </mapper>

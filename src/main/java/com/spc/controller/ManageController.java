@@ -4,6 +4,7 @@ package com.spc.controller;
 import com.spc.model.ClassDomain;
 import com.spc.model.StudentApplicationDomain;
 import com.spc.service.classes.ClassService;
+import com.spc.service.manage.ManageService;
 import com.spc.service.student.StudentService;
 import com.spc.view.ManageTablePdfView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class ManageController {
     @Autowired
     private ClassService classService;
 
+    @Autowired
+    private ManageService manageService;
+
 
 
 
@@ -35,8 +39,8 @@ public class ManageController {
     public String[][] manageFindClasses(
             @RequestParam(required = false, defaultValue = "88888888") Integer stuId
     ) {
-        String[][] res = studentService.findClasses(stuId);
-        System.out.println(res);
+        String[][] res = manageService.findClasses(stuId);
+
         return res;
     }
 
