@@ -144,9 +144,9 @@ public class StudentController {
      * 返回学生的已选学分
      * @return
      */
-    @RequestMapping("get/gradePoint")
+    @RequestMapping("get/classTime")
     public Map getGradePoint(){
-        return studentService.getGradePoint();
+        return studentService.getClassTime();
     }
 
     /**

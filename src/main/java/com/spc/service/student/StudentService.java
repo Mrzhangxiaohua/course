@@ -20,5 +20,5 @@ public interface StudentService {
 
     public List<ClassDomain> selectClassed(Map<String,Object> map);
 
-    public Map getGradePoint();
+    public Map getClassTime();
 }

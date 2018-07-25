@@ -19,7 +19,7 @@ public interface StudentDao {
 
     public List findStudent(@Param("className") String className, @Param("classId") Integer classId);
 
-    public List<Map<String,Object>> getWaiGradePoint(@Param("stuId") int stuId);
-    public List<Map<String,Object>> getNotWaiGradePoint(@Param("stuId") int stuId);
+    public List<Map<String,Object>> getWaiStudyTime(@Param("stuId") int stuId);
+    public List<Map<String,Object>> getNotWaiStudyTime(@Param("stuId") int stuId);
 
 }

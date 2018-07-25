@@ -163,19 +163,19 @@ public class StudentServiceImpl  implements StudentService {
     }
 
     @Override
-    public Map getGradePoint() {
+    public Map getClassTime() {
         int stuId = authMess.userId();
-        List<Map<String,Object>> li1= studentDao.getWaiGradePoint(stuId);
-        List<Map<String,Object>> li2= studentDao.getNotWaiGradePoint(stuId);
+        List<Map<String,Object>> li1= studentDao.getWaiStudyTime(stuId);
+        List<Map<String,Object>> li2= studentDao.getNotWaiStudyTime(stuId);
 
         int sum1 = 0;
         for(Map<String,Object> l:li1){
-            int temp = (int) l.get("classGradePoint");
+            int temp = (int) l.get("classTime");
             sum1 +=temp;
         }
         int sum2 = 0;
         for(Map<String,Object> l:li2){
-            int temp = (int) l.get("classGradePoint");
+            int temp = (int) l.get("classTime");
             sum2 +=temp;
         }
 

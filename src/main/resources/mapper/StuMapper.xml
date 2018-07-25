@@ -49,8 +49,8 @@
         from course.Course
     </select>
     
-    <select id="getWaiGradePoint" resultType="map">
-        select c.classGradePoint,c.className
+    <select id="getWaiStudyTime" resultType="map">
+        select c.classTime,c.className
         from
         (select classId
         from course.Course_choose c2
@@ -61,8 +61,8 @@
         where c.departId = 12
     </select>
 
-    <select id="getNotWaiGradePoint" resultType="map">
-        select c.classGradePoint,c.className
+    <select id="getNotWaiStudyTime" resultType="map">
+        select c.classTime,c.className
         from
         (select classId
         from course.Course_choose c2
