@@ -17,6 +17,5 @@ public interface ClassService {
 
     int updateScore(String className,int stuId,int score);
 
-    String[][] findCourseTable(int teaId);
 
 }

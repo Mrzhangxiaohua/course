@@ -80,7 +80,7 @@
             from course.Course
             where classId =#{classId}
         ) a
-        left join
+        inner join
         (
             select classDateDescription
             from

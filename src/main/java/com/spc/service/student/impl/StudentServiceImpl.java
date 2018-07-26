@@ -66,8 +66,6 @@ public class StudentServiceImpl implements StudentService {
         }
         return temp;
     }
-
-
     @Override
     public int addCourse(int classId) {
         //首先得到学生id

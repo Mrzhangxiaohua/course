@@ -1,16 +1,21 @@
 package com.spc.controller;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
+import com.spc.model.CourseTableExcelDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
 import com.spc.service.teacher.TeacherService;
 import com.spc.util.AuthMess;
 
 import com.spc.view.StudentTablePdfView;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -132,7 +138,7 @@ public class TeacherController {
     @ResponseBody
     public String[][]  findCourseTable(){
         int teaId = authMess.teacherId();
-        return classService.findCourseTable(teaId);
+        return teacherService.findCourseTable(teaId);
     }
 
     /**
@@ -210,18 +216,45 @@ public class TeacherController {
     @RequestMapping("/download/courseTable")
     public ModelAndView  downloadCourseTable(){
         int teaId = authMess.teacherId();
-        String[][] tables = classService.findCourseTable(teaId);
+        String[][] tables = teacherService.findCourseTable(teaId);
         System.out.println(tables);
 
         Map res = new HashMap();
 
-        res.put("tables", tables);
+        res.put("data", tables);
         Map<String, Object> model = new HashMap<>();
         model.put("res",res);
         model.put("style","wider");
 
         return new ModelAndView(new StudentTablePdfView(), model);
     }
+
+    @RequestMapping("/download/courseTableExcel")
+    public void   downloadCourseTableExcel(HttpServletRequest request,HttpServletResponse response){
+        int teaId = authMess.teacherId();
+        String[][] tables = teacherService.findCourseTable(teaId);
+
+        List<CourseTableExcelDomain> liC = new ArrayList<>();
+        for (int i=0;i<tables.length;i=i+2){
+            liC.add(new CourseTableExcelDomain(i/2,tables[i][0],tables[i][1],tables[i][2],tables[i][3]
+            ,tables[i][4],tables[i][5],tables[i][6]));
+        }
+        response.setHeader("content-Type", "application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename=Table.xls");
+
+        ExportParams params = new ExportParams();
+        params.setTitle("课表");
+
+
+        Workbook workbook = ExcelExportUtil.exportExcel(params, CourseTableExcelDomain.class, liC);
+
+        try {
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @RequestMapping(value = "add/classApplication",method = RequestMethod.POST)
     @ResponseBody
