@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -75,7 +76,8 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public List<StudentApplicationDomain> checkedMessage(int key) {
-        return studentApplicationDao.findall(key);
+    public List<StudentApplicationDomain> checkedMessage(int key,int stuId,Date date) {
+
+        return studentApplicationDao.findall(key,stuId,date);
     }
 }

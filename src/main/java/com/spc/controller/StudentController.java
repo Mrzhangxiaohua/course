@@ -242,7 +242,4 @@ public class StudentController {
         res.put("data", data);
         return res;
     }
-
-
-
 }

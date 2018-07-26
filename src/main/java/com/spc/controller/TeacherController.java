@@ -228,9 +228,6 @@ public class TeacherController {
     public int addClassApplication(@RequestBody  ClassApplicationDomain cad){
         cad.setChecked(1);
         cad.setTeaId(0);
-        System.out.println("================================");
-        System.out.println(cad.getClassTime());
-        System.out.println(cad.getClassName());
         return teacherService.addClassApplication(cad);
     }
 }

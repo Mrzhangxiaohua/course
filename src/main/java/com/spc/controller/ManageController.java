@@ -47,20 +47,27 @@ public class ManageController {
         return res;
     }
 
+    /**
+     * 查询所有的审核情况
+     * @param tabKey
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
     @RequestMapping("/checked/message")
     @ResponseBody
     public Map<String,Object> checkedMessage(
             @RequestParam(required = false,defaultValue = "88888888") int tabKey,
             @RequestParam(required = false, defaultValue = "1") int currentPage,
-            @RequestParam(required = false, defaultValue = "10") int pageSize
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false, defaultValue = "88888888") int stuId,
+            @RequestParam(required = false, defaultValue = "") Date date
             ){
 
         PageHelper.startPage(currentPage,pageSize);
-        System.out.printf("============%d",tabKey);
 
-        List<StudentApplicationDomain> result = manageService.checkedMessage(tabKey);
+        List<StudentApplicationDomain> result = manageService.checkedMessage(tabKey,stuId,date);
 
-        System.out.println(result.size());
         Map<String,Object> res = new HashMap<>();
 
         Map<String,Object> map = new HashMap<>();
@@ -69,8 +76,6 @@ public class ManageController {
         map.put("pageSize",pageSize);
         map.put("currentPage",currentPage);
         res.put("data",map);
-
-
         return res;
     }
 

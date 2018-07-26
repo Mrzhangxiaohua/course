@@ -31,6 +31,12 @@
             <if test="key!=88888888 and key!=0">
                 s.checked=#{key}
             </if>
+            <if test="stuId!=88888888">
+                and s.stuId = #{stuId}
+            </if>
+            <if test="date!=''">
+                and CONVERT (s.mydate) =#{date}
+            </if>
         </where>
     </select>
 </mapper>
