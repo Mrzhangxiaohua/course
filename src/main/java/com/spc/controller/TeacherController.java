@@ -230,7 +230,7 @@ public class TeacherController {
     }
 
     @RequestMapping("/download/courseTableExcel")
-    public void   downloadCourseTableExcel(HttpServletRequest request,HttpServletResponse response){
+    public void  downloadCourseTableExcel(HttpServletRequest request,HttpServletResponse response){
         int teaId = authMess.teacherId();
         String[][] tables = teacherService.findCourseTable(teaId);
 
