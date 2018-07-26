@@ -22,4 +22,7 @@ public interface StudentDao {
     public List<Map<String,Object>> getWaiStudyTime(@Param("stuId") int stuId);
     public List<Map<String,Object>> getNotWaiStudyTime(@Param("stuId") int stuId);
 
+    public List<Map<String,Object>> findTimeChongTu(@Param("stuId") int stuId,@Param("classId") int classId);
+
+
 }

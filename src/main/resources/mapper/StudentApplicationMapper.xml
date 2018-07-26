@@ -35,7 +35,7 @@
                 and s.stuId = #{stuId}
             </if>
             <if test="date!=''">
-                and CONVERT (s.mydate) =#{date}
+                and s.mydate) =#{date}
             </if>
         </where>
     </select>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.spc.dao.StudentDao" >
+<mapper namespace="com.spc.dao.StudentDao">
     <sql id="BASE_COLUMN">
       stuId,className,classDateDescription,classPlace,teaName,classNum,startWeek,endWeek
     </sql>
@@ -17,10 +17,10 @@
         </where>
     </select>
 
-    <insert id="addChooseCourse"  useGeneratedKeys="true" keyProperty="chooseId">
+    <insert id="addChooseCourse" useGeneratedKeys="true" keyProperty="chooseId">
         insert into Course_choose(stuId, classId,score) values(#{stuId}, #{classId},0)
     </insert>
-   <delete id="deleteChooseCourse">
+    <delete id="deleteChooseCourse">
        delete from course.Course_choose where stuId=#{stuId} and classId =#{classId};
    </delete>
 
@@ -48,7 +48,7 @@
         select distinct classId,className
         from course.Course
     </select>
-    
+
     <select id="getWaiStudyTime" resultType="map">
         select c.classTime,c.className
         from
@@ -71,6 +71,28 @@
         left  join course.Course c
         on a.classId = c.classId
         where c.departId!=12
+    </select>
+    <select id="findTimeChongTu" resultType="map">
+        select a.classDateDescription
+        from
+        (
+            select classDateDescription
+            from course.Course
+            where classId =#{classId}
+        ) a
+        left join
+        (
+            select classDateDescription
+            from
+            (
+                select classId
+                from course.Course_choose
+                where stuId = #{stuId}
+            )  c
+            left join  course.Course c2
+            on c.classId=c2.classId
+        )d
+        on d.classDateDescription = a.classDateDescription
     </select>
 
 </mapper>

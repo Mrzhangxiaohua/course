@@ -28,6 +28,7 @@ public class ClassDomain {
     private Integer classTime;
     private boolean notShowAddButton;
     private boolean showDeleteButton;
+    private String buttonGroup;
 
     public Integer getClassId() {
         return classId;
@@ -204,5 +205,13 @@ public class ClassDomain {
 
     public void setShowDeleteButton(boolean showDeleteButton) {
         this.showDeleteButton = showDeleteButton;
+    }
+
+    public String getButtonGroup() {
+        return buttonGroup;
+    }
+
+    public void setButtonGroup(String buttonGroup) {
+        this.buttonGroup = buttonGroup;
     }
 }

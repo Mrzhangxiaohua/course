@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service(value = "studentService")
-public class StudentServiceImpl  implements StudentService {
+public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentDao studentDao;
@@ -45,9 +45,9 @@ public class StudentServiceImpl  implements StudentService {
     public String[][] findClasses() {
         int stuId = authMess.userId();
 
-        List<HashMap<String,Object>> lis = studentDao.findClasses(stuId);
+        List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
         String temp[][] = new String[10][7];
-        for (HashMap<String,Object> li : lis){
+        for (HashMap<String, Object> li : lis) {
             String date = (String) li.get("classDateDescription");
             String classPlace = (String) li.get("classPlace");
             String teaName = (String) li.get("teaName");
@@ -57,12 +57,12 @@ public class StudentServiceImpl  implements StudentService {
             String className = (String) li.get("className");
 
             String[] ints = date.split(":");
-            Integer r = ints[0].toCharArray()[0]- '0';
-            Integer l = ints[1].toCharArray()[0]- '0';
+            Integer r = ints[0].toCharArray()[0] - '0';
+            Integer l = ints[1].toCharArray()[0] - '0';
 
-            String context = "★课程：" +className+ ','+"教室："+classPlace + ',' +"教师："+ teaName +','+ "周次："+startWeek + "-"+ endWeek+ ','+"班次："+classNum;
-            temp[(l-1) *2][r-1] =context;
-            temp[(l-1) *2 +1][r-1] =context;
+            String context = "★课程：" + className + ',' + "教室：" + classPlace + ',' + "教师：" + teaName + ',' + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
+            temp[(l - 1) * 2][r - 1] = context;
+            temp[(l - 1) * 2 + 1][r - 1] = context;
         }
         return temp;
     }
@@ -71,32 +71,32 @@ public class StudentServiceImpl  implements StudentService {
     @Override
     public int addCourse(int classId) {
         //首先得到学生id
-        int stuId =authMess.userId();
-        if(gradeDao.selectGrade(classId,stuId).isEmpty()!=true){
+        int stuId = authMess.userId();
+        List<Map<String, Object>> res = studentDao.findTimeChongTu(stuId, classId);
+        if (gradeDao.selectGrade(classId, stuId).isEmpty() && res.isEmpty()) {
+            classDao.updateChooseNum(classId, 1);
+            return studentDao.addChooseCourse(stuId, classId);
+        } else {
             return 0;
-        }else{
-            classDao.updateChooseNum(classId,1);
-            return studentDao.addChooseCourse(stuId,classId);
         }
     }
 
     @Override
     public int deleteCourse(int classId) {
-        int stuId =authMess.userId();
-        if(gradeDao.selectGrade(classId,stuId).isEmpty()!=true) {
-            classDao.updateChooseNum(classId,-1);
+        int stuId = authMess.userId();
+        if (gradeDao.selectGrade(classId, stuId).isEmpty() != true) {
+            classDao.updateChooseNum(classId, -1);
             return studentDao.deleteChooseCourse(stuId, classId);
-        }else {
+        } else {
             return 0;
         }
-
     }
 
 
     @Override
-    public int addApplication(int classId,int states,String reason) {
-        int stuId =authMess.userId();
-        return studentApplicationDao.add(stuId,classId,states,reason,1);
+    public int addApplication(int classId, int states, String reason) {
+        int stuId = authMess.userId();
+        return studentApplicationDao.add(stuId, classId, states, reason, 1);
     }
 
     @Override
@@ -110,46 +110,46 @@ public class StudentServiceImpl  implements StudentService {
         Integer endWeek = (Integer) map.get("endWeek");
         Integer departId = (Integer) map.get("departId");
         Integer teaId = (Integer) map.get("teaId");
-        String classname= (String) map.get("classname");
-        String teaname= (String) map.get("teaname");
-        Integer hasWaiGuoYu= (Integer) map.get("hasWaiGuoYu");
+        String classname = (String) map.get("classname");
+        String teaname = (String) map.get("teaname");
+        Integer hasWaiGuoYu = (Integer) map.get("hasWaiGuoYu");
 
-        List<GradeDomain> gradeDomains = gradeDao.selectGrade(88888888,stuId);
+        List<GradeDomain> gradeDomains = gradeDao.selectGrade(88888888, stuId);
 
         System.out.println("\n");
-        System.out.printf("startWeek = %d",startWeek);
-        System.out.printf("endWeek = %d",endWeek);
+        System.out.printf("startWeek = %d", startWeek);
+        System.out.printf("endWeek = %d", endWeek);
 
 
-
-        PageHelper.startPage(currentPage,pageSize);
-        List<ClassDomain> classes = classDao.selectClasses(departId, classname ,teaname,teaId,startWeek,endWeek,hasWaiGuoYu);
+        PageHelper.startPage(currentPage, pageSize);
+        List<ClassDomain> classes = classDao.selectClasses(departId, classname, teaname, teaId, startWeek, endWeek, hasWaiGuoYu);
 
 
         System.out.println(classes);
-        if (!gradeDomains.isEmpty()){
-            for(int j=0;j<gradeDomains.size();j++){
+        if (!gradeDomains.isEmpty()) {
+            for (int j = 0; j < gradeDomains.size(); j++) {
                 int id = gradeDomains.get(j).getClassId();
                 System.out.println("\n");
-                System.out.printf("id %d",id);
-                for (int i=0;i<classes.size();i++){
+                System.out.printf("id %d", id);
+                for (int i = 0; i < classes.size(); i++) {
                     int classId = classes.get(i).getClassId();
-                    if(classId == id){
+                    if (classId == id) {
                         classes.get(i).setShowDeleteButton(true);
                         classes.get(i).setNotShowAddButton(true);
                     }
                 }
             }
         }
-        for (ClassDomain classDomain :classes){
-            if (classDomain.getClassUpperLimit() == classDomain.getClassChooseNum()){
+        for (ClassDomain classDomain : classes) {
+            if (classDomain.getClassUpperLimit() == classDomain.getClassChooseNum()) {
                 classDomain.setShowDeleteButton(false);
                 classDomain.setNotShowAddButton(true);
             }
+            classDomain.setButtonGroup(Boolean.toString(!classDomain.isNotShowAddButton())+":"+Boolean.toString(classDomain.isShowDeleteButton()));
             String[] d = classDomain.getClassDateDescription().split(":");
             Integer a = Integer.parseInt(d[0]);
             Integer b = Integer.parseInt(d[1]);
-            classDomain.setClassDateDescription(new String(courseDateTrans.dateToString(a,b)));
+            classDomain.setClassDateDescription(new String(courseDateTrans.dateToString(a, b)));
         }
 
         return classes;
@@ -158,28 +158,28 @@ public class StudentServiceImpl  implements StudentService {
     @Override
     public Map getClassTime() {
         int stuId = authMess.userId();
-        List<Map<String,Object>> li1= studentDao.getWaiStudyTime(stuId);
-        List<Map<String,Object>> li2= studentDao.getNotWaiStudyTime(stuId);
+        List<Map<String, Object>> li1 = studentDao.getWaiStudyTime(stuId);
+        List<Map<String, Object>> li2 = studentDao.getNotWaiStudyTime(stuId);
 
         int sum1 = 0;
-        for(Map<String,Object> l:li1){
+        for (Map<String, Object> l : li1) {
             int temp = (int) l.get("classTime");
-            sum1 +=temp;
+            sum1 += temp;
         }
         int sum2 = 0;
-        for(Map<String,Object> l:li2){
+        for (Map<String, Object> l : li2) {
             int temp = (int) l.get("classTime");
-            sum2 +=temp;
+            sum2 += temp;
         }
 
-        Map<String,Object> res = new HashMap<>();
-        res.put("waiguoyu",sum1);
-        res.put("notwaiguoyu",sum2);
+        Map<String, Object> res = new HashMap<>();
+        res.put("waiguoyu", sum1);
+        res.put("notwaiguoyu", sum2);
         return res;
     }
 
 
-    public List<Map> findAllClassName(){
+    public List<Map> findAllClassName() {
         return studentDao.findAllClassName();
     }
 }
