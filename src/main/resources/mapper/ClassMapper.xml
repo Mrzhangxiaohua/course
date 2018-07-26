@@ -64,7 +64,7 @@
 
     <select id="findCourseTable" resultType="hashmap">
         select
-        classDateDescription,teaName,classPlace
+        classDateDescription,teaName,classPlace,endWeek,startWeek,classNum,className
         from  Course
         <where>
             teaId = #{teaId}

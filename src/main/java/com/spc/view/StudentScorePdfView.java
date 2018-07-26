@@ -1,14 +1,8 @@
 package com.spc.view;
 
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
 import com.spc.model.GradeDomain;
 import com.spc.util.AuthMess;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -111,5 +107,16 @@ public class StudentScorePdfView extends AbstractPdfView {
 
         }
         document.add(table);
+
+        Rectangle rect = new Rectangle(600,80,1000, 120);
+
+        PdfContentByte cb = writer.getDirectContent();
+        cb.rectangle(rect);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Phrase p = new Phrase("签名:   _________\n时间:   "+df.format(new Date()) ,textFont);
+        ColumnText ct = new ColumnText(cb);
+        ct.setSimpleColumn(rect);
+        ct.addText(p);
+        ct.go();
     }
 }

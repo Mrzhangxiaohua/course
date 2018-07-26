@@ -17,7 +17,7 @@ public interface ClassDao {
     int updateScore(@Param("className") String className, @Param("stuId") int stuId,
                     @Param("score") int score);
 
-    List<HashMap<String,String>> findCourseTable(@Param("teaId") Integer teaId);
+    List<HashMap<String,Object>> findCourseTable(@Param("teaId") Integer teaId);
 
     int updateChooseNum(@Param("classId")int classId,@Param("num")int num);
 }

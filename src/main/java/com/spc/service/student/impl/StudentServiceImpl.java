@@ -106,8 +106,6 @@ public class StudentServiceImpl  implements StudentService {
     @Override
     public List<ClassDomain> selectClassed(Map<String, Object> map) {
 
-
-
         //获得学生id
         Integer stuId = (Integer) map.get("stuId");
         Integer currentPage = (Integer) map.get("currentPage");
@@ -159,7 +157,6 @@ public class StudentServiceImpl  implements StudentService {
         }
 
         return classes;
-
     }
 
     @Override

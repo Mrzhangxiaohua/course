@@ -208,15 +208,17 @@ public class TeacherController {
     }
 
     @RequestMapping("/download/courseTable")
-    public ModelAndView  downloadCourseTable(HttpServletResponse response){
+    public ModelAndView  downloadCourseTable(){
         int teaId = authMess.teacherId();
         String[][] tables = classService.findCourseTable(teaId);
+        System.out.println(tables);
 
         Map res = new HashMap();
 
         res.put("tables", tables);
         Map<String, Object> model = new HashMap<>();
         model.put("res",res);
+        model.put("style","wider");
 
         return new ModelAndView(new StudentTablePdfView(), model);
     }

@@ -2,12 +2,13 @@ package com.spc.view;
 
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
+import org.apache.tomcat.jni.Time;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
+import java.util.Timer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -111,8 +112,18 @@ public class StudentTablePdfView extends AbstractPdfView {
                 cell.setPaddingBottom(6);
                 table.addCell(cell);
             }
-
         }
         document.add(table);
+        Rectangle rect = new Rectangle(600,80,1000, 120);
+
+        PdfContentByte cb = writer.getDirectContent();
+        cb.rectangle(rect);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Phrase p = new Phrase("签名:   _________\n时间:   "+df.format(new Date()) ,textFont);
+        ColumnText ct = new ColumnText(cb);
+        ct.setSimpleColumn(rect);
+        ct.addText(p);
+        ct.go();
+
     }
 }

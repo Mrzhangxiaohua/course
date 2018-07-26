@@ -46,7 +46,9 @@ public class ManageController {
 
     @RequestMapping("/checked/message")
     @ResponseBody
-    public Map<String,Object> checkedMessage(){
+    public Map<String,Object> checkedMessage(
+            @RequestParam(required = false,defaultValue = "88888888") int index
+            ){
 
         List<StudentApplicationDomain> maps = studentService.checkedMessage();
 
