@@ -3,6 +3,7 @@ package com.spc.view;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.tomcat.jni.Time;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +26,7 @@ public class StudentTablePdfView extends AbstractPdfView {
 //        document.setPageSize(pageSize);
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
-        String[][] tables = (String[][]) map.get("tables");
+        String[][] tables = (String[][]) map.get("data");
 
         System.out.println(tables);
         PdfPTable table = new PdfPTable(8);
@@ -88,8 +89,6 @@ public class StudentTablePdfView extends AbstractPdfView {
         table.addCell(hcell);
 
         for (int i = 0; i < tables.length; i = i + 2) {
-
-
             String[] t = tables[i];
             PdfPCell cell;
             System.out.println(t);
@@ -101,10 +100,15 @@ public class StudentTablePdfView extends AbstractPdfView {
             table.addCell(cell);
 
             for (int j = 0; j < t.length; j++) {
-                StringBuilder newStrs = null;
+                StringBuilder newStrs = new StringBuilder("");
                 if(t[j]!=null){
                     String[] strs = t[j].replace(",","\n ").split(" ");
-                    newStrs = new StringBuilder(strs[0].concat(strs[1]).concat(strs[2]).concat(strs[3]).concat(strs[4]));
+                    if(strs!=null && !(strs.length==0)){
+                        for(String li:strs ){
+                            System.out.println(li);
+                            newStrs = li!=null && li!=""? newStrs.append(li):newStrs;
+                        }
+                    }
                 }
 
                 cell = new PdfPCell(new Phrase(t[j] != null ? newStrs.toString(): " ", textFont));

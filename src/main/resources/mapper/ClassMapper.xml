@@ -6,6 +6,10 @@
         Course
     </sql>
 
+    <sql id="Table">
+        classDateDescription,teaName,classPlace,endWeek,startWeek,classNum,className
+    </sql>
+
     <sql id="BASE_COLUMN">
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
         classPlace,classLength,classModuleNum,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,classTime
@@ -60,11 +64,20 @@
         </where>
     </select>
 
+    
+
+
+    <select id="findAllClasseSimpleMess" resultType="map">
+        select
+        <include refid="Table"/>
+        from  Course
+        order by className,classNum
+    </select>
 
 
     <select id="findCourseTable" resultType="hashmap">
         select
-        classDateDescription,teaName,classPlace,endWeek,startWeek,classNum,className
+        <include refid="Table"/>
         from  Course
         <where>
             teaId = #{teaId}

@@ -27,5 +27,10 @@
         on s.stuId = s1.stuId
         left join Course c
         on s.classId = c.classId
+        <where>
+            <if test="key!=88888888 and key!=0">
+                s.checked=#{key}
+            </if>
+        </where>
     </select>
 </mapper>

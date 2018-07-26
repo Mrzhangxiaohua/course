@@ -161,7 +161,7 @@ public class StudentController {
         String[][] tables = studentService.findClasses();
         Map res = new HashMap();
 
-        res.put("tables", tables);
+        res.put("data", tables);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style","higher");
@@ -186,7 +186,7 @@ public class StudentController {
         System.out.println("tun here");
         Map res = new HashMap();
 
-        res.put("scores", scores);
+        res.put("data", scores);
         res.put("stuId",Integer.toString(stuId));
         res.put("stuName",authMess.userName());
         Map<String, Object> model = new HashMap<>();

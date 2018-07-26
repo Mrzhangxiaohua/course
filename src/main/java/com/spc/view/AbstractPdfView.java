@@ -44,9 +44,11 @@ public abstract class AbstractPdfView extends AbstractView {
             Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
             pageSize.rotate();
             document.setPageSize(pageSize);
-        }else{
+        }else if(model.get("style").equals("higher")){
             Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
             document.setPageSize(pageSize);
+        }else{
+
         }
 
         PdfWriter writer = PdfWriter.getInstance(document, baos);

@@ -9,5 +9,5 @@ public interface StudentApplicationDao {
 
     int add(@Param("stuId")Integer stuId,@Param("classId")Integer classId,  @Param("states")Integer  states,@Param("reason")String  reason,@Param("checked")int checked);
 
-    List<StudentApplicationDomain> findall();
+    List<StudentApplicationDomain> findall(@Param("key")Integer key);
 }

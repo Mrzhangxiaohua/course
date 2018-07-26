@@ -61,8 +61,8 @@ public class StudentServiceImpl  implements StudentService {
             Integer l = ints[1].toCharArray()[0]- '0';
 
             String context = "★课程：" +className+ ','+"教室："+classPlace + ',' +"教师："+ teaName +','+ "周次："+startWeek + "-"+ endWeek+ ','+"班次："+classNum;
-            temp[(r-1) *2][l-1] =context;
-            temp[(r-1) *2 +1][l-1] =context;
+            temp[(l-1) *2][r-1] =context;
+            temp[(l-1) *2 +1][r-1] =context;
         }
         return temp;
     }
@@ -92,10 +92,6 @@ public class StudentServiceImpl  implements StudentService {
 
     }
 
-    @Override
-    public List<StudentApplicationDomain> checkedMessage() {
-        return studentApplicationDao.findall();
-    }
 
     @Override
     public int addApplication(int classId,int states,String reason) {

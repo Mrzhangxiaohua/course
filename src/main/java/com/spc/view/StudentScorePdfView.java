@@ -27,7 +27,7 @@ public class StudentScorePdfView extends AbstractPdfView {
         String userId = (String) map.get("stuId");
         String userName = (String) map.get("stuName");
 
-        List<GradeDomain> scores = (List<GradeDomain>) map.get("scores");
+        List<GradeDomain> scores = (List<GradeDomain>) map.get("data");
 
 
         PdfPTable table = new PdfPTable(4);

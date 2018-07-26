@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
-public class ManageTablePdfView extends AbstractPdfView {
+public class ManageScorePdfView extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model,
@@ -21,7 +21,7 @@ public class ManageTablePdfView extends AbstractPdfView {
                                     HttpServletResponse response) throws Exception {
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
-        List<Map> students = (List<Map>) map.get("students");
+        List<Map> students = (List<Map>) map.get("data");
 
         System.out.println(students);
 

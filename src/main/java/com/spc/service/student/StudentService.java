@@ -14,7 +14,6 @@ public interface StudentService {
     public int addCourse(int classId);
     public int deleteCourse(int classId);
 
-    public List<StudentApplicationDomain> checkedMessage();
 
     public int addApplication(int classId,int states,String reason);
 
