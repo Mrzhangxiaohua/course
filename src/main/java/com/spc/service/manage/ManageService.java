@@ -10,6 +10,7 @@ public interface ManageService {
 
     String[][] bigTable();
     List<StudentApplicationDomain> checkedMessage(int key,int stuId);
+    List<StudentApplicationDomain> checkedMessageAndDate(int key,int stuId,Date date);
 
     int makeSure(int id);
     int reject(int id);

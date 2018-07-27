@@ -23,6 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RequestMapping("/manage")
@@ -69,16 +73,28 @@ public class ManageController {
             @RequestParam(required = false,defaultValue = "88888888") int tabKey,
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false, defaultValue = "88888888") int stuId
-//            @RequestParam(required = false, defaultValue = "") Date date
+            @RequestParam(required = false, defaultValue = "88888888") int stuId,
+            @RequestParam(required = false, defaultValue = "") String mydate
             ){
 
         PageHelper.startPage(currentPage,pageSize);
-
-        List<StudentApplicationDomain> result = manageService.checkedMessage(tabKey,stuId);
+        DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
+        List<StudentApplicationDomain> result = new ArrayList<>();
+        if(!mydate.equals("")){
+            try {
+                Date date =new Date();
+                date = fmt.parse(mydate);
+                result = manageService.checkedMessageAndDate(tabKey,stuId,date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else {
+            result = manageService.checkedMessage(tabKey,stuId);
+        }
+        System.out.println("==========-----------============");
+        System.out.println(result.get(0).getMydate());
 
         Map<String,Object> res = new HashMap<>();
-
         Map<String,Object> map = new HashMap<>();
         map.put(Integer.toString(tabKey),result);
         map.put("total",((Page)result).getTotal());
@@ -96,7 +112,6 @@ public class ManageController {
         try {
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
-//            Integer tabKey = obj.getInt("tabKey");
             return manageService.makeSure(id);
         }catch (Exception e){
             System.out.println(e);

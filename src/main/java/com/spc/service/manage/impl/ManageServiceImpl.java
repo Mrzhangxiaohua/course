@@ -82,6 +82,13 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
+    public List<StudentApplicationDomain> checkedMessageAndDate(int key, int stuId, Date date) {
+        java.sql.Date dateSql = new java.sql.Date(date.getTime());
+        System.out.println(dateSql);
+        return studentApplicationDao.findallWithDate(key,stuId,dateSql);
+    }
+
+    @Override
     public int makeSure(int id) {
         //通过的话就要将checked设置为1
         return studentApplicationDao.checked(id,1);

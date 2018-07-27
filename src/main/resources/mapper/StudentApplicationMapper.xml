@@ -17,7 +17,7 @@
    </insert>
 
     <select id="findall" resultType="com.spc.model.StudentApplicationDomain">
-        select s.id,s.stuId,s1.stuName,s.reason,s.mydate,a2.checkStr,a1.category,s.checked,c.className
+        select s.id,s.stuId,s1.stuName,s.reason, s.mydate,a2.checkStr,a1.category,s.checked,c.className
         from course.StudentApplication s
         left join Application_Category a1
         on s.states = a1.id
@@ -37,9 +37,32 @@
         </where>
     </select>
 
+    <select id="findallWithDate" resultType="com.spc.model.StudentApplicationDomain">
+        select s.id,s.stuId,s1.stuName,s.reason, s.mydate ,a2.checkStr,a1.category,s.checked,c.className
+        from course.StudentApplication s
+        left join Application_Category a1
+        on s.states = a1.id
+        left join Application_Check a2
+        on s.checked = a2.id
+        left join course.Student s1
+        on s.stuId = s1.stuId
+        left join Course c
+        on s.classId = c.classId
+        <where>
+            <if test="key!=88888888 and key!=0">
+                s.checked=#{key}
+            </if>
+            <if test="stuId!=88888888">
+                and s.stuId = #{stuId}
+            </if>
+                and cast(s.mydate as date) = #{date}
+        </where>
+    </select>
+
     <update id="checked">
         update  course.StudentApplication
         set checked = #{checked}
         where id=#{id} and checked=2
+--         只有未审核的才能改变状态
     </update>
 </mapper>

@@ -1,6 +1,7 @@
 package com.spc.model;
 
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class StudentApplicationDomain {
 
@@ -9,7 +10,7 @@ public class StudentApplicationDomain {
     private int classId;
     private int states;
     private String reason;
-    private Timestamp mydate;
+    private String mydate;
     private int checked;
     private String checkStr;
     private String category;
@@ -58,12 +59,13 @@ public class StudentApplicationDomain {
         this.reason = reason;
     }
 
-    public Timestamp getMydate() {
+    public String getMydate() {
         return mydate;
     }
 
-    public void setMydate(Timestamp mydate) {
-        this.mydate = mydate;
+    public void setMydate(java.sql.Timestamp mydate) {
+        String s = new SimpleDateFormat("yyyy-MM-dd").format(mydate);
+        this.mydate = s;
     }
 
     public int getChecked() {
