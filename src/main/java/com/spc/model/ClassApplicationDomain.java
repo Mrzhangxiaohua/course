@@ -34,7 +34,6 @@ public class ClassApplicationDomain {
     }
 
 
-
     public int getChecked() {
         return checked;
     }

@@ -40,10 +40,10 @@ public class TeacherServiceImpl implements TeacherService {
             String className = (String) li.get("className");
 
             String[] ints = date.split(":");
-            Integer r = ints[0].toCharArray()[0]- '0';
-            Integer l = ints[1].toCharArray()[0]- '0';
+            Integer r = ints[0].toCharArray()[0] - '0';
+            Integer l = ints[1].toCharArray()[0] - '0';
 
-            String context = "★课程：" +className+ ','+"教室："+classPlace + ',' +"教师："+ teacherName +','+ "周次："+startWeek + "-"+ endWeek+ ','+"班次："+classNum;
+            String context = "★课程：" + className + ',' + "教室：" + classPlace + ',' + "教师：" + teacherName + ',' + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
 
             temp[(l - 1) * 2][r - 1] = context;
             temp[(l - 1) * 2 + 1][r - 1] = context;

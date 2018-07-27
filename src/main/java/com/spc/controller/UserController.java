@@ -9,10 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
 import com.spc.util.RequestPayload;
 
 /**
  * 这个类提供用户管理的路由。
+ *
  * @author yuhongchao
  * @version 1.0
  */
@@ -36,7 +38,7 @@ public class UserController {
             System.out.println(json);
             JSONObject obj = new JSONObject(json);
 
-            UserDomain userDomain= new UserDomain();
+            UserDomain userDomain = new UserDomain();
 
             JSONObject sts = obj.getJSONObject("params").getJSONObject("values");
 
@@ -48,12 +50,10 @@ public class UserController {
             Integer roleId = sts.getInt("roleId");
 
             //多表关联插入
-            return userService.addUser(userDomain,roleId);
+            return userService.addUser(userDomain, roleId);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
-    };
-
-
+    }
 }

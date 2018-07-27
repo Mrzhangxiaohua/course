@@ -32,7 +32,7 @@ public class StudentTablePdfView extends AbstractPdfView {
         PdfPTable table = new PdfPTable(8);
 
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{2,2, 2, 2, 2, 2, 2, 2});
+        table.setWidths(new int[]{2, 2, 2, 2, 2, 2, 2, 2});
 
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -94,36 +94,36 @@ public class StudentTablePdfView extends AbstractPdfView {
             System.out.println(t);
 
 
-            cell = new PdfPCell(new Phrase(Integer.toString(i/2 +1)+"-"+ Integer.toString(i/2 +2)+"节", textFont));
+            cell = new PdfPCell(new Phrase(Integer.toString(i / 2 + 1) + "-" + Integer.toString(i / 2 + 2) + "节", textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
             for (int j = 0; j < t.length; j++) {
                 StringBuilder newStrs = new StringBuilder("");
-                if(t[j]!=null){
-                    String[] strs = t[j].replace(",","\n ").split(" ");
-                    if(strs!=null && !(strs.length==0)){
-                        for(String li:strs ){
+                if (t[j] != null) {
+                    String[] strs = t[j].replace(",", "\n ").split(" ");
+                    if (strs != null && !(strs.length == 0)) {
+                        for (String li : strs) {
                             System.out.println(li);
-                            newStrs = li!=null && li!=""? newStrs.append(li):newStrs;
+                            newStrs = li != null && li != "" ? newStrs.append(li) : newStrs;
                         }
                     }
                 }
 
-                cell = new PdfPCell(new Phrase(t[j] != null ? newStrs.toString(): " ", textFont));
+                cell = new PdfPCell(new Phrase(t[j] != null ? newStrs.toString() : " ", textFont));
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setPaddingBottom(6);
                 table.addCell(cell);
             }
         }
         document.add(table);
-        Rectangle rect = new Rectangle(600,80,1000, 120);
+        Rectangle rect = new Rectangle(600, 80, 1000, 120);
 
         PdfContentByte cb = writer.getDirectContent();
         cb.rectangle(rect);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Phrase p = new Phrase("签名:   _________\n时间:   "+df.format(new Date()) ,textFont);
+        Phrase p = new Phrase("签名:   _________\n时间:   " + df.format(new Date()), textFont);
         ColumnText ct = new ColumnText(cb);
         ct.setSimpleColumn(rect);
         ct.addText(p);

@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomUserService  implements UserDetailsService {
+public class CustomUserService implements UserDetailsService {
 
     @Autowired
     UserService userService;
@@ -20,15 +20,15 @@ public class CustomUserService  implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         UserDomain user = userService.findUsersByName(name);
-        if (user==null){
+        if (user == null) {
             throw new UsernameNotFoundException("用户不存在");
         }
         //认证
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         RoleDomain role = user.getRole();
         authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-        System.out.printf("run he%s",role.getRoleName());
+        System.out.printf("run he%s", role.getRoleName());
         System.out.println(user.getPassword());
-        return new org.springframework.security.core.userdetails.User(user.getUserName(),user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), authorities);
     }
 }

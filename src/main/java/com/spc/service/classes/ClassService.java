@@ -11,11 +11,11 @@ public interface ClassService {
 
     int addClass(ClassDomain classDomain);
 
-    List<ClassDomain> findAllClass(Integer departId,String className,int teaId,int startWeek,int endWeek);
+    List<ClassDomain> findAllClass(Integer departId, String className, int teaId, int startWeek, int endWeek);
 
     List findStudent(String className, int classId);
 
-    int updateScore(String className,int stuId,int score);
+    int updateScore(String className, int stuId, int score);
 
 
 }

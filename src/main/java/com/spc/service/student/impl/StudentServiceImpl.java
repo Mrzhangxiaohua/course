@@ -66,6 +66,7 @@ public class StudentServiceImpl implements StudentService {
         }
         return temp;
     }
+
     @Override
     public int addCourse(int classId) {
         //首先得到学生id
@@ -143,7 +144,7 @@ public class StudentServiceImpl implements StudentService {
                 classDomain.setShowDeleteButton(false);
                 classDomain.setNotShowAddButton(true);
             }
-            classDomain.setButtonGroup(Boolean.toString(!classDomain.isNotShowAddButton())+":"+Boolean.toString(classDomain.isShowDeleteButton()));
+            classDomain.setButtonGroup(Boolean.toString(!classDomain.isNotShowAddButton()) + ":" + Boolean.toString(classDomain.isShowDeleteButton()));
             String[] d = classDomain.getClassDateDescription().split(":");
             Integer a = Integer.parseInt(d[0]);
             Integer b = Integer.parseInt(d[1]);

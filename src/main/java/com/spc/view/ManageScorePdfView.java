@@ -28,7 +28,7 @@ public class ManageScorePdfView extends AbstractPdfView {
         PdfPTable table = new PdfPTable(6);
 
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{2,2, 2, 2, 2, 2});
+        table.setWidths(new int[]{2, 2, 2, 2, 2, 2});
 
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -73,7 +73,7 @@ public class ManageScorePdfView extends AbstractPdfView {
         System.out.println(students);
         for (int i = 0; i < students.size(); i = i + 1) {
 
-            Map<String,Object> t = students.get(i);
+            Map<String, Object> t = students.get(i);
             PdfPCell cell;
 //            System.out.println(t.get("teaName"));
 

@@ -1,6 +1,7 @@
 package com.spc.model;
 
 import java.lang.Integer;
+
 import org.apache.ibatis.type.Alias;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

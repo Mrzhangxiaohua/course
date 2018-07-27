@@ -1,7 +1,6 @@
 package com.spc.view;
 
 
-
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -40,14 +39,14 @@ public abstract class AbstractPdfView extends AbstractView {
         ByteArrayOutputStream baos = createTemporaryOutputStream();
 
         Document document = new Document();
-        if(model.get("style").equals("wider")){
+        if (model.get("style").equals("wider")) {
             Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
             pageSize.rotate();
             document.setPageSize(pageSize);
-        }else if(model.get("style").equals("higher")){
+        } else if (model.get("style").equals("higher")) {
             Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
             document.setPageSize(pageSize);
-        }else{
+        } else {
 
         }
 

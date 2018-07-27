@@ -12,12 +12,13 @@ public interface StudentService {
     public List<Map> findAllClassName();
 
     public int addCourse(int classId);
+
     public int deleteCourse(int classId);
 
 
-    public int addApplication(int classId,int states,String reason);
+    public int addApplication(int classId, int states, String reason);
 
-    public List<ClassDomain> selectClassed(Map<String,Object> map);
+    public List<ClassDomain> selectClassed(Map<String, Object> map);
 
     public Map getClassTime();
 }

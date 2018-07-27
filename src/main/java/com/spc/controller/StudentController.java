@@ -25,6 +25,7 @@ import java.util.Map;
 
 /**
  * 这个类提供学生端的路由。
+ *
  * @author yuhongchao
  * @version 1.0
  */
@@ -47,31 +48,34 @@ public class StudentController {
 
     /**
      * 学生端：根据学号查询学生选择的课程,用做课表显示
+     *
      * @return
      */
     @RequestMapping("/select/classes")
     @ResponseBody
-    public String[][] selectClasses(){
+    public String[][] selectClasses() {
         return studentService.findClasses();
     }
 
     /**
      * 学生端：查询所有的课程名称
+     *
      * @return
      */
     @RequestMapping(value = "/find/allClassName")
-    public List<Map> findAllClassName(){
+    public List<Map> findAllClassName() {
         return studentService.findAllClassName();
     }
 
     /**
      * 学生端：添加课程申请
+     *
      * @return
      */
-    @RequestMapping(value = "/add/application",method = RequestMethod.POST)
-    public int addApplcation(HttpServletRequest request){
+    @RequestMapping(value = "/add/application", method = RequestMethod.POST)
+    public int addApplcation(HttpServletRequest request) {
         String json = requestPayload.getRequestPayload(request);
-        System.out.printf("添加课程的json = %s",json);
+        System.out.printf("添加课程的json = %s", json);
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
@@ -81,8 +85,8 @@ public class StudentController {
             //states 为4 是退选计划
             Integer state = obj.getInt("states");
             String reason = obj.getString("reason");
-            return studentService.addApplication(classId,state,reason);
-        }catch (Exception e){
+            return studentService.addApplication(classId, state, reason);
+        } catch (Exception e) {
             System.out.println(e);
         }
         return 0;
@@ -90,12 +94,13 @@ public class StudentController {
 
     /**
      * 学生端：可以根据课程id 添加课程
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/choose/course",method = RequestMethod.POST)
+    @RequestMapping(value = "/choose/course", method = RequestMethod.POST)
     @ResponseBody
-    public int chooseCourse(HttpServletRequest request){
+    public int chooseCourse(HttpServletRequest request) {
         String json = requestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
@@ -111,12 +116,13 @@ public class StudentController {
 
     /**
      * 学生端：可以根据课程id 取消课程
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/delete/course",method = RequestMethod.POST)
+    @RequestMapping(value = "/delete/course", method = RequestMethod.POST)
     @ResponseBody
-    public int deleteCourse(HttpServletRequest request){
+    public int deleteCourse(HttpServletRequest request) {
         String json = requestPayload.getRequestPayload(request);
         try {
             JSONObject obj = new JSONObject(json);
@@ -131,28 +137,30 @@ public class StudentController {
     @RequestMapping("/select/grade")
     @ResponseBody
     public List<GradeDomain> selectGrade(
-            @RequestParam(required = false,defaultValue = "1") Integer pageNum,
-            @RequestParam(required = false,defaultValue = "10") Integer pageSize,
-            @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
-            @RequestParam(required = false,defaultValue = "88888888") Integer classId){
+            @RequestParam(required = false, defaultValue = "1") Integer pageNum,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false, defaultValue = "88888888") Integer stuId,
+            @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
 
 //        PageHelper.startPage(pageNum,pageSize);
 //        stuId = authMess.UserId();
         stuId = 2018000006;
-        return gradeService.selectGrade(classId,stuId);
+        return gradeService.selectGrade(classId, stuId);
     }
 
     /**
      * 返回学生的已选学分
+     *
      * @return
      */
     @RequestMapping("get/classTime")
-    public Map getGradePoint(){
+    public Map getGradePoint() {
         return studentService.getClassTime();
     }
 
     /**
      * 学生端：根据验证的学生id下载课表
+     *
      * @param response
      * @return
      */
@@ -166,12 +174,15 @@ public class StudentController {
         res.put("data", tables);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
-        model.put("style","higher");
+        model.put("style", "higher");
         return new ModelAndView(new StudentTablePdfView(), model);
-    };
+    }
+
+    ;
 
     /**
      * 学生端：根据验证的学生id下载成绩单
+     *
      * @param response
      * @param stuId
      * @param classId
@@ -179,26 +190,27 @@ public class StudentController {
      */
     @RequestMapping("/download/score")
     public ModelAndView downloadScore(HttpServletResponse response,
-                              @RequestParam(required = false,defaultValue = "88888888") Integer stuId,
-                              @RequestParam(required = false,defaultValue = "88888888") Integer classId) {
+                                      @RequestParam(required = false, defaultValue = "88888888") Integer stuId,
+                                      @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
         stuId = authMess.userId();
         stuId = 2018000006;
 
-        List<GradeDomain> scores = gradeService.selectGrade(classId,stuId);
+        List<GradeDomain> scores = gradeService.selectGrade(classId, stuId);
         System.out.println("tun here");
         Map res = new HashMap();
 
         res.put("data", scores);
-        res.put("stuId",Integer.toString(stuId));
-        res.put("stuName",authMess.userName());
+        res.put("stuId", Integer.toString(stuId));
+        res.put("stuName", authMess.userName());
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
-        model.put("style","wider");
+        model.put("style", "wider");
         return new ModelAndView(new StudentScorePdfView(), model);
     }
 
     /**
      * 学生端的选择课程，可以根据当前学生id来判断是否已选课程
+     *
      * @param currentPage
      * @param pageSize
      * @param departId
@@ -218,26 +230,26 @@ public class StudentController {
             @RequestParam(required = false, defaultValue = "88888888") int startWeek,
             @RequestParam(required = false, defaultValue = "88888888") int endWeek,
             @RequestParam(required = false, defaultValue = "88888888") int hasWaiGuoYu) {
-        Map map = new HashMap<String,Object>();
-        map.put("currentPage",currentPage);
-        map.put("pageSize",pageSize);
-        map.put("departId",departId);
-        map.put("classname",classname);
-        map.put("teaname",teaName);
-        map.put("teaId",teaId);
-        map.put("startWeek",startWeek);
-        map.put("endWeek",endWeek);
+        Map map = new HashMap<String, Object>();
+        map.put("currentPage", currentPage);
+        map.put("pageSize", pageSize);
+        map.put("departId", departId);
+        map.put("classname", classname);
+        map.put("teaname", teaName);
+        map.put("teaId", teaId);
+        map.put("startWeek", startWeek);
+        map.put("endWeek", endWeek);
         Integer stuId = authMess.userId();
-        map.put("stuId",stuId);
-        map.put("hasWaiGuoYu",hasWaiGuoYu);
+        map.put("stuId", stuId);
+        map.put("hasWaiGuoYu", hasWaiGuoYu);
 
         List<ClassDomain> classes = studentService.selectClassed(map);
 
         Map<String, Object> res = new HashMap<>();
-        res.put("status","SUCCESS");
+        res.put("status", "SUCCESS");
 
         Map<String, Object> data = new HashMap<>();
-        data.put("total", ((Page)classes).getTotal());
+        data.put("total", ((Page) classes).getTotal());
         data.put("pageSize", pageSize);
         data.put("currentPage", currentPage);
         data.put("list", classes);

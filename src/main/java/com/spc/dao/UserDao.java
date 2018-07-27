@@ -11,12 +11,10 @@ import java.util.List;
 
 public interface UserDao {
 
-//    @Insert("insert into User(userName, password) values(#{userName}, #{password})")
-//    @SelectKey(statement="call identity()", keyProperty="uid", before=false, resultType=long.class)
-    int  insert(UserDomain user);
+    int insert(UserDomain user);
 
     @Insert("insert into Role_user(roleId, uId) values(#{roleId}, #{uId})")
-    int insertRole(@Param("roleId")Integer roleId,@Param("uId")Integer uId);
+    int insertRole(@Param("roleId") Integer roleId, @Param("uId") Integer uId);
 
-    UserDomain findUsersByName(@Param("userName")String userName);
+    UserDomain findUsersByName(@Param("userName") String userName);
 }

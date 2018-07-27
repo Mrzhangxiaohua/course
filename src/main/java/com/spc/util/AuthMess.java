@@ -13,19 +13,18 @@ public class AuthMess {
 //        authentication= SecurityContextHolder.getContext().getAuthentication();
 //    }
 
-    public int userId(){
+    public int userId() {
         return 2018000006;
 //        return authentication.getAuthorities().toArray()[0];
     }
 
-    public int teacherId(){
+    public int teacherId() {
         return 2018124001;
     }
 
-    public String userName(){
+    public String userName() {
         return "于";
     }
-
 
 
 }

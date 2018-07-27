@@ -5,6 +5,7 @@ import com.spc.model.ClassApplicationDomain;
 public interface TeacherService {
 
     public int addClassApplication(ClassApplicationDomain classApplicationDomain);
+
     String[][] findCourseTable(int teaId);
 
 }

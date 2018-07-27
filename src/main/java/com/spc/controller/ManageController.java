@@ -29,13 +29,13 @@ import java.util.*;
 
 /**
  * 这个类提供管理端的路由。
+ *
  * @author yuhongchao
  * @version 1.0
  */
 @RequestMapping("/manage")
 @Controller
 public class ManageController {
-
 
 
     @Autowired
@@ -46,7 +46,6 @@ public class ManageController {
 
     @Autowired
     private RequestPayload requestPayload;
-
 
 
     @RequestMapping("/select/classes")
@@ -60,6 +59,7 @@ public class ManageController {
 
     /**
      * 查询所有的审核情况
+     *
      * @param tabKey
      * @param currentPage
      * @param pageSize
@@ -67,34 +67,34 @@ public class ManageController {
      */
     @RequestMapping("/checked/message")
     @ResponseBody
-    public Map<String,Object> checkedMessage(
-            @RequestParam(required = false,defaultValue = "88888888") int tabKey,
+    public Map<String, Object> checkedMessage(
+            @RequestParam(required = false, defaultValue = "88888888") int tabKey,
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "88888888") int stuId,
             @RequestParam(required = false, defaultValue = "") String mydate
-    ){
-        PageHelper.startPage(currentPage,pageSize);
-        DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
+    ) {
+        PageHelper.startPage(currentPage, pageSize);
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         List<StudentApplicationDomain> result = new ArrayList<>();
-        if(!mydate.equals("")){
+        if (!mydate.equals("")) {
             try {
-                Date date =new Date();
+                Date date = new Date();
                 date = fmt.parse(mydate);
-                result = manageService.checkedMessageAndDate(tabKey,stuId,date);
+                result = manageService.checkedMessageAndDate(tabKey, stuId, date);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }else {
-            result = manageService.checkedMessage(tabKey,stuId);
+        } else {
+            result = manageService.checkedMessage(tabKey, stuId);
         }
-        Map<String,Object> res = new HashMap<>();
-        Map<String,Object> map = new HashMap<>();
-        map.put("list",result);
-        map.put("total",((Page)result).getTotal());
-        map.put("pageSize",pageSize);
-        map.put("currentPage",currentPage);
-        res.put("data",map);
+        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", result);
+        map.put("total", ((Page) result).getTotal());
+        map.put("pageSize", pageSize);
+        map.put("currentPage", currentPage);
+        res.put("data", map);
         return res;
     }
 
@@ -102,71 +102,72 @@ public class ManageController {
      * 教师端：审核开课申请的信息。
      *
      * @param currentPage 当前页
-     * @param pageSize 页面大小
-     * @param mydate 日期
-     * @param className 课程名称
-     * @param teaId 教师id
+     * @param pageSize    页面大小
+     * @param mydate      日期
+     * @param className   课程名称
+     * @param teaId       教师id
      * @return 查询结果
      */
     @RequestMapping("/checked/classAppMessage")
     @ResponseBody
-    public Map<String,Object> checkedClassAppMessage(
+    public Map<String, Object> checkedClassAppMessage(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String mydate,
             @RequestParam(required = false, defaultValue = "") String className,
             @RequestParam(required = false, defaultValue = "88888888") Integer teaId
-    ){
-        PageHelper.startPage(currentPage,pageSize);
-        DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
+    ) {
+        PageHelper.startPage(currentPage, pageSize);
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         List<ClassApplicationDomain> result = new ArrayList<>();
-        if(!mydate.equals("")){
+        if (!mydate.equals("")) {
             try {
-                Date date =new Date();
+                Date date = new Date();
                 date = fmt.parse(mydate);
-                result = manageService.checkedClassMessageAndDate(teaId,className,date);
+                result = manageService.checkedClassMessageAndDate(teaId, className, date);
             } catch (ParseException e) {
                 System.out.println(e);
             }
-        }else {
-            result = manageService.checkedClassMessage(teaId,className);
+        } else {
+            result = manageService.checkedClassMessage(teaId, className);
         }
         System.out.println(result);
-        Map<String,Object> res = new HashMap<>();
-        Map<String,Object> map = new HashMap<>();
-        map.put("list",result);
-        map.put("total",((Page)result).getTotal());
-        map.put("pageSize",pageSize);
-        map.put("currentPage",currentPage);
+        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", result);
+        map.put("total", ((Page) result).getTotal());
+        map.put("pageSize", pageSize);
+        map.put("currentPage", currentPage);
 
-        res.put("data",map);
+        res.put("data", map);
         return res;
     }
 
-    @RequestMapping(value = "/makeSure/application",method = RequestMethod.POST)
+    @RequestMapping(value = "/makeSure/application", method = RequestMethod.POST)
     @ResponseBody
-    public int convertStatus(HttpServletRequest request){
+    public int convertStatus(HttpServletRequest request) {
         String json = requestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
             return manageService.makeSure(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         return 0;
     }
-    @RequestMapping(value = "/reject/application",method = RequestMethod.POST)
+
+    @RequestMapping(value = "/reject/application", method = RequestMethod.POST)
     @ResponseBody
-    public int rejectStatus(HttpServletRequest request){
+    public int rejectStatus(HttpServletRequest request) {
         String json = requestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
             return manageService.reject(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         return 0;
@@ -175,7 +176,7 @@ public class ManageController {
     @RequestMapping("/find/classes")
     @ResponseBody
     public List<Map> getAllCourse() {
-        List<ClassDomain> classes = classService.findAllClass(88888888, "", 88888888,88888888,88888888);
+        List<ClassDomain> classes = classService.findAllClass(88888888, "", 88888888, 88888888, 88888888);
         List<Map> resList = new ArrayList<Map>();
         for (int i = 0; i < classes.size(); i++) {
             Map<String, Object> res = new HashMap<>();
@@ -188,29 +189,29 @@ public class ManageController {
 
     @RequestMapping("/download/table")
     public ModelAndView downloadTable(HttpServletResponse response,
-                                      @RequestParam(required = false,defaultValue = "") String className,
-                                      @RequestParam(required = false,defaultValue = "88888888") Integer classId
-    ){
-        System.out.printf("classId %d",classId);
-        List students = classService.findStudent(className,classId);
-        Map<String,Object> res = new HashMap<String, Object>();
+                                      @RequestParam(required = false, defaultValue = "") String className,
+                                      @RequestParam(required = false, defaultValue = "88888888") Integer classId
+    ) {
+        System.out.printf("classId %d", classId);
+        List students = classService.findStudent(className, classId);
+        Map<String, Object> res = new HashMap<String, Object>();
 
         res.put("data", students);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
-        model.put("style","wider");
+        model.put("style", "wider");
         return new ModelAndView(new ManageScorePdfView(), model);
     }
 
     @RequestMapping("/download/bigTable")
-    public ModelAndView downloadTable(){
+    public ModelAndView downloadTable() {
         String[][] strs = manageService.bigTable();
-        Map<String,Object> res = new HashMap<String, Object>();
+        Map<String, Object> res = new HashMap<String, Object>();
 
         res.put("data", strs);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
-        model.put("style","wider");
+        model.put("style", "wider");
         return new ModelAndView(new StudentTablePdfView(), model);
 
     }

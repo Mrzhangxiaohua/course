@@ -21,10 +21,10 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;//这里会报错，但是并不会影响
 
     @Override
-    public boolean addUser(UserDomain user,int role) {
+    public boolean addUser(UserDomain user, int role) {
         userDao.insert(user);
         Integer uid = user.getUid();
-        userDao.insertRole(role,uid);
+        userDao.insertRole(role, uid);
         return true;
     }
 

@@ -36,6 +36,7 @@ import java.util.Map;
 
 /**
  * 这个类提供教师端的路由。
+ *
  * @author yuhongchao
  * @version 1.0
  */
@@ -59,23 +60,24 @@ public class TeacherController {
 
     /**
      * 教师端：录入分数
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value ="/grade/add" ,method = RequestMethod.POST)
+    @RequestMapping(value = "/grade/add", method = RequestMethod.POST)
     @ResponseBody
-    public int addGrade(HttpServletRequest request){
+    public int addGrade(HttpServletRequest request) {
         try {
             String json = requestPayload.getRequestPayload(request);
             System.out.println(json);
             JSONObject obj = new JSONObject(json);
 
-            Integer classId= obj.getInt("classId");
+            Integer classId = obj.getInt("classId");
             Integer stuId = obj.getInt("stuId");
             Integer score = obj.getInt("score");
 
-            return gradeService.addScore(classId,stuId,score);
-        }catch (Exception e){
+            return gradeService.addScore(classId, stuId, score);
+        } catch (Exception e) {
             System.out.println(e);
         }
         return 0;
@@ -83,21 +85,22 @@ public class TeacherController {
 
     /**
      * 教师端：根据老师teaId 查询所教的课程
+     *
      * @return
      */
     @RequestMapping("teach/course")
     @ResponseBody
-    public List<Map> getTeachCourse(){
+    public List<Map> getTeachCourse() {
         Integer teacherId = authMess.teacherId();
 
-        List<ClassDomain> classes =classService.findAllClass(88888888,"",teacherId,88888888,88888888);
+        List<ClassDomain> classes = classService.findAllClass(88888888, "", teacherId, 88888888, 88888888);
 
         List<Map> resList = new ArrayList<Map>();
 
-        for(int i=0;i<classes.size();i++){
+        for (int i = 0; i < classes.size(); i++) {
             Map<String, Object> res = new HashMap<>();
-            res.put("className",classes.get(i).getClassName());
-            res.put("classId",classes.get(i).getClassId());
+            res.put("className", classes.get(i).getClassName());
+            res.put("classId", classes.get(i).getClassId());
             resList.add(res);
         }
         return resList;
@@ -105,29 +108,30 @@ public class TeacherController {
 
     /**
      * 教师端：根据课程信息查询选课的学生
+     *
      * @param currentPage
      * @param pageSize
-     * @param className 课程名称
-     * @param classId 课程id
+     * @param className   课程名称
+     * @param classId     课程id
      * @return
      */
     @RequestMapping("/find/student")
     @ResponseBody
-    public Map<String, Object>  getStudent(
+    public Map<String, Object> getStudent(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false,defaultValue = "") String className,
-            @RequestParam(required = false,defaultValue = "88888888") Integer classId){
-        PageHelper.startPage(currentPage,pageSize);
+            @RequestParam(required = false, defaultValue = "") String className,
+            @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
+        PageHelper.startPage(currentPage, pageSize);
 
-        List students = classService.findStudent(className,classId);
-        System.out.printf("find student result:%s",students);
+        List students = classService.findStudent(className, classId);
+        System.out.printf("find student result:%s", students);
         Map<String, Object> res = new HashMap<>();
-        res.put("status","SUCCESS");
+        res.put("status", "SUCCESS");
 
         Map<String, Object> data = new HashMap<>();
-        data.put("total", ((Page)students).getTotal());
-        System.out.printf("total = %s\n",((Page)students).getTotal());
+        data.put("total", ((Page) students).getTotal());
+        System.out.printf("total = %s\n", ((Page) students).getTotal());
         data.put("pageSize", pageSize);
         data.put("currentPage", currentPage);
         data.put("list", students);
@@ -137,23 +141,25 @@ public class TeacherController {
 
     /**
      * 教师端：查询老师课表
+     *
      * @return 返回的是课表信息的多维数组
      */
     @RequestMapping(value = "/course/table")
     @ResponseBody
-    public String[][]  findCourseTable(){
+    public String[][] findCourseTable() {
         int teaId = authMess.teacherId();
         return teacherService.findCourseTable(teaId);
     }
 
     /**
      * 教师端：添加课程
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/course/add",method = RequestMethod.POST)
+    @RequestMapping(value = "/course/add", method = RequestMethod.POST)
     @ResponseBody
-    public int addCourse(HttpServletRequest request){
+    public int addCourse(HttpServletRequest request) {
         try {
             String json = requestPayload.getRequestPayload(request);
             System.out.println(json);
@@ -174,22 +180,22 @@ public class TeacherController {
             Integer daseA = obj.getInt("classDateDescriptionA");
             Integer daseB = obj.getInt("classDateDescriptionB");
 
-            System.out.printf("a%s,b%s",daseA,daseB);
+            System.out.printf("a%s,b%s", daseA, daseB);
 
-            classDomain.setClassDateDescription(Integer.toString(daseA) + Integer.toString(daseB) );
+            classDomain.setClassDateDescription(Integer.toString(daseA) + Integer.toString(daseB));
             classDomain.setClassPlace(obj.getString("classPlace"));
             classDomain.setDepartId(obj.getInt("departId"));
             classDomain.setClassModuleNum(obj.getInt("classModuleNum"));
             classDomain.setClassSemester(obj.getInt("classSemester"));
             classDomain.setModelsName(" ");
 
-            try{
+            try {
                 classService.addClass(classDomain);
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         return 0;
@@ -197,12 +203,13 @@ public class TeacherController {
 
     /**
      * 教师端 更新分数
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/update/score",method = RequestMethod.POST)
+    @RequestMapping(value = "/update/score", method = RequestMethod.POST)
     @ResponseBody
-    public int updateScore(HttpServletRequest request){
+    public int updateScore(HttpServletRequest request) {
         String json = requestPayload.getRequestPayload(request);
         System.out.println(json);
 
@@ -211,7 +218,7 @@ public class TeacherController {
             String className = obj.getString("className");
             int stuId = obj.getInt("stuId");
             int score = obj.getInt("score");
-            return classService.updateScore(className,stuId,score);
+            return classService.updateScore(className, stuId, score);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -219,7 +226,7 @@ public class TeacherController {
     }
 
     @RequestMapping("/download/courseTable")
-    public ModelAndView  downloadCourseTable(){
+    public ModelAndView downloadCourseTable() {
         int teaId = authMess.teacherId();
         String[][] tables = teacherService.findCourseTable(teaId);
         System.out.println(tables);
@@ -228,21 +235,21 @@ public class TeacherController {
 
         res.put("data", tables);
         Map<String, Object> model = new HashMap<>();
-        model.put("res",res);
-        model.put("style","wider");
+        model.put("res", res);
+        model.put("style", "wider");
 
         return new ModelAndView(new StudentTablePdfView(), model);
     }
 
     @RequestMapping("/download/courseTableExcel")
-    public void  downloadCourseTableExcel(HttpServletRequest request,HttpServletResponse response){
+    public void downloadCourseTableExcel(HttpServletRequest request, HttpServletResponse response) {
         int teaId = authMess.teacherId();
         String[][] tables = teacherService.findCourseTable(teaId);
 
         List<CourseTableExcelDomain> liC = new ArrayList<>();
-        for (int i=0;i<tables.length;i=i+2){
-            liC.add(new CourseTableExcelDomain(i/2,tables[i][0],tables[i][1],tables[i][2],tables[i][3]
-            ,tables[i][4],tables[i][5],tables[i][6]));
+        for (int i = 0; i < tables.length; i = i + 2) {
+            liC.add(new CourseTableExcelDomain(i / 2, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
+                    , tables[i][4], tables[i][5], tables[i][6]));
         }
         response.setHeader("content-Type", "application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment;filename=Table.xls");
@@ -261,9 +268,9 @@ public class TeacherController {
     }
 
 
-    @RequestMapping(value = "add/classApplication",method = RequestMethod.POST)
+    @RequestMapping(value = "add/classApplication", method = RequestMethod.POST)
     @ResponseBody
-    public int addClassApplication(@RequestBody  ClassApplicationDomain cad){
+    public int addClassApplication(@RequestBody ClassApplicationDomain cad) {
         cad.setChecked(1);
         cad.setTeaId(0);
         return teacherService.addClassApplication(cad);

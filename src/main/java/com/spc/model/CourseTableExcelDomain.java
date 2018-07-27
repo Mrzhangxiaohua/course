@@ -23,7 +23,8 @@ public class CourseTableExcelDomain {
 
     public CourseTableExcelDomain() {
     }
-    public CourseTableExcelDomain(int jieci,String mon, String tue, String wed, String thu, String fri, String sat, String sun) {
+
+    public CourseTableExcelDomain(int jieci, String mon, String tue, String wed, String thu, String fri, String sat, String sun) {
         this.jieci = jieci;
         this.mon = mon;
         this.tue = tue;
@@ -33,8 +34,6 @@ public class CourseTableExcelDomain {
         this.sat = sat;
         this.sun = sun;
     }
-
-
 
 
     public String getMon() {
@@ -94,8 +93,8 @@ public class CourseTableExcelDomain {
     }
 
     public String getJieci() {
-        StringBuilder res = new StringBuilder() ;
-        switch (jieci){
+        StringBuilder res = new StringBuilder();
+        switch (jieci) {
             case 0:
                 res.append("一二节");
                 break;

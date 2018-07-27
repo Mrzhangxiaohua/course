@@ -108,12 +108,12 @@ public class StudentScorePdfView extends AbstractPdfView {
         }
         document.add(table);
 
-        Rectangle rect = new Rectangle(600,80,1000, 120);
+        Rectangle rect = new Rectangle(600, 80, 1000, 120);
 
         PdfContentByte cb = writer.getDirectContent();
         cb.rectangle(rect);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Phrase p = new Phrase("签名:   _________\n时间:   "+df.format(new Date()) ,textFont);
+        Phrase p = new Phrase("签名:   _________\n时间:   " + df.format(new Date()), textFont);
         ColumnText ct = new ColumnText(cb);
         ct.setSimpleColumn(rect);
         ct.addText(p);

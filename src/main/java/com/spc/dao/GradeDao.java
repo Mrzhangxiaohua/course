@@ -8,7 +8,7 @@ import java.util.List;
 public interface GradeDao {
     public int insert(GradeDomain gradeDomain);
 
-    public List<GradeDomain> selectGrade (@Param("classId") Integer classId,@Param("stuId") Integer stuId);
+    public List<GradeDomain> selectGrade(@Param("classId") Integer classId, @Param("stuId") Integer stuId);
 
-    Integer addScore(@Param("stuId")Integer stuId , @Param("classId") Integer classId,@Param("score") Integer score);
+    Integer addScore(@Param("stuId") Integer stuId, @Param("classId") Integer classId, @Param("score") Integer score);
 }

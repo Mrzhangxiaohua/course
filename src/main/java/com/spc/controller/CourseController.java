@@ -25,6 +25,7 @@ public class CourseController {
 
     /**
      * 根据院系以及课程名称，老师名称查询课程
+     *
      * @param currentPage
      * @param pageSize
      * @param departId
@@ -43,22 +44,22 @@ public class CourseController {
             @RequestParam(required = false, defaultValue = "88888888") int teaId,
             Model model) {
 
-        PageHelper.startPage(currentPage,pageSize);
-        List<ClassDomain> classes = classService.findAllClass(departId, classname , teaId,88888888,88888888);
+        PageHelper.startPage(currentPage, pageSize);
+        List<ClassDomain> classes = classService.findAllClass(departId, classname, teaId, 88888888, 88888888);
 
 
-        for(ClassDomain l:classes){
+        for (ClassDomain l : classes) {
             String[] d = l.getClassDateDescription().split(":");
             int a = Integer.parseInt(d[0]);
             int b = Integer.parseInt(d[1]);
-            l.setClassDateDescription(new String(courseDateTrans.dateToString(a,b)));
+            l.setClassDateDescription(new String(courseDateTrans.dateToString(a, b)));
         }
         Map<String, Object> res = new HashMap<>();
-        res.put("status","SUCCESS");
+        res.put("status", "SUCCESS");
 
         Map<String, Object> data = new HashMap<>();
-        data.put("total", ((Page)classes).getTotal());
-        System.out.printf("total = %s\n",((Page)classes).getTotal());
+        data.put("total", ((Page) classes).getTotal());
+        System.out.printf("total = %s\n", ((Page) classes).getTotal());
         data.put("pageSize", pageSize);
         data.put("currentPage", currentPage);
         data.put("list", classes);

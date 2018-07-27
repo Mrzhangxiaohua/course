@@ -18,7 +18,6 @@ public class StudentApplicationDomain {
     private String className;
 
 
-
     public int getId() {
         return id;
     }

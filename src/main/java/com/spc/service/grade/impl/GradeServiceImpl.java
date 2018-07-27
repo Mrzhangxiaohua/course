@@ -12,6 +12,7 @@ import java.util.List;
 public class GradeServiceImpl implements GradeService {
     @Autowired
     GradeDao gradeDao;
+
     @Override
     public int insert(GradeDomain gradeDomain) {
         return gradeDao.insert(gradeDomain);
@@ -21,12 +22,12 @@ public class GradeServiceImpl implements GradeService {
     public List<GradeDomain> selectGrade(Integer classId, Integer stuId) {
         System.out.println(classId);
         System.out.println(stuId);
-        return gradeDao.selectGrade(classId,stuId);
+        return gradeDao.selectGrade(classId, stuId);
     }
 
     @Override
-    public int addScore(int classId, int stuId,int score) {
-        return gradeDao.addScore(stuId,classId,score);
+    public int addScore(int classId, int stuId, int score) {
+        return gradeDao.addScore(stuId, classId, score);
     }
 
 
