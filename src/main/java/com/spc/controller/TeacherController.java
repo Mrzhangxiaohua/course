@@ -34,6 +34,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 这个类提供教师端的路由。
+ * @author yuhongchao
+ * @version 1.0
+ */
 @RequestMapping("/teacher")
 @Controller
 public class TeacherController {

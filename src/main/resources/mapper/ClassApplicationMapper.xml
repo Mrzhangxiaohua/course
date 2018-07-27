@@ -13,5 +13,35 @@
        values
        (#{className}, #{mainLecturer}, #{teacherInfo},#{courseInfo},#{classTime},#{checked})
    </insert>
+    
+    <select id="findall" resultType="com.spc.model.ClassApplicationDomain">
+      select c.id, c.teaId ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr
+      from ClassApplication c
+      left join Application_Check a
+      on c.checked = a.id
+      <where>
+          <if test="teaId != 88888888">
+              and c.teaId=#{teaId}
+          </if>
+          <if test="className!=''">
+              and c.className=#{className}
+          </if>
+      </where>
+    </select>
+    <select id="findallWithDate" resultType="com.spc.model.ClassApplicationDomain">
+      select c.id, c.teaId ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr
+      from ClassApplication c
+      left join Application_Check a
+      on c.checked = a.id
+      <where>
+          <if test="teaId!=88888888">
+              and c.teaId=#{teaId}
+          </if>
+          <if test="className!=''">
+              and c.className=#{className}
+          </if>
+          and cast(s.mydate as date) = #{date}
+      </where>
+    </select>
 
 </mapper>

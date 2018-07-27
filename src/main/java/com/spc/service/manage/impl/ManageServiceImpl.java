@@ -1,8 +1,10 @@
 package com.spc.service.manage.impl;
 
+import com.spc.dao.ClassApplicationDao;
 import com.spc.dao.ClassDao;
 import com.spc.dao.StudentApplicationDao;
 import com.spc.dao.StudentDao;
+import com.spc.model.ClassApplicationDomain;
 import com.spc.model.StudentApplicationDomain;
 import com.spc.service.manage.ManageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class ManageServiceImpl implements ManageService {
 
     @Autowired
     private StudentApplicationDao studentApplicationDao;
+
+    @Autowired
+    private ClassApplicationDao classApplicationDao;
 
     @Override
     public String[][] findClasses(Integer stuId) {
@@ -98,5 +103,15 @@ public class ManageServiceImpl implements ManageService {
     public int reject(int id) {
         //拒绝的话就要将checked设置为3
         return studentApplicationDao.checked(id,3);
+    }
+
+    @Override
+    public List<ClassApplicationDomain> checkedClassMessage(int teaId, String className) {
+        return classApplicationDao.findall(teaId,className);
+    }
+
+    @Override
+    public List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date) {
+        return classApplicationDao.findallWithDate(teaId,className,date);
     }
 }

@@ -3,12 +3,11 @@ package com.spc.controller;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.model.StudentApplicationDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.manage.ManageService;
-import com.spc.service.student.StudentService;
-import com.spc.util.AuthMess;
 import com.spc.util.RequestPayload;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
@@ -23,18 +22,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * 这个类提供管理端的路由。
+ * @author yuhongchao
+ * @version 1.0
+ */
 @RequestMapping("/manage")
 @Controller
 public class ManageController {
 
-    @Autowired
-    private StudentService studentService;
 
 
     @Autowired
@@ -46,8 +47,6 @@ public class ManageController {
     @Autowired
     private RequestPayload requestPayload;
 
-    @Autowired
-    private AuthMess authMess;
 
 
     @RequestMapping("/select/classes")
@@ -56,7 +55,6 @@ public class ManageController {
             @RequestParam(required = false, defaultValue = "88888888") Integer stuId
     ) {
         String[][] res = manageService.findClasses(stuId);
-
         return res;
     }
 
@@ -75,8 +73,7 @@ public class ManageController {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "88888888") int stuId,
             @RequestParam(required = false, defaultValue = "") String mydate
-            ){
-
+    ){
         PageHelper.startPage(currentPage,pageSize);
         DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
         List<StudentApplicationDomain> result = new ArrayList<>();
@@ -91,15 +88,57 @@ public class ManageController {
         }else {
             result = manageService.checkedMessage(tabKey,stuId);
         }
-        System.out.println("==========-----------============");
-        System.out.println(result.get(0).getMydate());
-
         Map<String,Object> res = new HashMap<>();
         Map<String,Object> map = new HashMap<>();
-        map.put(Integer.toString(tabKey),result);
+        map.put("list",result);
         map.put("total",((Page)result).getTotal());
         map.put("pageSize",pageSize);
         map.put("currentPage",currentPage);
+        res.put("data",map);
+        return res;
+    }
+
+    /**
+     * 教师端：审核开课申请的信息。
+     *
+     * @param currentPage 当前页
+     * @param pageSize 页面大小
+     * @param mydate 日期
+     * @param className 课程名称
+     * @param teaId 教师id
+     * @return 查询结果
+     */
+    @RequestMapping("/checked/classAppMessage")
+    @ResponseBody
+    public Map<String,Object> checkedClassAppMessage(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false, defaultValue = "") String mydate,
+            @RequestParam(required = false, defaultValue = "") String className,
+            @RequestParam(required = false, defaultValue = "88888888") Integer teaId
+    ){
+        PageHelper.startPage(currentPage,pageSize);
+        DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
+        List<ClassApplicationDomain> result = new ArrayList<>();
+        if(!mydate.equals("")){
+            try {
+                Date date =new Date();
+                date = fmt.parse(mydate);
+                result = manageService.checkedClassMessageAndDate(teaId,className,date);
+            } catch (ParseException e) {
+                System.out.println(e);
+            }
+        }else {
+            result = manageService.checkedClassMessage(teaId,className);
+        }
+        System.out.println(result);
+        Map<String,Object> res = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",result);
+        map.put("total",((Page)result).getTotal());
+        map.put("pageSize",pageSize);
+        map.put("currentPage",currentPage);
+
         res.put("data",map);
         return res;
     }

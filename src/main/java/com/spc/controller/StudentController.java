@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 这个是用户端的控制层
+ * 这个类提供学生端的路由。
+ * @author yuhongchao
+ * @version 1.0
  */
 @RestController
 @RequestMapping("/student")

@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import com.spc.util.RequestPayload;
 
 /**
- * Created by Administrator on 2017/8/16.
+ * 这个类提供用户管理的路由。
+ * @author yuhongchao
+ * @version 1.0
  */
 @Controller
 @RequestMapping(path = "/user")
