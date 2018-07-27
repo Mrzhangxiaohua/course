@@ -12,7 +12,7 @@
 
     <sql id="BASE_COLUMN">
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,classTime
+        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,departId,classSemester,classGradePoint,endWeek,startWeek,classTime,mainLecturer
     </sql>
 
     <insert id="insert" parameterType="com.spc.model.ClassDomain">
@@ -24,7 +24,7 @@
         values
         <trim prefix="( " suffix=" )">
             #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
-            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester} ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime}
+            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester} ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime},#{mainLecturer}
         </trim>
     </insert>
 

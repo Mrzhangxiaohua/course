@@ -14,10 +14,7 @@ import com.spc.view.StudentTablePdfView;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -253,6 +250,15 @@ public class ManageController {
         model.put("res", res);
         model.put("style", "wider");
         return new ModelAndView(new StudentTablePdfView(), model);
+    }
 
+    @RequestMapping(value = "/add/course",method = RequestMethod.POST)
+    @ResponseBody
+    public int addCourse(@RequestBody ClassDomain cd){
+        cd.setClassDateDescription(cd.getClassDateDescriptionA()+":"+cd.getClassDateDescriptionB());
+        System.out.println(cd.getClassDateDescription());
+        System.out.println(cd.getMainLecturer());
+        manageService.addCourse(cd);
+        return 0;
     }
 }

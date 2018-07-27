@@ -16,6 +16,8 @@ public class ClassDomain {
     private Integer classChooseNum;
     private Integer classUpperLimit;
     private String classDateDescription;
+    private String classDateDescriptionA;
+    private String classDateDescriptionB;
     private String classPlace;
     private Integer classLength;
     private String modelsName;
@@ -29,6 +31,7 @@ public class ClassDomain {
     private boolean notShowAddButton;
     private boolean showDeleteButton;
     private String buttonGroup;
+    private String mainLecturer;
 
     public Integer getClassId() {
         return classId;
@@ -213,5 +216,29 @@ public class ClassDomain {
 
     public void setButtonGroup(String buttonGroup) {
         this.buttonGroup = buttonGroup;
+    }
+
+    public String getMainLecturer() {
+        return mainLecturer;
+    }
+
+    public void setMainLecturer(String mainLecturer) {
+        this.mainLecturer = mainLecturer;
+    }
+
+    public String getClassDateDescriptionA() {
+        return classDateDescriptionA;
+    }
+
+    public void setClassDateDescriptionA(String classDateDescriptionA) {
+        this.classDateDescriptionA = classDateDescriptionA;
+    }
+
+    public String getClassDateDescriptionB() {
+        return classDateDescriptionB;
+    }
+
+    public void setClassDateDescriptionB(String classDateDescriptionB) {
+        this.classDateDescriptionB = classDateDescriptionB;
     }
 }

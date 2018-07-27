@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ClassDao {
 
-    int insert(ClassDomain record);
+    void insert(ClassDomain record);
 
     List<ClassDomain> selectClasses(@Param("departId") Integer departId, @Param("className") String className,
                                     @Param("teaName") String teaName, @Param("teaId") int teaId, @Param("startWeek") int startWeek,

@@ -2,7 +2,6 @@ package com.spc.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
@@ -268,7 +267,7 @@ public class TeacherController {
     }
 
 
-    @RequestMapping(value = "add/classApplication", method = RequestMethod.POST)
+    @RequestMapping(value = "/add/classApplication", method = RequestMethod.POST)
     @ResponseBody
     public int addClassApplication(@RequestBody ClassApplicationDomain cad) {
         cad.setChecked(1);

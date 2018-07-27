@@ -5,6 +5,7 @@ import com.spc.dao.ClassDao;
 import com.spc.dao.StudentApplicationDao;
 import com.spc.dao.StudentDao;
 import com.spc.model.ClassApplicationDomain;
+import com.spc.model.ClassDomain;
 import com.spc.model.StudentApplicationDomain;
 import com.spc.service.manage.ManageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,16 +113,21 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public int rejectClassApplication(int id) {
-        return  classApplicationDao.checkedClass(id, 3);
+        return classApplicationDao.checkedClass(id, 3);
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessage(int teaId, String className,int tabKey) {
-        return classApplicationDao.findall(teaId, className,tabKey);
+    public void addCourse(ClassDomain cd) {
+       classDao.insert(cd);
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date,int tabKey) {
-        return classApplicationDao.findallWithDate(teaId, className, date,tabKey);
+    public List<ClassApplicationDomain> checkedClassMessage(int teaId, String className, int tabKey) {
+        return classApplicationDao.findall(teaId, className, tabKey);
+    }
+
+    @Override
+    public List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date, int tabKey) {
+        return classApplicationDao.findallWithDate(teaId, className, date, tabKey);
     }
 }

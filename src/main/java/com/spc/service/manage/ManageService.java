@@ -1,6 +1,7 @@
 package com.spc.service.manage;
 
 import com.spc.model.ClassApplicationDomain;
+import com.spc.model.ClassDomain;
 import com.spc.model.StudentApplicationDomain;
 
 import java.util.Date;
@@ -20,6 +21,8 @@ public interface ManageService {
 
     int reject(int id);
     int rejectClassApplication(int id);
+
+    void addCourse(ClassDomain cd);
 
     List<ClassApplicationDomain> checkedClassMessage(int teaId, String className,int tabKey);
 

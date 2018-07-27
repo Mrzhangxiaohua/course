@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface ClassService {
 
-    int addClass(ClassDomain classDomain);
+    void addClass(ClassDomain classDomain);
 
     List<ClassDomain> findAllClass(Integer departId, String className, int teaId, int startWeek, int endWeek);
 
