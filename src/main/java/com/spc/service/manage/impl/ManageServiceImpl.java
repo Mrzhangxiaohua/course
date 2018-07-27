@@ -76,8 +76,20 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public List<StudentApplicationDomain> checkedMessage(int key,int stuId,Date date) {
+    public List<StudentApplicationDomain> checkedMessage(int key,int stuId) {
 
-        return studentApplicationDao.findall(key,stuId,date);
+        return studentApplicationDao.findall(key,stuId);
+    }
+
+    @Override
+    public int makeSure(int id) {
+        //通过的话就要将checked设置为1
+        return studentApplicationDao.checked(id,1);
+    }
+
+    @Override
+    public int reject(int id) {
+        //拒绝的话就要将checked设置为3
+        return studentApplicationDao.checked(id,3);
     }
 }

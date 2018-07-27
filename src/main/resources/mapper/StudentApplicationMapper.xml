@@ -34,9 +34,12 @@
             <if test="stuId!=88888888">
                 and s.stuId = #{stuId}
             </if>
-            <if test="date!=''">
-                and s.mydate) =#{date}
-            </if>
         </where>
     </select>
+
+    <update id="checked">
+        update  course.StudentApplication
+        set checked = #{checked}
+        where id=#{id} and checked=2
+    </update>
 </mapper>

@@ -9,5 +9,8 @@ public interface ManageService {
     String[][] findClasses(Integer stuId);
 
     String[][] bigTable();
-    List<StudentApplicationDomain> checkedMessage(int key,int stuId,Date date);
+    List<StudentApplicationDomain> checkedMessage(int key,int stuId);
+
+    int makeSure(int id);
+    int reject(int id);
 }

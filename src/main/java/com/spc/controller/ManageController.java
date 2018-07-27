@@ -8,15 +8,20 @@ import com.spc.model.StudentApplicationDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.manage.ManageService;
 import com.spc.service.student.StudentService;
+import com.spc.util.AuthMess;
+import com.spc.util.RequestPayload;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -34,7 +39,11 @@ public class ManageController {
     @Autowired
     private ManageService manageService;
 
+    @Autowired
+    private RequestPayload requestPayload;
 
+    @Autowired
+    private AuthMess authMess;
 
 
     @RequestMapping("/select/classes")
@@ -60,13 +69,13 @@ public class ManageController {
             @RequestParam(required = false,defaultValue = "88888888") int tabKey,
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false, defaultValue = "88888888") int stuId,
-            @RequestParam(required = false, defaultValue = "") Date date
+            @RequestParam(required = false, defaultValue = "88888888") int stuId
+//            @RequestParam(required = false, defaultValue = "") Date date
             ){
 
         PageHelper.startPage(currentPage,pageSize);
 
-        List<StudentApplicationDomain> result = manageService.checkedMessage(tabKey,stuId,date);
+        List<StudentApplicationDomain> result = manageService.checkedMessage(tabKey,stuId);
 
         Map<String,Object> res = new HashMap<>();
 
@@ -77,6 +86,36 @@ public class ManageController {
         map.put("currentPage",currentPage);
         res.put("data",map);
         return res;
+    }
+
+    @RequestMapping(value = "/makeSure/application",method = RequestMethod.POST)
+    @ResponseBody
+    public int convertStatus(HttpServletRequest request){
+        String json = requestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(json);
+            Integer id = obj.getInt("id");
+//            Integer tabKey = obj.getInt("tabKey");
+            return manageService.makeSure(id);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return 0;
+    }
+    @RequestMapping(value = "/reject/application",method = RequestMethod.POST)
+    @ResponseBody
+    public int rejectStatus(HttpServletRequest request){
+        String json = requestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(json);
+            Integer id = obj.getInt("id");
+            return manageService.reject(id);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return 0;
     }
 
     @RequestMapping("/find/classes")
