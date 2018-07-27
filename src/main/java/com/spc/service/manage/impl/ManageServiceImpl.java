@@ -100,18 +100,28 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
+    public int makeSureClassApplication(int id) {
+        return classApplicationDao.checkedClass(id, 1);
+    }
+
+    @Override
     public int reject(int id) {
         //拒绝的话就要将checked设置为3
         return studentApplicationDao.checked(id, 3);
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessage(int teaId, String className) {
-        return classApplicationDao.findall(teaId, className);
+    public int rejectClassApplication(int id) {
+        return  classApplicationDao.checkedClass(id, 3);
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date) {
-        return classApplicationDao.findallWithDate(teaId, className, date);
+    public List<ClassApplicationDomain> checkedClassMessage(int teaId, String className,int tabKey) {
+        return classApplicationDao.findall(teaId, className,tabKey);
+    }
+
+    @Override
+    public List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date,int tabKey) {
+        return classApplicationDao.findallWithDate(teaId, className, date,tabKey);
     }
 }

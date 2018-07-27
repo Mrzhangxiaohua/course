@@ -98,4 +98,12 @@ public class ClassApplicationDomain {
     public void setCourseInfo(String courseInfo) {
         this.courseInfo = courseInfo;
     }
+
+    public String getCheckStr() {
+        return checkStr;
+    }
+
+    public void setCheckStr(String checkStr) {
+        this.checkStr = checkStr;
+    }
 }

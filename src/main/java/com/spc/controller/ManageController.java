@@ -90,7 +90,7 @@ public class ManageController {
         }
         Map<String, Object> res = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
-        map.put("list", result);
+        map.put(Integer.toString(tabKey), result);
         map.put("total", ((Page) result).getTotal());
         map.put("pageSize", pageSize);
         map.put("currentPage", currentPage);
@@ -115,7 +115,8 @@ public class ManageController {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String mydate,
             @RequestParam(required = false, defaultValue = "") String className,
-            @RequestParam(required = false, defaultValue = "88888888") Integer teaId
+            @RequestParam(required = false, defaultValue = "88888888") Integer teaId,
+            @RequestParam(required = false, defaultValue = "88888888") Integer tabKey
     ) {
         PageHelper.startPage(currentPage, pageSize);
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -124,17 +125,21 @@ public class ManageController {
             try {
                 Date date = new Date();
                 date = fmt.parse(mydate);
-                result = manageService.checkedClassMessageAndDate(teaId, className, date);
+                result = manageService.checkedClassMessageAndDate(teaId, className, date,tabKey);
             } catch (ParseException e) {
                 System.out.println(e);
             }
         } else {
-            result = manageService.checkedClassMessage(teaId, className);
+            result = manageService.checkedClassMessage(teaId, className,tabKey);
         }
         System.out.println(result);
         Map<String, Object> res = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
-        map.put("list", result);
+        if(tabKey==88888888){
+            map.put("list", result);
+        }else{
+            map.put(Integer.toString(tabKey), result);
+        }
         map.put("total", ((Page) result).getTotal());
         map.put("pageSize", pageSize);
         map.put("currentPage", currentPage);
@@ -143,6 +148,12 @@ public class ManageController {
         return res;
     }
 
+
+    /**
+     * 管理端：审核通过学生的改课申请
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/makeSure/application", method = RequestMethod.POST)
     @ResponseBody
     public int convertStatus(HttpServletRequest request) {
@@ -158,6 +169,21 @@ public class ManageController {
         return 0;
     }
 
+    @RequestMapping(value = "/makeSure/classApplication", method = RequestMethod.POST)
+    @ResponseBody
+    public int convertClassStatus(HttpServletRequest request) {
+        String json = requestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(json);
+            Integer id = obj.getInt("id");
+            return manageService.makeSureClassApplication(id);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
     @RequestMapping(value = "/reject/application", method = RequestMethod.POST)
     @ResponseBody
     public int rejectStatus(HttpServletRequest request) {
@@ -167,6 +193,20 @@ public class ManageController {
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
             return manageService.reject(id);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+    @RequestMapping(value = "/reject/classApplication", method = RequestMethod.POST)
+    @ResponseBody
+    public int rejectClassStatus(HttpServletRequest request) {
+        String json = requestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(json);
+            Integer id = obj.getInt("id");
+            return manageService.rejectClassApplication(id);
         } catch (Exception e) {
             System.out.println(e);
         }

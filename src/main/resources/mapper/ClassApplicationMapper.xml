@@ -21,10 +21,13 @@
       on c.checked = a.id
       <where>
           <if test="teaId != 88888888">
-              and c.teaId=#{teaId}
+              and c.teaId= #{teaId}
           </if>
           <if test="className!=''">
-              and c.className=#{className}
+              and c.className like "%"#{className}"%"
+          </if>
+          <if test="tabKey!=88888888 and tabKey !=0">
+              and c.checked=#{tabKey}
           </if>
       </where>
     </select>
@@ -40,8 +43,18 @@
           <if test="className!=''">
               and c.className=#{className}
           </if>
-          and cast(s.mydate as date) = #{date}
+          <if test="tabKey!=88888888 and tabKey !=0">
+              and c.checked=#{tabKey}
+          </if>
+          and cast(c.mydate as date) = #{date}
       </where>
     </select>
+
+    <update id="checkedClass">
+        update  course.ClassApplication
+        set checked = #{checked}
+        where id=#{id} and checked=2
+--         只有未审核的才能改变状态
+    </update>
 
 </mapper>

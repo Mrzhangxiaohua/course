@@ -16,10 +16,12 @@ public interface ManageService {
     List<StudentApplicationDomain> checkedMessageAndDate(int key, int stuId, Date date);
 
     int makeSure(int id);
+    int makeSureClassApplication(int id);
 
     int reject(int id);
+    int rejectClassApplication(int id);
 
-    List<ClassApplicationDomain> checkedClassMessage(int teaId, String className);
+    List<ClassApplicationDomain> checkedClassMessage(int teaId, String className,int tabKey);
 
-    List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date);
+    List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date,int tabKey);
 }
