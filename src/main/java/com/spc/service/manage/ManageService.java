@@ -28,4 +28,5 @@ public interface ManageService {
     List<ClassApplicationDomain> checkedClassMessage(int teaId, String className,int tabKey);
 
     List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date,int tabKey);
+
 }

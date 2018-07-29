@@ -135,4 +135,5 @@ public class ManageServiceImpl implements ManageService {
     public List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date, int tabKey) {
         return classApplicationDao.findallWithDate(teaId, className, date, tabKey);
     }
+
 }

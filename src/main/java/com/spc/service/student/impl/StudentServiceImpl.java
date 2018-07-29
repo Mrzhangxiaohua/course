@@ -51,6 +51,7 @@ public class StudentServiceImpl implements StudentService {
             String date = (String) li.get("classDateDescription");
             String classPlace = (String) li.get("classPlace");
             String teaName = (String) li.get("teaName");
+            System.out.println(li.get("startWeek"));
             String startWeek = Integer.toString((Integer) li.get("startWeek"));
             String endWeek = Integer.toString((Integer) li.get("endWeek"));
             String classNum = Integer.toString((Integer) li.get("classNum"));

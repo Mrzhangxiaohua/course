@@ -286,6 +286,7 @@ public class TeacherController {
     public int addClassApplication(@RequestBody ClassApplicationDomain cad) {
         cad.setChecked(2);
         cad.setTeaId(0);
+        cad.setShenQingRenName(authMess.userName());
         cad.setShenQingRenId(authMess.teacherId());
         return teacherService.addClassApplication(cad);
     }

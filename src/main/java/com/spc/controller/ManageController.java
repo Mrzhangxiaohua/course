@@ -274,4 +274,10 @@ public class ManageController {
         manageService.addCourse(cd);
         return 0;
     }
+
+    @RequestMapping("get/bigTable")
+    @ResponseBody
+    public String[][] getBigTable(){
+        return manageService.bigTable();
+    }
 }

@@ -17,6 +17,7 @@ public class ClassApplicationDomain {
     private String teacherInfo;
     private String courseInfo;
     private int shenQingRenId;
+    private String shenQingRenName;
 
     public int getId() {
         return id;
@@ -114,5 +115,13 @@ public class ClassApplicationDomain {
 
     public void setShenQingRenId(int shenQingRenId) {
         this.shenQingRenId = shenQingRenId;
+    }
+
+    public String getShenQingRenName() {
+        return shenQingRenName;
+    }
+
+    public void setShenQingRenName(String shenQingRenName) {
+        this.shenQingRenName = shenQingRenName;
     }
 }

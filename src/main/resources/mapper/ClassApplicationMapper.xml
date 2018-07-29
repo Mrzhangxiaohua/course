@@ -9,13 +9,13 @@
    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.spc.model.ClassApplicationDomain">
        insert  into
        <include refid="BASE_TABLE"/>
-       (className,mainLecturer,teacherInfo,courseInfo,classTime,checked,shenQingRenId)
+       (className,mainLecturer,teacherInfo,courseInfo,classTime,checked,shenQingRenId,shenQingRenName)
        values
-       (#{className}, #{mainLecturer}, #{teacherInfo},#{courseInfo},#{classTime},#{checked},#{shenQingRenId})
+       (#{className}, #{mainLecturer}, #{teacherInfo},#{courseInfo},#{classTime},#{checked},#{shenQingRenId},#{shenQingRenName})
    </insert>
     
     <select id="findall" resultType="com.spc.model.ClassApplicationDomain">
-      select c.id, c.teaId ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr
+      select c.id, c.teaId ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName
       from ClassApplication c
       left join Application_Check a
       on c.checked = a.id
@@ -32,7 +32,7 @@
       </where>
     </select>
     <select id="findallWithDate" resultType="com.spc.model.ClassApplicationDomain">
-      select c.id, c.teaId ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr
+      select c.id, c.teaId ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName
       from ClassApplication c
       left join Application_Check a
       on c.checked = a.id
