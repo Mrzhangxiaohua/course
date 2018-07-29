@@ -91,10 +91,7 @@ public class StudentTablePdfView extends AbstractPdfView {
         for (int i = 0; i < tables.length; i = i + 2) {
             String[] t = tables[i];
             PdfPCell cell;
-            System.out.println(t);
-
-
-            cell = new PdfPCell(new Phrase(Integer.toString(i / 2 + 1) + "-" + Integer.toString(i / 2 + 2) + "节", textFont));
+            cell = new PdfPCell(new Phrase(Integer.toString(i  + 1) + "-" + Integer.toString(i + 2) + "节", textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
@@ -105,7 +102,6 @@ public class StudentTablePdfView extends AbstractPdfView {
                     String[] strs = t[j].replace(",", "\n ").split(" ");
                     if (strs != null && !(strs.length == 0)) {
                         for (String li : strs) {
-                            System.out.println(li);
                             newStrs = li != null && li != "" ? newStrs.append(li) : newStrs;
                         }
                     }
