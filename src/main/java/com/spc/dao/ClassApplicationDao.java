@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface ClassApplicationDao {
     //添加开课申请
@@ -16,5 +17,7 @@ public interface ClassApplicationDao {
     List<ClassApplicationDomain> findallWithDate(@Param("teaId") int teaId, @Param("className") String className, @Param("date") Date date, @Param("tabKey") int tabKey);
 
     int checkedClass(@Param("id") int id, @Param("checked") int checked);
+
+    List<Map<String,Object>> findByTeaId(@Param("teaId") int teaId);
 
 }

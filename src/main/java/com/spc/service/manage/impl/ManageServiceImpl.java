@@ -122,6 +122,11 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
+    public void deleteCourse(int classId) {
+        classDao.delete(classId);
+    }
+
+    @Override
     public List<ClassApplicationDomain> checkedClassMessage(int teaId, String className, int tabKey) {
         return classApplicationDao.findall(teaId, className, tabKey);
     }

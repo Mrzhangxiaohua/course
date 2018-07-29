@@ -2,6 +2,7 @@ package com.spc.service.teacher.impl;
 
 import com.spc.dao.ClassApplicationDao;
 import com.spc.dao.ClassDao;
+import com.spc.dao.IssueGradeDao;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.service.teacher.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -18,6 +20,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     ClassDao classDao;
+
+    @Autowired
+    IssueGradeDao issueGradeDao;
 
 
     @Override
@@ -49,5 +54,15 @@ public class TeacherServiceImpl implements TeacherService {
             temp[(l - 1) * 2 + 1][r - 1] = context;
         }
         return temp;
+    }
+
+    @Override
+    public  List<Map<String,Object>>  findApplication(int teaId) {
+        return  classApplicationDao.findByTeaId(teaId);
+    }
+
+    @Override
+    public int issueGrade(int classId) {
+        return issueGradeDao.insert(classId,1);
     }
 }

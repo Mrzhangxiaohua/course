@@ -9,9 +9,9 @@
    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.spc.model.ClassApplicationDomain">
        insert  into
        <include refid="BASE_TABLE"/>
-       (className,mainLecturer,teacherInfo,courseInfo,classTime,checked)
+       (className,mainLecturer,teacherInfo,courseInfo,classTime,checked,shenQingRenId)
        values
-       (#{className}, #{mainLecturer}, #{teacherInfo},#{courseInfo},#{classTime},#{checked})
+       (#{className}, #{mainLecturer}, #{teacherInfo},#{courseInfo},#{classTime},#{checked},#{shenQingRenId})
    </insert>
     
     <select id="findall" resultType="com.spc.model.ClassApplicationDomain">
@@ -49,6 +49,15 @@
           and cast(c.mydate as date) = #{date}
       </where>
     </select>
+
+    <select id="findByTeaId" resultType="map">
+        select a.checkStr,c.className
+        from course.ClassApplication c
+        left join Application_Check a
+        on  c.checked = a.id
+        where c.shenQingRenId= #{teaId}
+    </select>
+
 
     <update id="checkedClass">
         update  course.ClassApplication

@@ -36,7 +36,7 @@ public class CourseController {
      */
     @RequestMapping("/classes")
     @ResponseBody
-    public Map<String, Object> selectClassed(
+    public Map<String, Object> selectClasses(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "88888888") int departId,
@@ -46,7 +46,7 @@ public class CourseController {
 
         PageHelper.startPage(currentPage, pageSize);
         List<ClassDomain> classes = classService.findAllClass(departId, classname, teaId, 88888888, 88888888);
-
+        System.out.println(classes);
 
         for (ClassDomain l : classes) {
             String[] d = l.getClassDateDescription().split(":");

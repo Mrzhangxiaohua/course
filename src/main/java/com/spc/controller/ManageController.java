@@ -11,6 +11,7 @@ import com.spc.service.manage.ManageService;
 import com.spc.util.RequestPayload;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -258,6 +259,18 @@ public class ManageController {
         cd.setClassDateDescription(cd.getClassDateDescriptionA()+":"+cd.getClassDateDescriptionB());
         System.out.println(cd.getClassDateDescription());
         System.out.println(cd.getMainLecturer());
+        manageService.addCourse(cd);
+        return 0;
+    }
+
+    @RequestMapping("/update/course")
+    @ResponseBody
+    public int updateCourse(@RequestBody ClassDomain cd){
+        System.out.println(cd.getClassDateDescriptionA());
+        System.out.println(cd.getClassDateDescriptionB());
+        cd.setClassDateDescription(cd.getClassDateDescriptionA()+":"+cd.getClassDateDescriptionB());
+        manageService.deleteCourse(cd.getClassId());
+        System.out.println(cd.getClassId());
         manageService.addCourse(cd);
         return 0;
     }

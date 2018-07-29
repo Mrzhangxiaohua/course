@@ -98,6 +98,12 @@
         set classChooseNum  = classChooseNum+#{num}
         where classId = #{classId}
     </update>
+    
+    <delete id="delete">
+        delete
+        from course.Course
+        where classId =#{classId}
+    </delete>
 
 
 

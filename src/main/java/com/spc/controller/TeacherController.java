@@ -121,21 +121,36 @@ public class TeacherController {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String className,
             @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
-        PageHelper.startPage(currentPage, pageSize);
+        List students = new ArrayList();
+        System.out.println(classId);
+        if(classId!=88888888){
+            PageHelper.startPage(currentPage, pageSize);
+            students = classService.findStudent(className, classId);
+            System.out.printf("find student result:%s", students);
+            Map<String, Object> res = new HashMap<>();
+            res.put("status", "SUCCESS");
 
-        List students = classService.findStudent(className, classId);
-        System.out.printf("find student result:%s", students);
-        Map<String, Object> res = new HashMap<>();
-        res.put("status", "SUCCESS");
+            Map<String, Object> data = new HashMap<>();
+            data.put("total", ((Page) students).getTotal());
+            System.out.printf("total = %s\n", ((Page) students).getTotal());
+            data.put("pageSize", pageSize);
+            data.put("currentPage", currentPage);
+            data.put("list", students);
+            res.put("data", data);
+            return res;
+        }else{
+            Map<String, Object> res = new HashMap<>();
+            res.put("status", "SUCCESS");
+            Map<String, Object> data = new HashMap<>();
+            data.put("total", 0);
+            data.put("pageSize", pageSize);
+            data.put("currentPage", currentPage);
+            data.put("list", students);
+            res.put("data", data);
+            return res;
+        }
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("total", ((Page) students).getTotal());
-        System.out.printf("total = %s\n", ((Page) students).getTotal());
-        data.put("pageSize", pageSize);
-        data.put("currentPage", currentPage);
-        data.put("list", students);
-        res.put("data", data);
-        return res;
+
     }
 
     /**
@@ -266,12 +281,52 @@ public class TeacherController {
         }
     }
 
-
     @RequestMapping(value = "/add/classApplication", method = RequestMethod.POST)
     @ResponseBody
     public int addClassApplication(@RequestBody ClassApplicationDomain cad) {
-        cad.setChecked(1);
+        cad.setChecked(2);
         cad.setTeaId(0);
+        cad.setShenQingRenId(authMess.teacherId());
         return teacherService.addClassApplication(cad);
     }
+
+    @RequestMapping("/find/application")
+    @ResponseBody
+    public  Map<String, Object>  findApplication(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize
+    ){
+        PageHelper.startPage(currentPage, pageSize);
+
+        List<Map<String,Object>> list= teacherService.findApplication(authMess.teacherId());
+
+        System.out.println(list.get(0));
+        Map<String, Object> res = new HashMap<>();
+        res.put("status", "SUCCESS");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", ((Page) list).getTotal());
+        System.out.printf("total = %s\n", ((Page) list).getTotal());
+        data.put("pageSize", pageSize);
+        data.put("currentPage", currentPage);
+        data.put("list", list);
+        res.put("data", data);
+        return res;
+    }
+
+    @RequestMapping(value = "/issue/grade",method = RequestMethod.POST)
+    @ResponseBody
+    public int issueGrade(HttpServletRequest request){
+        String json = requestPayload.getRequestPayload(request);
+        System.out.println(json);
+        try {
+            JSONObject obj = new JSONObject(json);
+            int classId = obj.getInt("classId");
+            return teacherService.issueGrade(classId);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return 0;
+    }
+
 }

@@ -10,6 +10,8 @@ public interface ClassDao {
 
     void insert(ClassDomain record);
 
+    void delete(@Param("classId") int classId);
+
     List<ClassDomain> selectClasses(@Param("departId") Integer departId, @Param("className") String className,
                                     @Param("teaName") String teaName, @Param("teaId") int teaId, @Param("startWeek") int startWeek,
                                     @Param("endWeek") int endWeek, @Param("hasWaiGuoYu") int hasWaiGuoYu);

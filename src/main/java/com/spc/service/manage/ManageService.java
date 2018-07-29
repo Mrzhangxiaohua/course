@@ -23,6 +23,7 @@ public interface ManageService {
     int rejectClassApplication(int id);
 
     void addCourse(ClassDomain cd);
+    void deleteCourse(int classId);
 
     List<ClassApplicationDomain> checkedClassMessage(int teaId, String className,int tabKey);
 
