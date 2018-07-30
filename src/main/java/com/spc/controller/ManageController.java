@@ -258,6 +258,7 @@ public class ManageController {
     @ResponseBody
     public int addCourse(@RequestBody ClassDomain cd){
         cd.setClassDateDescription(cd.getClassDateDescriptionA()+":"+cd.getClassDateDescriptionB());
+        cd.setClassChooseNum(0);
         System.out.println(cd.getClassDateDescription());
         System.out.println(cd.getMainLecturer());
         manageService.addCourse(cd);
