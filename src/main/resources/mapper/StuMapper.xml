@@ -45,7 +45,7 @@
     </select>
 
     <select id="findAllClassName" resultType="map">
-        select distinct classId,className
+        select distinct classId,className,classNum
         from course.Course
     </select>
 
@@ -93,6 +93,26 @@
             on c.classId=c2.classId
         )d
         on d.classDateDescription = a.classDateDescription
+    </select>
+    
+    <delete id="deleteCourse">
+        delete
+        from course.Course_choose cc
+        left join Course c
+        on cc.classId = c.classId
+        where c.className=#{className} and cc.stuId = #{stuId}
+    </delete>
+    
+    <update id="addClassNum">
+      INSERT INTO course.Course_choose (stuId,classId,0) values (#{stuId},SELECT classId FROM course.Course where classNum = #{classNum} and className = #{className} )
+    </update>
+    
+    <select id="findClassNewId">
+        select classId
+        from course.Course
+        where className=(
+        select className from course.Course
+        where classId=#{classId}) and classNum = #{classNum}
     </select>
 
 </mapper>

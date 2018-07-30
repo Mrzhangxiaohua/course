@@ -160,7 +160,8 @@ public class ManageController {
         try {
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
-            return manageService.makeSure(id);
+            String className = obj.getString("className");
+            return manageService.makeSure(id,className);
         } catch (Exception e) {
             System.out.println(e);
         }

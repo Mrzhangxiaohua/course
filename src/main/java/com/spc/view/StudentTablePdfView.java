@@ -124,6 +124,5 @@ public class StudentTablePdfView extends AbstractPdfView {
         ct.setSimpleColumn(rect);
         ct.addText(p);
         ct.go();
-
     }
 }

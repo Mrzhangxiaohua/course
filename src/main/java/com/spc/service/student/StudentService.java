@@ -9,14 +9,14 @@ import java.util.Map;
 public interface StudentService {
     public String[][] findClasses();
 
-    public List<Map> findAllClassName();
+    public List<Map<String,Object>> findAllClassName();
 
     public int addCourse(int classId);
 
     public int deleteCourse(int classId);
 
 
-    public int addApplication(int classId, int states, String reason);
+    public int addApplication(int classId, int states, String reason , int classNum);
 
     public List<ClassDomain> selectClassed(Map<String, Object> map);
 

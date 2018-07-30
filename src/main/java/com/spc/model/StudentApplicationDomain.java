@@ -16,6 +16,7 @@ public class StudentApplicationDomain {
     private String category;
     private String stuName;
     private String className;
+    private int classNum;
 
 
     public int getId() {
@@ -105,5 +106,13 @@ public class StudentApplicationDomain {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public int getClassNum() {
+        return classNum;
+    }
+
+    public void setClassNum(int classNum) {
+        this.classNum = classNum;
     }
 }

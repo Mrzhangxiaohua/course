@@ -1,9 +1,6 @@
 package com.spc.service.manage.impl;
 
-import com.spc.dao.ClassApplicationDao;
-import com.spc.dao.ClassDao;
-import com.spc.dao.StudentApplicationDao;
-import com.spc.dao.StudentDao;
+import com.spc.dao.*;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.model.StudentApplicationDomain;
@@ -11,10 +8,7 @@ import com.spc.service.manage.ManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ManageServiceImpl implements ManageService {
@@ -23,6 +17,8 @@ public class ManageServiceImpl implements ManageService {
     private StudentDao studentDao;
     @Autowired
     private ClassDao classDao;
+    @Autowired
+    private GradeDao gradeDao;
 
     @Autowired
     private StudentApplicationDao studentApplicationDao;
@@ -95,8 +91,52 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public int makeSure(int id) {
+    public int  chooseCourse(int classId,int stuId){
+        classDao.updateChooseNum(classId, 1);
+        studentDao.addChooseCourse(stuId, classId);
+        return 0;
+    }
+
+    @Override
+    public int deleteCourse(int classId, int stuId) {
+        classDao.updateChooseNum(classId, -1);
+        studentDao.deleteChooseCourse(stuId, classId);
+        return 0;
+    }
+
+    @Override
+    public int makeSure(int id,String classStr) {
         //通过的话就要将checked设置为1
+        //通过的话要根据请求的内容做相应的调整
+        StudentApplicationDomain studentApplicationDomain = studentApplicationDao.selectById(id);
+        int stuId = studentApplicationDomain.getStuId();
+        int classNum = studentApplicationDomain.getClassNum();
+        int oldClassId = studentApplicationDomain.getClassId();
+
+        switch (studentApplicationDomain.getCategory()){
+            case "新增课程":
+                System.out.println("新增课程");
+                List<Map<String, Object>> res = studentDao.findTimeChongTu(stuId, oldClassId);
+                boolean canAdd = gradeDao.selectGrade(oldClassId, stuId).isEmpty() && res.isEmpty();
+                if (canAdd) {
+                    chooseCourse(oldClassId,stuId);
+                }
+                break;
+            case "调整班级":
+                System.out.println("调整班级");
+                deleteCourse(oldClassId,stuId);
+                int newClassId = studentDao.findClassNewId(oldClassId,classNum);
+                chooseCourse(newClassId,stuId);
+                break;
+            case "重修课程":
+                System.out.println("重修课程");
+                chooseCourse(oldClassId,stuId);
+                break;
+            case "退选计划":
+                System.out.println("退选计划");
+                chooseCourse(stuId,oldClassId);
+                break;
+        }
         return studentApplicationDao.checked(id, 1);
     }
 

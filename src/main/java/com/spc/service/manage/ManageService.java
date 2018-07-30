@@ -16,11 +16,14 @@ public interface ManageService {
 
     List<StudentApplicationDomain> checkedMessageAndDate(int key, int stuId, Date date);
 
-    int makeSure(int id);
+    int makeSure(int id,String classStr);
     int makeSureClassApplication(int id);
 
     int reject(int id);
     int rejectClassApplication(int id);
+
+    int chooseCourse(int classId,int stuId);
+    int deleteCourse(int classId,int stuId);
 
     void addCourse(ClassDomain cd);
     void deleteCourse(int classId);

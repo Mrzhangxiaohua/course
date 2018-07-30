@@ -73,13 +73,16 @@ public class StudentServiceImpl implements StudentService {
         //首先得到学生id
         int stuId = authMess.userId();
         List<Map<String, Object>> res = studentDao.findTimeChongTu(stuId, classId);
-        if (gradeDao.selectGrade(classId, stuId).isEmpty() && res.isEmpty()) {
+        boolean canAdd = gradeDao.selectGrade(classId, stuId).isEmpty() && res.isEmpty();
+        if (canAdd) {
             classDao.updateChooseNum(classId, 1);
             return studentDao.addChooseCourse(stuId, classId);
         } else {
             return 0;
         }
     }
+
+
 
     @Override
     public int deleteCourse(int classId) {
@@ -94,9 +97,9 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public int addApplication(int classId, int states, String reason) {
+    public int addApplication(int classId, int states, String reason, int classNum) {
         int stuId = authMess.userId();
-        return studentApplicationDao.add(stuId, classId, states, reason, 1);
+        return studentApplicationDao.add(stuId, classId, states, reason, 2, classNum);
     }
 
     @Override
@@ -179,7 +182,14 @@ public class StudentServiceImpl implements StudentService {
     }
 
 
-    public List<Map> findAllClassName() {
-        return studentDao.findAllClassName();
+    @Override
+    public List<Map<String,Object>> findAllClassName() {
+        List<Map<String,Object>> liM = studentDao.findAllClassName();
+        for (Map<String,Object> aM:liM){
+            String className = (String) aM.get("className");
+            String classNum = Integer.toString((Integer) aM.get("classNum"));
+            aM.put("classStr",className+"("+classNum+"班)");
+        }
+        return liM;
     }
 }

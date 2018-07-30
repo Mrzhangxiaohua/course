@@ -10,7 +10,7 @@ public interface StudentDao {
 
     public List<HashMap<String, Object>> findClasses(@Param("stuId") Integer stuId);
 
-    public List<Map> findAllClassName();
+    public List<Map<String,Object>> findAllClassName();
 
 
     //添加该学生选择的课程
@@ -25,5 +25,11 @@ public interface StudentDao {
     public List<Map<String, Object>> getNotWaiStudyTime(@Param("stuId") int stuId);
 
     public List<Map<String, Object>> findTimeChongTu(@Param("stuId") int stuId, @Param("classId") int classId);
+
+    int addClassNum(@Param("stuId")int  stuId,@Param("classNum")int  classNum,@Param("className") String className);
+
+    int deleteCourse(String className,int stuId);
+
+    int findClassNewId(int  oldClassId,int classNum);
 
 }

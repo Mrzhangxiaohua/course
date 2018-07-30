@@ -63,7 +63,7 @@ public class StudentController {
      * @return
      */
     @RequestMapping(value = "/find/allClassName")
-    public List<Map> findAllClassName() {
+    public List<Map<String,Object>> findAllClassName() {
         return studentService.findAllClassName();
     }
 
@@ -85,7 +85,10 @@ public class StudentController {
             //states 为4 是退选计划
             Integer state = obj.getInt("states");
             String reason = obj.getString("reason");
-            return studentService.addApplication(classId, state, reason);
+            String className = obj.getString("className");
+            System.out.println(obj.getString("classNum"));
+            Integer classNum = obj.getString("classNum").equals("")? 0: Integer.parseInt(obj.getString("classNum")); //专门为调整班级使用的“班次”字段
+            return studentService.addApplication(classId, state, reason, classNum);
         } catch (Exception e) {
             System.out.println(e);
         }
