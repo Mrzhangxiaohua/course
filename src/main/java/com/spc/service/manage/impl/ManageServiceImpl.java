@@ -196,6 +196,11 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
+    public int getClassId(String className, int classNum) {
+        return   (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
+    }
+
+    @Override
     public List findStudentByClassnameAndNum(String className, int classNum,int pageSize,int currentPage) {
         int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
 

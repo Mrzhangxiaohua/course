@@ -232,18 +232,32 @@ public class ManageController {
     }
 
     @RequestMapping("/download/table")
-    public ModelAndView downloadTable(HttpServletResponse response,
-                                      @RequestParam(required = false, defaultValue = "") String className,
-                                      @RequestParam(required = false, defaultValue = "88888888") Integer classId
+    public ModelAndView downloadTable(HttpServletResponse response,HttpServletRequest request,
+                                      @RequestParam(required = false, defaultValue = "") String classStr
     ) {
-        System.out.printf("classId %d", classId);
-        List students = classService.findStudent(classId);
-        Map<String, Object> res = new HashMap<String, Object>();
-
-        res.put("data", students);
+        System.out.println(classStr);
         Map<String, Object> model = new HashMap<>();
-        model.put("res", res);
-        model.put("style", "wider");
+        try {
+            String newStr = classStr.replace("(",",").replace(")","");
+            String[] strs = newStr.substring(0,newStr.length()-1).split(",");
+
+            System.out.println(newStr);
+            String className = strs[0];
+            Integer classNum = Integer.parseInt(strs[1]);
+
+            int classId = manageService.getClassId(className,classNum);
+
+            System.out.printf("classId %d", classId);
+            List students = classService.findStudent(classId);
+            Map<String, Object> res = new HashMap<String, Object>();
+
+            res.put("data", students);
+            model.put("res", res);
+            model.put("style", "wider");
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
         return new ModelAndView(new ManageScorePdfView(), model);
     }
 

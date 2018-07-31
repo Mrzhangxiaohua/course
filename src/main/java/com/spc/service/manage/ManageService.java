@@ -33,6 +33,8 @@ public interface ManageService {
 
     int deleteCourseStudent(int stuId,String classStr);
 
+    int getClassId(String className,int classNum);
+
     List findStudentByClassnameAndNum(String className,int classNum,int pageSize,int currentPage);
 
     List<ClassApplicationDomain> checkedClassMessage(int teaId, String className,int tabKey);
