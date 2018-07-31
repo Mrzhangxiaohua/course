@@ -103,7 +103,6 @@ public class ManageController {
      * @param pageSize    页面大小
      * @param mydate      日期
      * @param className   课程名称
-     * @param teaId       教师id
      * @return 查询结果
      */
     @RequestMapping("/checked/classAppMessage")
@@ -113,7 +112,7 @@ public class ManageController {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String mydate,
             @RequestParam(required = false, defaultValue = "") String className,
-            @RequestParam(required = false, defaultValue = "88888888") Integer teaId,
+            @RequestParam(required = false, defaultValue = "88888888") Integer shenQingRenId,
             @RequestParam(required = false, defaultValue = "88888888") Integer tabKey
     ) {
         PageHelper.startPage(currentPage, pageSize);
@@ -123,12 +122,12 @@ public class ManageController {
             try {
                 Date date = new Date();
                 date = fmt.parse(mydate);
-                result = manageService.checkedClassMessageAndDate(teaId, className, date,tabKey);
+                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date,tabKey);
             } catch (ParseException e) {
                 System.out.println(e);
             }
         } else {
-            result = manageService.checkedClassMessage(teaId, className,tabKey);
+            result = manageService.checkedClassMessage(shenQingRenId, className,tabKey);
         }
         System.out.println(result);
         Map<String, Object> res = new HashMap<>();
@@ -232,7 +231,7 @@ public class ManageController {
                                       @RequestParam(required = false, defaultValue = "88888888") Integer classId
     ) {
         System.out.printf("classId %d", classId);
-        List students = classService.findStudent(className, classId);
+        List students = classService.findStudent(classId);
         Map<String, Object> res = new HashMap<String, Object>();
 
         res.put("data", students);
@@ -281,5 +280,68 @@ public class ManageController {
     @ResponseBody
     public String[][] getBigTable(){
         return manageService.bigTable();
+    }
+
+    @RequestMapping(value = "add/courseStudent",method = RequestMethod.POST)
+    @ResponseBody
+    public int addCourseStudent(HttpServletRequest request){
+        String json = requestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(json);
+            System.out.println(obj);
+            Integer stuId = obj.getInt("stuId");
+            String stuName = obj.getString("stuName");
+            String classStr = obj.getString("classStr");
+            manageService.addCourseStudent(stuId,stuName,classStr);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+        return 0;
+    }
+
+    @RequestMapping("/find/student")
+    @ResponseBody
+    public Map<String, Object>  findStudentByClassnameAndNum(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false, defaultValue = "") String classStr
+    ){
+        List students = new ArrayList();
+        System.out.println(classStr);
+        if(!classStr.equals("") && !classStr.isEmpty()){
+            String newStr = classStr.replace("(",",").replace(")","");
+            String[] strs = newStr.substring(0,newStr.length()-1).split(",");
+
+            System.out.println(strs);
+            String className = strs[0];
+            Integer classNum = Integer.parseInt(strs[1]);
+
+            students = manageService.findStudentByClassnameAndNum(className,classNum,pageSize,currentPage);
+
+            System.out.printf("find student result:%s", students);
+            Map<String, Object> res = new HashMap<>();
+            res.put("status", "SUCCESS");
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("total", ((Page) students).getTotal());
+            System.out.printf("total = %s\n", ((Page) students).getTotal());
+            data.put("pageSize", pageSize);
+            data.put("currentPage", currentPage);
+            data.put("list", students);
+            res.put("data", data);
+            return res;
+        }else {
+            Map<String, Object> res = new HashMap<>();
+            res.put("status", "SUCCESS");
+            Map<String, Object> data = new HashMap<>();
+            data.put("total", 0);
+            data.put("pageSize", pageSize);
+            data.put("currentPage", currentPage);
+            data.put("list", students);
+            res.put("data", data);
+            return res;
+        }
     }
 }

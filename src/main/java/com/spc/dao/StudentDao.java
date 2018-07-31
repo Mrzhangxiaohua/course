@@ -18,7 +18,7 @@ public interface StudentDao {
 
     public int deleteChooseCourse(@Param("stuId") Integer stuId, @Param("classId") Integer classId);
 
-    public List findStudent(@Param("className") String className, @Param("classId") Integer classId);
+    public List findStudent( @Param("classId") Integer classId);
 
     public List<Map<String, Object>> getWaiStudyTime(@Param("stuId") int stuId);
 
@@ -31,5 +31,7 @@ public interface StudentDao {
     int deleteCourse(String className,int stuId);
 
     int findClassNewId(int  oldClassId,int classNum);
+
+    Map<String,Object> findClassesByNameAndNum(@Param("className")String className,@Param("classNum") int classNum);
 
 }

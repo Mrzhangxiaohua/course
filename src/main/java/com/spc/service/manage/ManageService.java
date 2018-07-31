@@ -28,6 +28,11 @@ public interface ManageService {
     void addCourse(ClassDomain cd);
     void deleteCourse(int classId);
 
+
+    int addCourseStudent(int stuId,String stuName,String classStr);
+
+    List findStudentByClassnameAndNum(String className,int classNum,int pageSize,int currentPage);
+
     List<ClassApplicationDomain> checkedClassMessage(int teaId, String className,int tabKey);
 
     List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date,int tabKey);

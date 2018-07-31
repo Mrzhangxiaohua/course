@@ -38,9 +38,6 @@
             <if test="classId!=88888888">
                 a.classId = #{classId}
             </if>
-            <if test="className !=null and className!=''">
-                and a.className = #{className}
-            </if>
         </where>
     </select>
 
@@ -114,5 +111,9 @@
         select className from course.Course
         where classId=#{classId}) and classNum = #{classNum}
     </select>
-
+    <select id="findClassesByNameAndNum" resultType="map">
+        select classId
+        from course.Course
+        where className=#{className} and classNum = #{classNum}
+    </select>
 </mapper>

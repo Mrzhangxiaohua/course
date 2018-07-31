@@ -33,9 +33,12 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List findStudent(String className, int classId) {
-        return studentDao.findStudent(className, classId);
+    public List findStudent(int classId) {
+        return studentDao.findStudent(classId);
     }
+
+
+
 
     @Override
     public int updateScore(String className, int stuId, int score) {

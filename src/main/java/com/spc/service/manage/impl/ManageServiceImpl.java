@@ -1,5 +1,6 @@
 package com.spc.service.manage.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.spc.dao.*;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
@@ -166,14 +167,37 @@ public class ManageServiceImpl implements ManageService {
         classDao.delete(classId);
     }
 
+
+
     @Override
-    public List<ClassApplicationDomain> checkedClassMessage(int teaId, String className, int tabKey) {
-        return classApplicationDao.findall(teaId, className, tabKey);
+    public int addCourseStudent(int stuId, String stuName, String classStr) {
+        String newStr = classStr.replace("(",",").replace(")","");
+        String[] strs = newStr.substring(0,newStr.length()-1).split(",");
+
+        System.out.println(strs);
+        String className = strs[0];
+        Integer classNum = Integer.parseInt(strs[1]);
+        int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
+        chooseCourse(classId,stuId);
+        return 0;
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date, int tabKey) {
-        return classApplicationDao.findallWithDate(teaId, className, date, tabKey);
+    public List findStudentByClassnameAndNum(String className, int classNum,int pageSize,int currentPage) {
+        int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
+
+        PageHelper.startPage(currentPage, pageSize);
+        return studentDao.findStudent(classId);
+    }
+
+    @Override
+    public List<ClassApplicationDomain> checkedClassMessage(int shenQingRenId, String className, int tabKey) {
+        return classApplicationDao.findall(shenQingRenId, className, tabKey);
+    }
+
+    @Override
+    public List<ClassApplicationDomain> checkedClassMessageAndDate(int shenQingRenId, String className, Date date, int tabKey) {
+        return classApplicationDao.findallWithDate(shenQingRenId, className, date, tabKey);
     }
 
 }

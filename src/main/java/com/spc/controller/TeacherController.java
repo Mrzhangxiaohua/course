@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import com.spc.util.RequestPayload;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -110,7 +111,6 @@ public class TeacherController {
      *
      * @param currentPage
      * @param pageSize
-     * @param className   课程名称
      * @param classId     课程id
      * @return
      */
@@ -119,13 +119,12 @@ public class TeacherController {
     public Map<String, Object> getStudent(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false, defaultValue = "") String className,
             @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
         List students = new ArrayList();
-        System.out.println(classId);
         if(classId!=88888888){
             PageHelper.startPage(currentPage, pageSize);
-            students = classService.findStudent(className, classId);
+
+            students = classService.findStudent(classId);
             System.out.printf("find student result:%s", students);
             Map<String, Object> res = new HashMap<>();
             res.put("status", "SUCCESS");
@@ -149,8 +148,6 @@ public class TeacherController {
             res.put("data", data);
             return res;
         }
-
-
     }
 
     /**

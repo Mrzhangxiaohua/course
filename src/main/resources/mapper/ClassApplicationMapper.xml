@@ -20,8 +20,8 @@
       left join Application_Check a
       on c.checked = a.id
       <where>
-          <if test="teaId != 88888888">
-              and c.teaId= #{teaId}
+          <if test="shenQingRenId != 88888888">
+              and c.shenQingRenId= #{shenQingRenId}
           </if>
           <if test="className!=''">
               and c.className like "%"#{className}"%"
@@ -37,8 +37,8 @@
       left join Application_Check a
       on c.checked = a.id
       <where>
-          <if test="teaId!=88888888">
-              and c.teaId=#{teaId}
+          <if test="shenQingRenId!=88888888">
+              and c.shenQingRenId=#{shenQingRenId}
           </if>
           <if test="className!=''">
               and c.className=#{className}

@@ -12,9 +12,9 @@ public interface ClassApplicationDao {
     int add(ClassApplicationDomain cas);
 
     // 找到所有满足要求的开课申请
-    List<ClassApplicationDomain> findall(@Param("teaId") int teaId, @Param("className") String className, @Param("tabKey") int tabKey);
+    List<ClassApplicationDomain> findall(@Param("shenQingRenId") int shenQingRenId, @Param("className") String className, @Param("tabKey") int tabKey);
 
-    List<ClassApplicationDomain> findallWithDate(@Param("teaId") int teaId, @Param("className") String className, @Param("date") Date date, @Param("tabKey") int tabKey);
+    List<ClassApplicationDomain> findallWithDate(@Param("shenQingRenId") int shenQingRenId, @Param("className") String className, @Param("date") Date date, @Param("tabKey") int tabKey);
 
     int checkedClass(@Param("id") int id, @Param("checked") int checked);
 
