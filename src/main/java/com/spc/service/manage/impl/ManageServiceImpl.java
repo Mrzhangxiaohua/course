@@ -183,6 +183,19 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
+    public int deleteCourseStudent(int stuId, String classStr) {
+        String newStr = classStr.replace("(",",").replace(")","");
+        String[] strs = newStr.substring(0,newStr.length()-1).split(",");
+
+        System.out.println(strs);
+        String className = strs[0];
+        Integer classNum = Integer.parseInt(strs[1]);
+        int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
+        deleteCourse(classId,stuId);
+        return 0;
+    }
+
+    @Override
     public List findStudentByClassnameAndNum(String className, int classNum,int pageSize,int currentPage) {
         int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
 

@@ -82,12 +82,10 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
-
-
     @Override
     public int deleteCourse(int classId) {
         int stuId = authMess.userId();
-        if (gradeDao.selectGrade(classId, stuId).isEmpty() != true) {
+        if (!gradeDao.selectGrade(classId, stuId).isEmpty()) {
             classDao.updateChooseNum(classId, -1);
             return studentDao.deleteChooseCourse(stuId, classId);
         } else {

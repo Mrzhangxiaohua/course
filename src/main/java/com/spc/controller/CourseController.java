@@ -13,7 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * 这个类提供课程管理的路由。
+ *
+ * @author yuhongchao
+ * @version 1.0
+ */
 @RequestMapping("/select")
 @RestController
 public class CourseController {
@@ -26,13 +31,13 @@ public class CourseController {
     /**
      * 根据院系以及课程名称，老师名称查询课程
      *
-     * @param currentPage
-     * @param pageSize
-     * @param departId
-     * @param classname
-     * @param teaId
-     * @param model
-     * @return
+     * @param currentPage 当前页
+     * @param pageSize 页面大小
+     * @param departId 院系id
+     * @param classname 课程名称
+     * @param teaId 教师id
+     * @param model 课程所属模块
+     * @return Map<String, Object>
      */
     @RequestMapping("/classes")
     @ResponseBody

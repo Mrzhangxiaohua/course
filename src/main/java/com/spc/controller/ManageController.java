@@ -11,7 +11,6 @@ import com.spc.service.manage.ManageService;
 import com.spc.util.RequestPayload;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,7 +44,12 @@ public class ManageController {
     @Autowired
     private RequestPayload requestPayload;
 
-
+    /**
+     * 学生端：根据学生id查询课表
+     *
+     * @param stuId 学生id
+     * @return String[][] 类型的课表
+     */
     @RequestMapping("/select/classes")
     @ResponseBody
     public String[][] manageFindClasses(
@@ -56,12 +60,12 @@ public class ManageController {
     }
 
     /**
-     * 查询所有的审核情况
+     * 查询学生提交的改课申请
      *
-     * @param tabKey
-     * @param currentPage
-     * @param pageSize
-     * @return
+     * @param tabKey：所要查询的申请的状态
+     * @param currentPage ：当前页码
+     * @param pageSize ： 页面大小
+     * @return Map<String, Object>
      */
     @RequestMapping("/checked/message")
     @ResponseBody
@@ -122,19 +126,19 @@ public class ManageController {
             try {
                 Date date = new Date();
                 date = fmt.parse(mydate);
-                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date,tabKey);
+                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date, tabKey);
             } catch (ParseException e) {
                 System.out.println(e);
             }
         } else {
-            result = manageService.checkedClassMessage(shenQingRenId, className,tabKey);
+            result = manageService.checkedClassMessage(shenQingRenId, className, tabKey);
         }
         System.out.println(result);
         Map<String, Object> res = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
-        if(tabKey==88888888){
+        if (tabKey == 88888888) {
             map.put("list", result);
-        }else{
+        } else {
             map.put(Integer.toString(tabKey), result);
         }
         map.put("total", ((Page) result).getTotal());
@@ -148,6 +152,7 @@ public class ManageController {
 
     /**
      * 管理端：审核通过学生的改课申请
+     *
      * @param request
      * @return
      */
@@ -160,7 +165,7 @@ public class ManageController {
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
             String className = obj.getString("className");
-            return manageService.makeSure(id,className);
+            return manageService.makeSure(id, className);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -196,6 +201,7 @@ public class ManageController {
         }
         return 0;
     }
+
     @RequestMapping(value = "/reject/classApplication", method = RequestMethod.POST)
     @ResponseBody
     public int rejectClassStatus(HttpServletRequest request) {
@@ -253,10 +259,10 @@ public class ManageController {
         return new ModelAndView(new StudentTablePdfView(), model);
     }
 
-    @RequestMapping(value = "/add/course",method = RequestMethod.POST)
+    @RequestMapping(value = "/add/course", method = RequestMethod.POST)
     @ResponseBody
-    public int addCourse(@RequestBody ClassDomain cd){
-        cd.setClassDateDescription(cd.getClassDateDescriptionA()+":"+cd.getClassDateDescriptionB());
+    public int addCourse(@RequestBody ClassDomain cd) {
+        cd.setClassDateDescription(cd.getClassDateDescriptionA() + ":" + cd.getClassDateDescriptionB());
         cd.setClassChooseNum(0);
         System.out.println(cd.getClassDateDescription());
         System.out.println(cd.getMainLecturer());
@@ -266,10 +272,10 @@ public class ManageController {
 
     @RequestMapping("/update/course")
     @ResponseBody
-    public int updateCourse(@RequestBody ClassDomain cd){
+    public int updateCourse(@RequestBody ClassDomain cd) {
         System.out.println(cd.getClassDateDescriptionA());
         System.out.println(cd.getClassDateDescriptionB());
-        cd.setClassDateDescription(cd.getClassDateDescriptionA()+":"+cd.getClassDateDescriptionB());
+        cd.setClassDateDescription(cd.getClassDateDescriptionA() + ":" + cd.getClassDateDescriptionB());
         manageService.deleteCourse(cd.getClassId());
         System.out.println(cd.getClassId());
         manageService.addCourse(cd);
@@ -278,13 +284,19 @@ public class ManageController {
 
     @RequestMapping("get/bigTable")
     @ResponseBody
-    public String[][] getBigTable(){
+    public String[][] getBigTable() {
         return manageService.bigTable();
     }
 
-    @RequestMapping(value = "add/courseStudent",method = RequestMethod.POST)
+    /**
+     * 管理端：给相应的接口添加学生
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "add/courseStudent", method = RequestMethod.POST)
     @ResponseBody
-    public int addCourseStudent(HttpServletRequest request){
+    public int addCourseStudent(HttpServletRequest request) {
         String json = requestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
@@ -293,32 +305,48 @@ public class ManageController {
             Integer stuId = obj.getInt("stuId");
             String stuName = obj.getString("stuName");
             String classStr = obj.getString("classStr");
-            manageService.addCourseStudent(stuId,stuName,classStr);
-        }catch (Exception e){
+            manageService.addCourseStudent(stuId, stuName, classStr);
+        } catch (Exception e) {
             System.out.println(e);
         }
+        return 0;
+    }
 
+    @RequestMapping(value = "delete/courseStudent", method = RequestMethod.POST)
+    @ResponseBody
+    public int deleteCourseStudent(HttpServletRequest request) {
+        String json = requestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(json);
+            System.out.println(obj);
+            Integer stuId = obj.getInt("stuId");
+            String classStr = obj.getString("classStr");
+            manageService.deleteCourseStudent(stuId, classStr);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         return 0;
     }
 
     @RequestMapping("/find/student")
     @ResponseBody
-    public Map<String, Object>  findStudentByClassnameAndNum(
+    public Map<String, Object> findStudentByClassnameAndNum(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String classStr
-    ){
+    ) {
         List students = new ArrayList();
         System.out.println(classStr);
-        if(!classStr.equals("") && !classStr.isEmpty()){
-            String newStr = classStr.replace("(",",").replace(")","");
-            String[] strs = newStr.substring(0,newStr.length()-1).split(",");
+        if (!classStr.equals("") && !classStr.isEmpty()) {
+            String newStr = classStr.replace("(", ",").replace(")", "");
+            String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
             System.out.println(strs);
             String className = strs[0];
             Integer classNum = Integer.parseInt(strs[1]);
 
-            students = manageService.findStudentByClassnameAndNum(className,classNum,pageSize,currentPage);
+            students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
 
             System.out.printf("find student result:%s", students);
             Map<String, Object> res = new HashMap<>();
@@ -332,7 +360,7 @@ public class ManageController {
             data.put("list", students);
             res.put("data", data);
             return res;
-        }else {
+        } else {
             Map<String, Object> res = new HashMap<>();
             res.put("status", "SUCCESS");
             Map<String, Object> data = new HashMap<>();
