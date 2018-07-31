@@ -270,13 +270,20 @@ public class ManageController {
         return 0;
     }
 
+    @RequestMapping(value = "/delete/course", method = RequestMethod.POST)
+    @ResponseBody
+    public int deleteCourse(@RequestBody ClassDomain cd) {
+        manageService.deleteCourseRecord(cd.getClassId());
+        return 0;
+    }
+
     @RequestMapping("/update/course")
     @ResponseBody
     public int updateCourse(@RequestBody ClassDomain cd) {
         System.out.println(cd.getClassDateDescriptionA());
         System.out.println(cd.getClassDateDescriptionB());
         cd.setClassDateDescription(cd.getClassDateDescriptionA() + ":" + cd.getClassDateDescriptionB());
-        manageService.deleteCourse(cd.getClassId());
+        manageService.deleteCourseRecord(cd.getClassId());
         System.out.println(cd.getClassId());
         manageService.addCourse(cd);
         return 0;
@@ -312,12 +319,13 @@ public class ManageController {
         return 0;
     }
 
-    @RequestMapping(value = "delete/courseStudent", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete/courseStudent", method = RequestMethod.POST)
     @ResponseBody
     public int deleteCourseStudent(HttpServletRequest request) {
         String json = requestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
+            System.out.println("==================");
             obj = new JSONObject(json);
             System.out.println(obj);
             Integer stuId = obj.getInt("stuId");
@@ -348,16 +356,16 @@ public class ManageController {
 
             students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
 
-            System.out.printf("find student result:%s", students);
+            List newStus = zhuanhuan(students);
+            System.out.printf("find student result:%s", newStus);
             Map<String, Object> res = new HashMap<>();
             res.put("status", "SUCCESS");
 
             Map<String, Object> data = new HashMap<>();
             data.put("total", ((Page) students).getTotal());
-            System.out.printf("total = %s\n", ((Page) students).getTotal());
             data.put("pageSize", pageSize);
             data.put("currentPage", currentPage);
-            data.put("list", students);
+            data.put("list", newStus);
             res.put("data", data);
             return res;
         } else {
@@ -371,5 +379,12 @@ public class ManageController {
             res.put("data", data);
             return res;
         }
+    }
+
+    List zhuanhuan(List<Map<String,Object>> students){
+        for (Map li :students){
+            li.put("classStr",li.get("className")+"("+li.get("classNum")+"班)");
+        }
+        return students;
     }
 }

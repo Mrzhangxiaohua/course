@@ -163,7 +163,7 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public void deleteCourse(int classId) {
+    public void deleteCourseRecord(int classId) {
         classDao.delete(classId);
     }
 
@@ -187,7 +187,7 @@ public class ManageServiceImpl implements ManageService {
         String newStr = classStr.replace("(",",").replace(")","");
         String[] strs = newStr.substring(0,newStr.length()-1).split(",");
 
-        System.out.println(strs);
+        System.out.println(newStr);
         String className = strs[0];
         Integer classNum = Integer.parseInt(strs[1]);
         int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");

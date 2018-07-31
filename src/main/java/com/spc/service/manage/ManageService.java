@@ -26,7 +26,7 @@ public interface ManageService {
     int deleteCourse(int classId,int stuId);
 
     void addCourse(ClassDomain cd);
-    void deleteCourse(int classId);
+    void deleteCourseRecord(int classId);
 
 
     int addCourseStudent(int stuId,String stuName,String classStr);
