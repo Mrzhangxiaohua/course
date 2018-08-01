@@ -1,14 +1,12 @@
 package com.spc.config;
 
-
-import com.spc.service.user.CasUserDetailsService;
+import com.spc.config.CasProperties;
 import com.spc.service.user.CustomUserService;
+import com.spc.service.user.UserService;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.jasig.cas.client.validation.Saml11TicketValidator;
-import org.jasig.cas.client.validation.TicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.cas.ServiceProperties;
@@ -21,7 +19,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
@@ -30,51 +30,31 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 @EnableWebSecurity //启用web权限
 @EnableGlobalMethodSecurity(prePostEnabled = true) //启用方法验证
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private CasProperties casProperties;
 
-    @Value("${cas.server.url:https://cas.xjtu.edu.cn/login}")
-    private String casServerUrl;
+    @Autowired
+    private UserService userService;
 
     /**定义认证用户信息获取来源，密码校验规则等*/
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         super.configure(auth);
         auth.authenticationProvider(casAuthenticationProvider());
-        //inMemoryAuthentication 从内存中获取
-        //auth.inMemoryAuthentication().withUser("chengli").password("123456").roles("USER")
-        //.and().withUser("admin").password("123456").roles("ADMIN");
-
-        //jdbcAuthentication从数据库中获取，但是默认是以security提供的表结构
-        //usersByUsernameQuery 指定查询用户SQL
-        //authoritiesByUsernameQuery 指定查询权限SQL
-        //auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery(query).authoritiesByUsernameQuery(query);
-
-        //注入userDetailsService，需要实现userDetailsService接口
-        //auth.userDetailsService(userDetailsService);
     }
 
     /**定义安全策略*/
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()//配置安全策略
-//                .antMatchers("/login/cas").permitAll()
-//                .and()
+                //.antMatchers("/","/hello").permitAll()//定义/请求不需要验证
                 .anyRequest().authenticated()//其余的所有请求都需要验证
                 .and()
                 .logout()
+                .logoutSuccessUrl("/logout")
                 .permitAll()//定义logout不需要验证
                 .and()
                 .formLogin();//使用form表单登录
-
-//        http
-////                .authorizeRequests().antMatchers("/login/cas").permitAll()
-////                .and()
-//                .authorizeRequests().anyRequest().authenticated()
-//                .and()
-//                .httpBasic().authenticationEntryPoint(casAuthenticationEntryPoint())
-//                .and()
-//                .logout().logoutSuccessUrl("/logout");
-////                .addFilterBefore(singleSignOutFilter, CasAuthenticationFilter.class).addFilterBefore(logoutFilter, LogoutFilter.class);
-////
 
         http.exceptionHandling().authenticationEntryPoint(casAuthenticationEntryPoint())
                 .and()
@@ -89,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CasAuthenticationEntryPoint casAuthenticationEntryPoint() {
         CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
-        casAuthenticationEntryPoint.setLoginUrl(casServerUrl);
+        casAuthenticationEntryPoint.setLoginUrl(casProperties.getCasServerLoginUrl());
         casAuthenticationEntryPoint.setServiceProperties(serviceProperties());
         return casAuthenticationEntryPoint;
     }
@@ -98,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public ServiceProperties serviceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
-        serviceProperties.setService("http://localhost:8080/login");
+        serviceProperties.setService(casProperties.getAppServerUrl() + casProperties.getAppLoginUrl());
         serviceProperties.setAuthenticateAllArtifacts(true);
         return serviceProperties;
     }
@@ -108,8 +88,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
         CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
         casAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        casAuthenticationFilter.setFilterProcessesUrl("/login");
+        casAuthenticationFilter.setFilterProcessesUrl(casProperties.getAppLoginUrl());
         return casAuthenticationFilter;
+    }
+
+    @Bean
+    public Saml11TicketValidator Saml11TicketValidator() {
+        //指定cas校验器
+        return new Saml11TicketValidator(casProperties.getCasServerUrl());
+//        return new Cas30ServiceTicketValidator(casServerUrl);
     }
 
     /**cas 认证 Provider*/
@@ -117,20 +104,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CasAuthenticationProvider casAuthenticationProvider() {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
         casAuthenticationProvider.setAuthenticationUserDetailsService(customUserDetailsService());
-        //casAuthenticationProvider.setUserDetailsService(customUserDetailsService()); //这里只是接口类型，实现的接口不一样，都可以的。
+        casAuthenticationProvider.setAuthenticationUserDetailsService(
+                principal->{
+                String name = (String) principal.getPrincipal();
+                if(userService.findUsersByName(name)==null){
+                    System.out.println("here");
+                    return  new User(
+                            principal.getName(),
+                            "",
+                            true,
+                            true,
+                            true,
+                            true,
+                            AuthorityUtils.createAuthorityList("学生"));
+                }else{
+                    String role = userService.findUsersByName(name).getRole().getRoleName();
+                    return  new User(
+                            principal.getName(),
+                            "",
+                            true,
+                            true,
+                            true,
+                            true,
+                            AuthorityUtils.createAuthorityList(role));
+                }
+        });
+//        casAuthenticationProvider.setUserDetailsService(customUserDetailsService()); //这里只是接口类型，实现的接口不一样，都可以的。
         casAuthenticationProvider.setServiceProperties(serviceProperties());
-        casAuthenticationProvider.setTicketValidator(ticketValidator());
+        casAuthenticationProvider.setTicketValidator(cas20ServiceTicketValidator());
+//        casAuthenticationProvider.setTicketValidator(Saml11TicketValidator());
         casAuthenticationProvider.setKey("casAuthenticationProviderKey");
         return casAuthenticationProvider;
     }
 
-    @Bean
-    public TicketValidator ticketValidator() {
-        //指定cas校验器
-        return new Saml11TicketValidator("https://cas.xjtu.edu.cn/");
-//        return new Cas30ServiceTicketValidator(casServerUrl);
-    }
-//
 	/*@Bean
 	public UserDetailsService customUserDetailsService(){
 		return new CustomUserDetailsService();
@@ -139,22 +145,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**用户自定义的AuthenticationUserDetailsService*/
     @Bean
     public AuthenticationUserDetailsService<CasAssertionAuthenticationToken> customUserDetailsService(){
-//        return new CasUserDetailsService();
         return new CustomUserService();
     }
 
-//    @Bean
-//    public Cas20ServiceTicketValidator cas20ServiceTicketValidator() {
-//        return new Cas20ServiceTicketValidator(casServerUrl);
-//    }
+    @Bean
+    public Cas20ServiceTicketValidator cas20ServiceTicketValidator() {
+        return new Cas20ServiceTicketValidator(casProperties.getCasServerUrl());
+    }
 
     /**单点登出过滤器*/
     @Bean
     public SingleSignOutFilter singleSignOutFilter() {
         SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
-//        singleSignOutFilter.setCasServerUrlPrefix(casServerUrl);
-//        singleSignOutFilter.
-//        singleSignOutFilter.setC
+//        singleSignOutFilter.setCasServerUrlPrefix(casProperties.getCasServerUrl());
         singleSignOutFilter.setIgnoreInitConfiguration(true);
         return singleSignOutFilter;
     }
@@ -162,9 +165,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**请求单点退出过滤器*/
     @Bean
     public LogoutFilter casLogoutFilter() {
-        LogoutFilter logoutFilter = new LogoutFilter("https://cas.xjtu.edu.cn/logout?service=http://localhost:8080/", new SecurityContextLogoutHandler());
-        logoutFilter.setFilterProcessesUrl("/logout");
-
+        LogoutFilter logoutFilter = new LogoutFilter(casProperties.getCasServerLogoutUrl(), new SecurityContextLogoutHandler());
+        logoutFilter.setFilterProcessesUrl(casProperties.getAppLogoutUrl());
         return logoutFilter;
     }
 }

@@ -52,6 +52,7 @@ public class CustomUserService implements AuthenticationUserDetailsService {
         String username = login.toLowerCase();
         List grantedAuthorities = new ArrayList();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
         return new CASUserDomain(username, grantedAuthorities);
     }
 }

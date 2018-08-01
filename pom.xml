@@ -104,26 +104,41 @@
         </dependency>
 
 
-        <!--security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-            <version>1.5.10.RELEASE</version>
         </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.security</groupId>-->
-            <!--<artifactId>spring-security-core</artifactId>-->
-            <!--<version>3.2.1.RELEASE</version>-->
-            <!--<scope>compile</scope>-->
-        <!--</dependency>-->
-
+        <!-- security 对CAS支持 -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-cas</artifactId>
-            <version>3.2.1.RELEASE</version>
-            <scope>compile</scope>
         </dependency>
+        <!-- security taglibs -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+        </dependency>
+
+        <!--security-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-security</artifactId>-->
+            <!--<version>1.5.10.RELEASE</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash;<dependency>&ndash;&gt;-->
+            <!--&lt;!&ndash;<groupId>org.springframework.security</groupId>&ndash;&gt;-->
+            <!--&lt;!&ndash;<artifactId>spring-security-core</artifactId>&ndash;&gt;-->
+            <!--&lt;!&ndash;<version>3.2.1.RELEASE</version>&ndash;&gt;-->
+            <!--&lt;!&ndash;<scope>compile</scope>&ndash;&gt;-->
+        <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.security</groupId>-->
+            <!--<artifactId>spring-security-cas</artifactId>-->
+            <!--<version>3.2.1.RELEASE</version>-->
+            <!--<scope>compile</scope>-->
+        <!--</dependency>-->
 
         <!--<dependency>-->
             <!--<groupId>org.springframework.security</groupId>-->

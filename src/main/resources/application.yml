@@ -62,4 +62,19 @@ pagehelper:
 #  level:
 #    com.spc: DEBUG
 
+cas:
+  server:
+    host:
+      url: https://cas.xjtu.edu.cn/
+      login_url: https://cas.xjtu.edu.cn/login
+      logout_url: https://cas.xjtu.edu.cn/logout?service=http://localhost:8080/login
+app:
+  server:
+    host:
+      url: http://localhost:8080
+  login:
+    url: /login
+  logout:
+    url: /logout
+
 

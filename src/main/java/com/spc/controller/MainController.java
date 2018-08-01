@@ -2,6 +2,7 @@ package com.spc.controller;
 
 
 import com.spc.util.RequestPayload;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,14 @@ public class MainController {
     @Autowired
     RequestPayload requestPayload;
 
-    @RequestMapping("/login/cas")
+    @RequestMapping("/")
     public String index(ModelMap modelMap) {
         Authentication auth = SecurityContextHolder.getContext() .getAuthentication();
         if (auth.isAuthenticated())
+            System.out.println("=================");
             System.out.println(auth.getName());
-        else
-            System.out.println("==================");
+//        else
+//            System.out.println("==================");
 //        System.out.println(auth.getDetails().);
         if(auth != null
                 && auth.getPrincipal() != null
@@ -65,11 +67,11 @@ public class MainController {
     public String teacherForms() {
         return "teacher_forms";
     }
-
-    @RequestMapping("/login")
-    public String login() {
-        return "index";
-    }
+//
+//    @RequestMapping("/login")
+//    public String login() {
+//        return "index";
+//    }
 
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
