@@ -2,10 +2,14 @@ package com.spc.controller;
 
 
 import com.spc.util.RequestPayload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,14 +18,28 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class MainController {
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
 
     @Autowired
     RequestPayload requestPayload;
 
-    @RequestMapping("/")
-    public String index() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String authName = authentication.getAuthorities().toArray()[0].toString();
+    @RequestMapping("/login/cas")
+    public String index(ModelMap modelMap) {
+        Authentication auth = SecurityContextHolder.getContext() .getAuthentication();
+        if (auth.isAuthenticated())
+            System.out.println(auth.getName());
+        else
+            System.out.println("==================");
+//        System.out.println(auth.getDetails().);
+        if(auth != null
+                && auth.getPrincipal() != null
+                && auth.getPrincipal() instanceof UserDetails) {
+            modelMap.put("username", ((UserDetails) auth.getPrincipal()).getUsername());
+        }
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println(authentication);
+        String authName = auth.getAuthorities().toArray()[0].toString();
         if (authName.equals("教师")) {
             System.out.println("run here teacher");
             return "teacher/index";
@@ -50,7 +68,7 @@ public class MainController {
 
     @RequestMapping("/login")
     public String login() {
-        return "login";
+        return "index";
     }
 
     @RequestMapping("/logout")

@@ -58,8 +58,8 @@ pagehelper:
     returnPageInfo: check
 
 # 打印sql
-logging:
-  level:
-    com.spc: DEBUG
+#logging:
+#  level:
+#    com.spc: DEBUG
 
 

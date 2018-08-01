@@ -3,6 +3,7 @@ package com.spc.model;
 import java.lang.Integer;
 
 import org.apache.ibatis.type.Alias;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Alias("UserDomain") //起别名
