@@ -5,9 +5,9 @@ server:
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://202.117.16.167:3306/course?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+        url: jdbc:mysql://localhost:3306/course?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
         username: root
-        password: xjtudlc_PL<KI*()_
+        password: xjtudlc
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
@@ -67,13 +67,13 @@ cas:
     host:
       url: https://cas.xjtu.edu.cn/
       login_url: https://cas.xjtu.edu.cn/login
-      logout_url: https://cas.xjtu.edu.cn/logout?service=http://localhost:8080/login
+      logout_url: https://cas.xjtu.edu.cn/logout?service=http://58.206.125.53:8080/psc
 app:
   server:
     host:
-      url: http://localhost:8080
+      url: http://58.206.125.53:8080/psc
   login:
-    url: /login
+    url: /login/cas
   logout:
     url: /logout
 

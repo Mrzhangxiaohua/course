@@ -2,19 +2,24 @@ package com.spc.controller;
 
 
 import com.spc.util.RequestPayload;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 
 @Controller
@@ -25,29 +30,46 @@ public class MainController {
     @Autowired
     RequestPayload requestPayload;
 
-    @RequestMapping("/")
-    public String index(ModelMap modelMap) {
+    @RequestMapping(value = "/login/cas", method = RequestMethod.GET)
+    public String index(ModelMap modelMap, HttpServletRequest request) {
+//        String netid = request.getParameter("netid");
+//        System.out.println("netid: "+netid);
+//        String cn = request.getParameter("cn");
+//        System.out.println("cn: "+cn);
+//        String en = request.getParameter("en");
+//        System.out.println("en: "+en);
+//        String json = requestPayload.getRequestPayload(request);
+//        try {
+//            JSONObject obj = new JSONObject(json);
+////            String id = obj.getString("netid");
+//            System.out.println("obj is "+obj);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+
+        AttributePrincipal principal = (AttributePrincipal)request.getUserPrincipal();
+//        Map attributes = principal.getAttributes();
+
+        System.out.println("principal:=" + principal);
         Authentication auth = SecurityContextHolder.getContext() .getAuthentication();
-        if (auth.isAuthenticated())
-            System.out.println("=================");
-            System.out.println(auth.getName());
-//        else
-//            System.out.println("==================");
-//        System.out.println(auth.getDetails().);
+
+
         if(auth != null
                 && auth.getPrincipal() != null
                 && auth.getPrincipal() instanceof UserDetails) {
             modelMap.put("username", ((UserDetails) auth.getPrincipal()).getUsername());
         }
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println(authentication);
-        String authName = auth.getAuthorities().toArray()[0].toString();
-        if (authName.equals("教师")) {
-            System.out.println("run here teacher");
+        String authName = auth.getName();
+
+        if (authName == null) {
+            return "student/index";
+        } else if (authName.equals("教师")) {
+            System.out.println("=========run here teacher===========");
             return "teacher/index";
         } else if (authName.equals("学生")) {
             return "student/index";
         } else {
+            System.out.println("==============run here============== "+authName);
             return "manage/index";
         }
     }
@@ -67,11 +89,7 @@ public class MainController {
     public String teacherForms() {
         return "teacher_forms";
     }
-//
-//    @RequestMapping("/login")
-//    public String login() {
-//        return "index";
-//    }
+
 
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
