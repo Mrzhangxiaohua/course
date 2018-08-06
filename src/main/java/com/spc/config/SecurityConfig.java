@@ -22,14 +22,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-
+import org.springframework.stereotype.Component;
 
 
 @Configuration
 @EnableWebSecurity //启用web权限
 @EnableGlobalMethodSecurity(prePostEnabled = true) //启用方法验证
 @Order(10000)
-//@Component
+@Component
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CasProperties casProperties;
@@ -49,21 +49,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http.authorizeRequests()//配置安全策略
-                .anyRequest().authenticated()//其余的所有请求都需要验证
+                .anyRequest().authenticated()//其余的所有请求都需要验
+//                .regexMatchers("/none").authenticated()//其余的所有请求都需要验
                 .and()
                 .logout()
+                .permitAll()
                 .logoutSuccessUrl("/logout");
 
 
         http.exceptionHandling().authenticationEntryPoint(casAuthenticationEntryPoint())
                 .and()
                 .addFilter(casAuthenticationFilter())
-//                .addFilter(registWrapperFilter())
-//                .addFilterBefore(registWrapperFilter(),SecurityContextHolderAwareRequestFilter.class)
                 .addFilterBefore(casLogoutFilter(), LogoutFilter.class)
                 .addFilterAfter(singleSignOutFilter(), CasAuthenticationFilter.class);
 
-        //http.csrf().disable(); //禁用CSRF
     }
 
     /**认证的入口*/
@@ -120,14 +119,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 
-    @Bean
-    public FilterRegistrationBean wrapperFilter() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(new HttpServletRequestWrapperFilter());
-        filterRegistrationBean.setOrder(0);
-        filterRegistrationBean.addUrlPatterns("/*");
-        return filterRegistrationBean;
-    }
+//    @Bean
+//    public FilterRegistrationBean wrapperFilter() {
+//        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+//        filterRegistrationBean.setFilter(new HttpServletRequestWrapperFilter());
+//        filterRegistrationBean.setOrder(0);
+//        filterRegistrationBean.addUrlPatterns("/*");
+//        return filterRegistrationBean;
+//    }
 
     /**单点登出过滤器*/
     @Bean
@@ -139,27 +138,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return singleSignOutFilter;
     }
 
-//    @Bean
-//    public FilterRegistrationBean securityFilterChain( @Qualifier(AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME) Filter registWrapperFilter) {
-//        FilterRegistrationBean registration = new FilterRegistrationBean(registWrapperFilter);
-//        registration.setOrder(0);
-//        registration
-//                .setName(AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME);
-//        return registration;
-//    }
-
-//    @Bean
-//    public HttpServletRequestWrapperFilter registWrapperFilter()
-//    {
-//
-////        HttpServletRequestWrapperFilter filter = new HttpServletRequestWrapperFilter();
-////        securityFilterChain(filter);
-////        registration.setFilter(new HttpServletRequestWrapperFilter());
-////        registration.addUrlPatterns("/login/*", "/*");
-////        registration.setName("wrapperFilter");
-//        System.out.println("=====================");
-//        return new HttpServletRequestWrapperFilter();
-//    }
 
 
     /**请求单点退出过滤器*/

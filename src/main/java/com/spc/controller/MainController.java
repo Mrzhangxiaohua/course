@@ -32,25 +32,7 @@ public class MainController {
 
     @RequestMapping(value = "/login/cas", method = RequestMethod.GET)
     public String index(ModelMap modelMap, HttpServletRequest request) {
-//        String netid = request.getParameter("netid");
-//        System.out.println("netid: "+netid);
-//        String cn = request.getParameter("cn");
-//        System.out.println("cn: "+cn);
-//        String en = request.getParameter("en");
-//        System.out.println("en: "+en);
-//        String json = requestPayload.getRequestPayload(request);
-//        try {
-//            JSONObject obj = new JSONObject(json);
-////            String id = obj.getString("netid");
-//            System.out.println("obj is "+obj);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
 
-        AttributePrincipal principal = (AttributePrincipal)request.getUserPrincipal();
-//        Map attributes = principal.getAttributes();
-
-        System.out.println("principal:=" + principal);
         Authentication auth = SecurityContextHolder.getContext() .getAuthentication();
 
 
