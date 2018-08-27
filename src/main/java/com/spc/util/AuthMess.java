@@ -1,21 +1,19 @@
 package com.spc.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.List;
 
 @Configuration
 public class AuthMess {
 
-//    private Authentication authentication;
-
-//    public AuthMess(){
-//        authentication= SecurityContextHolder.getContext().getAuthentication();
-//    }
-
     public int userId() {
         return 2018000006;
-//        return authentication.getAuthorities().toArray()[0];
     }
 
     public int teacherId() {
@@ -23,7 +21,14 @@ public class AuthMess {
     }
 
     public String userName() {
-        return "于";
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+        return userDetails.getUsername();
+    }
+    public String role() {
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
+        return String.valueOf(authorities.get(0));
     }
 
 

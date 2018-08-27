@@ -2,10 +2,8 @@ package com.spc.config;
 
 import com.spc.service.user.CustomUserService;
 import org.jasig.cas.client.session.SingleSignOutFilter;
-import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
 import org.jasig.cas.client.validation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -133,7 +131,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SingleSignOutFilter singleSignOutFilter() {
         System.out.println("sso run ===============");
         SingleSignOutFilter singleSignOutFilter = new SingleSignOutFilter();
-//        singleSignOutFilter.setCasServerUrlPrefix(casProperties.getCasServerUrl());
+        singleSignOutFilter.setLogoutParameterName(casProperties.getCasServerUrl());
         singleSignOutFilter.setIgnoreInitConfiguration(true);
         return singleSignOutFilter;
     }

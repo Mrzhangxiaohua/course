@@ -67,7 +67,8 @@ cas:
     host:
       url: https://cas.xjtu.edu.cn/
       login_url: https://cas.xjtu.edu.cn/login
-      logout_url: https://cas.xjtu.edu.cn/logout?service=http://58.206.125.53:8080
+      logout_url: https://cas.xjtu.edu.cn/logout?service=http://58.206.125.53:8080/psc
+#      logout_url: https://cas.xjtu.edu.cn/logout?service=http://202.117.16.167:8080/psc
 app:
   server:
     host:
