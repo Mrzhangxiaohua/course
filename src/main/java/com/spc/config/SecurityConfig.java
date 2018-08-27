@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        http.csrf().disable();
 
         http.authorizeRequests()//配置安全策略
                 .anyRequest().authenticated()//其余的所有请求都需要验

@@ -303,7 +303,7 @@ public class ManageController {
         return 0;
     }
 
-    @RequestMapping("get/bigTable")
+    @RequestMapping("/get/bigTable")
     @ResponseBody
     public String[][] getBigTable() {
         return manageService.bigTable();
@@ -315,9 +315,10 @@ public class ManageController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "add/courseStudent", method = RequestMethod.POST)
+    @RequestMapping(value = "/add/courseStudent", method = RequestMethod.POST)
     @ResponseBody
     public int addCourseStudent(HttpServletRequest request) {
+        System.out.println("run addCourseStudent");
         String json = requestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
