@@ -37,7 +37,7 @@ public class MainController {
     @Autowired
     AuthMess authName;
 
-    @RequestMapping(value = "/login/cas", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(ModelMap modelMap, HttpServletRequest request) {
         String role = authName.role();
         System.out.printf("登录的用户是%s",role);
