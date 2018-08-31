@@ -49,7 +49,7 @@ public class MainController {
             return "teacher/index";
         }  else if (role.equals("学院管理员")) {
             System.out.println("=========run here teacher===========");
-            return "departManage/index";
+            return "manage/index";
         } else {
             System.out.println("==============run here============== "+authName);
             return "manage/index";
