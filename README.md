@@ -10,8 +10,16 @@
 * maven| 3.3.9
 * alibaba Druid 数据库连接池|1.1.0
 * 数据库| mysql
-* 前端|thymeleaf , jquery , requirejs ,bootstrap ,paginationjs
-* 后端|mybatis
+
+### 日志
++ 日志使用的是Logpack
+
+### CAS
++ CAS 使用的是Spring Security
+
+### 后端
++ Mybatis
+
 
 ### 功能实现：
 

@@ -52,12 +52,15 @@ public class CourseController {
         PageHelper.startPage(currentPage, pageSize);
         List<ClassDomain> classes = classService.findAllClass(departId, classname, teaId, 88888888, 88888888);
         System.out.println(classes);
+        if(classes !=null){
+            for (ClassDomain l : classes) {
+                System.out.println(l.getClassDateDescription());
 
-        for (ClassDomain l : classes) {
-            String[] d = l.getClassDateDescription().split(":");
-            int a = Integer.parseInt(d[0]);
-            int b = Integer.parseInt(d[1]);
-            l.setClassDateDescription(new String(courseDateTrans.dateToString(a, b)));
+                String[] d = l.getClassDateDescription().split(":");
+                int a = Integer.parseInt(d[0]);
+                int b = Integer.parseInt(d[1]);
+                l.setClassDateDescription(new String(courseDateTrans.dateToString(a, b)));
+            }
         }
         Map<String, Object> res = new HashMap<>();
         res.put("status", "SUCCESS");

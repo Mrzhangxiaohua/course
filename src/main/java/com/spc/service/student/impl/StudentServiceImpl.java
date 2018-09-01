@@ -16,6 +16,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,24 +48,30 @@ public class StudentServiceImpl implements StudentService {
 
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
         String temp[][] = new String[10][7];
-        for (HashMap<String, Object> li : lis) {
-            String date = (String) li.get("classDateDescription");
-            String classPlace = (String) li.get("classPlace");
-            String teaName = (String) li.get("teaName");
-            System.out.println(li.get("startWeek"));
-            String startWeek = Integer.toString((Integer) li.get("startWeek"));
-            String endWeek = Integer.toString((Integer) li.get("endWeek"));
-            String classNum = Integer.toString((Integer) li.get("classNum"));
-            String className = (String) li.get("className");
+        System.out.println(lis);
+        if(!lis.isEmpty()){
+            for (HashMap<String, Object> li : lis) {
+                System.out.println("=======检测============");
+                System.out.println(li.get("startWeek"));
+                String date = (String) li.get("classDateDescription");
+                String classPlace = (String) li.get("classPlace");
+                String teaName = (String) li.get("teaName");
+                System.out.println(li.get("startWeek"));
+                String startWeek = Integer.toString((Integer) li.get("startWeek"));
+                String endWeek = Integer.toString((Integer) li.get("endWeek"));
+                String classNum = Integer.toString((Integer) li.get("classNum"));
+                String className = (String) li.get("className");
 
-            String[] ints = date.split(":");
-            Integer r = ints[0].toCharArray()[0] - '0';
-            Integer l = ints[1].toCharArray()[0] - '0';
+                String[] ints = date.split(":");
+                Integer r = ints[0].toCharArray()[0] - '0';
+                Integer l = ints[1].toCharArray()[0] - '0';
 
-            String context = "★课程：" + className + ',' + "教室：" + classPlace + ',' + "教师：" + teaName + ',' + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
-            temp[(l - 1) * 2][r - 1] = context;
-            temp[(l - 1) * 2 + 1][r - 1] = context;
+                String context = "★课程：" + className + ',' + "教室：" + classPlace + ',' + "教师：" + teaName + ',' + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
+                temp[(l - 1) * 2][r - 1] = context;
+                temp[(l - 1) * 2 + 1][r - 1] = context;
+            }
         }
+
         return temp;
     }
 
