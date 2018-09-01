@@ -8,13 +8,13 @@ import java.util.Date;
 import java.util.List;
 
 public interface ManageService {
-    String[][] findClasses(Integer stuId);
+    String[][] findClasses(String stuId);
 
     String[][] bigTable();
 
-    List<StudentApplicationDomain> checkedMessage(int key, int stuId);
+    List<StudentApplicationDomain> checkedMessage(int key, String stuId);
 
-    List<StudentApplicationDomain> checkedMessageAndDate(int key, int stuId, Date date);
+    List<StudentApplicationDomain> checkedMessageAndDate(int key, String stuId, Date date);
 
     int makeSure(int id,String classStr);
     int makeSureClassApplication(int id);
@@ -22,23 +22,23 @@ public interface ManageService {
     int reject(int id);
     int rejectClassApplication(int id);
 
-    int chooseCourse(int classId,int stuId);
-    int deleteCourse(int classId,int stuId);
+    int chooseCourse(int classId,String stuId);
+    int deleteCourse(int classId,String stuId);
 
     void addCourse(ClassDomain cd);
     void deleteCourseRecord(int classId);
 
 
-    int addCourseStudent(int stuId,String stuName,String classStr);
+    int addCourseStudent(String stuId,String stuName,String classStr);
 
-    int deleteCourseStudent(int stuId,String classStr);
+    int deleteCourseStudent(String stuId,String classStr);
 
     int getClassId(String className,int classNum);
 
     List findStudentByClassnameAndNum(String className,int classNum,int pageSize,int currentPage);
 
-    List<ClassApplicationDomain> checkedClassMessage(int teaId, String className,int tabKey);
+    List<ClassApplicationDomain> checkedClassMessage(String teaId, String className,int tabKey);
 
-    List<ClassApplicationDomain> checkedClassMessageAndDate(int teaId, String className, Date date,int tabKey);
+    List<ClassApplicationDomain> checkedClassMessageAndDate(String teaId, String className, Date date,int tabKey);
 
 }

@@ -44,8 +44,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public String[][] findClasses() {
-        int stuId = authMess.userId();
-
+//        int stuId = Integer.parseInt(authMess.userDetails().getUserid());
+        String stuId = authMess.userId();
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
         String temp[][] = new String[10][7];
         System.out.println(lis);
@@ -78,7 +78,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public int addCourse(int classId) {
         //首先得到学生id
-        int stuId = authMess.userId();
+        String stuId = authMess.userId();
+//        int stuId = Integer.parseInt(authMess.userDetails().getUserid());
         List<Map<String, Object>> res = studentDao.findTimeChongTu(stuId, classId);
         boolean canAdd = gradeDao.selectGrade(classId, stuId).isEmpty() && res.isEmpty();
         if (canAdd) {
@@ -91,7 +92,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public int deleteCourse(int classId) {
-        int stuId = authMess.userId();
+        String stuId = authMess.userId();
         if (!gradeDao.selectGrade(classId, stuId).isEmpty()) {
             classDao.updateChooseNum(classId, -1);
             return studentDao.deleteChooseCourse(stuId, classId);
@@ -103,7 +104,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public int addApplication(int classId, int states, String reason, int classNum) {
-        int stuId = authMess.userId();
+        String stuId = authMess.userId();
         return studentApplicationDao.add(stuId, classId, states, reason, 2, classNum);
     }
 
@@ -111,13 +112,13 @@ public class StudentServiceImpl implements StudentService {
     public List<ClassDomain> selectClassed(Map<String, Object> map) {
 
         //获得学生id
-        Integer stuId = (Integer) map.get("stuId");
+        String stuId = (String) map.get("stuId");
         Integer currentPage = (Integer) map.get("currentPage");
         Integer pageSize = (Integer) map.get("pageSize");
         Integer startWeek = (Integer) map.get("startWeek");
         Integer endWeek = (Integer) map.get("endWeek");
         Integer departId = (Integer) map.get("departId");
-        Integer teaId = (Integer) map.get("teaId");
+        String teaId = (String) map.get("teaId");
         String classname = (String) map.get("classname");
         String teaname = (String) map.get("teaname");
         Integer hasWaiGuoYu = (Integer) map.get("hasWaiGuoYu");
@@ -165,7 +166,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Map getClassTime() {
-        int stuId = authMess.userId();
+        String stuId = authMess.userId();
         List<Map<String, Object>> li1 = studentDao.getWaiStudyTime(stuId);
         List<Map<String, Object>> li2 = studentDao.getNotWaiStudyTime(stuId);
 

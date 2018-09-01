@@ -18,7 +18,7 @@
             <if test="classId!= 88888888">
               and g.classId= #{classId}
             </if>
-            <if test="stuId!= 88888888 ">
+            <if test="stuId!= '' and stuId!=null ">
                 and g.stuId= #{stuId}
             </if>
         </where>

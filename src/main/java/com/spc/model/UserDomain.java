@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Alias("UserDomain") //起别名
-public class UserDomain implements  UserDetails{
+public class UserDomain {
 
     private Integer uid;
 
@@ -21,12 +21,7 @@ public class UserDomain implements  UserDetails{
 
     private RoleDomain role; //用户的角色
 
-    private Integer stuId;
-
-    private Set<AuthorityInfo> authorities = new HashSet<AuthorityInfo>();
-    public void setAuthorities(Set<AuthorityInfo> authorities) {
-        this.authorities = authorities;
-    }
+    private String stuId;
 
 
     public String getUserName() {
@@ -37,10 +32,6 @@ public class UserDomain implements  UserDetails{
         this.userName = userName == null ? null : userName.trim();
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
 
     public String getPassword() {
 //        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -49,30 +40,6 @@ public class UserDomain implements  UserDetails{
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return userName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
@@ -95,11 +62,12 @@ public class UserDomain implements  UserDetails{
         this.uid = uid;
     }
 
-    public Integer getStuId() {
+    public String getStuId() {
         return stuId;
     }
 
-    public void setStuId(Integer stuId) {
+    public void setStuId(String stuId) {
         this.stuId = stuId;
     }
 }
+

@@ -73,7 +73,7 @@ public class TeacherController {
             JSONObject obj = new JSONObject(json);
 
             Integer classId = obj.getInt("classId");
-            Integer stuId = obj.getInt("stuId");
+            String stuId = obj.getString("stuId");
             Integer score = obj.getInt("score");
 
             return gradeService.addScore(classId, stuId, score);
@@ -91,7 +91,7 @@ public class TeacherController {
     @RequestMapping("teach/course")
     @ResponseBody
     public List<Map> getTeachCourse() {
-        Integer teacherId = authMess.teacherId();
+        String teacherId = authMess.userId();
 
         List<ClassDomain> classes = classService.findAllClass(88888888, "", teacherId, 88888888, 88888888);
 
@@ -158,7 +158,7 @@ public class TeacherController {
     @RequestMapping(value = "/course/table")
     @ResponseBody
     public String[][] findCourseTable() {
-        int teaId = authMess.teacherId();
+        String teaId = authMess.userId();
         return teacherService.findCourseTable(teaId);
     }
 
@@ -181,7 +181,7 @@ public class TeacherController {
             classDomain.setCourseInfo(obj.getString("courseInfo"));
 //            classDomain.setClassId(obj.getInt("classId"));
             classDomain.setTeaName(obj.getString("teaName"));
-            classDomain.setTeaId(obj.getInt("teaId"));
+            classDomain.setTeaId(obj.getString("teaId"));
             classDomain.setClassUpperLimit(obj.getInt("classUpperLimit"));
             classDomain.setClassNum(obj.getInt("classNum"));
             classDomain.setClassName(obj.getString("className"));
@@ -227,7 +227,7 @@ public class TeacherController {
         try {
             JSONObject obj = new JSONObject(json);
             String className = obj.getString("className");
-            int stuId = obj.getInt("stuId");
+            String stuId = obj.getString("stuId");
             int score = obj.getInt("score");
             return classService.updateScore(className, stuId, score);
         } catch (JSONException e) {
@@ -238,7 +238,7 @@ public class TeacherController {
 
     @RequestMapping("/download/courseTable")
     public ModelAndView downloadCourseTable() {
-        int teaId = authMess.teacherId();
+        String teaId = authMess.userId();
         String[][] tables = teacherService.findCourseTable(teaId);
         System.out.println(tables);
 
@@ -254,7 +254,7 @@ public class TeacherController {
 
     @RequestMapping("/download/courseTableExcel")
     public void downloadCourseTableExcel(HttpServletRequest request, HttpServletResponse response) {
-        int teaId = authMess.teacherId();
+        String teaId = authMess.userId();
         String[][] tables = teacherService.findCourseTable(teaId);
 
         List<CourseTableExcelDomain> liC = new ArrayList<>();
@@ -282,9 +282,9 @@ public class TeacherController {
     @ResponseBody
     public int addClassApplication(@RequestBody ClassApplicationDomain cad) {
         cad.setChecked(2);
-        cad.setTeaId(0);
-        cad.setShenQingRenName(authMess.userName());
-        cad.setShenQingRenId(authMess.teacherId());
+        cad.setTeaId("");
+        cad.setShenQingRenName(authMess.userDetails().getUsername());
+        cad.setShenQingRenId(authMess.userId());
         return teacherService.addClassApplication(cad);
     }
 
@@ -296,7 +296,7 @@ public class TeacherController {
     ){
         PageHelper.startPage(currentPage, pageSize);
 
-        List<Map<String,Object>> list= teacherService.findApplication(authMess.teacherId());
+        List<Map<String,Object>> list= teacherService.findApplication(authMess.userId());
 
         System.out.println(list.get(0));
         Map<String, Object> res = new HashMap<>();

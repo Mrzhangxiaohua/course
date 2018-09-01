@@ -42,7 +42,7 @@ public class UserController {
 
             JSONObject sts = obj.getJSONObject("params").getJSONObject("values");
 
-            userDomain.setStuId(sts.getInt("stuId"));
+            userDomain.setStuId(sts.getString("stuId"));
             userDomain.setPassword(sts.getString("password"));
             userDomain.setUserName(sts.getString("userName"));
             userDomain.setRole(null);

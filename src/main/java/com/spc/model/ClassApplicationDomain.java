@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 public class ClassApplicationDomain {
 
     private int id;
-    private int teaId;
+    private String teaId;
     private int checked;
     private String checkStr;
     private int classTime;
@@ -16,7 +16,7 @@ public class ClassApplicationDomain {
     private String className;
     private String teacherInfo;
     private String courseInfo;
-    private int shenQingRenId;
+    private String shenQingRenId;
     private String shenQingRenName;
 
     public int getId() {
@@ -25,14 +25,6 @@ public class ClassApplicationDomain {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getTeaId() {
-        return teaId;
-    }
-
-    public void setTeaId(int teaId) {
-        this.teaId = teaId;
     }
 
 
@@ -109,13 +101,6 @@ public class ClassApplicationDomain {
         this.checkStr = checkStr;
     }
 
-    public int getShenQingRenId() {
-        return shenQingRenId;
-    }
-
-    public void setShenQingRenId(int shenQingRenId) {
-        this.shenQingRenId = shenQingRenId;
-    }
 
     public String getShenQingRenName() {
         return shenQingRenName;
@@ -123,5 +108,21 @@ public class ClassApplicationDomain {
 
     public void setShenQingRenName(String shenQingRenName) {
         this.shenQingRenName = shenQingRenName;
+    }
+
+    public String getTeaId() {
+        return teaId;
+    }
+
+    public void setTeaId(String teaId) {
+        this.teaId = teaId;
+    }
+
+    public String getShenQingRenId() {
+        return shenQingRenId;
+    }
+
+    public void setShenQingRenId(String shenQingRenId) {
+        this.shenQingRenId = shenQingRenId;
     }
 }

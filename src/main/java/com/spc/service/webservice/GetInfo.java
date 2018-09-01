@@ -23,7 +23,7 @@ import java.rmi.RemoteException;
 @Service
 public class GetInfo {
 
-    public  UserInfoDto getInfoById(){
+    public  UserInfoDto getInfoById(String name){
 
         String netId = "yuhongchao";
         UserInfoPortType proxy = new UserInfoPortTypeProxy();

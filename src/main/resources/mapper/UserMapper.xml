@@ -44,6 +44,14 @@
         userName = #{userName}
       </where>
   </select>
+  <select id="findUsersById" resultMap="userMap">
+      SELECT *
+      FROM
+        <include refid="BASE_TABLE"/>
+      <where>
+        stuId = #{userId}
+      </where>
+  </select>
 
   <insert id = "insert" useGeneratedKeys="true" keyProperty="uid" parameterType="com.spc.model.UserDomain" keyColumn="uid">
       insert  into  User (userName, password, stuId) values(#{userName}, #{password}, #{stuId})

@@ -7,7 +7,20 @@
 
 package com.spc.service.xjtu.webservice.info.xsd;
 
-public class UserInfoDto implements java.io.Serializable {
+import com.spc.model.UserDomain;
+import com.spc.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class UserInfoDto implements java.io.Serializable ,UserDetails{
+
+
     private String birthday;
 
     private String classid;
@@ -482,6 +495,44 @@ public class UserInfoDto implements java.io.Serializable {
         this.userid = userid;
     }
 
+//
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//
+//        String role = getUsertype().equals("1")?"学生":"老师";
+//
+//        List grantedAuthorities = new ArrayList();
+//        grantedAuthorities.add(new SimpleGrantedAuthority(role));
+//        return null;
+//    }
+//
+//    @Override
+//    public String getPassword() {
+//        return null;
+//    }
+    @Autowired
+    UserService userService;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        String role = null;
+        switch(usertype){
+            case "1":
+                role = "学生";
+                break;
+            case "2":
+                UserDomain userDomain =userService.findUsersById(userid);
+                role = userDomain.getRole().getRoleName();
+        }
+        List grantedAuthorities = new ArrayList();
+        grantedAuthorities.add(new SimpleGrantedAuthority(role));
+        return grantedAuthorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
 
     /**
      * Gets the username value for this UserInfoDto.
@@ -492,6 +543,46 @@ public class UserInfoDto implements java.io.Serializable {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return true;
+//    }
+//
 
     /**
      * Sets the username value for this UserInfoDto.

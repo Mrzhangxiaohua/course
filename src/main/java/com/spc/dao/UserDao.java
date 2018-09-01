@@ -17,4 +17,5 @@ public interface UserDao {
     int insertRole(@Param("roleId") Integer roleId, @Param("uId") Integer uId);
 
     UserDomain findUsersByName(@Param("userName") String userName);
+    UserDomain findUsersById(@Param("userId") String userId);
 }

@@ -1,6 +1,8 @@
 package com.spc.controller;
 
 
+import com.spc.service.webservice.GetInfo;
+import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 import com.spc.util.AuthMess;
 import com.spc.util.RequestPayload;
 import org.jasig.cas.client.authentication.AttributePrincipal;
@@ -35,13 +37,23 @@ public class MainController {
     RequestPayload requestPayload;
 
     @Autowired
-    AuthMess authName;
+    AuthMess authMess;
 
+    @Autowired
+    GetInfo getInfo;
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(ModelMap modelMap, HttpServletRequest request) {
-        String role = authName.role();
-        System.out.printf("登录的用户是%s",role);
-        System.out.println(authName.userName());
+
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        UserInfoDto userDetails = (UserInfoDto) authentication.getPrincipal();
+        UserInfoDto userDetails =  authMess.userDetails();
+
+        System.out.println(userDetails.getBirthday());
+        List<GrantedAuthority> authentication = (List<GrantedAuthority>) userDetails.getAuthorities();
+        String role = authentication.get(0).getAuthority();
+//        String role = authName.role();
+        System.out.printf("登录的用户是%s",userDetails.getUsername());
+        System.out.println(role);
         if (role.equals("学生")) {
             return "student/index";
         } else if (role.equals("教师")) {
@@ -51,7 +63,7 @@ public class MainController {
             System.out.println("=========run here teacher===========");
             return "dmanage/index";
         } else {
-            System.out.println("==============run here============== "+authName);
+            System.out.println("==============run here============== ");
             return "student/index";
         }
     }

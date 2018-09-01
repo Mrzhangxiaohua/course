@@ -34,4 +34,9 @@ public class UserServiceImpl implements UserService {
 //        PageHelper.startPage(pageNum, pageSize);
         return userDao.findUsersByName(userName);
     }
+
+    @Override
+    public UserDomain findUsersById(String id) {
+        return userDao.findUsersById(id);
+    }
 }

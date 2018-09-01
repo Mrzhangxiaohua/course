@@ -28,7 +28,7 @@ public class ManageServiceImpl implements ManageService {
     private ClassApplicationDao classApplicationDao;
 
     @Override
-    public String[][] findClasses(Integer stuId) {
+    public String[][] findClasses(String stuId) {
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
         String temp[][] = new String[10][7];
         for (HashMap<String, Object> li : lis) {
@@ -79,27 +79,27 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public List<StudentApplicationDomain> checkedMessage(int key, int stuId) {
+    public List<StudentApplicationDomain> checkedMessage(int key, String stuId) {
 
         return studentApplicationDao.findall(key, stuId);
     }
 
     @Override
-    public List<StudentApplicationDomain> checkedMessageAndDate(int key, int stuId, Date date) {
+    public List<StudentApplicationDomain> checkedMessageAndDate(int key, String stuId, Date date) {
         java.sql.Date dateSql = new java.sql.Date(date.getTime());
         System.out.println(dateSql);
         return studentApplicationDao.findallWithDate(key, stuId, dateSql);
     }
 
     @Override
-    public int  chooseCourse(int classId,int stuId){
+    public int  chooseCourse(int classId,String stuId){
         classDao.updateChooseNum(classId, 1);
         studentDao.addChooseCourse(stuId, classId);
         return 0;
     }
 
     @Override
-    public int deleteCourse(int classId, int stuId) {
+    public int deleteCourse(int classId, String stuId) {
         classDao.updateChooseNum(classId, -1);
         studentDao.deleteChooseCourse(stuId, classId);
         return 0;
@@ -110,7 +110,7 @@ public class ManageServiceImpl implements ManageService {
         //通过的话就要将checked设置为1
         //通过的话要根据请求的内容做相应的调整
         StudentApplicationDomain studentApplicationDomain = studentApplicationDao.selectById(id);
-        int stuId = studentApplicationDomain.getStuId();
+        String stuId = studentApplicationDomain.getStuId();
         int classNum = studentApplicationDomain.getClassNum();
         int oldClassId = studentApplicationDomain.getClassId();
 
@@ -135,7 +135,8 @@ public class ManageServiceImpl implements ManageService {
                 break;
             case "退选计划":
                 System.out.println("退选计划");
-                chooseCourse(stuId,oldClassId);
+//                chooseCourse(oldClassId,stuId);
+                deleteCourse(oldClassId,stuId);
                 break;
         }
         return studentApplicationDao.checked(id, 1);
@@ -170,7 +171,7 @@ public class ManageServiceImpl implements ManageService {
 
 
     @Override
-    public int addCourseStudent(int stuId, String stuName, String classStr) {
+    public int addCourseStudent(String stuId, String stuName, String classStr) {
         String newStr = classStr.replace("(",",").replace(")","");
         String[] strs = newStr.substring(0,newStr.length()-1).split(",");
 
@@ -183,7 +184,7 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public int deleteCourseStudent(int stuId, String classStr) {
+    public int deleteCourseStudent(String stuId, String classStr) {
         String newStr = classStr.replace("(",",").replace(")","");
         String[] strs = newStr.substring(0,newStr.length()-1).split(",");
 
@@ -209,12 +210,12 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessage(int shenQingRenId, String className, int tabKey) {
+    public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className, int tabKey) {
         return classApplicationDao.findall(shenQingRenId, className, tabKey);
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessageAndDate(int shenQingRenId, String className, Date date, int tabKey) {
+    public List<ClassApplicationDomain> checkedClassMessageAndDate(String shenQingRenId, String className, Date date, int tabKey) {
         return classApplicationDao.findallWithDate(shenQingRenId, className, date, tabKey);
     }
 

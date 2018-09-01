@@ -11,7 +11,7 @@ public class ClassDomain {
     private Integer classId; //课程编号
     private String className;
     private Integer classNum; //课程的班次
-    private Integer teaId; //老师的工号
+    private String teaId; //老师的工号
     private String teaName;
     private Integer classChooseNum;
     private Integer classUpperLimit;
@@ -57,13 +57,7 @@ public class ClassDomain {
         this.className = className;
     }
 
-    public Integer getTeaId() {
-        return teaId;
-    }
 
-    public void setTeaId(Integer teaId) {
-        this.teaId = teaId;
-    }
 
     public String getTeaName() {
         return teaName;
@@ -240,5 +234,13 @@ public class ClassDomain {
 
     public void setClassDateDescriptionB(String classDateDescriptionB) {
         this.classDateDescriptionB = classDateDescriptionB;
+    }
+
+    public String getTeaId() {
+        return teaId;
+    }
+
+    public void setTeaId(String teaId) {
+        this.teaId = teaId;
     }
 }

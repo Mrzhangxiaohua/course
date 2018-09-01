@@ -6,7 +6,7 @@ import java.util.Date;
 public class StudentApplicationDomain {
 
     private int id;
-    private int stuId;
+    private String stuId;
     private int classId;
     private int states;
     private String reason;
@@ -27,13 +27,7 @@ public class StudentApplicationDomain {
         this.id = id;
     }
 
-    public int getStuId() {
-        return stuId;
-    }
 
-    public void setStuId(int stuId) {
-        this.stuId = stuId;
-    }
 
     public int getClassId() {
         return classId;
@@ -114,5 +108,13 @@ public class StudentApplicationDomain {
 
     public void setClassNum(int classNum) {
         this.classNum = classNum;
+    }
+
+    public String getStuId() {
+        return stuId;
+    }
+
+    public void setStuId(String stuId) {
+        this.stuId = stuId;
     }
 }

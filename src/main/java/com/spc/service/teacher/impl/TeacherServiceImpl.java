@@ -31,7 +31,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public String[][] findCourseTable(int teaId) {
+    public String[][] findCourseTable(String teaId) {
 
         List<HashMap<String, Object>> lis = classDao.findCourseTable(teaId);
         String temp[][] = new String[10][7];
@@ -57,7 +57,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public  List<Map<String,Object>>  findApplication(int teaId) {
+    public  List<Map<String,Object>>  findApplication(String teaId) {
         return  classApplicationDao.findByTeaId(teaId);
     }
 

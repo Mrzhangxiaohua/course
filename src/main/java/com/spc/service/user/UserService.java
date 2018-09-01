@@ -13,5 +13,6 @@ public interface UserService {
     boolean addUser(UserDomain user, int role);
 
     UserDomain findUsersByName(String name);
+    UserDomain findUsersById(String id);
 
 }

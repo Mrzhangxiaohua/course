@@ -46,7 +46,7 @@ public class CourseController {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "88888888") int departId,
             @RequestParam(required = false, defaultValue = "") String classname,
-            @RequestParam(required = false, defaultValue = "88888888") int teaId,
+            @RequestParam(required = false, defaultValue = "") String teaId,
             Model model) {
 
         PageHelper.startPage(currentPage, pageSize);

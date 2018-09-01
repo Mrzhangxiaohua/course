@@ -9,9 +9,9 @@ public interface TeacherService {
 
     public int addClassApplication(ClassApplicationDomain classApplicationDomain);
 
-    String[][] findCourseTable(int teaId);
+    String[][] findCourseTable(String teaId);
 
-    List<Map<String,Object>> findApplication(int teaId);
+    List<Map<String,Object>> findApplication(String teaId);
 
     public int issueGrade(int classId);
 

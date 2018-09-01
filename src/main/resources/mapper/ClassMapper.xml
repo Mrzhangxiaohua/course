@@ -49,7 +49,7 @@
           <if test="teaName!=null and teaName!='' ">
               and a.teaName like  "%"#{teaName}"%"
           </if>
-          <if test="teaId!=88888888">
+          <if test="teaId!=null and teaId!=''">
               and a.teaId = #{teaId}
           </if>
           <if test="startWeek!=88888888">

@@ -27,7 +27,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<ClassDomain> findAllClass(Integer departId, String className, int teaId, int startWeek, int endWeek) {
+    public List<ClassDomain> findAllClass(Integer departId, String className, String teaId, int startWeek, int endWeek) {
 
         return classDao.selectClasses(departId, className, "", teaId, startWeek, endWeek, 1);
     }
@@ -41,7 +41,7 @@ public class ClassServiceImpl implements ClassService {
 
 
     @Override
-    public int updateScore(String className, int stuId, int score) {
+    public int updateScore(String className, String stuId, int score) {
         return classDao.updateScore(className, stuId, score);
 
     }

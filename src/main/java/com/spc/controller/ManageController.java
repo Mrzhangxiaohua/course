@@ -53,7 +53,7 @@ public class ManageController {
     @RequestMapping("/select/classes")
     @ResponseBody
     public String[][] manageFindClasses(
-            @RequestParam(required = false, defaultValue = "88888888") Integer stuId
+            @RequestParam(required = false, defaultValue = "") String stuId
     ) {
         String[][] res = manageService.findClasses(stuId);
         return res;
@@ -73,7 +73,7 @@ public class ManageController {
             @RequestParam(required = false, defaultValue = "88888888") int tabKey,
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false, defaultValue = "88888888") int stuId,
+            @RequestParam(required = false, defaultValue = "") String stuId,
             @RequestParam(required = false, defaultValue = "") String mydate
     ) {
         PageHelper.startPage(currentPage, pageSize);
@@ -116,7 +116,7 @@ public class ManageController {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String mydate,
             @RequestParam(required = false, defaultValue = "") String className,
-            @RequestParam(required = false, defaultValue = "88888888") Integer shenQingRenId,
+            @RequestParam(required = false, defaultValue = "") String shenQingRenId,
             @RequestParam(required = false, defaultValue = "88888888") Integer tabKey
     ) {
         PageHelper.startPage(currentPage, pageSize);
@@ -220,7 +220,7 @@ public class ManageController {
     @RequestMapping("/find/classes")
     @ResponseBody
     public List<Map> getAllCourse() {
-        List<ClassDomain> classes = classService.findAllClass(88888888, "", 88888888, 88888888, 88888888);
+        List<ClassDomain> classes = classService.findAllClass(88888888, "", "", 88888888, 88888888);
         List<Map> resList = new ArrayList<Map>();
         for (int i = 0; i < classes.size(); i++) {
             Map<String, Object> res = new HashMap<>();
@@ -324,7 +324,7 @@ public class ManageController {
         try {
             obj = new JSONObject(json);
             System.out.println(obj);
-            Integer stuId = obj.getInt("stuId");
+            String stuId = obj.getString("stuId");
             String stuName = obj.getString("stuName");
             String classStr = obj.getString("classStr");
             manageService.addCourseStudent(stuId, stuName, classStr);
@@ -343,7 +343,7 @@ public class ManageController {
             System.out.println("==================");
             obj = new JSONObject(json);
             System.out.println(obj);
-            Integer stuId = obj.getInt("stuId");
+            String stuId = obj.getString("stuId");
             String classStr = obj.getString("classStr");
             manageService.deleteCourseStudent(stuId, classStr);
         } catch (Exception e) {

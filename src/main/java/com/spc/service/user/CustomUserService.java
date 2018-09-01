@@ -2,16 +2,23 @@ package com.spc.service.user;
 
 import com.spc.model.CASUserDomain;
 import com.spc.model.UserDomain;
+import com.spc.service.webservice.GetInfo;
+import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
+import org.apache.commons.collections4.Get;
 import org.jasig.cas.client.validation.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -22,6 +29,9 @@ public class CustomUserService implements AuthenticationUserDetailsService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    GetInfo getInfo;
 
 //    @Override
 //    public UserDetails loadUserDetails(Assertion ass) throws UsernameNotFoundException {
@@ -44,21 +54,9 @@ public class CustomUserService implements AuthenticationUserDetailsService {
 
     @Override
     public UserDetails loadUserDetails(Authentication token) throws UsernameNotFoundException {
-        USER_SERVICE_LOGGER.info("校验成功的登录名为: " + token.getName());
         System.out.printf("=======================%s用户已登录===========================\n",token.getName());
-        String username = token.getPrincipal().toString();
-        UserDomain userDomain = userService.findUsersByName(username);
-        String role = userDomain==null?"学生":userDomain.getRole().getRoleName();
-        System.out.println(role);
+        UserInfoDto userInfoDto = getInfo.getInfoById(token.getName());
+        return userInfoDto;
 
-        List grantedAuthorities = new ArrayList();
-        grantedAuthorities.add(new SimpleGrantedAuthority(role));
-        return   new User(username,
-                            "",
-                            true,
-                            true,
-                            true,
-                            true,
-                grantedAuthorities);
     }
 }

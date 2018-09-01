@@ -142,12 +142,12 @@ public class StudentController {
     public List<GradeDomain> selectGrade(
             @RequestParam(required = false, defaultValue = "1") Integer pageNum,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-            @RequestParam(required = false, defaultValue = "88888888") Integer stuId,
+            @RequestParam(required = false, defaultValue = "") String stuId,
             @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
 
 //        PageHelper.startPage(pageNum,pageSize);
-//        stuId = authMess.UserId();
-        stuId = 2018000006;
+        stuId = authMess.userId();
+//        stuId = 2018000006;
         return gradeService.selectGrade(classId, stuId);
     }
 
@@ -193,18 +193,18 @@ public class StudentController {
      */
     @RequestMapping("/download/score")
     public ModelAndView downloadScore(HttpServletResponse response,
-                                      @RequestParam(required = false, defaultValue = "88888888") Integer stuId,
+                                      @RequestParam(required = false, defaultValue = "") String stuId,
                                       @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
         stuId = authMess.userId();
-        stuId = 2018000006;
+//        stuId = 2018000006;
 
         List<GradeDomain> scores = gradeService.selectGrade(classId, stuId);
         System.out.println("tun here");
         Map res = new HashMap();
 
         res.put("data", scores);
-        res.put("stuId", Integer.toString(stuId));
-        res.put("stuName", authMess.userName());
+        res.put("stuId", stuId);
+        res.put("stuName", authMess.userDetails().getUsername());
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "wider");
@@ -229,7 +229,7 @@ public class StudentController {
             @RequestParam(required = false, defaultValue = "88888888") int departId,
             @RequestParam(required = false, defaultValue = "") String classname,
             @RequestParam(required = false, defaultValue = "") String teaName,
-            @RequestParam(required = false, defaultValue = "88888888") int teaId,
+            @RequestParam(required = false, defaultValue = "") String teaId,
             @RequestParam(required = false, defaultValue = "88888888") int startWeek,
             @RequestParam(required = false, defaultValue = "88888888") int endWeek,
             @RequestParam(required = false, defaultValue = "88888888") int hasWaiGuoYu) {
@@ -242,7 +242,7 @@ public class StudentController {
         map.put("teaId", teaId);
         map.put("startWeek", startWeek);
         map.put("endWeek", endWeek);
-        Integer stuId = authMess.userId();
+        String stuId = authMess.userId();
         map.put("stuId", stuId);
         map.put("hasWaiGuoYu", hasWaiGuoYu);
 
