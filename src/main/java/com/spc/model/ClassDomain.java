@@ -32,6 +32,7 @@ public class ClassDomain {
     private boolean showDeleteButton;
     private String buttonGroup;
     private String mainLecturer;
+    private String classEncode;
 
     public Integer getClassId() {
         return classId;
@@ -242,5 +243,13 @@ public class ClassDomain {
 
     public void setTeaId(String teaId) {
         this.teaId = teaId;
+    }
+
+    public String getClassEncode() {
+        return classEncode;
+    }
+
+    public void setClassEncode(String classEncode) {
+        this.classEncode = classEncode;
     }
 }

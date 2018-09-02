@@ -298,7 +298,6 @@ public class TeacherController {
 
         List<Map<String,Object>> list= teacherService.findApplication(authMess.userId());
 
-        System.out.println(list.get(0));
         Map<String, Object> res = new HashMap<>();
         res.put("status", "SUCCESS");
 

@@ -49,40 +49,42 @@ public class MainController {
 
     @Autowired
     GetInfo getInfo;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(ModelMap modelMap, HttpServletRequest request) {
 
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        UserInfoDto userDetails = (UserInfoDto) authentication.getPrincipal();
-        UserInfoDto userDetails =  authMess.userDetails();
+        UserInfoDto userDetails = authMess.userDetails();
         dataService.storeUserInformation(userDetails);
 
         System.out.println(userDetails.getBirthday());
         List<GrantedAuthority> authentication = (List<GrantedAuthority>) userDetails.getAuthorities();
         String role = authentication.get(0).getAuthority();
 //        String role = authName.role();
-        System.out.printf("登录的用户是%s\n",userDetails.getUsername());
-        System.out.printf("角色是%s\n",role);
+        System.out.printf("登录的用户是%s\n", userDetails.getUsername());
+        System.out.printf("角色是%s\n", role);
 
-        System.out.println("角色的工号是"+userDetails.getUserno());
+        System.out.println("角色的工号是" + userDetails.getUserno());
+        String res = null;
         if (role.equals("学生")) {
-            return "student/index";
-        } else  if(role.equals("教职工")){//这个是教职工的情况
+            res =  "student/index";
+        } else if (role.equals("教职工")) {//这个是教职工的情况
             System.out.println("=========run here teacher===========");
             UserDomain userDomain = userService.findUsersById(userDetails.getUserno());
-            System.out.println("userDomain is"+userDomain);
-            switch(userDomain.getRole()){
-                case "学院管理员":
-                    return "dmanage/index";
-                case "超级管理员":
-                    return "manage/index";
-                default:
-                    return "teacher/index";
-            }
+            System.out.println("userDomain is" + userDomain);
 
-        }else{
-            return "error";
+            if (userDomain == null) {
+                res = "teacher/index";
+            } else {
+                if (userDomain.getRole().equals("学院管理员")) {
+                    res =  "dmanage/index";
+                } else if (userDomain.getRole().equals("超级管理员")) {
+                    res =  "manage/index";
+                }
+            }
         }
+        return res;
     }
 
     @RequestMapping("/student/classes")
