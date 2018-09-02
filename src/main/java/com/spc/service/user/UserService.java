@@ -4,6 +4,7 @@ import com.spc.model.UserDomain;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/4/19.
@@ -14,6 +15,6 @@ public interface UserService {
 
     UserDomain findUsersByName(String name);
 
-    UserDomain findUsersById(String id);
+    Map findUsersById(String id);
 
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/8/16.
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDomain findUsersById(String id) {
+    public Map findUsersById(String id) {
         System.out.println("id is "+id);
         return userDao.findUsersById(id);
     }

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectKey;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserDao {
 
@@ -17,6 +18,6 @@ public interface UserDao {
     int insertRole(@Param("roleId") Integer roleId, @Param("uId") Integer uId);
 
     UserDomain findUsersByName(@Param("userName") String userName);
-    UserDomain findUsersById(@Param("stuId") String stuId);
+    Map findUsersById(@Param("stuId") String stuId);
 
 }

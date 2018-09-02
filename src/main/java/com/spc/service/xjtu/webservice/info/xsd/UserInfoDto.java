@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class UserInfoDto implements java.io.Serializable, UserDetails {
 
@@ -519,18 +520,11 @@ public class UserInfoDto implements java.io.Serializable, UserDetails {
         String role = null;
         //下面的主要用于测试功能
         if (username.equals("于洪潮")) {
-            System.out.println(userno);
-            System.out.println(userService);
-            UserDomain userDomain = userService.findUsersById(userno);
-//            UserDomain userDomain = userService.findUsersByName(userid);
-            System.out.printf("user is",userDomain,"\n");
-
-            role = userDomain.getRole().getRoleName();
+            role = "学院管理员";
         } else if (usertype.equals("1")) {
             role = "学生";
         } else if (usertype.equals("2")) {
-            UserDomain userDomain = userService.findUsersById(userno);
-            role = userDomain.getRole().getRoleName();
+            role = "教职工";
         }
         List grantedAuthorities = new ArrayList();
         grantedAuthorities.add(new SimpleGrantedAuthority(role));
