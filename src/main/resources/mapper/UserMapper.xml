@@ -3,13 +3,13 @@
 
 <mapper namespace="com.spc.dao.UserDao" >
 
-  <resultMap id="userMap" type="com.spc.model.UserDomain">
-    <id property="uid" column="uid"/>
-    <result property="userName" column="userName"/>
-    <result property="password" column="password"/>
-    <result property="stuId" column="stuId"/>
-    <association property="role"  column="uid" select="selectRole"/>
-  </resultMap>
+  <!--<resultMap id="userMap" type="com.spc.model.UserDomain">-->
+    <!--<id property="uid" column="uid"/>-->
+    <!--<result property="userName" column="userName"/>-->
+    <!--<result property="password" column="password"/>-->
+    <!--<result property="stuId" column="stuId"/>-->
+    <!--<association property="role"  column="uid" select="selectRole"/>-->
+  <!--</resultMap>-->
 
   <select id="selectRole" resultType="com.spc.model.RoleDomain">
   select r.roleName,r.roleId
@@ -27,7 +27,7 @@
 
 
   <sql id="BASE_TABLE">
-    User
+    course.User
   </sql>
 
   <sql id="BASE_COLUMN">
@@ -36,21 +36,15 @@
 
 
 
-  <select id="findUsersByName" resultMap="userMap">
+  <select id="findUsersByName" resultType="com.spc.model.UserDomain">
       SELECT *
-      FROM
-        <include refid="BASE_TABLE"/>
-      <where>
-        userName = #{userName}
-      </where>
+      FROM course.User
+      where userName=#{userName}
   </select>
-  <select id="findUsersById" resultMap="userMap">
+  <select id="findUsersById" resultType="com.spc.model.UserDomain">
       SELECT *
-      FROM
-        <include refid="BASE_TABLE"/>
-      <where>
-        stuId = #{userId}
-      </where>
+      FROM course.User
+      where  stuId=#{stuId}
   </select>
 
   <insert id = "insert" useGeneratedKeys="true" keyProperty="uid" parameterType="com.spc.model.UserDomain" keyColumn="uid">

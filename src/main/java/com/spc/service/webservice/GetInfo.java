@@ -25,7 +25,7 @@ public class GetInfo {
 
     public  UserInfoDto getInfoById(String name){
 
-        String netId = "yuhongchao";
+        String netId = name;
         UserInfoPortType proxy = new UserInfoPortTypeProxy();
         UserInfoDto stu = null;
         try {

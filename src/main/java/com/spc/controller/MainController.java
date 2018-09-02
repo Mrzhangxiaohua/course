@@ -52,8 +52,8 @@ public class MainController {
         List<GrantedAuthority> authentication = (List<GrantedAuthority>) userDetails.getAuthorities();
         String role = authentication.get(0).getAuthority();
 //        String role = authName.role();
-        System.out.printf("登录的用户是%s",userDetails.getUsername());
-        System.out.println(role);
+        System.out.printf("登录的用户是%s\n",userDetails.getUsername());
+        System.out.printf("角色是%s\n",role);
         if (role.equals("学生")) {
             return "student/index";
         } else if (role.equals("教师")) {
@@ -62,9 +62,11 @@ public class MainController {
         }  else if (role.equals("学院管理员")) {
             System.out.println("=========run here teacher===========");
             return "dmanage/index";
-        } else {
+        } else if (role.equals("超级管理员")) {
             System.out.println("==============run here============== ");
-            return "student/index";
+            return "manage/index";
+        }else{
+            return "error";
         }
     }
 
@@ -79,9 +81,9 @@ public class MainController {
         return "student/calendar2";
     }
 
-//    @RequestMapping("/login")
+//    @RequestMapping("/error")
 //    public String login(){
-//        return "/psc/logout";
+//        return "error";
 //    }
     @RequestMapping("/student/teacher_forms")
     public String teacherForms() {

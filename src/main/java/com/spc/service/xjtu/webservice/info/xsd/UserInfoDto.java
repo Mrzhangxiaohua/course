@@ -9,6 +9,7 @@ package com.spc.service.xjtu.webservice.info.xsd;
 
 import com.spc.model.UserDomain;
 import com.spc.service.user.UserService;
+import com.spc.service.user.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class UserInfoDto implements java.io.Serializable ,UserDetails{
+public class UserInfoDto implements java.io.Serializable, UserDetails {
 
 
     private String birthday;
@@ -495,7 +496,7 @@ public class UserInfoDto implements java.io.Serializable ,UserDetails{
         this.userid = userid;
     }
 
-//
+    //
 //    @Override
 //    public Collection<? extends GrantedAuthority> getAuthorities() {
 //
@@ -510,19 +511,26 @@ public class UserInfoDto implements java.io.Serializable ,UserDetails{
 //    public String getPassword() {
 //        return null;
 //    }
-    @Autowired
-    UserService userService;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        UserService userService = new UserServiceImpl();
         String role = null;
-        switch(usertype){
-            case "1":
-                role = "学生";
-                break;
-            case "2":
-                UserDomain userDomain =userService.findUsersById(userid);
-                role = userDomain.getRole().getRoleName();
+        //下面的主要用于测试功能
+        if (username.equals("于洪潮")) {
+            System.out.println(userno);
+            System.out.println(userService);
+            UserDomain userDomain = userService.findUsersById(userno);
+//            UserDomain userDomain = userService.findUsersByName(userid);
+            System.out.printf("user is",userDomain,"\n");
+
+            role = userDomain.getRole().getRoleName();
+        } else if (usertype.equals("1")) {
+            role = "学生";
+        } else if (usertype.equals("2")) {
+            UserDomain userDomain = userService.findUsersById(userno);
+            role = userDomain.getRole().getRoleName();
         }
         List grantedAuthorities = new ArrayList();
         grantedAuthorities.add(new SimpleGrantedAuthority(role));

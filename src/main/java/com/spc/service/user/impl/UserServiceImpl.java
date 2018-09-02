@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDomain findUsersById(String id) {
+        System.out.println("id is "+id);
         return userDao.findUsersById(id);
     }
 }
