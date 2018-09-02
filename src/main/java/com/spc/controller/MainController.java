@@ -2,6 +2,7 @@ package com.spc.controller;
 
 
 import com.spc.model.UserDomain;
+import com.spc.service.data.DataService;
 import com.spc.service.user.UserService;
 import com.spc.service.webservice.GetInfo;
 import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
@@ -42,6 +43,8 @@ public class MainController {
     AuthMess authMess;
 
     @Autowired
+    DataService dataService;
+    @Autowired
     UserService userService;
 
     @Autowired
@@ -52,6 +55,7 @@ public class MainController {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        UserInfoDto userDetails = (UserInfoDto) authentication.getPrincipal();
         UserInfoDto userDetails =  authMess.userDetails();
+        dataService.storeUserInformation(userDetails);
 
         System.out.println(userDetails.getBirthday());
         List<GrantedAuthority> authentication = (List<GrantedAuthority>) userDetails.getAuthorities();
@@ -59,6 +63,8 @@ public class MainController {
 //        String role = authName.role();
         System.out.printf("登录的用户是%s\n",userDetails.getUsername());
         System.out.printf("角色是%s\n",role);
+
+        System.out.println("角色的工号是"+userDetails.getUserno());
         if (role.equals("学生")) {
             return "student/index";
         } else  if(role.equals("教职工")){//这个是教职工的情况
@@ -70,8 +76,10 @@ public class MainController {
                     return "dmanage/index";
                 case "超级管理员":
                     return "manage/index";
+                default:
+                    return "teacher/index";
             }
-            return "teacher/index";
+
         }else{
             return "error";
         }
@@ -88,10 +96,6 @@ public class MainController {
         return "student/calendar2";
     }
 
-    @RequestMapping("/error")
-    public String login(){
-        return "error";
-    }
 
     @RequestMapping("/student/teacher_forms")
     public String teacherForms() {

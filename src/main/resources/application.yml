@@ -59,8 +59,9 @@ pagehelper:
 
 # 打印sql
 logging:
-  level:
-    com.spc: DEBUG
+#  level:
+#    com.spc: DEBUG
+  path: classpath:logging-config.xml
 
 cas:
   server:

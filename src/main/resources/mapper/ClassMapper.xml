@@ -64,7 +64,11 @@
         </where>
     </select>
 
-    
+    <select id="findClassById" resultType="com.spc.model.ClassDomain">
+        select *
+        from course.Course
+        where classId = #{classId}
+    </select>
 
 
     <select id="findAllClasseSimpleMess" resultType="map">

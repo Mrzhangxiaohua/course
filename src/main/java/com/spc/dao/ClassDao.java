@@ -25,5 +25,6 @@ public interface ClassDao {
 
     int updateChooseNum(@Param("classId") int classId, @Param("num") int num);
 
+    ClassDomain findClassById(@Param("classId") int classId);
 
 }

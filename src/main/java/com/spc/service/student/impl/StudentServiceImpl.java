@@ -1,6 +1,5 @@
 package com.spc.service.student.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.dao.ClassDao;
 import com.spc.dao.GradeDao;
@@ -8,15 +7,13 @@ import com.spc.dao.StudentApplicationDao;
 import com.spc.dao.StudentDao;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
-import com.spc.model.StudentApplicationDomain;
 import com.spc.service.student.StudentService;
 import com.spc.util.AuthMess;
 import com.spc.util.CourseDateTrans;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,22 +71,43 @@ public class StudentServiceImpl implements StudentService {
 
         return temp;
     }
-
     @Override
     public int addCourse(int classId) {
         //首先得到学生id
         String stuId = authMess.userId();
-//        int stuId = Integer.parseInt(authMess.userDetails().getUserid());
-        List<Map<String, Object>> res = studentDao.findTimeChongTu(stuId, classId);
-        boolean canAdd = gradeDao.selectGrade(classId, stuId).isEmpty() && res.isEmpty();
-        if (canAdd) {
-            classDao.updateChooseNum(classId, 1);
-            return studentDao.addChooseCourse(stuId, classId);
+        boolean weixuan = gradeDao.selectGrade(classId, stuId).isEmpty();
+        if (weixuan) {
+            boolean noShijianchongtu  = studentDao.findTimeChongTu(stuId, classId).isEmpty();
+            if(noShijianchongtu){
+
+                ClassDomain course = classDao.findClassById(classId);
+                boolean noChaobiao = course.getClassChooseNum() < course.getClassUpperLimit();
+                if(noChaobiao){
+                    return addyuanzi(classId,stuId);
+                }else{
+                    return 0;
+                }
+            }else{
+                return 0;
+            }
         } else {
             return 0;
         }
     }
 
+    @Transactional
+    public int addyuanzi(int classId,String stuId){
+        classDao.updateChooseNum(classId, 1);
+        studentDao.addChooseCourse(stuId, classId);
+
+        ClassDomain course = classDao.findClassById(classId);
+        if(course.getClassChooseNum() < course.getClassUpperLimit()){
+            throw new RuntimeException();
+        }
+        return 0;
+    }
+
+    @Transactional
     @Override
     public int deleteCourse(int classId) {
         String stuId = authMess.userId();

@@ -2,9 +2,11 @@ package com.spc.service.user.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.spc.dao.UserDao;
+import com.spc.dao.UserInfoDao;
 import com.spc.model.RoleDomain;
 import com.spc.model.UserDomain;
 import com.spc.service.user.UserService;
+import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;//这里会报错，但是并不会影响
 
-//    @Override
+    @Autowired
+    private UserInfoDao userInfoDao;
+
+
+
+
+
+    //    @Override
 //    public boolean addUser(UserDomain user, int role) {
 //        userDao.insert(user);
 //        Integer uid = user.getUid();

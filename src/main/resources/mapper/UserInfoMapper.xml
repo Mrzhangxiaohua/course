@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.UserInfoDao">
+
+
+    <insert id="addInformation" parameterType="com.spc.service.xjtu.webservice.info.xsd.UserInfoDto">
+          insert ignore  into  course.XjtuUserInfo (birthday,classid,dep,depid,email,
+          gender, idcardname, idcardno,marriage, mobile,nation, nationplace,
+          polity,roomnumber, roomphone, speciality,studenttype,
+          tutoremployeeid,userid, username, userno,usertype) values (#{birthday},#{classid}, #{dep},#{depid},#{email},
+          #{gender}, #{idcardname}, #{idcardno},#{marriage}, #{mobile},#{nation}, #{nationplace},
+          #{polity},#{roomnumber}, #{roomphone}, #{speciality},#{studenttype},
+          #{tutoremployeeid},#{userid}, #{username}, #{userno},#{usertype})
+    </insert>
+
+
+</mapper>

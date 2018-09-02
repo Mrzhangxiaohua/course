@@ -28,8 +28,8 @@
         select DISTINCT
         a.stuId,b.stuName,a.score,c.className,d.departName,c.teaName,c.classNum
         from Course_choose a
-        left join course.Student b
-        on a.stuId = b.stuId
+        left join course.XjtuUserInfo b
+        on a.stuId = b.userno
         left join course.Course c
         on a.classId = c.classId
         left join course.Department d
