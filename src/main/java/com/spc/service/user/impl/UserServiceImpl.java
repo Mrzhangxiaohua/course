@@ -21,23 +21,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;//这里会报错，但是并不会影响
 
+//    @Override
+//    public boolean addUser(UserDomain user, int role) {
+//        userDao.insert(user);
+//        Integer uid = user.getUid();
+//        userDao.insertRole(role, uid);
+//        return true;
+//    }
     @Override
-    public boolean addUser(UserDomain user, int role) {
+    public boolean addUser(UserDomain user) {
         userDao.insert(user);
-        Integer uid = user.getUid();
-        userDao.insertRole(role, uid);
         return true;
     }
 
-    @Override
-    public UserDomain findUsersByName(String userName) {
-        //将参数传给这个方法就可以实现物理分页了，非常简单。
-//        PageHelper.startPage(pageNum, pageSize);
-        return userDao.findUsersByName(userName);
-    }
+
 
     @Override
-    public Map findUsersById(String id) {
+    public UserDomain findUsersById(String id) {
         System.out.println("id is "+id);
         return userDao.findUsersById(id);
     }

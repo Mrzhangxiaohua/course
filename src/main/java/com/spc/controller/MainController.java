@@ -1,6 +1,8 @@
 package com.spc.controller;
 
 
+import com.spc.model.UserDomain;
+import com.spc.service.user.UserService;
 import com.spc.service.webservice.GetInfo;
 import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 import com.spc.util.AuthMess;
@@ -40,6 +42,9 @@ public class MainController {
     AuthMess authMess;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     GetInfo getInfo;
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(ModelMap modelMap, HttpServletRequest request) {
@@ -56,15 +61,17 @@ public class MainController {
         System.out.printf("角色是%s\n",role);
         if (role.equals("学生")) {
             return "student/index";
-        } else if (role.equals("教师")) {
+        } else  if(role.equals("教职工")){//这个是教职工的情况
             System.out.println("=========run here teacher===========");
+            UserDomain userDomain = userService.findUsersById(userDetails.getUserno());
+            System.out.println("userDomain is"+userDomain);
+            switch(userDomain.getRole()){
+                case "学院管理员":
+                    return "dmanage/index";
+                case "超级管理员":
+                    return "manage/index";
+            }
             return "teacher/index";
-        }  else if (role.equals("学院管理员")) {
-            System.out.println("=========run here teacher===========");
-            return "dmanage/index";
-        } else if (role.equals("超级管理员")) {
-            System.out.println("==============run here============== ");
-            return "manage/index";
         }else{
             return "error";
         }
@@ -81,10 +88,11 @@ public class MainController {
         return "student/calendar2";
     }
 
-//    @RequestMapping("/error")
-//    public String login(){
-//        return "error";
-//    }
+    @RequestMapping("/error")
+    public String login(){
+        return "error";
+    }
+
     @RequestMapping("/student/teacher_forms")
     public String teacherForms() {
         return "teacher_forms";

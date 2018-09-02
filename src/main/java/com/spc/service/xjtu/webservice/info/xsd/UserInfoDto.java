@@ -519,9 +519,10 @@ public class UserInfoDto implements java.io.Serializable, UserDetails {
         UserService userService = new UserServiceImpl();
         String role = null;
         //下面的主要用于测试功能
-        if (username.equals("于洪潮")) {
-            role = "学院管理员";
-        } else if (usertype.equals("1")) {
+//        if (username.equals("于洪潮")) {
+//            role = "学院管理员";
+//        } else if (usertype.equals("1")) {
+        if (usertype.equals("1")) {
             role = "学生";
         } else if (usertype.equals("2")) {
             role = "教职工";

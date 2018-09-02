@@ -13,11 +13,10 @@ import java.util.Map;
 public interface UserDao {
 
     int insert(UserDomain user);
+//
+//    @Insert("insert into Role_user(roleId, uId) values(#{roleId}, #{uId})")
+//    int insertRole(@Param("roleId") Integer roleId, @Param("uId") Integer uId);
 
-    @Insert("insert into Role_user(roleId, uId) values(#{roleId}, #{uId})")
-    int insertRole(@Param("roleId") Integer roleId, @Param("uId") Integer uId);
-
-    UserDomain findUsersByName(@Param("userName") String userName);
-    Map findUsersById(@Param("stuId") String stuId);
+    UserDomain findUsersById(@Param("stuId") String stuId);
 
 }

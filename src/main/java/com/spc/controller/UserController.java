@@ -43,14 +43,19 @@ public class UserController {
             JSONObject sts = obj.getJSONObject("params").getJSONObject("values");
 
             userDomain.setStuId(sts.getString("stuId"));
-            userDomain.setPassword(sts.getString("password"));
-            userDomain.setUserName(sts.getString("userName"));
-            userDomain.setRole(null);
 
             Integer roleId = sts.getInt("roleId");
-
+            System.out.println("roleId");
+            switch (roleId){
+                case 1:
+                    userDomain.setRole("学院管理员");
+                    break;
+                case 2:
+                    userDomain.setRole("超级管理员");
+                    break;
+            }
             //多表关联插入
-            return userService.addUser(userDomain, roleId);
+            return userService.addUser(userDomain);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;

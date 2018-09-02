@@ -11,10 +11,8 @@ import java.util.Map;
  */
 public interface UserService {
 
-    boolean addUser(UserDomain user, int role);
+    boolean addUser(UserDomain user);
 
-    UserDomain findUsersByName(String name);
-
-    Map findUsersById(String id);
+    UserDomain findUsersById(String id);
 
 }

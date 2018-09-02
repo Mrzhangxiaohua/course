@@ -3,55 +3,41 @@
 
 <mapper namespace="com.spc.dao.UserDao" >
 
-  <resultMap id="userMap" type="com.spc.model.UserDomain">
-    <id property="uid" column="uid"/>
-    <result property="userName" column="userName"/>
-    <result property="password" column="password"/>
-    <result property="stuId" column="stuId"/>
-    <association property="role"  column="uid" select="selectRole"/>
-  </resultMap>
+  <!--<resultMap id="userMap" type="com.spc.model.UserDomain">-->
+    <!--<id property="uid" column="uid"/>-->
+    <!--<result property="userName" column="userName"/>-->
+    <!--<result property="password" column="password"/>-->
+    <!--<result property="stuId" column="stuId"/>-->
+    <!--<association property="role"  column="uid" select="selectRole"/>-->
+  <!--</resultMap>-->
 
-  <select id="selectRole" resultType="com.spc.model.RoleDomain">
-  select r.roleName,r.roleId
-  from
-  (select  u.uid, ru.roleId
-  from User u
-  left join Role_user ru
-  on u.uid = ru.uid
-  ) a
-  left join Role r
-  on a.roleId = r.roleId
-  where a.uid = #{id}
-  </select>
-
-
-
-  <sql id="BASE_TABLE">
-    course.User
-  </sql>
-
-  <sql id="BASE_COLUMN">
-    uid,userName,password,num
-  </sql>
+  <!--<select id="selectRole" resultType="com.spc.model.RoleDomain">-->
+  <!--select r.roleName,r.roleId-->
+  <!--from-->
+  <!--(select  u.uid, ru.roleId-->
+  <!--from User u-->
+  <!--left join Role_user ru-->
+  <!--on u.uid = ru.uid-->
+  <!--) a-->
+  <!--left join Role r-->
+  <!--on a.roleId = r.roleId-->
+  <!--where a.uid = #{id}-->
+  <!--</select>-->
 
 
 
-  <select id="findUsersByName" resultType="com.spc.model.UserDomain">
-      SELECT *
-      FROM course.User
-      where userName= #{userName}
-  </select>
-  <select id="findUsersById" resultType="map">
+
+
+
+
+  <select id="findUsersById" resultType="com.spc.model.UserDomain">
       SELECT *
       FROM course.User
       where  stuId= #{stuId}
   </select>
 
   <insert id = "insert" useGeneratedKeys="true" keyProperty="uid" parameterType="com.spc.model.UserDomain" keyColumn="uid">
-      insert  into  User (userName, password, stuId) values(#{userName}, #{password}, #{stuId})
-    <selectKey keyProperty="uid" resultType="int" order="AFTER">
-    SELECT LAST_INSERT_ID();
-  </selectKey>
+      insert  into  course.User (stuId, role) values(#{stuId}, #{role})
   </insert>
 
 
