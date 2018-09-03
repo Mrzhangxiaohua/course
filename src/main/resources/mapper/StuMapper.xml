@@ -91,7 +91,7 @@
         )d
         on d.classDateDescription = a.classDateDescription
     </select>
-    
+
     <delete id="deleteCourse">
         delete
         from course.Course_choose cc
@@ -99,11 +99,11 @@
         on cc.classId = c.classId
         where c.className=#{className} and cc.stuId = #{stuId}
     </delete>
-    
+
     <update id="addClassNum">
       INSERT INTO course.Course_choose (stuId,classId,0) values (#{stuId},SELECT classId FROM course.Course where classNum = #{classNum} and className = #{className} )
     </update>
-    
+
     <select id="findClassNewId">
         select classId
         from course.Course

@@ -1,53 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.spc.dao.ClassApplicationDao" >
+<mapper namespace="com.spc.dao.ClassApplicationDao">
     <sql id="BASE_TABLE">
        ClassApplication
     </sql>
 
-   <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.spc.model.ClassApplicationDomain">
-       insert  into
-       <include refid="BASE_TABLE"/>
-       (className,mainLecturer,teacherInfo,courseInfo,classTime,checked,shenQingRenId,shenQingRenName)
-       values
-       (#{className}, #{mainLecturer}, #{teacherInfo},#{courseInfo},#{classTime},#{checked},#{shenQingRenId},#{shenQingRenName})
-   </insert>
-    
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.spc.model.ClassApplicationDomain">
+        insert into
+        <include refid="BASE_TABLE"/>
+        (className,mainLecturer,teacherInfo,courseInfo,classTime,checked,shenQingRenId,shenQingRenName)
+        values
+        (#{className}, #{mainLecturer},
+        #{teacherInfo},#{courseInfo},#{classTime},#{checked},#{shenQingRenId},#{shenQingRenName})
+    </insert>
+
     <select id="findall" resultType="com.spc.model.ClassApplicationDomain">
-      select c.id, c.teaId ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName
-      from ClassApplication c
-      left join Application_Check a
-      on c.checked = a.id
-      <where>
-          <if test="shenQingRenId != 88888888">
-              and c.shenQingRenId= #{shenQingRenId}
-          </if>
-          <if test="className!=''">
-              and c.className like "%"#{className}"%"
-          </if>
-          <if test="tabKey!=88888888 and tabKey !=0">
-              and c.checked=#{tabKey}
-          </if>
-      </where>
+        select c.id, c.teaId
+        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName
+        from ClassApplication c
+        left join Application_Check a
+        on c.checked = a.id
+        <where>
+            <if test="shenQingRenId != 88888888">
+                and c.shenQingRenId= #{shenQingRenId}
+            </if>
+            <if test="className!=''">
+                and c.className like "%"#{className}"%"
+            </if>
+            <if test="tabKey!=88888888 and tabKey !=0">
+                and c.checked=#{tabKey}
+            </if>
+        </where>
     </select>
     <select id="findallWithDate" resultType="com.spc.model.ClassApplicationDomain">
-      select c.id, c.teaId ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName
-      from ClassApplication c
-      left join Application_Check a
-      on c.checked = a.id
-      <where>
-          <if test="shenQingRenId!=88888888">
-              and c.shenQingRenId=#{shenQingRenId}
-          </if>
-          <if test="className!=''">
-              and c.className=#{className}
-          </if>
-          <if test="tabKey!=88888888 and tabKey !=0">
-              and c.checked=#{tabKey}
-          </if>
-          and cast(c.mydate as date) = #{date}
-      </where>
+        select c.id, c.teaId
+        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName
+        from ClassApplication c
+        left join Application_Check a
+        on c.checked = a.id
+        <where>
+            <if test="shenQingRenId!=88888888">
+                and c.shenQingRenId=#{shenQingRenId}
+            </if>
+            <if test="className!=''">
+                and c.className=#{className}
+            </if>
+            <if test="tabKey!=88888888 and tabKey !=0">
+                and c.checked=#{tabKey}
+            </if>
+            and cast(c.mydate as date) = #{date}
+        </where>
     </select>
 
     <select id="findByTeaId" resultType="map">

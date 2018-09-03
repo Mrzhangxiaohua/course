@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.spc.dao.ClassDao" >
+<mapper namespace="com.spc.dao.ClassDao">
     <sql id="BASE_TABLE">
         Course
     </sql>
@@ -24,7 +24,8 @@
         values
         <trim prefix="( " suffix=" )">
             #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
-            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester} ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime},#{mainLecturer},#{classEncode}
+            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester}
+            ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime},#{mainLecturer},#{classEncode}
         </trim>
     </insert>
 
@@ -35,62 +36,63 @@
         classPlace,classLength,classModuleNum,m.modelsName,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,
         classEncode,classTime
         from
-        <include refid="BASE_TABLE"/> a
-        left join  Department b
+        <include refid="BASE_TABLE"/>
+        a
+        left join Department b
         on a.departId = b.departId
-        left join  models m
+        left join models m
         on a.classModuleNum = m.modelsId
         <where>
-          <if test="departId!=88888888 ">
-              b.departId = #{departId}
-          </if>
-          <if test="className!=null and className!='' ">
-              and a.className like  "%"#{className}"%"
-          </if>
-          <if test="teaName!=null and teaName!='' ">
-              and a.teaName like  "%"#{teaName}"%"
-          </if>
-          <if test="teaId!=null and teaId!=''">
-              and a.teaId = #{teaId}
-          </if>
-          <if test="startWeek!=88888888">
-              and a.startWeek >= #{startWeek}
-          </if>
-          <if test="endWeek!=88888888">
-              and #{endWeek} >= a.endWeek
-          </if>
-          <if test="hasWaiGuoYu != 1">
-              and a.departId != 12
-          </if>
+            <if test="departId!=88888888 ">
+                b.departId = #{departId}
+            </if>
+            <if test="className!=null and className!='' ">
+                and a.className like "%"#{className}"%"
+            </if>
+            <if test="teaName!=null and teaName!='' ">
+                and a.teaName like "%"#{teaName}"%"
+            </if>
+            <if test="teaId!=null and teaId!=''">
+                and a.teaId = #{teaId}
+            </if>
+            <if test="startWeek!=88888888">
+                and a.startWeek >= #{startWeek}
+            </if>
+            <if test="endWeek!=88888888">
+                and #{endWeek} >= a.endWeek
+            </if>
+            <if test="hasWaiGuoYu != 1">
+                and a.departId != 12
+            </if>
         </where>
-        order by className, classNum asc;
+        order by className, classNum asc
     </select>
 
     <select id="findClassById" resultType="com.spc.model.ClassDomain">
         select *
         from course.Course
         where classId = #{classId}
-        order by className, classNum asc;
+        order by className, classNum asc
     </select>
 
 
     <select id="findAllClasseSimpleMess" resultType="map">
         select
         <include refid="Table"/>
-        from  Course
-        order by className,classNum asc;
+        from Course
+        order by className,classNum asc
     </select>
 
 
     <select id="findCourseTable" resultType="hashmap">
         select
         <include refid="Table"/>
-        from  Course
+        from Course
         <where>
             teaId = #{teaId}
         </where>
     </select>
-    
+
     <update id="updateScore">
         UPDATE Course_choose c
         INNER JOIN Course a
@@ -106,14 +108,11 @@
         where classId = #{classId}
     </update>
 
-
-
     <delete id="delete">
         delete
         from course.Course
         where classId =#{classId}
     </delete>
-
 
 
 </mapper>
