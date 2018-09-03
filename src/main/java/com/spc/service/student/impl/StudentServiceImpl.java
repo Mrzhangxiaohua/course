@@ -100,11 +100,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Transactional
     public int addyuanzi(int classId,String stuId){
+
         classDao.updateChooseNum(classId, 1);
         studentDao.addChooseCourse(stuId, classId);
 
         ClassDomain course = classDao.findClassById(classId);
-        if(course.getClassChooseNum() < course.getClassUpperLimit()){
+        if(course.getClassChooseNum() > course.getClassUpperLimit()){
             throw new RuntimeException();
         }
         return 0;

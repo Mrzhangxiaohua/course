@@ -63,12 +63,14 @@
               and a.departId != 12
           </if>
         </where>
+        order by className, classNum asc;
     </select>
 
     <select id="findClassById" resultType="com.spc.model.ClassDomain">
         select *
         from course.Course
         where classId = #{classId}
+        order by className, classNum asc;
     </select>
 
 
@@ -76,7 +78,7 @@
         select
         <include refid="Table"/>
         from  Course
-        order by className,classNum
+        order by className,classNum asc;
     </select>
 
 
