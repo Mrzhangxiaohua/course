@@ -27,5 +27,11 @@ public class AuthMess {
         String stuId = userDetails().getUserno();
         return stuId;
     }
+    public String userName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserInfoDto userDetails = (UserInfoDto) authentication.getPrincipal();
+        String username = userDetails().getUsername();
+        return username;
+    }
 
 }

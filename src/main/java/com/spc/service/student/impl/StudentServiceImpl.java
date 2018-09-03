@@ -71,6 +71,9 @@ public class StudentServiceImpl implements StudentService {
 
         return temp;
     }
+
+
+
     @Override
     public int addCourse(int classId) {
         //首先得到学生id
@@ -207,13 +210,19 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public List<Map<String,Object>> findAllClassName() {
-        List<Map<String,Object>> liM = studentDao.findAllClassName();
-        for (Map<String,Object> aM:liM){
-            String className = (String) aM.get("className");
-            String classNum = Integer.toString((Integer) aM.get("classNum"));
-            aM.put("classStr",className+"("+classNum+"班)");
+    public List<HashMap<String,Object>> findAllClassName(int student) {
+        if(student==1){
+            String stuId = authMess.userId();
+            List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
+            return lis;
+        }else {
+            List<HashMap<String, Object>> liM = studentDao.findAllClassName();
+            for (HashMap<String, Object> aM : liM) {
+                String className = (String) aM.get("className");
+                String classNum = Integer.toString((Integer) aM.get("classNum"));
+                aM.put("classStr", className + "(" + classNum + "班)");
+            }
+            return liM;
         }
-        return liM;
     }
 }

@@ -63,8 +63,10 @@ public class StudentController {
      * @return
      */
     @RequestMapping(value = "/find/allClassName")
-    public List<Map<String,Object>> findAllClassName() {
-        return studentService.findAllClassName();
+    public List<HashMap<String,Object>> findAllClassName(
+            @RequestParam(required = false, defaultValue = "88888888") int student
+    ) {
+        return studentService.findAllClassName(student);
     }
 
     /**

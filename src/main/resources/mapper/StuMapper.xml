@@ -41,7 +41,7 @@
         </where>
     </select>
 
-    <select id="findAllClassName" resultType="map">
+    <select id="findAllClassName" resultType="hashmap">
         select distinct classId,className,classNum
         from course.Course
     </select>

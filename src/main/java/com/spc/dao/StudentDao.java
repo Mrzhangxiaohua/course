@@ -10,7 +10,7 @@ public interface StudentDao {
 
     public List<HashMap<String, Object>> findClasses(@Param("stuId") String stuId);
 
-    public List<Map<String,Object>> findAllClassName();
+    public List<HashMap<String,Object>> findAllClassName();
 
 
     //添加该学生选择的课程
