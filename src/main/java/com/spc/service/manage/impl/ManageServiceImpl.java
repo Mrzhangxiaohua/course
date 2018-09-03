@@ -171,7 +171,7 @@ public class ManageServiceImpl implements ManageService {
 
 
     @Override
-    public int addCourseStudent(String stuId, String stuName, String classStr) {
+    public int addCourseStudent(String stuId, String classStr) {
         String newStr = classStr.replace("(",",").replace(")","");
         String[] strs = newStr.substring(0,newStr.length()-1).split(",");
 

@@ -29,7 +29,7 @@ public interface ManageService {
     void deleteCourseRecord(int classId);
 
 
-    int addCourseStudent(String stuId,String stuName,String classStr);
+    int addCourseStudent(String stuId ,String classStr);
 
     int deleteCourseStudent(String stuId,String classStr);
 

@@ -34,7 +34,7 @@
         select
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
         classPlace,classLength,classModuleNum,m.modelsName,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,
-        classEncode,classTime
+        classEncode,classTime,mainLecturer
         from
         <include refid="BASE_TABLE"/>
         a

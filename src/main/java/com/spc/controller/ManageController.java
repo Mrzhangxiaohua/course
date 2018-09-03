@@ -325,9 +325,9 @@ public class ManageController {
             obj = new JSONObject(json);
             System.out.println(obj);
             String stuId = obj.getString("stuId");
-            String stuName = obj.getString("stuName");
+//            String stuName = obj.getString("stuName");
             String classStr = obj.getString("classStr");
-            manageService.addCourseStudent(stuId, stuName, classStr);
+            manageService.addCourseStudent(stuId, classStr);
         } catch (Exception e) {
             System.out.println(e);
         }
