@@ -215,11 +215,7 @@ public class StudentServiceImpl implements StudentService {
         if(student==1){
             String stuId = authMess.userId();
             List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
-            for (HashMap<String, Object> aM : lis) {
-                String className = (String) aM.get("className");
-                String classNum = Integer.toString((Integer) aM.get("classNum"));
-                aM.put("classStr", className + "(" + classNum + "班)");
-            }
+            System.out.println(lis);
             return lis;
         }else {
             List<HashMap<String, Object>> liM = studentDao.findAllClassName();
@@ -228,6 +224,7 @@ public class StudentServiceImpl implements StudentService {
                 String classNum = Integer.toString((Integer) aM.get("classNum"));
                 aM.put("classStr", className + "(" + classNum + "班)");
             }
+            System.out.println(liM);
             return liM;
         }
     }

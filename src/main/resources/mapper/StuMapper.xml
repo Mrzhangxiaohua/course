@@ -9,8 +9,8 @@
     <select id="findClasses" resultType="hashmap">
         select
         <include refid="BASE_COLUMN"/>
-        from Course_choose a
-        left join Course b
+        from course.Course_choose a
+        left join course.Course b
         on a.classId = b.classId
         <where>
             stuId = #{stuId}
@@ -18,7 +18,7 @@
     </select>
 
     <insert id="addChooseCourse" useGeneratedKeys="true" keyProperty="chooseId">
-        insert into Course_choose(stuId, classId,score) values(#{stuId}, #{classId},0)
+        insert into course.Course_choose(stuId, classId,score) values(#{stuId}, #{classId},0)
     </insert>
     <delete id="deleteChooseCourse">
        delete from course.Course_choose where stuId=#{stuId} and classId =#{classId};
@@ -27,7 +27,7 @@
     <select id="findStudent" resultType="hashmap">
         select DISTINCT
         a.stuId,b.stuName,a.score,c.className,d.departName,c.teaName,c.classNum
-        from Course_choose a
+        from course.Course_choose a
         left join course.XjtuUserInfo b
         on a.stuId = b.userno
         left join course.Course c
@@ -53,7 +53,7 @@
         from course.Course_choose c2
         where c2.stuId=#{stuId}
         ) a
-        left  join course.Course c
+        left join course.Course c
         on a.classId = c.classId
         where c.departId = 12
     </select>
