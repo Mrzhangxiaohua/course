@@ -31,19 +31,13 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/student")
-public class StudentController {
+public class StudentController extends Base{
 
     @Autowired
     private StudentService studentService;
 
     @Autowired
     private GradeService gradeService;
-
-    @Autowired
-    private RequestPayload requestPayload;
-
-    @Autowired
-    private AuthMess authMess;
 
 
     /**
@@ -76,8 +70,8 @@ public class StudentController {
      */
     @RequestMapping(value = "/add/application", method = RequestMethod.POST)
     public int addApplcation(HttpServletRequest request) {
-        String json = requestPayload.getRequestPayload(request);
-        System.out.printf("添加课程的json = %s", json);
+        String json = RequestPayload.getRequestPayload(request);
+       logger.info("添加课程的json = %s", json);
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
@@ -106,7 +100,7 @@ public class StudentController {
     @RequestMapping(value = "/choose/course", method = RequestMethod.POST)
     @ResponseBody
     public int chooseCourse(HttpServletRequest request) {
-        String json = requestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
@@ -128,7 +122,7 @@ public class StudentController {
     @RequestMapping(value = "/delete/course", method = RequestMethod.POST)
     @ResponseBody
     public int deleteCourse(HttpServletRequest request) {
-        String json = requestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
@@ -148,8 +142,7 @@ public class StudentController {
             @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
 
 //        PageHelper.startPage(pageNum,pageSize);
-        stuId = authMess.userId();
-//        stuId = 2018000006;
+        stuId = AuthMess.userId(authentication);
         return gradeService.selectGrade(classId, stuId);
     }
 
@@ -166,11 +159,10 @@ public class StudentController {
     /**
      * 学生端：根据验证的学生id下载课表
      *
-     * @param response
      * @return
      */
     @RequestMapping("/download/table")
-    public ModelAndView downloadCourseTable(HttpServletResponse response) {
+    public ModelAndView downloadCourseTable() {
 
 
         String[][] tables = studentService.findClasses();
@@ -187,17 +179,12 @@ public class StudentController {
 
     /**
      * 学生端：根据验证的学生id下载成绩单
-     *
-     * @param response
-     * @param stuId
-     * @param classId
+
      * @return
      */
     @RequestMapping("/download/score")
-    public ModelAndView downloadScore(HttpServletResponse response,
-                                      @RequestParam(required = false, defaultValue = "") String stuId,
-                                      @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
-        stuId = authMess.userId();
+    public ModelAndView downloadScore(@RequestParam(required = false, defaultValue = "88888888") Integer classId) {
+        String stuId = AuthMess.userId(authentication);
 //        stuId = 2018000006;
 
         List<GradeDomain> scores = gradeService.selectGrade(classId, stuId);
@@ -206,7 +193,7 @@ public class StudentController {
 
         res.put("data", scores);
         res.put("stuId", stuId);
-        res.put("stuName", authMess.userDetails().getUsername());
+        res.put("stuName", AuthMess.userName(authentication));
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "wider");
@@ -244,7 +231,7 @@ public class StudentController {
         map.put("teaId", teaId);
         map.put("startWeek", startWeek);
         map.put("endWeek", endWeek);
-        String stuId = authMess.userId();
+        String stuId = AuthMess.userId(authentication);
         map.put("stuId", stuId);
         map.put("hasWaiGuoYu", hasWaiGuoYu);
 

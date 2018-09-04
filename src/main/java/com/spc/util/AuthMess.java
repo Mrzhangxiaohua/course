@@ -14,24 +14,27 @@ import java.util.List;
 @Configuration
 public class AuthMess {
 
-
-    public UserInfoDto userDetails(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public static UserInfoDto userDetails(Authentication authentication){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserInfoDto userDetails = (UserInfoDto) authentication.getPrincipal();
         return userDetails;
     }
 
-    public String userId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserInfoDto userDetails = (UserInfoDto) authentication.getPrincipal();
-        String stuId = userDetails().getUserno();
+
+    public static String userId(Authentication authentication) {
+        String stuId = userDetails(authentication).getUserno();
         return stuId;
     }
-    public String userName() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserInfoDto userDetails = (UserInfoDto) authentication.getPrincipal();
-        String username = userDetails().getUsername();
+    public static String userName( Authentication authentication) {
+        String username = userDetails(authentication).getUsername();
         return username;
     }
+
+    public static String userRole( Authentication authentication) {
+        List<GrantedAuthority> authentications = (List<GrantedAuthority>) userDetails(authentication).getAuthorities();
+        return authentications.get(0).getAuthority();
+    }
+
+
 
 }

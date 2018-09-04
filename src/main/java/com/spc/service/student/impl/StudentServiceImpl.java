@@ -1,6 +1,7 @@
 package com.spc.service.student.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.spc.controller.Base;
 import com.spc.dao.ClassDao;
 import com.spc.dao.GradeDao;
 import com.spc.dao.StudentApplicationDao;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service(value = "studentService")
-public class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl extends Base implements StudentService  {
 
     @Autowired
     private StudentDao studentDao;
@@ -33,16 +34,12 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private GradeDao gradeDao;
 
-    @Autowired
-    private CourseDateTrans courseDateTrans;
 
-    @Autowired
-    private AuthMess authMess;
 
     @Override
     public String[][] findClasses() {
 //        int stuId = Integer.parseInt(authMess.userDetails().getUserid());
-        String stuId = authMess.userId();
+        String stuId = AuthMess.userId(authentication);
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
         String temp[][] = new String[10][7];
         System.out.println(lis);
@@ -77,7 +74,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public int addCourse(int classId) {
         //首先得到学生id
-        String stuId = authMess.userId();
+        String stuId = AuthMess.userId(authentication);
         boolean weixuan = gradeDao.selectGrade(classId, stuId).isEmpty();
         if (weixuan) {
             boolean noShijianchongtu  = studentDao.findTimeChongTu(stuId, classId).isEmpty();
@@ -114,7 +111,7 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public int deleteCourse(int classId) {
-        String stuId = authMess.userId();
+        String stuId = AuthMess.userId(authentication);
         if (!gradeDao.selectGrade(classId, stuId).isEmpty()) {
             classDao.updateChooseNum(classId, -1);
             return studentDao.deleteChooseCourse(stuId, classId);
@@ -126,7 +123,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public int addApplication(int classId, int states, String reason, int classNum) {
-        String stuId = authMess.userId();
+        String stuId = AuthMess.userId(authentication);
         return studentApplicationDao.add(stuId, classId, states, reason, 2, classNum);
     }
 
@@ -180,7 +177,7 @@ public class StudentServiceImpl implements StudentService {
             String[] d = classDomain.getClassDateDescription().split(":");
             Integer a = Integer.parseInt(d[0]);
             Integer b = Integer.parseInt(d[1]);
-            classDomain.setClassDateDescription(new String(courseDateTrans.dateToString(a, b)));
+            classDomain.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b)));
         }
 
         return classes;
@@ -188,7 +185,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Map getClassTime() {
-        String stuId = authMess.userId();
+        String stuId = AuthMess.userId(authentication);
         List<Map<String, Object>> li1 = studentDao.getWaiStudyTime(stuId);
         List<Map<String, Object>> li2 = studentDao.getNotWaiStudyTime(stuId);
 
@@ -213,7 +210,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<HashMap<String,Object>> findAllClassName(int student) {
         if(student==1){
-            String stuId = authMess.userId();
+            String stuId = AuthMess.userId(authentication);
             List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
             System.out.println(lis);
             return lis;

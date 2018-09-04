@@ -17,16 +17,14 @@ import java.util.Map;
  * 这个类提供课程管理的路由。
  *
  * @author yuhongchao
- * @version 1.0
  */
 @RequestMapping("/select")
 @RestController
-public class CourseController {
+public class CourseController extends Base{
+
     @Autowired
     private ClassService classService;
 
-    @Autowired
-    private CourseDateTrans courseDateTrans;
 
     /**
      * 根据院系以及课程名称，老师名称查询课程
@@ -59,7 +57,7 @@ public class CourseController {
                 String[] d = l.getClassDateDescription().split(":");
                 int a = Integer.parseInt(d[0]);
                 int b = Integer.parseInt(d[1]);
-                l.setClassDateDescription(new String(courseDateTrans.dateToString(a, b)));
+                l.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b)));
             }
         }
         Map<String, Object> res = new HashMap<>();
@@ -74,6 +72,4 @@ public class CourseController {
         res.put("data", data);
         return res;
     }
-
-
 }

@@ -42,18 +42,13 @@ import java.util.Map;
  */
 @RequestMapping("/teacher")
 @Controller
-public class TeacherController {
-    @Autowired
-    RequestPayload requestPayload;
+public class TeacherController  extends Base{
 
     @Autowired
     ClassService classService;
 
     @Autowired
     GradeService gradeService;
-
-    @Autowired
-    AuthMess authMess;
 
     @Autowired
     TeacherService teacherService;
@@ -68,7 +63,7 @@ public class TeacherController {
     @ResponseBody
     public int addGrade(HttpServletRequest request) {
         try {
-            String json = requestPayload.getRequestPayload(request);
+            String json = RequestPayload.getRequestPayload(request);
             System.out.println(json);
             JSONObject obj = new JSONObject(json);
 
@@ -91,7 +86,7 @@ public class TeacherController {
     @RequestMapping("teach/course")
     @ResponseBody
     public List<Map> getTeachCourse() {
-        String teacherId = authMess.userId();
+        String teacherId = AuthMess.userId(authentication);
 
         List<ClassDomain> classes = classService.findAllClass(88888888, "", teacherId, 88888888, 88888888);
 
@@ -158,7 +153,7 @@ public class TeacherController {
     @RequestMapping(value = "/course/table")
     @ResponseBody
     public String[][] findCourseTable() {
-        String teaId = authMess.userId();
+        String teaId = AuthMess.userId(authentication);
         return teacherService.findCourseTable(teaId);
     }
 
@@ -172,7 +167,7 @@ public class TeacherController {
     @ResponseBody
     public int addCourse(HttpServletRequest request) {
         try {
-            String json = requestPayload.getRequestPayload(request);
+            String json = RequestPayload.getRequestPayload(request);
             System.out.println(json);
             JSONObject obj = new JSONObject(json);
 
@@ -221,7 +216,7 @@ public class TeacherController {
     @RequestMapping(value = "/update/score", method = RequestMethod.POST)
     @ResponseBody
     public int updateScore(HttpServletRequest request) {
-        String json = requestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         System.out.println(json);
 
         try {
@@ -238,7 +233,7 @@ public class TeacherController {
 
     @RequestMapping("/download/courseTable")
     public ModelAndView downloadCourseTable() {
-        String teaId = authMess.userId();
+        String teaId = AuthMess.userId(authentication);
         String[][] tables = teacherService.findCourseTable(teaId);
         System.out.println(tables);
 
@@ -253,8 +248,8 @@ public class TeacherController {
     }
 
     @RequestMapping("/download/courseTableExcel")
-    public void downloadCourseTableExcel(HttpServletRequest request, HttpServletResponse response) {
-        String teaId = authMess.userId();
+    public void downloadCourseTableExcel(HttpServletResponse response) {
+        String teaId = AuthMess.userId(authentication);
         String[][] tables = teacherService.findCourseTable(teaId);
 
         List<CourseTableExcelDomain> liC = new ArrayList<>();
@@ -283,8 +278,8 @@ public class TeacherController {
     public int addClassApplication(@RequestBody ClassApplicationDomain cad) {
         cad.setChecked(2);
         cad.setTeaId("");
-        cad.setShenQingRenName(authMess.userDetails().getUsername());
-        cad.setShenQingRenId(authMess.userId());
+        cad.setShenQingRenName(AuthMess.userName(authentication));
+        cad.setShenQingRenId(AuthMess.userId(authentication));
         return teacherService.addClassApplication(cad);
     }
 
@@ -296,7 +291,7 @@ public class TeacherController {
     ){
         PageHelper.startPage(currentPage, pageSize);
 
-        List<Map<String,Object>> list= teacherService.findApplication(authMess.userId());
+        List<Map<String,Object>> list= teacherService.findApplication(AuthMess.userId(authentication));
 
         Map<String, Object> res = new HashMap<>();
         res.put("status", "SUCCESS");
@@ -314,7 +309,7 @@ public class TeacherController {
     @RequestMapping(value = "/issue/grade",method = RequestMethod.POST)
     @ResponseBody
     public int issueGrade(HttpServletRequest request){
-        String json = requestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         System.out.println(json);
         try {
             JSONObject obj = new JSONObject(json);

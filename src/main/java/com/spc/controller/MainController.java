@@ -7,40 +7,22 @@ import com.spc.service.user.UserService;
 import com.spc.service.webservice.GetInfo;
 import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 import com.spc.util.AuthMess;
-import com.spc.util.RequestPayload;
-import org.jasig.cas.client.authentication.AttributePrincipal;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.cas.authentication.CasAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
-
+/**
+ * 中心路由
+ *
+ * @author yuhongchao
+ */
 @Controller
-public class MainController {
-    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+public class MainController extends Base{
 
 
-    @Autowired
-    RequestPayload requestPayload;
 
-    @Autowired
-    AuthMess authMess;
 
     @Autowired
     DataService dataService;
@@ -51,68 +33,64 @@ public class MainController {
     GetInfo getInfo;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(ModelMap modelMap, HttpServletRequest request) {
+    public String index() {
 
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        UserInfoDto userDetails = (UserInfoDto) authentication.getPrincipal();
-        UserInfoDto userDetails = authMess.userDetails();
+        //初始化参数
+        setPara();
+
+        UserInfoDto userDetails = AuthMess.userDetails(authentication);
         dataService.storeUserInformation(userDetails);
 
-        System.out.println(userDetails.getBirthday());
-        List<GrantedAuthority> authentication = (List<GrantedAuthority>) userDetails.getAuthorities();
-        String role = authentication.get(0).getAuthority();
-//        String role = authName.role();
-        System.out.printf("登录的用户是%s\n", userDetails.getUsername());
-        System.out.printf("角色是%s\n", role);
+        logger.info("登录的用户是%s，角色是%s\n", userDetails.getUsername(), userRole);
 
-        System.out.println("角色的工号是" + userDetails.getUserno());
         String res = null;
-        if (role.equals("学生")) {
-            res =  "student/index";
-        } else if (role.equals("教职工")) {//这个是教职工的情况
-            System.out.println("=========run here teacher===========");
+        if (userRole.equals("学生")) {
+            logger.info("登录的是学生端");
+            res = "student/index";
+        } else if (userRole.equals("教职工")) {//这个是教职工的情况
             UserDomain userDomain = userService.findUsersById(userDetails.getUserno());
-            System.out.println("userDomain is" + userDomain);
-
+            logger.info("登录的是教师端");
             if (userDomain == null) {
                 res = "teacher/index";
             } else {
                 if (userDomain.getRole().equals("学院管理员")) {
-                    res =  "dmanage/index";
+                    logger.info("登录的是学院管理员端");
+                    res = "dmanage/index";
                 } else if (userDomain.getRole().equals("超级管理员")) {
-                    res =  "manage/index";
+                    logger.info("登录的是超级管理员端");
+                    res = "manage/index";
                 }
             }
         }
         return res;
     }
 
-    @RequestMapping("/student/classes")
-    public String classes() {
-        return "course/showClass";
-    }
+//    @RequestMapping("/student/classes")
+//    public String classes() {
+//        return "course/showClass";
+//    }
 
-    @RequestMapping("/student/calendar")
-    public String showTimeTable() {
-        System.out.println("run here");
-        return "student/calendar2";
-    }
+//    @RequestMapping("/student/calendar")
+//    public String showTimeTable() {
+//        System.out.println("run here");
+//        return "student/calendar2";
+//    }
+//
 
-
-    @RequestMapping("/student/teacher_forms")
-    public String teacherForms() {
-        return "teacher_forms";
-    }
+//    @RequestMapping("/student/teacher_forms")
+//    public String teacherForms() {
+//        return "teacher_forms";
+//    }
 
 
     @RequestMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout() {
         System.out.println("run login");
         return "/psc/logout";
     }
 
-    @RequestMapping("/test/form")
-    public String test() {
-        return "test/form";
-    }
+//    @RequestMapping("/test/form")
+//    public String test() {
+//        return "test/form";
+//    }
 }

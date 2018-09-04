@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CourseDateTrans {
 
-    public StringBuilder dateToString(Integer a, Integer b) {
+    public static StringBuilder dateToString(Integer a, Integer b) {
         return aToString(a).append(bToString(b));
     }
 
-    public StringBuilder aToString(Integer a) {
+    public static StringBuilder aToString(Integer a) {
         StringBuilder strs = new StringBuilder(" ");
         switch (a) {
             case 1:
@@ -39,7 +39,7 @@ public class CourseDateTrans {
         return strs;
     }
 
-    public StringBuilder bToString(Integer b) {
+    public static StringBuilder bToString(Integer b) {
         StringBuilder strs = new StringBuilder(" ");
         switch (b) {
             case 1:

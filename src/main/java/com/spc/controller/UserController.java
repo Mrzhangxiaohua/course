@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.plaf.basic.BasicHTML;
 
 import com.spc.util.RequestPayload;
 
@@ -20,11 +21,7 @@ import com.spc.util.RequestPayload;
  */
 @Controller
 @RequestMapping(path = "/user")
-public class UserController {
-
-
-    @Autowired
-    RequestPayload requestPayload;
+public class UserController extends Base {
 
 
     @Autowired
@@ -34,7 +31,7 @@ public class UserController {
     @PostMapping(value = "/add")
     public boolean addUser(HttpServletRequest request) {
         try {
-            String json = requestPayload.getRequestPayload(request);
+            String json = RequestPayload.getRequestPayload(request);
             System.out.println(json);
             JSONObject obj = new JSONObject(json);
 

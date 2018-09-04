@@ -12,6 +12,8 @@ import com.spc.util.RequestPayload;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +34,7 @@ import java.util.*;
  */
 @RequestMapping("/manage")
 @Controller
-public class ManageController {
-
+public class ManageController extends Base{
 
     @Autowired
     private ClassService classService;
@@ -41,14 +42,12 @@ public class ManageController {
     @Autowired
     private ManageService manageService;
 
-    @Autowired
-    private RequestPayload requestPayload;
 
     /**
      * 学生端：根据学生id查询课表
      *
      * @param stuId 学生id
-     * @return String[][] 类型的课表
+     * @return String[][]
      */
     @RequestMapping("/select/classes")
     @ResponseBody
@@ -120,6 +119,7 @@ public class ManageController {
             @RequestParam(required = false, defaultValue = "88888888") Integer tabKey
     ) {
         PageHelper.startPage(currentPage, pageSize);
+
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         List<ClassApplicationDomain> result = new ArrayList<>();
         if (!mydate.equals("")) {
@@ -133,7 +133,6 @@ public class ManageController {
         } else {
             result = manageService.checkedClassMessage(shenQingRenId, className, tabKey);
         }
-        System.out.println(result);
         Map<String, Object> res = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
         if (tabKey == 88888888) {
@@ -159,7 +158,7 @@ public class ManageController {
     @RequestMapping(value = "/makeSure/application", method = RequestMethod.POST)
     @ResponseBody
     public int convertStatus(HttpServletRequest request) {
-        String json = requestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
@@ -172,10 +171,15 @@ public class ManageController {
         return 0;
     }
 
+    /**
+     * 确认了老师开课申请
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/makeSure/classApplication", method = RequestMethod.POST)
     @ResponseBody
     public int convertClassStatus(HttpServletRequest request) {
-        String json = requestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
@@ -187,10 +191,15 @@ public class ManageController {
         return 0;
     }
 
+    /**
+     * 拒绝学生改课申请
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/reject/application", method = RequestMethod.POST)
     @ResponseBody
     public int rejectStatus(HttpServletRequest request) {
-        String json = requestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
@@ -202,10 +211,15 @@ public class ManageController {
         return 0;
     }
 
+    /**
+     * 拒绝老师开课申请
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/reject/classApplication", method = RequestMethod.POST)
     @ResponseBody
     public int rejectClassStatus(HttpServletRequest request) {
-        String json = requestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
@@ -217,6 +231,10 @@ public class ManageController {
         return 0;
     }
 
+    /**
+     * 管理员端查询课程
+     * @return
+     */
     @RequestMapping("/find/classes")
     @ResponseBody
     public List<Map> getAllCourse() {
@@ -231,23 +249,25 @@ public class ManageController {
         return resList;
     }
 
+    /**
+     * 下载课表
+     * @param classStr
+     * @return
+     */
     @RequestMapping("/download/table")
-    public ModelAndView downloadTable(HttpServletResponse response,HttpServletRequest request,
-                                      @RequestParam(required = false, defaultValue = "") String classStr
+    public ModelAndView downloadTable(@RequestParam(required = false, defaultValue = "") String classStr
     ) {
-        System.out.println(classStr);
         Map<String, Object> model = new HashMap<>();
         try {
             String newStr = classStr.replace("(",",").replace(")","");
             String[] strs = newStr.substring(0,newStr.length()-1).split(",");
 
-            System.out.println(newStr);
             String className = strs[0];
             Integer classNum = Integer.parseInt(strs[1]);
 
             int classId = manageService.getClassId(className,classNum);
 
-            System.out.printf("classId %d", classId);
+//            System.out.printf("classId %d", classId);
             List students = classService.findStudent(classId);
             Map<String, Object> res = new HashMap<String, Object>();
 
@@ -261,6 +281,10 @@ public class ManageController {
         return new ModelAndView(new ManageScorePdfView(), model);
     }
 
+    /**
+     * 下载大课表
+     * @return
+     */
     @RequestMapping("/download/bigTable")
     public ModelAndView downloadTable() {
         String[][] strs = manageService.bigTable();
@@ -273,13 +297,16 @@ public class ManageController {
         return new ModelAndView(new StudentTablePdfView(), model);
     }
 
+    /**
+     * 添加课程
+     * @param cd
+     * @return
+     */
     @RequestMapping(value = "/add/course", method = RequestMethod.POST)
     @ResponseBody
     public int addCourse(@RequestBody ClassDomain cd) {
         cd.setClassDateDescription(cd.getClassDateDescriptionA() + ":" + cd.getClassDateDescriptionB());
         cd.setClassChooseNum(0);
-        System.out.println(cd.getClassDateDescription());
-        System.out.println(cd.getMainLecturer());
         manageService.addCourse(cd);
         return 0;
     }
@@ -294,11 +321,11 @@ public class ManageController {
     @RequestMapping("/update/course")
     @ResponseBody
     public int updateCourse(@RequestBody ClassDomain cd) {
-        System.out.println(cd.getClassDateDescriptionA());
-        System.out.println(cd.getClassDateDescriptionB());
+//        System.out.println(cd.getClassDateDescriptionA());
+//        System.out.println(cd.getClassDateDescriptionB());
         cd.setClassDateDescription(cd.getClassDateDescriptionA() + ":" + cd.getClassDateDescriptionB());
         manageService.deleteCourseRecord(cd.getClassId());
-        System.out.println(cd.getClassId());
+//        System.out.println(cd.getClassId());
         manageService.addCourse(cd);
         return 0;
     }
@@ -318,12 +345,12 @@ public class ManageController {
     @RequestMapping(value = "/add/courseStudent", method = RequestMethod.POST)
     @ResponseBody
     public int addCourseStudent(HttpServletRequest request) {
-        System.out.println("run addCourseStudent");
-        String json = requestPayload.getRequestPayload(request);
+//        System.out.println("run addCourseStudent");
+        String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
-            System.out.println(obj);
+//            System.out.println(obj);
             String stuId = obj.getString("stuId");
 //            String stuName = obj.getString("stuName");
             String classStr = obj.getString("classStr");
@@ -337,12 +364,10 @@ public class ManageController {
     @RequestMapping(value = "/delete/courseStudent", method = RequestMethod.POST)
     @ResponseBody
     public int deleteCourseStudent(HttpServletRequest request) {
-        String json = requestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
-            System.out.println("==================");
             obj = new JSONObject(json);
-            System.out.println(obj);
             String stuId = obj.getString("stuId");
             String classStr = obj.getString("classStr");
             manageService.deleteCourseStudent(stuId, classStr);
@@ -352,6 +377,13 @@ public class ManageController {
         return 0;
     }
 
+    /**
+     * 通过班级名称以及班次查询学生
+     * @param currentPage
+     * @param pageSize
+     * @param classStr
+     * @return
+     */
     @RequestMapping("/find/student")
     @ResponseBody
     public Map<String, Object> findStudentByClassnameAndNum(
@@ -360,19 +392,17 @@ public class ManageController {
             @RequestParam(required = false, defaultValue = "") String classStr
     ) {
         List students = new ArrayList();
-        System.out.println(classStr);
         if (!classStr.equals("") && !classStr.isEmpty()) {
             String newStr = classStr.replace("(", ",").replace(")", "");
             String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
-            System.out.println(strs);
             String className = strs[0];
             Integer classNum = Integer.parseInt(strs[1]);
 
             students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
 
             List newStus = zhuanhuan(students);
-            System.out.printf("find student result:%s", newStus);
+            logger.info("find student result:%s", newStus);
             Map<String, Object> res = new HashMap<>();
             res.put("status", "SUCCESS");
 
