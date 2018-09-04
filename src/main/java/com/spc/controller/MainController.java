@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class MainController extends Base{
 
 
-
-
     @Autowired
     DataService dataService;
     @Autowired
@@ -41,7 +39,7 @@ public class MainController extends Base{
         UserInfoDto userDetails = AuthMess.userDetails(authentication);
         dataService.storeUserInformation(userDetails);
 
-        logger.info("登录的用户是%s，角色是%s\n", userDetails.getUsername(), userRole);
+        logger.info("登录的用户是{}，角色是{}",username, userRole);
 
         String res = null;
         if (userRole.equals("学生")) {
@@ -65,32 +63,11 @@ public class MainController extends Base{
         return res;
     }
 
-//    @RequestMapping("/student/classes")
-//    public String classes() {
-//        return "course/showClass";
-//    }
-
-//    @RequestMapping("/student/calendar")
-//    public String showTimeTable() {
-//        System.out.println("run here");
-//        return "student/calendar2";
-//    }
-//
-
-//    @RequestMapping("/student/teacher_forms")
-//    public String teacherForms() {
-//        return "teacher_forms";
-//    }
-
-
     @RequestMapping("/logout")
     public String logout() {
-        System.out.println("run login");
+        logger.info("{}退出了",username);
         return "/psc/logout";
     }
 
-//    @RequestMapping("/test/form")
-//    public String test() {
-//        return "test/form";
-//    }
+
 }

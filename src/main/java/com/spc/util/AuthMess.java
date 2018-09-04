@@ -20,7 +20,6 @@ public class AuthMess {
         return userDetails;
     }
 
-
     public static String userId(Authentication authentication) {
         String stuId = userDetails(authentication).getUserno();
         return stuId;

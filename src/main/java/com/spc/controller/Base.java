@@ -14,16 +14,18 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class Base {
+    //static：保证全局唯一性，
+    //public：确保任意包里的子类都可以调用这些属性。
     public static final Logger logger = LoggerFactory.getLogger(Base.class);
-    protected  Authentication authentication ;
-    protected  String username;
-    protected  String userId;
-    protected  String userRole;
+    public static Authentication authentication;
+    public static String username;
+    public static String userId;
+    public static String userRole;
 
-    public void setPara(){
-        authentication  = SecurityContextHolder.getContext().getAuthentication();
-        username =  AuthMess.userName(authentication);
-        userId =  AuthMess.userId(authentication);
-        userRole =  AuthMess.userRole(authentication);
+    public void setPara() {
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        username = AuthMess.userName(authentication);
+        userId = AuthMess.userId(authentication);
+        userRole = AuthMess.userRole(authentication);
     }
 }

@@ -232,6 +232,7 @@ public class StudentController extends Base{
         map.put("startWeek", startWeek);
         map.put("endWeek", endWeek);
         String stuId = AuthMess.userId(authentication);
+
         map.put("stuId", stuId);
         map.put("hasWaiGuoYu", hasWaiGuoYu);
 
