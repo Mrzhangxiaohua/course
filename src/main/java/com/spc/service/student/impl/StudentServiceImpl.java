@@ -137,6 +137,7 @@ public class StudentServiceImpl extends Base  implements StudentService  {
         Integer startWeek = (Integer) map.get("startWeek");
         Integer endWeek = (Integer) map.get("endWeek");
         Integer departId = (Integer) map.get("departId");
+        Integer modelsId = (Integer) map.get("modelsId");
         String teaId = (String) map.get("teaId");
         String classname = (String) map.get("classname");
         String teaname = (String) map.get("teaname");
@@ -150,7 +151,7 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
 
         PageHelper.startPage(currentPage, pageSize);
-        List<ClassDomain> classes = classDao.selectClasses(departId, classname, teaname, teaId, startWeek, endWeek, hasWaiGuoYu);
+        List<ClassDomain> classes = classDao.selectClasses(departId, classname, teaname, teaId, startWeek, endWeek, hasWaiGuoYu,modelsId);
 
 
         System.out.println(classes);

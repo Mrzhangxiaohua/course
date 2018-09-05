@@ -29,7 +29,7 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public List<ClassDomain> findAllClass(Integer departId, String className, String teaId, int startWeek, int endWeek) {
 
-        return classDao.selectClasses(departId, className, "", teaId, startWeek, endWeek, 1);
+        return classDao.selectClasses(departId, className, "", teaId, startWeek, endWeek, 1,88888888);
     }
 
     @Override
@@ -37,14 +37,22 @@ public class ClassServiceImpl implements ClassService {
         return studentDao.findStudent(classId);
     }
 
-
-
+    @Override
+    public int updateScore1(String className, String stuId, int wlzzxxGrade, int knskGrade) {
+        return classDao.updateScore1(className, stuId, wlzzxxGrade,knskGrade);
+    }
 
     @Override
-    public int updateScore(String className, String stuId, int score) {
-        return classDao.updateScore(className, stuId, score);
-
+    public int updateScore2(String className, String stuId, int xbsjGrade) {
+        return classDao.updateScore2(className, stuId, xbsjGrade);
     }
+    @Override
+    public int updateScore3(String className, String stuId, int xbsjGrade,int wlzzxxGrade, int knskGrade) {
+        return classDao.updateScore3(className, stuId, xbsjGrade, wlzzxxGrade,  knskGrade);
+    }
+
+
+
 }
 
 

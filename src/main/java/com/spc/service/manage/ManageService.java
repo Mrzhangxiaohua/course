@@ -35,6 +35,8 @@ public interface ManageService {
 
     int getClassId(String className,int classNum);
 
+    int deleteApplication(int id);
+
     List findStudentByClassnameAndNum(String className,int classNum,int pageSize,int currentPage);
 
     List<ClassApplicationDomain> checkedClassMessage(String teaId, String className,int tabKey);

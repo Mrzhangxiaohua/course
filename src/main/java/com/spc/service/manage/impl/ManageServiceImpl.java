@@ -202,6 +202,12 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
+    public int deleteApplication(int id) {
+        classApplicationDao.deleteClassApp(id);
+        return 0;
+    }
+
+    @Override
     public List findStudentByClassnameAndNum(String className, int classNum,int pageSize,int currentPage) {
         int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
 

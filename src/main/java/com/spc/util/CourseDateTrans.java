@@ -11,28 +11,28 @@ public class CourseDateTrans {
     }
 
     public static StringBuilder aToString(Integer a) {
-        StringBuilder strs = new StringBuilder(" ");
+        StringBuilder strs = new StringBuilder("");
         switch (a) {
             case 1:
-                strs = strs.append("星期一");
+                strs = strs.append("周一");
                 break;
             case 2:
-                strs = strs.append("星期二");
+                strs = strs.append("周二");
                 break;
             case 3:
-                strs = strs.append("星期三");
+                strs = strs.append("周三");
                 break;
             case 4:
-                strs = strs.append("星期四");
+                strs = strs.append("周四");
                 break;
             case 5:
-                strs = strs.append("星期五");
+                strs = strs.append("周五");
                 break;
             case 6:
-                strs = strs.append("星期六");
+                strs = strs.append("周六");
                 break;
             default:
-                strs = strs.append("星期日");
+                strs = strs.append("周日");
                 break;
         }
         ;
@@ -40,22 +40,22 @@ public class CourseDateTrans {
     }
 
     public static StringBuilder bToString(Integer b) {
-        StringBuilder strs = new StringBuilder(" ");
+        StringBuilder strs = new StringBuilder("");
         switch (b) {
             case 1:
-                strs = strs.append("一二节");
+                strs = strs.append("1-2节");
                 break;
             case 2:
-                strs = strs.append("三四节");
+                strs = strs.append("3-4节");
                 break;
             case 3:
-                strs = strs.append("五六节");
+                strs = strs.append("5-6节");
                 break;
             case 4:
-                strs = strs.append("七八节");
+                strs = strs.append("7-8节");
                 break;
             default:
-                strs = strs.append("九十节");
+                strs = strs.append("9-10节");
                 break;
         }
         ;

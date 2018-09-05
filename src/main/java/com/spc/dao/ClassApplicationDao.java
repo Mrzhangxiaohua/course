@@ -20,4 +20,6 @@ public interface ClassApplicationDao {
 
     List<Map<String,Object>> findByTeaId(@Param("teaId") String teaId);
 
+    int deleteClassApp(@Param("id") int  id);
+
 }

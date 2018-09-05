@@ -58,6 +58,8 @@ public class CourseController extends Base{
                 int a = Integer.parseInt(d[0]);
                 int b = Integer.parseInt(d[1]);
                 l.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b)));
+                l.setClassDateDescriptionA(Integer.toString(a));
+                l.setClassDateDescriptionB(Integer.toString(b));
             }
         }
         Map<String, Object> res = new HashMap<>();

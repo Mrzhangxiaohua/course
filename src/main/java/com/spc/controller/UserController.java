@@ -39,7 +39,7 @@ public class UserController extends Base {
 
             JSONObject sts = obj.getJSONObject("params").getJSONObject("values");
 
-            userDomain.setStuId(sts.getString("stuId"));
+            userDomain.setStuId(sts.getString("teaId"));
 
             Integer roleId = sts.getInt("roleId");
             System.out.println("roleId");

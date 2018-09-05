@@ -44,7 +44,10 @@
         on a.classModuleNum = m.modelsId
         <where>
             <if test="departId!=88888888 ">
-                b.departId = #{departId}
+                and b.departId = #{departId}
+            </if>
+            <if test="modelsId!=88888888 ">
+                and a.classModuleNum = #{modelsId}
             </if>
             <if test="className!=null and className!='' ">
                 and a.className like "%"#{className}"%"
@@ -93,11 +96,27 @@
         </where>
     </select>
 
-    <update id="updateScore">
+    <update id="updateScore1">
         UPDATE Course_choose c
         INNER JOIN Course a
         ON c.classId = a.classId
-        SET c.score = #{score}
+        SET c.wlzzxxGrade = #{wlzzxxGrade},c.knskGrade = #{knskGrade}
+        WHERE a.className = #{className}
+        and c.stuId = #{stuId}
+    </update>
+    <update id="updateScore2">
+        UPDATE Course_choose c
+        INNER JOIN Course a
+        ON c.classId = a.classId
+        SET c.xbsjGrade = #{xbsjGrade}
+        WHERE a.className = #{className}
+        and c.stuId = #{stuId}
+    </update>
+    <update id="updateScore3">
+        UPDATE Course_choose c
+        INNER JOIN Course a
+        ON c.classId = a.classId
+        SET c.xbsjGrade = #{xbsjGrade},c.wlzzxxGrade = #{wlzzxxGrade},c.knskGrade = #{knskGrade}
         WHERE a.className = #{className}
         and c.stuId = #{stuId}
     </update>

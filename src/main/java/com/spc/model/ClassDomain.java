@@ -1,6 +1,7 @@
 package com.spc.model;
 
 
+import com.spc.util.CourseDateTrans;
 import org.apache.ibatis.type.Alias;
 
 @Alias("ClassDomain")
@@ -23,7 +24,7 @@ public class ClassDomain {
     private String modelsName;
     private Integer departId;
     private Integer classModuleNum;
-    private Integer classSemester;
+    private String classSemester;
     private Integer classGradePoint;
     private Integer startWeek;
     private Integer endWeek;
@@ -85,7 +86,6 @@ public class ClassDomain {
     }
 
     public String getClassDateDescription() {
-
         return classDateDescription;
     }
 
@@ -133,13 +133,7 @@ public class ClassDomain {
         this.classModuleNum = classModuleNum;
     }
 
-    public Integer getClassSemester() {
-        return classSemester;
-    }
 
-    public void setClassSemester(Integer classSemester) {
-        this.classSemester = classSemester;
-    }
 
     public String getTeacherInfo() {
         return teacherInfo;
@@ -251,5 +245,13 @@ public class ClassDomain {
 
     public void setClassEncode(String classEncode) {
         this.classEncode = classEncode;
+    }
+
+    public String getClassSemester() {
+        return classSemester;
+    }
+
+    public void setClassSemester(String classSemester) {
+        this.classSemester = classSemester;
     }
 }

@@ -47,8 +47,9 @@ public class MainController extends Base{
             res = "student/index";
         } else if (userRole.equals("教职工")) {//这个是教职工的情况
             UserDomain userDomain = userService.findUsersById(userDetails.getUserno());
-            logger.info("登录的是教师端");
+
             if (userDomain == null) {
+                logger.info("登录的是教师端");
                 res = "teacher/index";
             } else {
                 if (userDomain.getRole().equals("学院管理员")) {
@@ -57,6 +58,9 @@ public class MainController extends Base{
                 } else if (userDomain.getRole().equals("超级管理员")) {
                     logger.info("登录的是超级管理员端");
                     res = "manage/index";
+                }else{
+                    logger.info("登录的是教师端");
+                    res = "teacher/index";
                 }
             }
         }

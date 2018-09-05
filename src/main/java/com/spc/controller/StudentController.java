@@ -216,6 +216,7 @@ public class StudentController extends Base{
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "88888888") int departId,
+            @RequestParam(required = false, defaultValue = "88888888") int modelsId,
             @RequestParam(required = false, defaultValue = "") String classname,
             @RequestParam(required = false, defaultValue = "") String teaName,
             @RequestParam(required = false, defaultValue = "") String teaId,
@@ -229,6 +230,7 @@ public class StudentController extends Base{
         map.put("classname", classname);
         map.put("teaname", teaName);
         map.put("teaId", teaId);
+        map.put("modelsId", modelsId);
         map.put("startWeek", startWeek);
         map.put("endWeek", endWeek);
         String stuId = AuthMess.userId(authentication);

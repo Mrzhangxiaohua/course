@@ -14,10 +14,15 @@ public interface ClassDao {
 
     List<ClassDomain> selectClasses(@Param("departId") Integer departId, @Param("className") String className,
                                     @Param("teaName") String teaName, @Param("teaId") String teaId, @Param("startWeek") int startWeek,
-                                    @Param("endWeek") int endWeek, @Param("hasWaiGuoYu") int hasWaiGuoYu);
+                                    @Param("endWeek") int endWeek, @Param("hasWaiGuoYu") int hasWaiGuoYu,
+                                    @Param("modelsId") int modelsId);
 
-    int updateScore(@Param("className") String className, @Param("stuId") String stuId,
-                    @Param("score") int score);
+    int updateScore1(@Param("className") String className, @Param("stuId") String stuId,
+                    @Param("wlzzxxGrade") int wlzzxxGrade, @Param("knskGrade") int knskGrade);
+    int updateScore2(@Param("className") String className, @Param("stuId") String stuId,
+                    @Param("xbsjGrade") int xbsjGrade);
+    int updateScore3(@Param("className") String className, @Param("stuId") String stuId,
+                    @Param("xbsjGrade") int xbsjGrade ,@Param("wlzzxxGrade") int wlzzxxGrade, @Param("knskGrade") int knskGrade);
 
     List<HashMap<String, Object>> findCourseTable(@Param("teaId") String teaId);
 

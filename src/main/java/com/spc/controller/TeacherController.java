@@ -86,7 +86,7 @@ public class TeacherController  extends Base{
     @RequestMapping("teach/course")
     @ResponseBody
     public List<Map> getTeachCourse() {
-        String teacherId = AuthMess.userId(authentication);
+        String teacherId = userId;
 
         List<ClassDomain> classes = classService.findAllClass(88888888, "", teacherId, 88888888, 88888888);
 
@@ -96,9 +96,33 @@ public class TeacherController  extends Base{
             Map<String, Object> res = new HashMap<>();
             res.put("className", classes.get(i).getClassName());
             res.put("classId", classes.get(i).getClassId());
+            res.put("classStr", classes.get(i).getClassName() +"("+ classes.get(i).getClassNum()+")");
             resList.add(res);
         }
         return resList;
+    }
+
+    @RequestMapping("teach/course2")
+    @ResponseBody
+    public Map getTeachCourse2(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize
+    ) {
+        String teacherId = userId;
+        PageHelper.startPage(currentPage, pageSize);
+        List<ClassDomain> classes = classService.findAllClass(88888888, "", teacherId, 88888888, 88888888);
+
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("status", "SUCCESS");
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", ((Page) classes).getTotal());
+        data.put("pageSize", pageSize);
+        data.put("currentPage", currentPage);
+        data.put("list", classes);
+
+        res.put("data", data);
+        return res;
     }
 
     /**
@@ -120,6 +144,8 @@ public class TeacherController  extends Base{
             PageHelper.startPage(currentPage, pageSize);
 
             students = classService.findStudent(classId);
+
+
             System.out.printf("find student result:%s", students);
             Map<String, Object> res = new HashMap<>();
             res.put("status", "SUCCESS");
@@ -192,7 +218,7 @@ public class TeacherController  extends Base{
             classDomain.setClassPlace(obj.getString("classPlace"));
             classDomain.setDepartId(obj.getInt("departId"));
             classDomain.setClassModuleNum(obj.getInt("classModuleNum"));
-            classDomain.setClassSemester(obj.getInt("classSemester"));
+            classDomain.setClassSemester(obj.getString("classSemester"));
             classDomain.setModelsName(" ");
 
             try {
@@ -208,12 +234,12 @@ public class TeacherController  extends Base{
     }
 
     /**
-     * 教师端 更新分数
+     * 教师端 更新模块一的分数
      *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/update/score", method = RequestMethod.POST)
+    @RequestMapping(value = "/update/score1", method = RequestMethod.POST)
     @ResponseBody
     public int updateScore(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
@@ -223,8 +249,52 @@ public class TeacherController  extends Base{
             JSONObject obj = new JSONObject(json);
             String className = obj.getString("className");
             String stuId = obj.getString("stuId");
-            int score = obj.getInt("score");
-            return classService.updateScore(className, stuId, score);
+            int wlzzxxGrade = obj.getInt("wlzzxxGrade");
+            int knskGrade = obj.getInt("knskGrade");
+            return classService.updateScore1(className, stuId, wlzzxxGrade,knskGrade);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    /**
+     * 教师端 更新分数
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/update/score2", method = RequestMethod.POST)
+    @ResponseBody
+    public int updateScore2(HttpServletRequest request) {
+        String json = RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+
+        try {
+            JSONObject obj = new JSONObject(json);
+            String className = obj.getString("className");
+            String stuId = obj.getString("stuId");
+            int xbsjGrade = obj.getInt("xbsjGrade");
+            return classService.updateScore2(className, stuId, xbsjGrade);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    @RequestMapping(value = "/update/score3", method = RequestMethod.POST)
+    @ResponseBody
+    public int updateScore3(HttpServletRequest request) {
+        String json = RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+
+        try {
+            JSONObject obj = new JSONObject(json);
+            String className = obj.getString("className");
+            String stuId = obj.getString("stuId");
+            int xbsjGrade = obj.getInt("xbsjGrade");
+            int wlzzxxGrade = obj.getInt("wlzzxxGrade");
+            int knskGrade = obj.getInt("knskGrade");
+
+            return classService.updateScore3(className, stuId, xbsjGrade,wlzzxxGrade,knskGrade);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -277,9 +347,9 @@ public class TeacherController  extends Base{
     @ResponseBody
     public int addClassApplication(@RequestBody ClassApplicationDomain cad) {
         cad.setChecked(2);
-        cad.setTeaId("");
-        cad.setShenQingRenName(AuthMess.userName(authentication));
-        cad.setShenQingRenId(AuthMess.userId(authentication));
+//        cad.setTeaId("");
+        cad.setShenQingRenName(username);
+        cad.setShenQingRenId(userId);
         return teacherService.addClassApplication(cad);
     }
 

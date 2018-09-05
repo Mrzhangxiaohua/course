@@ -9,7 +9,7 @@
 
     <select id="selectGrade" resultType="com.spc.model.GradeDomain" parameterType="int">
         select distinct
-        g.classId,g.score,g.stuId,c.className,c.classSemester,c.classGradePoint
+        g.classId,g.wlzzxxGrade,g.knskGrade,g.xbsjGrade,g.stuId,c.className,c.classSemester,c.classGradePoint
         from
         Course_choose g
         left join Course c

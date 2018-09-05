@@ -9,10 +9,10 @@
     <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.spc.model.ClassApplicationDomain">
         insert into
         <include refid="BASE_TABLE"/>
-        (className,mainLecturer,teacherInfo,courseInfo,classTime,checked,shenQingRenId,shenQingRenName)
+        (className,mainLecturer,teacherInfo,courseInfo,classTime,checked,shenQingRenId,shenQingRenName,classModuleNum)
         values
         (#{className}, #{mainLecturer},
-        #{teacherInfo},#{courseInfo},#{classTime},#{checked},#{shenQingRenId},#{shenQingRenName})
+        #{teacherInfo},#{courseInfo},#{classTime},#{checked},#{shenQingRenId},#{shenQingRenName},#{classModuleNum})
     </insert>
 
     <select id="findall" resultType="com.spc.model.ClassApplicationDomain">
@@ -22,7 +22,7 @@
         left join Application_Check a
         on c.checked = a.id
         <where>
-            <if test="shenQingRenId != 88888888">
+            <if test="shenQingRenId != ''">
                 and c.shenQingRenId= #{shenQingRenId}
             </if>
             <if test="className!=''">
@@ -68,5 +68,10 @@
         where id=#{id} and checked=2
 --         只有未审核的才能改变状态
     </update>
+    
+    <delete id="deleteClassApp">
+        delete from course.ClassApplication
+        where course.ClassApplication.id = #{id}
+    </delete>
 
 </mapper>

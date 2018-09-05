@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
+import com.spc.model.ClassDomainWithId;
 import com.spc.model.StudentApplicationDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.manage.ManageService;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -133,6 +135,7 @@ public class ManageController extends Base{
         } else {
             result = manageService.checkedClassMessage(shenQingRenId, className, tabKey);
         }
+        System.out.println(result.size());
         Map<String, Object> res = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
         if (tabKey == 88888888) {
@@ -148,6 +151,42 @@ public class ManageController extends Base{
         return res;
     }
 
+    @RequestMapping("/checked/classAppMessage2")
+    @ResponseBody
+    public Map<String, Object> checkedClassAppMessage2(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false, defaultValue = "") String mydate,
+            @RequestParam(required = false, defaultValue = "") String className,
+            @RequestParam(required = false, defaultValue = "") String shenQingRenId
+    ) {
+        PageHelper.startPage(currentPage, pageSize);
+
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        List<ClassApplicationDomain> result = new ArrayList<>();
+        if (!mydate.equals("")) {
+            try {
+                Date date = new Date();
+                date = fmt.parse(mydate);
+                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date, 1);
+            } catch (ParseException e) {
+                System.out.println(e);
+            }
+        } else {
+            result = manageService.checkedClassMessage(shenQingRenId, className, 1);
+        }
+        System.out.println(result.size());
+        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("list", result);
+        map.put("total", ((Page) result).getTotal());
+        map.put("pageSize", pageSize);
+        map.put("currentPage", currentPage);
+
+        res.put("data", map);
+        return res;
+    }
 
     /**
      * 管理端：审核通过学生的改课申请
@@ -302,12 +341,26 @@ public class ManageController extends Base{
      * @param cd
      * @return
      */
+//    @RequestMapping(value = "/add/course", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int addCourse(@RequestBody ClassDomain cd ) {
+//        cd.setClassDateDescription(cd.getClassDateDescriptionA() + ":" + cd.getClassDateDescriptionB());
+//        cd.setClassChooseNum(0);
+//        manageService.addCourse(cd);
+//        return 0;
+//    }
+
+
     @RequestMapping(value = "/add/course", method = RequestMethod.POST)
     @ResponseBody
-    public int addCourse(@RequestBody ClassDomain cd) {
-        cd.setClassDateDescription(cd.getClassDateDescriptionA() + ":" + cd.getClassDateDescriptionB());
-        cd.setClassChooseNum(0);
-        manageService.addCourse(cd);
+    public int addCourse(@RequestBody ClassDomainWithId cdwi ) {
+        cdwi.setClassDateDescription(cdwi.getClassDateDescriptionA() + ":" + cdwi.getClassDateDescriptionB());
+        cdwi.setClassChooseNum(0);
+        int id = cdwi.getId();
+        if(id!= 0){
+            manageService.deleteApplication(id);
+        }
+        manageService.addCourse(cdwi);
         return 0;
     }
 
@@ -318,6 +371,7 @@ public class ManageController extends Base{
         return 0;
     }
 
+    @Transactional
     @RequestMapping("/update/course")
     @ResponseBody
     public int updateCourse(@RequestBody ClassDomain cd) {
