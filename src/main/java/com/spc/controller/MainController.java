@@ -12,6 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 
 /**
  * 中心路由
@@ -31,21 +34,30 @@ public class MainController extends Base{
     GetInfo getInfo;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index() {
+    public String index(HttpServletRequest request) {
 
-        //初始化参数
-        setPara();
+//        //初始化参数
+//        setPara();
 
-        UserInfoDto userDetails = AuthMess.userDetails(authentication);
+        HttpSession httpSession = request.getSession();
+
+        BaseInfo baseInfo = new BaseInfo();
+
+        httpSession.setAttribute("authentication",baseInfo.getAuthentication());
+        httpSession.setAttribute("username",baseInfo.getUsername());
+        httpSession.setAttribute("userId",baseInfo.getUserId());
+        httpSession.setAttribute("userRole",baseInfo.getUserRole());
+
+        UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
         dataService.storeUserInformation(userDetails);
 
-        logger.info("登录的用户是{}，角色是{}",username, userRole);
+        logger.info("登录的用户是{}，角色是{}",baseInfo.getUsername(), baseInfo.getUserRole());
 
         String res = null;
-        if (userRole.equals("学生")) {
+        if (baseInfo.getUserRole().equals("学生")) {
             logger.info("登录的是学生端");
             res = "student/index";
-        } else if (userRole.equals("教职工")) {//这个是教职工的情况
+        } else if (baseInfo.getUserRole().equals("教职工")) {//这个是教职工的情况
             UserDomain userDomain = userService.findUsersById(userDetails.getUserno());
 
             if (userDomain == null) {
@@ -68,8 +80,8 @@ public class MainController extends Base{
     }
 
     @RequestMapping("/logout")
-    public String logout() {
-        logger.info("{}退出了",username);
+    public String logout(HttpServletRequest request) {
+        logger.info("{}退出了",request.getSession().getAttribute("username"));
         return "/psc/logout";
     }
 

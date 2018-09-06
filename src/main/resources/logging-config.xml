@@ -8,7 +8,7 @@
              <level>ERROR</level>
          </filter>-->
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %mdc{username} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -24,11 +24,11 @@
 
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %mdc{username} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="info">
+    <root level="INFO">
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
     </root>
@@ -42,8 +42,18 @@
     <logger name="com.spc.config" level="INFO">
         <appender-ref ref="file"/>
     </logger>
-    <logger name="com.alibaba.druid.pool" level="INFO">
+    <logger name="com.spc.dao" level="DEBUG">
         <appender-ref ref="file"/>
+    </logger>
+
+    <!--logger 中的name 属性是约束某一个包或者具体的一个类的打印级别-->
+
+    <logger name="org.mybatis">
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="java.sql">
+        <level value="DEBUG"/>
     </logger>
 
 </configuration>

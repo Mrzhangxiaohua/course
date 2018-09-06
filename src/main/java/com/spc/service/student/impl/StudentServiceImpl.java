@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +38,8 @@ public class StudentServiceImpl extends Base  implements StudentService  {
     private GradeDao gradeDao;
 
     @Override
-    public String[][] findClasses() {
+    public String[][] findClasses(String stuId) {
 //        int stuId = Integer.parseInt(authMess.userDetails().getUserid());
-        String stuId = userId;
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
         String temp[][] = new String[10][7];
         System.out.println(lis);
@@ -72,9 +72,8 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
 
     @Override
-    public int addCourse(int classId) {
+    public int addCourse(int classId,String stuId) {
         //首先得到学生id
-        String stuId = userId;
         boolean weixuan = gradeDao.selectGrade(classId, stuId).isEmpty();
         if (weixuan) {
             boolean noShijianchongtu  = studentDao.findTimeChongTu(stuId, classId).isEmpty();
@@ -110,8 +109,7 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
     @Transactional
     @Override
-    public int deleteCourse(int classId) {
-        String stuId = userId;
+    public int deleteCourse(int classId,String stuId) {
         if (!gradeDao.selectGrade(classId, stuId).isEmpty()) {
             classDao.updateChooseNum(classId, -1);
             return studentDao.deleteChooseCourse(stuId, classId);
@@ -122,8 +120,7 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
 
     @Override
-    public int addApplication(int classId, int states, String reason, int classNum) {
-        String stuId = userId;
+    public int addApplication(int classId, int states, String reason, int classNum,String stuId) {
         return studentApplicationDao.add(stuId, classId, states, reason, 2, classNum);
     }
 
@@ -185,8 +182,7 @@ public class StudentServiceImpl extends Base  implements StudentService  {
     }
 
     @Override
-    public Map getClassTime() {
-        String stuId = userId;
+    public Map getClassTime(String stuId) {
         List<Map<String, Object>> li1 = studentDao.getWaiStudyTime(stuId);
         List<Map<String, Object>> li2 = studentDao.getNotWaiStudyTime(stuId);
 
@@ -209,9 +205,8 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
 
     @Override
-    public List<HashMap<String,Object>> findAllClassName(int student) {
+    public List<HashMap<String,Object>> findAllClassName(int student,String stuId) {
         if(student==1){
-            String stuId = userId;
             List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
             System.out.println(lis);
             return lis;

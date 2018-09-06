@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,9 @@ public class StudentController extends Base{
      */
     @RequestMapping("/select/classes")
     @ResponseBody
-    public String[][] selectClasses() {
-        return studentService.findClasses();
+    public String[][] selectClasses(HttpSession session) {
+        String stuId = (String) session.getAttribute("userId");
+        return studentService.findClasses(stuId);
     }
 
     /**
@@ -58,9 +60,11 @@ public class StudentController extends Base{
      */
     @RequestMapping(value = "/find/allClassName")
     public List<HashMap<String,Object>> findAllClassName(
-            @RequestParam(required = false, defaultValue = "88888888") int student
+            @RequestParam(required = false, defaultValue = "88888888") int student,
+            HttpSession session
     ) {
-        return studentService.findAllClassName(student);
+        String stuId = (String) session.getAttribute("userId");
+        return studentService.findAllClassName(student,stuId);
     }
 
     /**
@@ -84,7 +88,8 @@ public class StudentController extends Base{
             String className = obj.getString("className");
             System.out.println(obj.getString("classNum"));
             Integer classNum = obj.getString("classNum").equals("")? 0: Integer.parseInt(obj.getString("classNum")); //专门为调整班级使用的“班次”字段
-            return studentService.addApplication(classId, state, reason, classNum);
+            String stuId = (String) request.getSession().getAttribute("userId");
+            return studentService.addApplication(classId, state, reason, classNum,stuId);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -105,7 +110,7 @@ public class StudentController extends Base{
         try {
             obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
-            return studentService.addCourse(classId);
+            return studentService.addCourse(classId, (String) request.getSession().getAttribute("userId"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -126,7 +131,7 @@ public class StudentController extends Base{
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
-            return studentService.deleteCourse(classId);
+            return studentService.deleteCourse(classId, (String) request.getSession().getAttribute("userId"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,10 +144,11 @@ public class StudentController extends Base{
             @RequestParam(required = false, defaultValue = "1") Integer pageNum,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(required = false, defaultValue = "") String stuId,
-            @RequestParam(required = false, defaultValue = "88888888") Integer classId) {
+            @RequestParam(required = false, defaultValue = "88888888") Integer classId,
+    HttpSession session) {
 
 //        PageHelper.startPage(pageNum,pageSize);
-        stuId = AuthMess.userId(authentication);
+        stuId = (String) session.getAttribute("userId");
         return gradeService.selectGrade(classId, stuId);
     }
 
@@ -152,8 +158,8 @@ public class StudentController extends Base{
      * @return
      */
     @RequestMapping("get/classTime")
-    public Map getGradePoint() {
-        return studentService.getClassTime();
+    public Map getGradePoint(HttpSession session) {
+        return studentService.getClassTime((String) session.getAttribute("userId"));
     }
 
     /**
@@ -162,10 +168,10 @@ public class StudentController extends Base{
      * @return
      */
     @RequestMapping("/download/table")
-    public ModelAndView downloadCourseTable() {
+    public ModelAndView downloadCourseTable(HttpSession session) {
 
 
-        String[][] tables = studentService.findClasses();
+        String[][] tables = studentService.findClasses((String) session.getAttribute("userId"));
         Map res = new HashMap();
 
         res.put("data", tables);
@@ -183,8 +189,9 @@ public class StudentController extends Base{
      * @return
      */
     @RequestMapping("/download/score")
-    public ModelAndView downloadScore(@RequestParam(required = false, defaultValue = "88888888") Integer classId) {
-        String stuId = AuthMess.userId(authentication);
+    public ModelAndView downloadScore(@RequestParam(required = false, defaultValue = "88888888") Integer classId,
+                                      HttpSession session) {
+        String stuId = (String) session.getAttribute("userId");
 //        stuId = 2018000006;
 
         List<GradeDomain> scores = gradeService.selectGrade(classId, stuId);
@@ -193,7 +200,7 @@ public class StudentController extends Base{
 
         res.put("data", scores);
         res.put("stuId", stuId);
-        res.put("stuName", AuthMess.userName(authentication));
+        res.put("stuName", session.getAttribute("authentication"));
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "wider");
@@ -213,6 +220,7 @@ public class StudentController extends Base{
     @RequestMapping("/classes/find")
     @ResponseBody
     public Map<String, Object> selectClassed(
+            HttpSession session,
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "88888888") int departId,
@@ -233,7 +241,7 @@ public class StudentController extends Base{
         map.put("modelsId", modelsId);
         map.put("startWeek", startWeek);
         map.put("endWeek", endWeek);
-        String stuId = AuthMess.userId(authentication);
+        String stuId = (String) session.getAttribute("userId");
 
         map.put("stuId", stuId);
         map.put("hasWaiGuoYu", hasWaiGuoYu);

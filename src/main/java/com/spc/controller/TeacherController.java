@@ -27,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,8 +86,8 @@ public class TeacherController  extends Base{
      */
     @RequestMapping("teach/course")
     @ResponseBody
-    public List<Map> getTeachCourse() {
-        String teacherId = userId;
+    public List<Map> getTeachCourse(HttpSession session) {
+        String teacherId = (String) session.getAttribute("userId");
 
         List<ClassDomain> classes = classService.findAllClass(88888888, "", teacherId, 88888888, 88888888);
 
@@ -106,9 +107,10 @@ public class TeacherController  extends Base{
     @ResponseBody
     public Map getTeachCourse2(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
-            @RequestParam(required = false, defaultValue = "10") int pageSize
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            HttpSession session
     ) {
-        String teacherId = userId;
+        String teacherId = (String) session.getAttribute("userId");
         PageHelper.startPage(currentPage, pageSize);
         List<ClassDomain> classes = classService.findAllClass(88888888, "", teacherId, 88888888, 88888888);
 
@@ -178,8 +180,8 @@ public class TeacherController  extends Base{
      */
     @RequestMapping(value = "/course/table")
     @ResponseBody
-    public String[][] findCourseTable() {
-        String teaId = AuthMess.userId(authentication);
+    public String[][] findCourseTable(HttpSession session) {
+        String teaId = (String) session.getAttribute("userId");
         return teacherService.findCourseTable(teaId);
     }
 
@@ -302,8 +304,8 @@ public class TeacherController  extends Base{
     }
 
     @RequestMapping("/download/courseTable")
-    public ModelAndView downloadCourseTable() {
-        String teaId = AuthMess.userId(authentication);
+    public ModelAndView downloadCourseTable(HttpSession session) {
+        String teaId = (String) session.getAttribute("userId");
         String[][] tables = teacherService.findCourseTable(teaId);
         System.out.println(tables);
 
@@ -318,8 +320,8 @@ public class TeacherController  extends Base{
     }
 
     @RequestMapping("/download/courseTableExcel")
-    public void downloadCourseTableExcel(HttpServletResponse response) {
-        String teaId = AuthMess.userId(authentication);
+    public void downloadCourseTableExcel(HttpServletResponse response,HttpSession session) {
+        String teaId = (String) session.getAttribute("userId");
         String[][] tables = teacherService.findCourseTable(teaId);
 
         List<CourseTableExcelDomain> liC = new ArrayList<>();
@@ -345,11 +347,12 @@ public class TeacherController  extends Base{
 
     @RequestMapping(value = "/add/classApplication", method = RequestMethod.POST)
     @ResponseBody
-    public int addClassApplication(@RequestBody ClassApplicationDomain cad) {
+    public int addClassApplication(@RequestBody ClassApplicationDomain cad,
+                                   HttpSession session) {
         cad.setChecked(2);
 //        cad.setTeaId("");
-        cad.setShenQingRenName(username);
-        cad.setShenQingRenId(userId);
+        cad.setShenQingRenName((String) session.getAttribute("username"));
+        cad.setShenQingRenId((String) session.getAttribute("userId"));
         return teacherService.addClassApplication(cad);
     }
 
@@ -357,11 +360,12 @@ public class TeacherController  extends Base{
     @ResponseBody
     public  Map<String, Object>  findApplication(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
-            @RequestParam(required = false, defaultValue = "10") int pageSize
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            HttpSession session
     ){
         PageHelper.startPage(currentPage, pageSize);
 
-        List<Map<String,Object>> list= teacherService.findApplication(AuthMess.userId(authentication));
+        List<Map<String,Object>> list= teacherService.findApplication((String) session.getAttribute("userId"));
 
         Map<String, Object> res = new HashMap<>();
         res.put("status", "SUCCESS");

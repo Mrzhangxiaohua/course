@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +31,8 @@ public class BaseDataContoller extends Base {
 
     @RequestMapping("/getDepart")
     @ResponseBody
-    public List<Map<String, Object>> getDepart() {
-        logger.info(username + "查询院系列表");
+    public List<Map<String, Object>> getDepart(HttpSession session) {
+        logger.info(session.getAttribute("username") + "查询院系列表");
         return dataService.getDepart();
     }
 
@@ -42,9 +43,9 @@ public class BaseDataContoller extends Base {
      */
     @RequestMapping("/getUserName")
     @ResponseBody
-    public Map<String, Object> getUserName() {
+    public Map<String, Object> getUserName(HttpSession session) {
         Map res = new HashMap();
-        res.put("UserName", username);
+        res.put("UserName", session.getAttribute("username"));
         return res;
     }
 }

@@ -13,6 +13,15 @@
           #{polity},#{roomnumber}, #{roomphone}, #{speciality},#{studenttype},
           #{tutoremployeeid},#{userid}, #{username}, #{userno},#{usertype})
     </insert>
+    
+    <select id="selectById" resultType="com.spc.service.xjtu.webservice.info.xsd.UserInfoDto">
+        select birthday,classid,dep,depid,email,
+          gender, idcardname, idcardno,marriage, mobile,nation, nationplace,
+          polity,roomnumber, roomphone, speciality,studenttype,
+          tutoremployeeid,userid, username, userno,usertype
+          from XjtuUserInfo
+          where userno =#{id}
+    </select>
 
 
 </mapper>

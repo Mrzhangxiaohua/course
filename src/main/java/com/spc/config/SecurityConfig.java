@@ -38,7 +38,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         super.configure(auth);
         auth.authenticationProvider(casAuthenticationProvider());
-
     }
 
     /**定义安全策略*/
