@@ -21,8 +21,6 @@ public class BaseInfo {
     public Authentication getAuthentication() {
         return  authentication;
     }
-
-
     public String getUsername() {
         return username;
     }

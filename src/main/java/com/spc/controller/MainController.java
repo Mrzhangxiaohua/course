@@ -49,6 +49,7 @@ public class MainController extends Base{
         httpSession.setAttribute("userRole",baseInfo.getUserRole());
 
         UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
+//        将用户信息存储
         dataService.storeUserInformation(userDetails);
 
         logger.info("登录的用户是{}，角色是{}",baseInfo.getUsername(), baseInfo.getUserRole());
