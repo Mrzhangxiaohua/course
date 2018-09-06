@@ -43,6 +43,12 @@ public class MainController extends Base{
 
         BaseInfo baseInfo = new BaseInfo();
 
+//        //202
+//        httpSession.setAttribute("authentication",baseInfo.getAuthentication());
+//        httpSession.setAttribute("username","yuhongchao");
+//        httpSession.setAttribute("userId","12313113");
+//        httpSession.setAttribute("userRole","stu");
+
         httpSession.setAttribute("authentication",baseInfo.getAuthentication());
         httpSession.setAttribute("username",baseInfo.getUsername());
         httpSession.setAttribute("userId",baseInfo.getUserId());

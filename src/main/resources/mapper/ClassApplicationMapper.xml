@@ -25,6 +25,9 @@
             <if test="shenQingRenId != ''">
                 and c.shenQingRenId= #{shenQingRenId}
             </if>
+            <if test="shenqingrenname != ''">
+                and c.shenQingRenName= #{shenqingrenname}
+            </if>
             <if test="className!=''">
                 and c.className like "%"#{className}"%"
             </if>
@@ -45,6 +48,9 @@
             </if>
             <if test="className!=''">
                 and c.className=#{className}
+            </if>
+            <if test="shenqingrenname != ''">
+                and c.shenQingRenName= #{shenqingrenname}
             </if>
             <if test="tabKey!=88888888 and tabKey !=0">
                 and c.checked=#{tabKey}

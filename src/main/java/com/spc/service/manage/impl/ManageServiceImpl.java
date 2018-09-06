@@ -216,13 +216,13 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className, int tabKey) {
-        return classApplicationDao.findall(shenQingRenId, className, tabKey);
+    public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className, int tabKey,String shenqingrenname) {
+        return classApplicationDao.findall(shenQingRenId, className, tabKey,shenqingrenname);
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessageAndDate(String shenQingRenId, String className, Date date, int tabKey) {
-        return classApplicationDao.findallWithDate(shenQingRenId, className, date, tabKey);
+    public List<ClassApplicationDomain> checkedClassMessageAndDate(String shenQingRenId, String className, Date date, int tabKey,String shenqingrenname) {
+        return classApplicationDao.findallWithDate(shenQingRenId, className, date, tabKey,shenqingrenname);
     }
 
 }

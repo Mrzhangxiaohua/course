@@ -118,6 +118,7 @@ public class ManageController extends Base{
             @RequestParam(required = false, defaultValue = "") String mydate,
             @RequestParam(required = false, defaultValue = "") String className,
             @RequestParam(required = false, defaultValue = "") String shenQingRenId,
+            @RequestParam(required = false, defaultValue = "") String shenQingRenName,
             @RequestParam(required = false, defaultValue = "88888888") Integer tabKey
     ) {
         PageHelper.startPage(currentPage, pageSize);
@@ -128,12 +129,12 @@ public class ManageController extends Base{
             try {
                 Date date = new Date();
                 date = fmt.parse(mydate);
-                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date, tabKey);
+                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date, tabKey, shenQingRenName);
             } catch (ParseException e) {
                 System.out.println(e);
             }
         } else {
-            result = manageService.checkedClassMessage(shenQingRenId, className, tabKey);
+            result = manageService.checkedClassMessage(shenQingRenId, className, tabKey, shenQingRenName);
         }
         System.out.println(result.size());
         Map<String, Object> res = new HashMap<>();
@@ -158,7 +159,8 @@ public class ManageController extends Base{
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String mydate,
             @RequestParam(required = false, defaultValue = "") String className,
-            @RequestParam(required = false, defaultValue = "") String shenQingRenId
+            @RequestParam(required = false, defaultValue = "") String shenQingRenId,
+            @RequestParam(required = false, defaultValue = "") String shenQingRenName
     ) {
         PageHelper.startPage(currentPage, pageSize);
 
@@ -168,12 +170,12 @@ public class ManageController extends Base{
             try {
                 Date date = new Date();
                 date = fmt.parse(mydate);
-                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date, 1);
+                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date, 1,shenQingRenName );
             } catch (ParseException e) {
                 System.out.println(e);
             }
         } else {
-            result = manageService.checkedClassMessage(shenQingRenId, className, 1);
+            result = manageService.checkedClassMessage(shenQingRenId, className, 1,shenQingRenName);
         }
         System.out.println(result.size());
         Map<String, Object> res = new HashMap<>();
@@ -338,7 +340,6 @@ public class ManageController extends Base{
 
     /**
      * 添加课程
-     * @param cd
      * @return
      */
 //    @RequestMapping(value = "/add/course", method = RequestMethod.POST)
