@@ -12,6 +12,7 @@ import com.spc.service.manage.ManageService;
 import com.spc.util.RequestPayload;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -232,6 +233,44 @@ public class ManageController extends Base{
         return 0;
     }
 
+    @RequestMapping(value = "/makeSure/applications", method = RequestMethod.POST)
+    @ResponseBody
+    public int convertS(HttpServletRequest request) {
+        String json = RequestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        try {
+            JSONArray Jarray = new JSONArray(json);
+            for (int i=0;i<Jarray.length();i++){
+                obj = Jarray.getJSONObject(i);
+                Integer id = obj.getInt("id");
+                String className = obj.getString("className");
+                manageService.makeSure(id, className);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    @RequestMapping(value = "/makeSure/classApplications", method = RequestMethod.POST)
+    @ResponseBody
+    public int convertClassApplications(HttpServletRequest request) {
+        String json = RequestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        try {
+            JSONArray Jarray = new JSONArray(json);
+            for (int i=0;i<Jarray.length();i++){
+                obj = Jarray.getJSONObject(i);
+                System.out.println("提交的实体是"+ obj);
+                Integer id = obj.getInt("id");
+                manageService.makeSureClassApplication(id);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
     /**
      * 拒绝学生改课申请
      * @param request
@@ -266,6 +305,25 @@ public class ManageController extends Base{
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
             return manageService.rejectClassApplication(id);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    @RequestMapping(value = "/reject/classApplications", method = RequestMethod.POST)
+    @ResponseBody
+    public int rejectClasses(HttpServletRequest request) {
+        String json = RequestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        try {
+            JSONArray Jarray = new JSONArray(json);
+            for (int i=0;i<Jarray.length();i++){
+                obj = Jarray.getJSONObject(i);
+                System.out.println("提交的实体是"+ obj);
+                Integer id = obj.getInt("id");
+                manageService.rejectClassApplication(id);
+            }
         } catch (Exception e) {
             System.out.println(e);
         }

@@ -204,21 +204,40 @@ public class StudentServiceImpl extends Base  implements StudentService  {
     }
 
 
+//    @Override
+//    public List<HashMap<String,Object>> findAllClassName(int student,String stuId) {
+//        if(student==1){
+//            List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
+//            System.out.println(lis);
+//            return lis;
+//        }else {
+//            List<HashMap<String, Object>> liM = studentDao.findAllClassName();
+//            for (HashMap<String, Object> aM : liM) {
+//                String className = (String) aM.get("className");
+//                String classNum = Integer.toString((Integer) aM.get("classNum"));
+//                aM.put("classStr", className + "(" + classNum + "班)");
+//            }
+//            System.out.println(liM);
+//            return liM;
+//        }
+//    }
+
+
     @Override
     public List<HashMap<String,Object>> findAllClassName(int student,String stuId) {
         if(student==1){
             List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
-            System.out.println(lis);
             return lis;
-        }else {
-            List<HashMap<String, Object>> liM = studentDao.findAllClassName();
-            for (HashMap<String, Object> aM : liM) {
+
+        }else{
+            List<HashMap<String,Object>> liM = studentDao.findAllClassName();
+            for (HashMap<String,Object> aM:liM){
                 String className = (String) aM.get("className");
                 String classNum = Integer.toString((Integer) aM.get("classNum"));
-                aM.put("classStr", className + "(" + classNum + "班)");
+                aM.put("classStr",className+"("+classNum+"班)");
             }
-            System.out.println(liM);
             return liM;
         }
+
     }
 }
