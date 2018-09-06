@@ -5,10 +5,12 @@ package com.spc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 //@EnableTransactionManagement
 @SpringBootApplication
+@ServletComponentScan
 //@EnableCasClient
 public class Springboot2MybatisDemoApplication extends SpringBootServletInitializer {
 
