@@ -15,7 +15,7 @@
         #{teacherInfo},#{courseInfo},#{classTime},#{checked},#{shenQingRenId},#{shenQingRenName},#{classModuleNum})
     </insert>
 
-    <select id="findall" resultType="com.spc.model.ClassApplicationDomain">
+    <select id="findallClass" resultType="com.spc.model.ClassApplicationDomain">
         select c.id, c.teaId
         ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName,f.modelsName
         from ClassApplication c
@@ -38,7 +38,7 @@
             </if>
         </where>
     </select>
-    <select id="findallWithDate" resultType="com.spc.model.ClassApplicationDomain">
+    <select id="findallClassWithDate" resultType="com.spc.model.ClassApplicationDomain">
         select c.id, c.teaId
         ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName,f.modelsName
         from ClassApplication c
@@ -47,10 +47,10 @@
         left join course.models f
         on f.modelsId= c.classModuleNum
         <where>
-            <if test="shenQingRenId!=88888888">
+            <if test="shenQingRenId!=''">
                 and c.shenQingRenId=#{shenQingRenId}
             </if>
-            <if test="className!=''">
+            <if test="className!='' ">
                 and c.className=#{className}
             </if>
             <if test="shenqingrenname != ''">

@@ -225,13 +225,15 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className, int tabKey,String shenqingrenname) {
-        return classApplicationDao.findall(shenQingRenId, className, tabKey,shenqingrenname);
+    public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className,  int tabKey,String shenqingrenname) {
+        return classApplicationDao.findallClass(shenQingRenId, className, tabKey,shenqingrenname);
     }
 
     @Override
     public List<ClassApplicationDomain> checkedClassMessageAndDate(String shenQingRenId, String className, Date date, int tabKey,String shenqingrenname) {
-        return classApplicationDao.findallWithDate(shenQingRenId, className, date, tabKey,shenqingrenname);
+        java.sql.Date dateSql = new java.sql.Date(date.getTime());
+        System.out.println("时间time是======"+dateSql);
+        return classApplicationDao.findallClassWithDate(shenQingRenId, className, date, tabKey,shenqingrenname);
     }
 
     @Override
@@ -239,6 +241,10 @@ public class ManageServiceImpl implements ManageService {
         return timeSwitchDao.add(timeSwitch);
     }
 
+    @Override
+    public int updateTimeSwitch(int timeSwitch) {
+        return timeSwitchDao.updateTimeSwitch(timeSwitch);
+    }
 
 
     @Override

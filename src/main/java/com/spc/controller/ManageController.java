@@ -3,16 +3,14 @@ package com.spc.controller;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.spc.model.ClassApplicationDomain;
-import com.spc.model.ClassDomain;
-import com.spc.model.ClassDomainWithId;
-import com.spc.model.StudentApplicationDomain;
+import com.spc.model.*;
 import com.spc.service.classes.ClassService;
 import com.spc.service.manage.ManageService;
 import com.spc.util.RequestPayload;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -134,7 +132,7 @@ public class ManageController extends Base{
         } else {
             result = manageService.checkedClassMessage(shenQingRenId, className, tabKey, shenQingRenName);
         }
-        System.out.println(result.size());
+        System.out.println(result);
         Map<String, Object> res = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
         if (tabKey == 88888888) {
@@ -175,7 +173,7 @@ public class ManageController extends Base{
         } else {
             result = manageService.checkedClassMessage(shenQingRenId, className, 1,shenQingRenName);
         }
-        System.out.println(result.size());
+        System.out.println(result);
         Map<String, Object> res = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
 
@@ -553,14 +551,24 @@ public class ManageController extends Base{
         return students;
     }
 
-    @RequestMapping("/time/switch")
+    @RequestMapping(value = "/time/switch",method = RequestMethod.POST)
     @ResponseBody
-    public int deleteCourseStudent(
-            @RequestParam(required = false, defaultValue = "0") int timeSwitch
-    ) {
-        manageService.addTimeSwitch(timeSwitch);
+    public int timeSwitch(HttpServletRequest request) {
+        String json = RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(json);
+            JSONObject sts = obj.getJSONObject("params").getJSONObject("values");
+            Integer timeSwitch = sts.getInt("timeSwitch");
+
+            manageService.updateTimeSwitch(timeSwitch);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
+
 
     @RequestMapping("/jilian/select")
     @ResponseBody

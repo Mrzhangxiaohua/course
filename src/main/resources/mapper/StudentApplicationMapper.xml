@@ -41,7 +41,7 @@
             <if test="key!=88888888 and key!=0">
                 s.checked=#{key}
             </if>
-            <if test="stuId!='' and stuId != null">
+            <if test="stuId!=''">
                 and s.stuId = #{stuId}
             </if>
         </where>
@@ -62,7 +62,7 @@
             <if test="key!=88888888 and key!=0">
                 s.checked=#{key}
             </if>
-            <if test="stuId!='' and stuId !=null">
+            <if test="stuId!=''">
                 and s.stuId = #{stuId}
             </if>
             and cast(s.mydate as date) = #{date}
