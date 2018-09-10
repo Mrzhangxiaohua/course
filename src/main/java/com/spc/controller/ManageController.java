@@ -14,8 +14,6 @@ import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -349,7 +346,7 @@ public class ManageController extends Base{
     }
 
     /**
-     * 下载课表
+     * 根据课程classStr下载课表
      * @param classStr
      * @return
      */
@@ -358,6 +355,7 @@ public class ManageController extends Base{
     ) {
         Map<String, Object> model = new HashMap<>();
         try {
+
             String newStr = classStr.replace("(",",").replace(")","");
             String[] strs = newStr.substring(0,newStr.length()-1).split(",");
 
@@ -385,8 +383,12 @@ public class ManageController extends Base{
      * @return
      */
     @RequestMapping("/download/bigTable")
-    public ModelAndView downloadTable() {
-        String[][] strs = manageService.bigTable();
+    public ModelAndView downloadTable(
+            @RequestParam(required = false, defaultValue = "")String  shenQingRenId,
+            @RequestParam(required = false, defaultValue = "") String  shenQingRenName,
+            @RequestParam(required = false, defaultValue = "") String  teaName
+    ) {
+        String[][] strs = manageService.bigTable(shenQingRenId,shenQingRenName,teaName);
         Map<String, Object> res = new HashMap<String, Object>();
 
         res.put("data", strs);
@@ -412,7 +414,7 @@ public class ManageController extends Base{
 
     @RequestMapping(value = "/add/course", method = RequestMethod.POST)
     @ResponseBody
-    public int addCourse(@RequestBody ClassDomainWithId cdwi ) {
+    public int addCourse(@RequestBody ClassDomainWithId cdwi) {
         cdwi.setClassDateDescription(cdwi.getClassDateDescriptionA() + ":" + cdwi.getClassDateDescriptionB());
         cdwi.setClassChooseNum(0);
         int id = cdwi.getId();
@@ -445,12 +447,15 @@ public class ManageController extends Base{
 
     @RequestMapping("/get/bigTable")
     @ResponseBody
-    public String[][] getBigTable() {
-        return manageService.bigTable();
+    public String[][] getBigTable(
+            @RequestParam(required = false, defaultValue = "")String  shenQingRenId,
+                                  @RequestParam(required = false, defaultValue = "") String  shenQingRenName,
+                                  @RequestParam(required = false, defaultValue = "") String  teaName) {
+        return manageService.bigTable(shenQingRenId,shenQingRenName,teaName);
     }
 
     /**
-     * 管理端：给相应的接口添加学生
+     * 管理端：给相应的班级添加学生
      *
      * @param request
      * @return
@@ -489,6 +494,8 @@ public class ManageController extends Base{
         }
         return 0;
     }
+
+
 
     /**
      * 通过班级名称以及班次查询学生
@@ -545,4 +552,20 @@ public class ManageController extends Base{
         }
         return students;
     }
+
+    @RequestMapping("/time/switch")
+    @ResponseBody
+    public int deleteCourseStudent(
+            @RequestParam(required = false, defaultValue = "0") int timeSwitch
+    ) {
+        manageService.addTimeSwitch(timeSwitch);
+        return 0;
+    }
+
+    @RequestMapping("/jilian/select")
+    @ResponseBody
+    public List<Map>  jilianSelect(){
+        return manageService.jilianSelect();
+    }
+
 }

@@ -6,11 +6,12 @@ import com.spc.model.StudentApplicationDomain;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface ManageService {
     String[][] findClasses(String stuId);
 
-    String[][] bigTable();
+    String[][] bigTable(String shenQingRenId, String shenQingRenName,String teaName);
 
     List<StudentApplicationDomain> checkedMessage(int key, String stuId);
 
@@ -43,4 +44,7 @@ public interface ManageService {
 
     List<ClassApplicationDomain> checkedClassMessageAndDate(String teaId, String className, Date date,int tabKey,String shenqingrenname);
 
+    int addTimeSwitch(int timeSwitch);
+
+    public List<Map> jilianSelect();
 }

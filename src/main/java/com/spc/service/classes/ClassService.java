@@ -16,7 +16,7 @@ public interface ClassService {
     List findStudent(int classId);
 
 
-    int updateScore1(String className, String stuId, int wlzzxxGrade,int knskGrade);
-    int updateScore2(String className, String stuId, int xbsjGrade);
-    int updateScore3(String className, String stuId, int xbsjGrade,int wlzzxxGrade,int knskGrade);
+    int updateScore1(String className,int classNum, String stuId, int wlzzxxGrade,int knskGrade);
+    int updateScore2(String className,int classNum, String stuId, int xbsjGrade);
+    int updateScore3(String className,int classNum, String stuId, int xbsjGrade,int wlzzxxGrade,int knskGrade);
 }

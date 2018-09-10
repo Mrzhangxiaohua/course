@@ -1,13 +1,10 @@
 package com.spc.controller;
 
 import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
-import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
-import com.spc.util.AuthMess;
 import com.spc.util.RequestPayload;
 import com.spc.view.StudentScorePdfView;
 import com.spc.view.StudentTablePdfView;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -259,4 +255,14 @@ public class StudentController extends Base{
         res.put("data", data);
         return res;
     }
+
+    @RequestMapping("/get/timeswitch")
+    @ResponseBody
+    public Map getTimeSwitch(){
+        Map res = new HashMap();
+        res.put("timeSwitch",studentService.getTimeSwtich());
+        return res;
+    }
+
+
 }

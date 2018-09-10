@@ -17,19 +17,21 @@ public interface ClassDao {
                                     @Param("endWeek") int endWeek, @Param("hasWaiGuoYu") int hasWaiGuoYu,
                                     @Param("modelsId") int modelsId);
 
-    int updateScore1(@Param("className") String className, @Param("stuId") String stuId,
+    int updateScore1(@Param("className") String className, @Param("classNum") int classNum,@Param("stuId") String stuId,
                     @Param("wlzzxxGrade") int wlzzxxGrade, @Param("knskGrade") int knskGrade);
-    int updateScore2(@Param("className") String className, @Param("stuId") String stuId,
+    int updateScore2(@Param("className") String className,@Param("classNum") int classNum, @Param("stuId") String stuId,
                     @Param("xbsjGrade") int xbsjGrade);
-    int updateScore3(@Param("className") String className, @Param("stuId") String stuId,
+    int updateScore3(@Param("className") String className,@Param("classNum") int classNum, @Param("stuId") String stuId,
                     @Param("xbsjGrade") int xbsjGrade ,@Param("wlzzxxGrade") int wlzzxxGrade, @Param("knskGrade") int knskGrade);
 
     List<HashMap<String, Object>> findCourseTable(@Param("teaId") String teaId);
 
-    List<HashMap<String, Object>> findAllClasseSimpleMess();
+    List<HashMap<String, Object>> findAllClasseSimpleMess(@Param("shenQingRenId") String shenQingRenId,@Param("shenQingRenName") String shenQingRenName,@Param("teaName")String teaName);
 
     int updateChooseNum(@Param("classId") int classId, @Param("num") int num);
 
     ClassDomain findClassById(@Param("classId") int classId);
+
+    List haveStuInClass(@Param("classId")int  classId,@Param("stuId")String stuId);
 
 }

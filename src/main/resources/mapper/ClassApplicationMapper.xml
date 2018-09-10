@@ -17,10 +17,12 @@
 
     <select id="findall" resultType="com.spc.model.ClassApplicationDomain">
         select c.id, c.teaId
-        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName
+        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName,f.modelsName
         from ClassApplication c
         left join Application_Check a
         on c.checked = a.id
+        left join course.models f
+        on f.modelsId= c.classModuleNum
         <where>
             <if test="shenQingRenId != ''">
                 and c.shenQingRenId= #{shenQingRenId}
@@ -38,10 +40,12 @@
     </select>
     <select id="findallWithDate" resultType="com.spc.model.ClassApplicationDomain">
         select c.id, c.teaId
-        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName
+        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName,f.modelsName
         from ClassApplication c
         left join Application_Check a
         on c.checked = a.id
+        left join course.models f
+        on f.modelsId= c.classModuleNum
         <where>
             <if test="shenQingRenId!=88888888">
                 and c.shenQingRenId=#{shenQingRenId}

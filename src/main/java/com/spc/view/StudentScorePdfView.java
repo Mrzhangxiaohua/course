@@ -108,7 +108,10 @@ public class StudentScorePdfView extends AbstractPdfView {
         }
         document.add(table);
 
-        Rectangle rect = new Rectangle(600, 80, 1000, 120);
+//        PdfStamper stp = PdfStamper.createSignature(reader, fout, '\0');
+        Rectangle pageRect =document.getPageSize();
+        System.out.println(pageRect);
+        Rectangle rect = new Rectangle(600, -120, 1000, -80);
 
         PdfContentByte cb = writer.getDirectContent();
         cb.rectangle(rect);

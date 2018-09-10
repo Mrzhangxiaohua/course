@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -36,18 +38,11 @@ public class MainController extends Base{
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(HttpServletRequest request) {
 
-//        //初始化参数
-//        setPara();
 
         HttpSession httpSession = request.getSession();
 
         BaseInfo baseInfo = new BaseInfo();
 
-//        //202
-//        httpSession.setAttribute("authentication",baseInfo.getAuthentication());
-//        httpSession.setAttribute("username","yuhongchao");
-//        httpSession.setAttribute("userId","12313113");
-//        httpSession.setAttribute("userRole","stu");
 
         httpSession.setAttribute("authentication",baseInfo.getAuthentication());
         httpSession.setAttribute("username",baseInfo.getUsername());
@@ -61,6 +56,12 @@ public class MainController extends Base{
         logger.info("登录的用户是{}，角色是{}",baseInfo.getUsername(), baseInfo.getUserRole());
 
         String res = null;
+
+        //为了缓存老师更新的数据而在内存中建立的hashMap
+        Map updateScore = new HashMap<>();
+        updateScore.put("operator",baseInfo.getUsername());
+
+
         if (baseInfo.getUserRole().equals("学生")) {
             logger.info("登录的是学生端");
             res = "student/index";
@@ -69,16 +70,26 @@ public class MainController extends Base{
 
             if (userDomain == null) {
                 logger.info("登录的是教师端");
+
+                httpSession.setAttribute("updatescore1",updateScore);
+                httpSession.setAttribute("updatescore2",updateScore);
                 res = "teacher/index";
             } else {
                 if (userDomain.getRole().equals("学院管理员")) {
+                    httpSession.setAttribute("updatescore3",updateScore);
                     logger.info("登录的是学院管理员端");
                     res = "dmanage/index";
                 } else if (userDomain.getRole().equals("超级管理员")) {
+                    httpSession.setAttribute("updatescore3",updateScore);
                     logger.info("登录的是超级管理员端");
                     res = "manage/index";
-                }else{
+
+                } else{
+                    httpSession.setAttribute("updatescore1",updateScore);
+                    httpSession.setAttribute("updatescore2",updateScore);
                     logger.info("登录的是教师端");
+
+                    System.out.println("产生了map");
                     res = "teacher/index";
                 }
             }
@@ -91,6 +102,9 @@ public class MainController extends Base{
         logger.info("{}退出了",request.getSession().getAttribute("username"));
         return "/psc/logout";
     }
-
-
+//    @RequestMapping("error")
+//    public String login(HttpServletRequest request) {
+//        logger.info("{}退出了",request.getSession().getAttribute("username"));
+//        return "error";
+//    }
 }

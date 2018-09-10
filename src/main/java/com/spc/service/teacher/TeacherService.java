@@ -13,6 +13,7 @@ public interface TeacherService {
 
     List<Map<String,Object>> findApplication(String teaId);
 
+    List findStudentByClassnameAndNum(String className,int classNum);
     public int issueGrade(int classId);
 
 }

@@ -12,7 +12,7 @@
 
     <sql id="BASE_COLUMN">
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,departId,classSemester,classGradePoint,endWeek,startWeek,classTime,mainLecturer,classEncode
+        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,departId,classSemester,classGradePoint,endWeek,startWeek,classTime,mainLecturer,classEncode,shenQingRenId
     </sql>
 
     <insert id="insert" parameterType="com.spc.model.ClassDomain">
@@ -25,7 +25,7 @@
         <trim prefix="( " suffix=" )">
             #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
             #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester}
-            ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime},#{mainLecturer},#{classEncode}
+            ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime},#{mainLecturer},#{classEncode},#{shenQingRenId}
         </trim>
     </insert>
 
@@ -33,8 +33,8 @@
     <select id="selectClasses" resultType="com.spc.model.ClassDomain">
         select
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,m.modelsName,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,
-        classEncode,classTime,mainLecturer
+        classPlace,classLength,classModuleNum,m.modelsName as modelsName,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,
+        classEncode,classTime,mainLecturer,b.departName as departName
         from
         <include refid="BASE_TABLE"/>
         a
@@ -81,9 +81,22 @@
 
     <select id="findAllClasseSimpleMess" resultType="map">
         select
-        <include refid="Table"/>
-        from Course
-        order by className,classNum asc
+        classDateDescription,teaName,classPlace,endWeek,startWeek,classNum,className,mainLecturer
+        from Course c
+        left join XjtuUserInfo x
+        on x.userno = c.shenQingRenId
+        <where>
+            <if test="shenQingRenId != ''">
+                and c.shenQingRenId =#{shenQingRenId}
+            </if>
+            <if test="shenQingRenName != ''">
+                and x.username =#{shenQingRenName}
+            </if>
+            <if test="teaName !=''">
+                and c.teaName=#{teaName}
+            </if>
+        </where>
+        order by c.className,c.classNum asc
     </select>
 
 
@@ -101,7 +114,7 @@
         INNER JOIN Course a
         ON c.classId = a.classId
         SET c.wlzzxxGrade = #{wlzzxxGrade},c.knskGrade = #{knskGrade}
-        WHERE a.className = #{className}
+        WHERE a.className = #{className} and a.classNum = #{classNum}
         and c.stuId = #{stuId}
     </update>
     <update id="updateScore2">
@@ -109,7 +122,7 @@
         INNER JOIN Course a
         ON c.classId = a.classId
         SET c.xbsjGrade = #{xbsjGrade}
-        WHERE a.className = #{className}
+        WHERE a.className = #{className} and a.classNum = #{classNum}
         and c.stuId = #{stuId}
     </update>
     <update id="updateScore3">
@@ -117,7 +130,7 @@
         INNER JOIN Course a
         ON c.classId = a.classId
         SET c.xbsjGrade = #{xbsjGrade},c.wlzzxxGrade = #{wlzzxxGrade},c.knskGrade = #{knskGrade}
-        WHERE a.className = #{className}
+        WHERE a.className = #{className} and a.classNum = #{classNum}
         and c.stuId = #{stuId}
     </update>
 
@@ -132,6 +145,13 @@
         from course.Course
         where classId =#{classId}
     </delete>
+
+
+    <select id="haveStuInClass">
+        select stuId,classId
+        from course.Course_choose
+        where stuId=#{stuId} and classId=#{classId}
+    </select>
 
 
 </mapper>

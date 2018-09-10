@@ -14,6 +14,11 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 //@EnableCasClient
 public class Springboot2MybatisDemoApplication extends SpringBootServletInitializer {
 
+    public Springboot2MybatisDemoApplication() {
+        super();
+        setRegisterErrorPageFilter(false); // <- this one
+    }
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Springboot2MybatisDemoApplication.class);

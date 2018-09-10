@@ -31,8 +31,25 @@ public class StudentTablePdfView extends AbstractPdfView {
         System.out.println(tables);
         PdfPTable table = new PdfPTable(8);
 
+
+        boolean[] widthCellB = new boolean[]{false,false,false,false,false,false,false};
+        int[] widthCell = new int[]{1,1,1,1,1,1,1,1};
+        for (int i = 0; i < tables.length; i = i + 2) {
+            String[] t = tables[i];
+            boolean have = false;
+            for(int k =0;k<t.length;k++){
+                if(tables[i][k]!=null & tables[i][k]!=""){
+                    widthCellB[k] = true;
+                }
+            }
+        }
+        for (int j = 0;j<widthCellB.length;j++) {
+            widthCell[j+1]=widthCellB[j]==true?3:1;
+        }
+
+
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{2, 2, 2, 2, 2, 2, 2, 2});
+        table.setWidths(widthCell);
 
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -114,12 +131,12 @@ public class StudentTablePdfView extends AbstractPdfView {
             }
         }
         document.add(table);
-        Rectangle rect = new Rectangle(600, 80, 1000, 120);
+        Rectangle rect = new Rectangle(600, 10, 1000, 120);
 
         PdfContentByte cb = writer.getDirectContent();
         cb.rectangle(rect);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Phrase p = new Phrase("签名:   _________\n时间:   " + df.format(new Date()), textFont);
+        Phrase p = new Phrase("主讲老师签名:   _________\n授课老师签名:   _________\n时间:   " + df.format(new Date()), textFont);
         ColumnText ct = new ColumnText(cb);
         ct.setSimpleColumn(rect);
         ct.addText(p);

@@ -34,6 +34,9 @@ public class ClassDomain {
     private String buttonGroup;
     private String mainLecturer;
     private String classEncode;
+    private String shenQingRenId;
+    private String classStr;
+    private String departName;
 
     public Integer getClassId() {
         return classId;
@@ -253,5 +256,29 @@ public class ClassDomain {
 
     public void setClassSemester(String classSemester) {
         this.classSemester = classSemester;
+    }
+
+    public String getShenQingRenId() {
+        return shenQingRenId;
+    }
+
+    public void setShenQingRenId(String shenQingRenId) {
+        this.shenQingRenId = shenQingRenId;
+    }
+
+    public String getClassStr() {
+        return classStr;
+    }
+
+    public void setClassStr(String classStr) {
+        this.classStr = classStr;
+    }
+
+    public String getDepartName() {
+        return departName;
+    }
+
+    public void setDepartName(String departName) {
+        this.departName = departName;
     }
 }

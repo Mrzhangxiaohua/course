@@ -2,10 +2,7 @@ package com.spc.service.student.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.spc.controller.Base;
-import com.spc.dao.ClassDao;
-import com.spc.dao.GradeDao;
-import com.spc.dao.StudentApplicationDao;
-import com.spc.dao.StudentDao;
+import com.spc.dao.*;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.student.StudentService;
@@ -36,6 +33,9 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
     @Autowired
     private GradeDao gradeDao;
+
+    @Autowired
+    private TimeSwitchDao timeSwitchDao;
 
     @Override
     public String[][] findClasses(String stuId) {
@@ -140,6 +140,7 @@ public class StudentServiceImpl extends Base  implements StudentService  {
         String teaname = (String) map.get("teaname");
         Integer hasWaiGuoYu = (Integer) map.get("hasWaiGuoYu");
 
+        //这个是学生选择的课程
         List<GradeDomain> gradeDomains = gradeDao.selectGrade(88888888, stuId);
 
         System.out.println("\n");
@@ -148,6 +149,8 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
 
         PageHelper.startPage(currentPage, pageSize);
+
+        //这个是全部的课程
         List<ClassDomain> classes = classDao.selectClasses(departId, classname, teaname, teaId, startWeek, endWeek, hasWaiGuoYu,modelsId);
 
 
@@ -160,17 +163,27 @@ public class StudentServiceImpl extends Base  implements StudentService  {
                 for (int i = 0; i < classes.size(); i++) {
                     int classId = classes.get(i).getClassId();
                     if (classId == id) {
-                        classes.get(i).setShowDeleteButton(true);
-                        classes.get(i).setNotShowAddButton(true);
+                        classes.get(i).setShowDeleteButton(true);//显示取消按钮
+                        classes.get(i).setNotShowAddButton(true);//不显示添加按钮
+                    }else if(classId != id & classes.get(i).getClassUpperLimit() == classes.get(i).getClassChooseNum()){
+                        classes.get(i).setShowDeleteButton(false);//显示取消按钮
+                        classes.get(i).setNotShowAddButton(true);//不显示添加按钮
+                    }else if(classId != id & classes.get(i).getClassUpperLimit() != classes.get(i).getClassChooseNum()){
+                        classes.get(i).setShowDeleteButton(false);//显示取消按钮
+                        classes.get(i).setNotShowAddButton(false);//不显示添加按钮
                     }
                 }
             }
         }
+
+
         for (ClassDomain classDomain : classes) {
-            if (classDomain.getClassUpperLimit() == classDomain.getClassChooseNum()) {
-                classDomain.setShowDeleteButton(false);
-                classDomain.setNotShowAddButton(true);
-            }
+
+//            if (classDomain.getClassUpperLimit() == classDomain.getClassChooseNum()) {
+//                classDomain.setShowDeleteButton(false);
+//                classDomain.setNotShowAddButton(true);
+//            }
+            System.out.println(classDomain.isNotShowAddButton()+":"+classDomain.isShowDeleteButton());
             classDomain.setButtonGroup(Boolean.toString(!classDomain.isNotShowAddButton()) + ":" + Boolean.toString(classDomain.isShowDeleteButton()));
             String[] d = classDomain.getClassDateDescription().split(":");
             Integer a = Integer.parseInt(d[0]);
@@ -239,5 +252,10 @@ public class StudentServiceImpl extends Base  implements StudentService  {
             return liM;
         }
 
+    }
+
+    @Override
+    public int getTimeSwtich() {
+        return timeSwitchDao.get();
     }
 }
