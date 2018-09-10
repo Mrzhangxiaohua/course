@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,13 @@ public class CourseController extends Base{
         PageHelper.startPage(currentPage, pageSize);
         List<ClassDomain> classes = classService.findAllClass(departId, classname, teaId, 88888888, 88888888);
         System.out.println(classes);
+//        List<ClassDomain> temps = new ArrayList<>();
         if(classes !=null){
             for (ClassDomain l : classes) {
+//                if(l.getClassChooseNum()==l.getClassUpperLimit()){
+//                    temps.add(l);
+//                }
+//                classes.remove(l);
                 System.out.println(l.getClassDateDescription());
 
                 String[] d = l.getClassDateDescription().split(":");
@@ -62,6 +68,9 @@ public class CourseController extends Base{
                 l.setClassDateDescriptionB(Integer.toString(b));
             }
         }
+//        for(int j=0;j<temps.size();j++){
+//            classes.add(temps.get(j));
+//        }
         Map<String, Object> res = new HashMap<>();
         res.put("status", "SUCCESS");
 

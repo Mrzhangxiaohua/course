@@ -15,12 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service(value = "studentService")
-public class StudentServiceImpl extends Base  implements StudentService  {
+public class StudentServiceImpl extends Base implements StudentService {
 
     @Autowired
     private StudentDao studentDao;
@@ -43,7 +41,7 @@ public class StudentServiceImpl extends Base  implements StudentService  {
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
         String temp[][] = new String[10][7];
         System.out.println(lis);
-        if(!lis.isEmpty()){
+        if (!lis.isEmpty()) {
             for (HashMap<String, Object> li : lis) {
                 System.out.println("=======检测============");
                 System.out.println(li.get("startWeek"));
@@ -70,23 +68,22 @@ public class StudentServiceImpl extends Base  implements StudentService  {
     }
 
 
-
     @Override
-    public int addCourse(int classId,String stuId) {
+    public int addCourse(int classId, String stuId) {
         //首先得到学生id
         boolean weixuan = gradeDao.selectGrade(classId, stuId).isEmpty();
         if (weixuan) {
-            boolean noShijianchongtu  = studentDao.findTimeChongTu(stuId, classId).isEmpty();
-            if(noShijianchongtu){
+            boolean noShijianchongtu = studentDao.findTimeChongTu(stuId, classId).isEmpty();
+            if (noShijianchongtu) {
 
                 ClassDomain course = classDao.findClassById(classId);
                 boolean noChaobiao = course.getClassChooseNum() < course.getClassUpperLimit();
-                if(noChaobiao){
-                    return addyuanzi(classId,stuId);
-                }else{
+                if (noChaobiao) {
+                    return addyuanzi(classId, stuId);
+                } else {
                     return 0;
                 }
-            }else{
+            } else {
                 return 0;
             }
         } else {
@@ -95,13 +92,13 @@ public class StudentServiceImpl extends Base  implements StudentService  {
     }
 
     @Transactional
-    public int addyuanzi(int classId,String stuId){
+    public int addyuanzi(int classId, String stuId) {
 
         classDao.updateChooseNum(classId, 1);
         studentDao.addChooseCourse(stuId, classId);
 
         ClassDomain course = classDao.findClassById(classId);
-        if(course.getClassChooseNum() > course.getClassUpperLimit()){
+        if (course.getClassChooseNum() > course.getClassUpperLimit()) {
             throw new RuntimeException();
         }
         return 0;
@@ -109,7 +106,7 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
     @Transactional
     @Override
-    public int deleteCourse(int classId,String stuId) {
+    public int deleteCourse(int classId, String stuId) {
         if (!gradeDao.selectGrade(classId, stuId).isEmpty()) {
             classDao.updateChooseNum(classId, -1);
             return studentDao.deleteChooseCourse(stuId, classId);
@@ -120,7 +117,7 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
 
     @Override
-    public int addApplication(int classId, int states, String reason, int classNum,String stuId) {
+    public int addApplication(int classId, int states, String reason, int classNum, String stuId) {
         return studentApplicationDao.add(stuId, classId, states, reason, 2, classNum);
     }
 
@@ -149,72 +146,68 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 
 
         PageHelper.startPage(currentPage, pageSize);
-
-        //这个是全部的课程
-        List<ClassDomain> classes = classDao.selectClasses(departId, classname, teaname, teaId, startWeek, endWeek, hasWaiGuoYu,modelsId);
-
+        List<ClassDomain> classes = classDao.selectClasses(departId, classname, teaname, teaId, startWeek, endWeek, hasWaiGuoYu, modelsId);
 
         System.out.println(classes);
+        Set<Integer> haveAddClass = new HashSet<>();
         if (!gradeDomains.isEmpty()) {
             for (int j = 0; j < gradeDomains.size(); j++) {
                 int id = gradeDomains.get(j).getClassId();
                 System.out.println("\n");
                 System.out.printf("id %d", id);
-                for (int i = 0; i < classes.size(); i++) {
-                    int classId = classes.get(i).getClassId();
-                    if (classId == id) {
-                        classes.get(i).setShowDeleteButton(true);//显示取消按钮
-                        classes.get(i).setNotShowAddButton(true);//不显示添加按钮
-                    }else if(classId != id & classes.get(i).getClassUpperLimit() == classes.get(i).getClassChooseNum()){
-                        classes.get(i).setShowDeleteButton(false);//显示取消按钮
-                        classes.get(i).setNotShowAddButton(true);//不显示添加按钮
-                    }else if(classId != id & classes.get(i).getClassUpperLimit() != classes.get(i).getClassChooseNum()){
-                        classes.get(i).setShowDeleteButton(false);//显示取消按钮
-                        classes.get(i).setNotShowAddButton(false);//不显示添加按钮
-                    }
-                }
+                haveAddClass.add(id);
             }
         }
-
-
-        for (ClassDomain classDomain : classes) {
-
-//            if (classDomain.getClassUpperLimit() == classDomain.getClassChooseNum()) {
-//                classDomain.setShowDeleteButton(false);
-//                classDomain.setNotShowAddButton(true);
+        for (int i = 0; i < classes.size(); i++) {
+            int classId = classes.get(i).getClassId();
+            int limit = classes.get(i).getClassUpperLimit();
+            int chooseNum = classes.get(i).getClassChooseNum();
+            if (haveAddClass.contains(classId)) {
+                classes.get(i).setShowDeleteButton(true);//显示取消按钮
+                classes.get(i).setNotShowAddButton(true);//不显示添加按钮
+            } else if (!haveAddClass.contains(classId) & limit == chooseNum) {
+                classes.get(i).setShowDeleteButton(false);//不显示取消按钮
+                classes.get(i).setNotShowAddButton(true);//不显示添加按钮
+            } else if (!haveAddClass.contains(classId) & limit > chooseNum) {
+                classes.get(i).setShowDeleteButton(false);//不显示取消按钮
+                classes.get(i).setNotShowAddButton(false);//显示添加按钮
+            }
+//            if (limit == chooseNum){
+//                Collections.swap(classes,);
 //            }
-            System.out.println(classDomain.isNotShowAddButton()+":"+classDomain.isShowDeleteButton());
+
+        }
+        for (ClassDomain classDomain : classes) {
+            System.out.println(classDomain.isNotShowAddButton() + ":" + classDomain.isShowDeleteButton());
             classDomain.setButtonGroup(Boolean.toString(!classDomain.isNotShowAddButton()) + ":" + Boolean.toString(classDomain.isShowDeleteButton()));
             String[] d = classDomain.getClassDateDescription().split(":");
             Integer a = Integer.parseInt(d[0]);
             Integer b = Integer.parseInt(d[1]);
             classDomain.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b)));
         }
-
         return classes;
     }
+        @Override
+        public Map getClassTime (String stuId){
+            List<Map<String, Object>> li1 = studentDao.getWaiStudyTime(stuId);
+            List<Map<String, Object>> li2 = studentDao.getNotWaiStudyTime(stuId);
 
-    @Override
-    public Map getClassTime(String stuId) {
-        List<Map<String, Object>> li1 = studentDao.getWaiStudyTime(stuId);
-        List<Map<String, Object>> li2 = studentDao.getNotWaiStudyTime(stuId);
+            int sum1 = 0;
+            for (Map<String, Object> l : li1) {
+                int temp = (int) l.get("classTime");
+                sum1 += temp;
+            }
+            int sum2 = 0;
+            for (Map<String, Object> l : li2) {
+                int temp = (int) l.get("classTime");
+                sum2 += temp;
+            }
 
-        int sum1 = 0;
-        for (Map<String, Object> l : li1) {
-            int temp = (int) l.get("classTime");
-            sum1 += temp;
+            Map<String, Object> res = new HashMap<>();
+            res.put("waiguoyu", sum1);
+            res.put("notwaiguoyu", sum2);
+            return res;
         }
-        int sum2 = 0;
-        for (Map<String, Object> l : li2) {
-            int temp = (int) l.get("classTime");
-            sum2 += temp;
-        }
-
-        Map<String, Object> res = new HashMap<>();
-        res.put("waiguoyu", sum1);
-        res.put("notwaiguoyu", sum2);
-        return res;
-    }
 
 
 //    @Override
@@ -236,26 +229,26 @@ public class StudentServiceImpl extends Base  implements StudentService  {
 //    }
 
 
-    @Override
-    public List<HashMap<String,Object>> findAllClassName(int student,String stuId) {
-        if(student==1){
-            List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
-            return lis;
+        @Override
+        public List<HashMap<String, Object>> findAllClassName ( int student, String stuId){
+            if (student == 1) {
+                List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
+                return lis;
 
-        }else{
-            List<HashMap<String,Object>> liM = studentDao.findAllClassName();
-            for (HashMap<String,Object> aM:liM){
-                String className = (String) aM.get("className");
-                String classNum = Integer.toString((Integer) aM.get("classNum"));
-                aM.put("classStr",className+"("+classNum+"班)");
+            } else {
+                List<HashMap<String, Object>> liM = studentDao.findAllClassName();
+                for (HashMap<String, Object> aM : liM) {
+                    String className = (String) aM.get("className");
+                    String classNum = Integer.toString((Integer) aM.get("classNum"));
+                    aM.put("classStr", className + "(" + classNum + "班)");
+                }
+                return liM;
             }
-            return liM;
+
         }
 
+        @Override
+        public int getTimeSwtich () {
+            return timeSwitchDao.get();
+        }
     }
-
-    @Override
-    public int getTimeSwtich() {
-        return timeSwitchDao.get();
-    }
-}

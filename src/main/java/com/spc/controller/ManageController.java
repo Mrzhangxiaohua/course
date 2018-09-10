@@ -466,8 +466,8 @@ public class ManageController extends Base{
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
-//            System.out.println(obj);
             String stuId = obj.getString("stuId");
+            System.out.println("==============="+stuId);
 //            String stuName = obj.getString("stuName");
             String classStr = obj.getString("classStr");
             manageService.addCourseStudent(stuId, classStr);

@@ -8,6 +8,7 @@ import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.model.CourseTableExcelDomain;
+import com.spc.model.UserDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
 import com.spc.service.teacher.TeacherService;
@@ -458,6 +459,7 @@ public class TeacherController extends Base {
     @RequestMapping(value = "/store/score1", method = RequestMethod.POST)
     @ResponseBody
     public int storeGrade1(HttpServletRequest request) {
+        tianjiaMap(request);
         Map map = (Map) request.getSession(false).getAttribute("updatescore1");
         for (Object i : map.keySet()) {
             if (!i.toString().equals("operator")) {
@@ -477,6 +479,7 @@ public class TeacherController extends Base {
     @RequestMapping(value = "/store/score2", method = RequestMethod.POST)
     @ResponseBody
     public int storeGrade2(HttpServletRequest request) {
+        tianjiaMap(request);
         Map map = (Map) request.getSession(false).getAttribute("updatescore2");
         for (Object i : map.keySet()) {
             if (!i.toString().equals("operator")) {
@@ -496,6 +499,7 @@ public class TeacherController extends Base {
     @RequestMapping(value = "/store/score3", method = RequestMethod.POST)
     @ResponseBody
     public int storeGrade3(HttpServletRequest request) {
+        tianjiaMap(request);
         Map map = (Map) request.getSession(false).getAttribute("updatescore3");
         for (Object i : map.keySet()) {
             if (!i.toString().equals("operator")) {
@@ -516,6 +520,19 @@ public class TeacherController extends Base {
     @RequestMapping(value = "/issue/grade1", method = RequestMethod.POST)
     @ResponseBody
     public int issueGrade1(HttpServletRequest request) {
+        Map map = (Map) request.getSession(false).getAttribute("updatescore1");
+        for (Object i : map.keySet()) {
+            if (!i.toString().equals("operator")) {
+                String[] strs = i.toString().split(":");
+                String className = strs[0];
+                String classNum = strs[1];
+                String stuId = strs[2];
+                Map scoreMap = (Map) map.get(i);
+                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
+                int knskGrade = (int) scoreMap.get("knskGrade");
+                classService.updateScore1(className, Integer.parseInt(classNum), stuId, wlzzxxGrade, knskGrade);
+            }
+        }
         String json = RequestPayload.getRequestPayload(request);
         System.out.println(json);
         try {
@@ -533,6 +550,21 @@ public class TeacherController extends Base {
     @ResponseBody
     public int issueGrade2(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
+
+        Map map = (Map) request.getSession(false).getAttribute("updatescore2");
+        for (Object i : map.keySet()) {
+            if (!i.toString().equals("operator")) {
+                String[] strs = i.toString().split(":");
+                String className = strs[0];
+                String classNum = strs[1];
+                String stuId = strs[2];
+                Map scoreMap = (Map) map.get(i);
+                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
+
+                classService.updateScore2(className, Integer.parseInt(classNum), stuId, xbsjGrade);
+            }
+        }
+
         System.out.println(json);
         try {
             JSONObject obj = new JSONObject(json);
@@ -546,6 +578,21 @@ public class TeacherController extends Base {
     @RequestMapping(value = "/issue/grade3", method = RequestMethod.POST)
     @ResponseBody
     public int issueGrade3(HttpServletRequest request) {
+        Map map = (Map) request.getSession(false).getAttribute("updatescore3");
+        for (Object i : map.keySet()) {
+            if (!i.toString().equals("operator")) {
+                String[] strs = i.toString().split(":");
+                String className = strs[0];
+                String classNum = strs[1];
+                String stuId = strs[2];
+                Map scoreMap = (Map) map.get(i);
+                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
+                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
+                int knskGrade = (int) scoreMap.get("knskGrade");
+                classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade,wlzzxxGrade,knskGrade);
+            }
+        }
+
         String json = RequestPayload.getRequestPayload(request);
         System.out.println(json);
         try {
@@ -558,4 +605,15 @@ public class TeacherController extends Base {
         return 0;
     }
 
+    void tianjiaMap(HttpServletRequest request) {
+        if (request.getSession().getAttribute("updatescore1") == null ||
+                request.getSession().getAttribute("updatescore2") == null) {
+            Map updateScore = new HashMap<>();
+            updateScore.put("operator", request.getSession().getAttribute("username"));
+            HttpSession httpSession = request.getSession();
+
+            httpSession.setAttribute("updatescore1", updateScore);
+            httpSession.setAttribute("updatescore2", updateScore);
+        }
+    }
 }

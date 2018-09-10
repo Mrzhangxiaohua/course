@@ -99,7 +99,8 @@ public class ManageServiceImpl implements ManageService {
     @Override
     @Transactional
     public int  chooseCourse(int classId,String stuId){
-        if(classDao.haveStuInClass(classId,stuId)==null){
+        System.out.println(classDao.haveStuInClass(classId,stuId));
+        if(classDao.haveStuInClass(classId,stuId).isEmpty()){
             classDao.updateChooseNum(classId, 1);
             studentDao.addChooseCourse(stuId, classId);
         }
@@ -188,6 +189,7 @@ public class ManageServiceImpl implements ManageService {
         String className = strs[0];
         Integer classNum = Integer.parseInt(strs[1]);
         int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
+        System.out.println("run here ="+classId);
         chooseCourse(classId,stuId);
         return 0;
     }

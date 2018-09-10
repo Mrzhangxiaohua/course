@@ -147,7 +147,7 @@
     </delete>
 
 
-    <select id="haveStuInClass">
+    <select id="haveStuInClass" resultType="map">
         select stuId,classId
         from course.Course_choose
         where stuId=#{stuId} and classId=#{classId}
