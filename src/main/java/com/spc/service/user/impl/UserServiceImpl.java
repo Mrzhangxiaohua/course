@@ -39,7 +39,11 @@ public class UserServiceImpl implements UserService {
 //    }
     @Override
     public boolean addUser(UserDomain user) {
-        userDao.insert(user);
+        if(userDao.findUsersById(user.getStuId())==null){
+            userDao.insert(user);
+        }else{
+            userDao.udpate(user);
+        }
         return true;
     }
 

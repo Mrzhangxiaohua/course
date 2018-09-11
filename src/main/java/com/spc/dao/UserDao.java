@@ -13,6 +13,7 @@ import java.util.Map;
 public interface UserDao {
 
     int insert(UserDomain user);
+    int udpate(UserDomain user);
 //
 //    @Insert("insert into Role_user(roleId, uId) values(#{roleId}, #{uId})")
 //    int insertRole(@Param("roleId") Integer roleId, @Param("uId") Integer uId);

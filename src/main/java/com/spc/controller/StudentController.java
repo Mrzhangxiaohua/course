@@ -134,6 +134,15 @@ public class StudentController extends Base{
         return 0;
     }
 
+    /**
+     * 学生端：查询学生的学分
+     * @param pageNum
+     * @param pageSize
+     * @param stuId
+     * @param classId
+     * @param session
+     * @return
+     */
     @RequestMapping("/select/grade")
     @ResponseBody
     public List<GradeDomain> selectGrade(
@@ -143,7 +152,6 @@ public class StudentController extends Base{
             @RequestParam(required = false, defaultValue = "88888888") Integer classId,
     HttpSession session) {
 
-//        PageHelper.startPage(pageNum,pageSize);
         stuId = (String) session.getAttribute("userId");
         return gradeService.selectGrade(classId, stuId);
     }
@@ -256,6 +264,10 @@ public class StudentController extends Base{
         return res;
     }
 
+    /**
+     * 学生端查询开关信息，主要用于显示开关
+     * @return
+     */
     @RequestMapping("/get/timeswitch")
     @ResponseBody
     public Map getTimeSwitch(){
@@ -263,6 +275,4 @@ public class StudentController extends Base{
         res.put("timeSwitch",studentService.getTimeSwtich());
         return res;
     }
-
-
 }

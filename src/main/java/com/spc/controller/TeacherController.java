@@ -103,6 +103,13 @@ public class TeacherController extends Base {
         return resList;
     }
 
+    /**
+     * 主要用于教师端的教授课程显示
+     * @param currentPage
+     * @param pageSize
+     * @param session
+     * @return
+     */
     @RequestMapping("teach/course2")
     @ResponseBody
     public Map getTeachCourse2(
