@@ -4,8 +4,10 @@ package com.spc.model;
 import com.spc.util.CourseDateTrans;
 import org.apache.ibatis.type.Alias;
 
+import java.io.Serializable;
+
 @Alias("ClassDomain")
-public class ClassDomain {
+public class ClassDomain implements Serializable {
 
     private String teacherInfo;
     private String courseInfo;

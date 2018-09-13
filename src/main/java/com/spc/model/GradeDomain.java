@@ -1,6 +1,8 @@
 package com.spc.model;
 
-public class GradeDomain {
+import java.io.Serializable;
+
+public class GradeDomain  implements Serializable {
     private Integer chooseId;
     private String stuId;
     private String className;

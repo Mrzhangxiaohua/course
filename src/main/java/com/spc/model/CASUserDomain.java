@@ -3,10 +3,11 @@ package com.spc.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-public class CASUserDomain implements UserDetails {
+public class CASUserDomain implements UserDetails ,Serializable {
 
     private String userName;
 

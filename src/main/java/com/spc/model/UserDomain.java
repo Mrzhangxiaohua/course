@@ -1,5 +1,6 @@
 package com.spc.model;
 
+import java.io.Serializable;
 import java.lang.Integer;
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Alias("UserDomain") //起别名
-public class UserDomain {
+public class UserDomain implements Serializable {
 
     private Integer uid;
 

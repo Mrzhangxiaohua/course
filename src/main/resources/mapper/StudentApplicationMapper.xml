@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.spc.dao.StudentApplicationDao">
+
+    <cache/>
     <sql id="BASE_TABLE">
         StudentApplication
     </sql>
@@ -69,7 +71,7 @@
         </where>
     </select>
 
-    <update id="checked">
+    <update id="checked"  flushCache="true">
         update  course.StudentApplication
         set checked = #{checked}
         where id=#{id} and checked=2

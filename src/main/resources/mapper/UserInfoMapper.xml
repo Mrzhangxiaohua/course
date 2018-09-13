@@ -3,7 +3,6 @@
 
 <mapper namespace="com.spc.dao.UserInfoDao">
 
-
     <insert id="addInformation" parameterType="com.spc.service.xjtu.webservice.info.xsd.UserInfoDto">
           insert ignore  into  course.XjtuUserInfo (birthday,classid,dep,depid,email,
           gender, idcardname, idcardno,marriage, mobile,nation, nationplace,

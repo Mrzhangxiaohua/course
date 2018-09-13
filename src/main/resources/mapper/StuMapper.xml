@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.spc.dao.StudentDao">
+
+    <cache/>
     <sql id="BASE_COLUMN">
       stuId,className,classDateDescription,classPlace,teaName,classNum,startWeek,endWeek
     </sql>
@@ -17,10 +19,10 @@
         </where>
     </select>
 
-    <insert id="addChooseCourse" useGeneratedKeys="true" keyProperty="chooseId">
+    <insert id="addChooseCourse" useGeneratedKeys="true" keyProperty="chooseId" flushCache="true">
         insert into course.Course_choose(stuId, classId,wlzzxxGrade,knskGrade,xbsjGrade) values(#{stuId}, #{classId},0,0,0)
     </insert>
-    <delete id="deleteChooseCourse">
+    <delete id="deleteChooseCourse"  flushCache="true">
        delete from course.Course_choose where stuId=#{stuId} and classId =#{classId};
    </delete>
 
@@ -92,7 +94,7 @@
         on d.classDateDescription = a.classDateDescription
     </select>
 
-    <delete id="deleteCourse">
+    <delete id="deleteCourse"  flushCache="true">
         delete
         from course.Course_choose cc
         left join Course c
@@ -100,7 +102,7 @@
         where c.className=#{className} and cc.stuId = #{stuId}
     </delete>
 
-    <update id="addClassNum">
+    <update id="addClassNum"  flushCache="true">
       INSERT INTO course.Course_choose (stuId,classId,0) values (#{stuId},SELECT classId FROM course.Course where classNum = #{classNum} and className = #{className} )
     </update>
 

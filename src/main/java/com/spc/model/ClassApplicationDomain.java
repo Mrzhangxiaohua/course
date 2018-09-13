@@ -1,9 +1,9 @@
 package com.spc.model;
 
-import java.sql.Timestamp;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
-public class ClassApplicationDomain {
+public class ClassApplicationDomain  implements Serializable {
 
     private int id;
     private String teaId;

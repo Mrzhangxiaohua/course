@@ -1,9 +1,10 @@
 package com.spc.model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class StudentApplicationDomain {
+public class StudentApplicationDomain implements Serializable {
 
     private int id;
     private String stuId;

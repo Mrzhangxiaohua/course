@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.spc.dao.UserDao">
-
+    <cache/>
     <!--<resultMap id="userMap" type="com.spc.model.UserDomain">-->
     <!--<id property="uid" column="uid"/>-->
     <!--<result property="userName" column="userName"/>-->
@@ -23,24 +23,22 @@
     <!--on a.roleId = r.roleId-->
     <!--where a.uid = #{id}-->
     <!--</select>-->
-
-
     <select id="findUsersById" resultType="com.spc.model.UserDomain">
       SELECT *
       FROM course.User
       where  stuId= #{stuId}
   </select>
     
-    <update id="udpate" parameterType="com.spc.model.UserDomain">
+    <update id="udpate" parameterType="com.spc.model.UserDomain" flushCache="true">
         update course.User
         set role=#{role}
         where stuId =#{stuId}
     </update>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="uid" parameterType="com.spc.model.UserDomain"
+    <insert id="insert" useGeneratedKeys="true" keyProperty="uid" parameterType="com.spc.model.UserDomain" flushCache="true"
             keyColumn="uid">
       insert  into  course.User (stuId, role) values(#{stuId}, #{role})
-  </insert>
+    </insert>
 
 
 </mapper>

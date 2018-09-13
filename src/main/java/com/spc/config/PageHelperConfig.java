@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Properties;
 
-/**
- * 分页插件的配置
- * Created by Donghua.Chen on 2018/4/20.
- */
+
 @Configuration
 public class PageHelperConfig {
 

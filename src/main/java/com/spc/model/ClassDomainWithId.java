@@ -1,6 +1,8 @@
 package com.spc.model;
 
-public class ClassDomainWithId extends ClassDomain {
+import java.io.Serializable;
+
+public class ClassDomainWithId extends ClassDomain implements Serializable {
     private  int id;
 
     public int getId() {
