@@ -7,6 +7,7 @@ import com.spc.service.user.UserService;
 import com.spc.service.webservice.GetInfo;
 import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 import com.spc.util.AuthMess;
+import com.spc.util.StudentTimeLoad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,8 @@ public class MainController extends Base{
 
     @Autowired
     GetInfo getInfo;
+
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(HttpServletRequest request) {
@@ -65,6 +68,7 @@ public class MainController extends Base{
         if (baseInfo.getUserRole().equals("学生")) {
             logger.info("登录的是学生端");
             res = "student/index";
+
         } else if (baseInfo.getUserRole().equals("教职工")) {//这个是教职工的情况
             UserDomain userDomain = userService.findUsersById(userDetails.getUserno());
 
@@ -102,9 +106,5 @@ public class MainController extends Base{
         logger.info("{}退出了",request.getSession().getAttribute("username"));
         return "/psc/logout";
     }
-//    @RequestMapping("error")
-//    public String login(HttpServletRequest request) {
-//        logger.info("{}退出了",request.getSession().getAttribute("username"));
-//        return "error";
-//    }
+
 }

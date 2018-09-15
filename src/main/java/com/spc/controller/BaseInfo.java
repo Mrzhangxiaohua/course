@@ -4,14 +4,17 @@ import com.spc.util.AuthMess;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+/**
+ * 登录学生的基础信息类
+ */
 
 public class BaseInfo {
     private Authentication authentication;
-    private  String username;
-    private  String userId;
-    private  String userRole;
+    private String username;
+    private String userId;
+    private String userRole;
 
-    BaseInfo(){
+    BaseInfo() {
         this.authentication = SecurityContextHolder.getContext().getAuthentication();
         this.username = AuthMess.userName(authentication);
         this.userId = AuthMess.userId(authentication);
@@ -19,8 +22,9 @@ public class BaseInfo {
     }
 
     public Authentication getAuthentication() {
-        return  authentication;
+        return authentication;
     }
+
     public String getUsername() {
         return username;
     }
@@ -36,7 +40,5 @@ public class BaseInfo {
     public String getUserRole() {
         return userRole;
     }
-
-
 
 }

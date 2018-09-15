@@ -6,6 +6,7 @@ import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.model.StudentApplicationDomain;
 import com.spc.service.manage.ManageService;
+import com.spc.util.MakeTimeTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,53 +35,54 @@ public class ManageServiceImpl implements ManageService {
     @Override
     public String[][] findClasses(String stuId) {
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
-        String temp[][] = new String[10][7];
-        for (HashMap<String, Object> li : lis) {
-            String date = (String) li.get("classDateDescription");
-            String classPlace = (String) li.get("classPlace");
-            String teaName = (String) li.get("teaName");
-            String className = (String) li.get("className");
-            String startWeek = Integer.toString((Integer) li.get("startWeek"));
-            String endWeek = Integer.toString((Integer) li.get("endWeek"));
-            String classNum = Integer.toString((Integer) li.get("classNum"));
-
-            String[] ints = date.split(":");
-            Integer r = ints[0].toCharArray()[0] - '0';
-            Integer l = ints[1].toCharArray()[0] - '0';
-
-            String context = className + ',' + classPlace + ',' + teaName + ',' + startWeek + "-" + endWeek + ',' + classNum;
-
-            temp[(r - 1) * 2][l - 1] = context;
-            temp[(r - 1) * 2 + 1][l - 1] = context;
-        }
-        return temp;
+//        String temp[][] = new String[10][7];
+//        for (HashMap<String, Object> li : lis) {
+//            String date = (String) li.get("classDateDescription");
+//            String classPlace = (String) li.get("classPlace");
+//            String teaName = (String) li.get("teaName");
+//            String className = (String) li.get("className");
+//            String startWeek = Integer.toString((Integer) li.get("startWeek"));
+//            String endWeek = Integer.toString((Integer) li.get("endWeek"));
+//            String classNum = Integer.toString((Integer) li.get("classNum"));
+//
+//            String[] ints = date.split(":");
+//            Integer r = ints[0].toCharArray()[0] - '0';
+//            Integer l = ints[1].toCharArray()[0] - '0';
+//
+//            String context = className + ',' + classPlace + ',' + teaName + ',' + startWeek + "-" + endWeek + ',' + classNum;
+//
+//            temp[(r - 1) * 2][l - 1] = context;
+//            temp[(r - 1) * 2 + 1][l - 1] = context;
+//        }
+//        return temp;
+        return MakeTimeTable.makeBigTable(lis);
     }
 
     @Override
     public String[][] bigTable(String shenQingRenId, String shenQingRenName,String teaName) {
 
         List<HashMap<String, Object>> lis = classDao.findAllClasseSimpleMess( shenQingRenId,  shenQingRenName, teaName);
-        String temp[][] = new String[10][7];
-        for (HashMap<String, Object> li : lis) {
-//            System.out.println(li);
-            String date = (String) li.get("classDateDescription");
-            String classPlace = (String) li.get("classPlace");
-            String mainLecturer = (String) li.get("mainLecturer");
-            String teacherName = (String) li.get("teaName");
-            String startWeek = Integer.toString((Integer) li.get("startWeek"));
-            String endWeek = Integer.toString((Integer) li.get("endWeek"));
-            String classNum = Integer.toString((Integer) li.get("classNum"));
-            String className = (String) li.get("className");
-
-            String[] ints = date.split(":");
-            Integer r = ints[0].toCharArray()[0] - '0';
-            Integer l = ints[1].toCharArray()[0] - '0';
-
-            String context = "★课程：" + className + ',' + "教室：" + classPlace + ',' + "授课教师：" + teacherName + ','+ "主讲教师：" + mainLecturer + ',' + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
-            temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
-            temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
-        }
-        return temp;
+//        String temp[][] = new String[10][7];
+//        for (HashMap<String, Object> li : lis) {
+////            System.out.println(li);
+//            String date = (String) li.get("classDateDescription");
+//            String classPlace = (String) li.get("classPlace");
+//            String mainLecturer = (String) li.get("mainLecturer");
+//            String teacherName = (String) li.get("teaName");
+//            String startWeek = Integer.toString((Integer) li.get("startWeek"));
+//            String endWeek = Integer.toString((Integer) li.get("endWeek"));
+//            String classNum = Integer.toString((Integer) li.get("classNum"));
+//            String className = (String) li.get("className");
+//
+//            String[] ints = date.split(":");
+//            Integer r = ints[0].toCharArray()[0] - '0';
+//            Integer l = ints[1].toCharArray()[0] - '0';
+//
+//            String context = "★课程：" + className + ',' + "教室：" + classPlace + ',' + "授课教师：" + teacherName + ','+ "主讲教师：" + mainLecturer + ',' + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
+//            temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
+//            temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
+//        }
+        return MakeTimeTable.makeBigTable(lis);
     }
 
     @Override

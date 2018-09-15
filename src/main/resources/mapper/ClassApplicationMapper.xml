@@ -3,11 +3,12 @@
 
 <mapper namespace="com.spc.dao.ClassApplicationDao">
 
+    <cache></cache>
     <sql id="BASE_TABLE">
        ClassApplication
     </sql>
 
-    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.spc.model.ClassApplicationDomain">
+    <insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="com.spc.model.ClassApplicationDomain" flushCache="true">
         insert into
         <include refid="BASE_TABLE"/>
         (className,mainLecturer,teacherInfo,courseInfo,classTime,checked,shenQingRenId,shenQingRenName,classModuleNum)
@@ -73,14 +74,14 @@
     </select>
 
 
-    <update id="checkedClass">
+    <update id="checkedClass" flushCache="true">
         update  course.ClassApplication
         set checked = #{checked}
         where id=#{id} and checked=2
 --         只有未审核的才能改变状态
     </update>
     
-    <delete id="deleteClassApp">
+    <delete id="deleteClassApp" flushCache="true">
         delete from course.ClassApplication
         where course.ClassApplication.id = #{id}
     </delete>

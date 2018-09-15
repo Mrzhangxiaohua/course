@@ -8,12 +8,12 @@ import com.github.pagehelper.PageHelper;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.model.CourseTableExcelDomain;
-import com.spc.model.UserDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
 import com.spc.service.teacher.TeacherService;
 
 import com.spc.util.CourseDateTrans;
+import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONException;
@@ -387,11 +387,16 @@ public class TeacherController extends Base {
         return 0;
     }
 
+    /**
+     * 教师端：根据教师工号下载课表
+     * @param session
+     * @param response
+     * @return
+     */
     @RequestMapping("/download/courseTable")
-    public ModelAndView downloadCourseTable(HttpSession session) {
+    public ModelAndView downloadCourseTable(HttpSession session,HttpServletResponse response) {
         String teaId = (String) session.getAttribute("userId");
         String[][] tables = teacherService.findCourseTable(teaId);
-        System.out.println(tables);
 
         Map res = new HashMap();
 
@@ -399,10 +404,19 @@ public class TeacherController extends Base {
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "wider");
+        model.put("student",0);
+
+        //根据学生的名称设置pdf的文件名
+        response = ResponseWrap.setName(response, (String) session.getAttribute("username")+"的课表","pdf");
 
         return new ModelAndView(new StudentTablePdfView(), model);
     }
 
+    /**
+     * 根据教师id下载课表
+     * @param response
+     * @param session
+     */
     @RequestMapping("/download/courseTableExcel")
     public void downloadCourseTableExcel(HttpServletResponse response, HttpSession session) {
         String teaId = (String) session.getAttribute("userId");
@@ -413,8 +427,8 @@ public class TeacherController extends Base {
             liC.add(new CourseTableExcelDomain(i / 2, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
                     , tables[i][4], tables[i][5], tables[i][6]));
         }
-        response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("Content-Disposition", "attachment;filename=Table.xls");
+
+        response = ResponseWrap.setName(response, (String) session.getAttribute("username")+"的课表","xls");
 
         ExportParams params = new ExportParams();
         params.setTitle("课表");

@@ -13,7 +13,7 @@
           #{tutoremployeeid},#{userid}, #{username}, #{userno},#{usertype})
     </insert>
     
-    <select id="selectById" resultType="com.spc.service.xjtu.webservice.info.xsd.UserInfoDto">
+    <select id="selectById" resultType="com.spc.service.xjtu.webservice.info.xsd.UserInfoDto" useCache="false">
         select birthday,classid,dep,depid,email,
           gender, idcardname, idcardno,marriage, mobile,nation, nationplace,
           polity,roomnumber, roomphone, speciality,studenttype,

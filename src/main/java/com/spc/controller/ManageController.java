@@ -7,6 +7,7 @@ import com.spc.model.*;
 import com.spc.service.classes.ClassService;
 import com.spc.service.manage.ManageService;
 import com.spc.util.RequestPayload;
+import com.spc.util.ResponseWrap;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
 import org.json.JSONArray;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -344,12 +347,15 @@ public class ManageController extends Base{
     }
 
     /**
-     * 根据课程classStr下载课表
+     * 根据课程classStr下载学生名单
      * @param classStr
      * @return
      */
     @RequestMapping("/download/table")
-    public ModelAndView downloadTable(@RequestParam(required = false, defaultValue = "") String classStr
+    public ModelAndView downloadTable(
+            @RequestParam(required = false, defaultValue = "") String classStr,
+            HttpServletResponse response,
+            HttpSession session
     ) {
         Map<String, Object> model = new HashMap<>();
         try {
@@ -369,6 +375,9 @@ public class ManageController extends Base{
             res.put("data", students);
             model.put("res", res);
             model.put("style", "wider");
+            model.put("name", classStr);
+            response = ResponseWrap.setName(response, className+String.valueOf(classNum)+"班人名单","pdf");
+
 
         }catch (Exception e){
             System.out.println(e);
@@ -377,14 +386,16 @@ public class ManageController extends Base{
     }
 
     /**
-     * 下载大课表
+     * 管理端：下载大课表
      * @return
      */
     @RequestMapping("/download/bigTable")
     public ModelAndView downloadTable(
             @RequestParam(required = false, defaultValue = "")String  shenQingRenId,
             @RequestParam(required = false, defaultValue = "") String  shenQingRenName,
-            @RequestParam(required = false, defaultValue = "") String  teaName
+            @RequestParam(required = false, defaultValue = "") String  teaName,
+            HttpServletResponse response,
+            HttpSession session
     ) {
         String[][] strs = manageService.bigTable(shenQingRenId,shenQingRenName,teaName);
         Map<String, Object> res = new HashMap<String, Object>();
@@ -393,6 +404,10 @@ public class ManageController extends Base{
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "wider");
+        model.put("student", 1);
+        String fileName = teaName==""?"all":teaName;
+
+        response = ResponseWrap.setName(response, fileName+"的课表","pdf");
         return new ModelAndView(new StudentTablePdfView(), model);
     }
 

@@ -2,6 +2,7 @@ package com.spc.view;
 
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +36,7 @@ public abstract class AbstractPdfView extends AbstractView {
     @Override
     protected final void renderMergedOutputModel(Map<String, Object> model,
                                                  HttpServletRequest request, HttpServletResponse response) throws Exception {
+
 
         ByteArrayOutputStream baos = createTemporaryOutputStream();
 

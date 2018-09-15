@@ -1,13 +1,18 @@
 package com.spc.controller;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.github.pagehelper.Page;
 import com.spc.model.ClassDomain;
+import com.spc.model.CourseTableExcelDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
 import com.spc.util.RequestPayload;
+import com.spc.util.ResponseWrap;
 import com.spc.view.StudentScorePdfView;
 import com.spc.view.StudentTablePdfView;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,12 +175,12 @@ public class StudentController extends Base{
     }
 
     /**
-     * 学生端：根据验证的学生id下载课表
+     * 学生端：根据验证的学生id下载课表到pdf
      *
      * @return
      */
     @RequestMapping("/download/table")
-    public ModelAndView downloadCourseTable(HttpSession session) {
+    public ModelAndView downloadCourseTable(HttpSession session, HttpServletResponse response) {
 
 
         String[][] tables = studentService.findClasses((String) session.getAttribute("userId"));
@@ -182,10 +190,45 @@ public class StudentController extends Base{
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "higher");
-        return new ModelAndView(new StudentTablePdfView(), model);
-    }
+        model.put("student",1);
 
-    ;
+        //根据学生的名称设置pdf的文件名
+        response = ResponseWrap.setName(response, (String) session.getAttribute("username")+"的课表","pdf");
+
+        return new ModelAndView(new StudentTablePdfView(), model);
+    };
+
+    /**
+     * 学生端：根据验证的学生id下载课表到excel
+     *
+     * @return
+     */
+    @RequestMapping("/download/excelTable")
+    public void downloadCourseTableExcel(HttpSession session,HttpServletResponse response) {
+
+
+        String[][] tables = studentService.findClasses((String) session.getAttribute("userId"));
+
+        List<CourseTableExcelDomain> liC = new ArrayList<>();
+        for (int i = 0; i < tables.length; i = i + 2) {
+            liC.add(new CourseTableExcelDomain(i / 2, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
+                    , tables[i][4], tables[i][5], tables[i][6]));
+        }
+
+        //设置课表的名称
+        response =  ResponseWrap.setName(response, (String) session.getAttribute("username")+"的课表","xls");
+
+        ExportParams params = new ExportParams();
+        params.setTitle("课表");
+
+        Workbook workbook = ExcelExportUtil.exportExcel(params, CourseTableExcelDomain.class, liC);
+
+        try {
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    };
 
     /**
      * 学生端：根据验证的学生id下载成绩单

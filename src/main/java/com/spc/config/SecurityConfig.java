@@ -52,8 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .regexMatchers("/none").authenticated()//其余的所有请求都需要验
                 .and()
                 .logout()
+                .logoutUrl("/logout")
                 .permitAll()
-                .logoutSuccessUrl("/logout");
+                .logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
 
 
         http.exceptionHandling().authenticationEntryPoint(casAuthenticationEntryPoint())

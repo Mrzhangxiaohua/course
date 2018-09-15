@@ -26,6 +26,7 @@ public class StudentTablePdfView extends AbstractPdfView {
 //        document.setPageSize(pageSize);
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
+        int studentSwitch = (int) model.get("student");
         String[][] tables = (String[][]) map.get("data");
 
         System.out.println(tables);
@@ -132,14 +133,16 @@ public class StudentTablePdfView extends AbstractPdfView {
         }
         document.add(table);
         Rectangle rect = new Rectangle(600, 10, 1000, 120);
-
         PdfContentByte cb = writer.getDirectContent();
         cb.rectangle(rect);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Phrase p = new Phrase("主讲老师签名:   _________\n授课老师签名:   _________\n时间:   " + df.format(new Date()), textFont);
         ColumnText ct = new ColumnText(cb);
-        ct.setSimpleColumn(rect);
-        ct.addText(p);
-        ct.go();
+
+        if(studentSwitch != 1) {
+            ct.setSimpleColumn(rect);
+            ct.addText(p);
+            ct.go();
+        }
     }
 }

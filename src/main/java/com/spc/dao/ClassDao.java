@@ -5,12 +5,17 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface ClassDao {
 
     void insert(ClassDomain record);
 
     void delete(@Param("classId") int classId);
+
+    List<Map> findStudentClassTime(@Param("stuId") String stuId);
+
+    Map findClassTimeById(@Param("classId") int classId);
 
     List<ClassDomain> selectClasses(@Param("departId") Integer departId, @Param("className") String className,
                                     @Param("teaName") String teaName, @Param("teaId") String teaId, @Param("startWeek") int startWeek,

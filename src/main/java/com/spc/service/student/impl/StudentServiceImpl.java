@@ -6,8 +6,7 @@ import com.spc.dao.*;
 import com.spc.model.ClassDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.student.StudentService;
-import com.spc.util.AuthMess;
-import com.spc.util.CourseDateTrans;
+import com.spc.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,47 +34,60 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Autowired
     private TimeSwitchDao timeSwitchDao;
 
+
+
     @Override
     public String[][] findClasses(String stuId) {
 //        int stuId = Integer.parseInt(authMess.userDetails().getUserid());
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
-        String temp[][] = new String[10][7];
-        System.out.println(lis);
-        if (!lis.isEmpty()) {
-            for (HashMap<String, Object> li : lis) {
-                System.out.println("=======检测============");
-                System.out.println(li.get("startWeek"));
-                String date = (String) li.get("classDateDescription");
-                String classPlace = (String) li.get("classPlace");
-                String teaName = (String) li.get("teaName");
-                System.out.println(li.get("startWeek"));
-                String startWeek = Integer.toString((Integer) li.get("startWeek"));
-                String endWeek = Integer.toString((Integer) li.get("endWeek"));
-                String classNum = Integer.toString((Integer) li.get("classNum"));
-                String className = (String) li.get("className");
-
-                String[] ints = date.split(":");
-                Integer r = ints[0].toCharArray()[0] - '0';
-                Integer l = ints[1].toCharArray()[0] - '0';
-
-                String context = "★课程：" + className + ',' + "教室：" + classPlace + ',' + "教师：" + teaName + ',' + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
-                temp[(l - 1) * 2][r - 1] = context;
-                temp[(l - 1) * 2 + 1][r - 1] = context;
-            }
-        }
-
-        return temp;
+//        String temp[][] = new String[10][7];
+//        System.out.println(lis);
+//        if (!lis.isEmpty()) {
+//            for (HashMap<String, Object> li : lis) {
+//                System.out.println("=======检测============");
+//                System.out.println(li.get("startWeek"));
+//                String date = (String) li.get("classDateDescription");
+//                String classPlace = (String) li.get("classPlace");
+//                String teaName = (String) li.get("teaName");
+//                System.out.println(li.get("startWeek"));
+//                String startWeek = Integer.toString((Integer) li.get("startWeek"));
+//                String endWeek = Integer.toString((Integer) li.get("endWeek"));
+//                String classNum = Integer.toString((Integer) li.get("classNum"));
+//                String className = (String) li.get("className");
+//
+//                String[] ints = date.split(":");
+//                Integer r = ints[0].toCharArray()[0] - '0';
+//                Integer l = ints[1].toCharArray()[0] - '0';
+//
+//                String context = "★课程：" + className + ',' + "教室：" + classPlace + ',' + "教师：" + teaName + ',' + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
+//                temp[(l - 1) * 2][r - 1] = context;
+//                temp[(l - 1) * 2 + 1][r - 1] = context;
+//            }
+//        }
+//
+//        return temp;
+        return MakeTimeTable.makeBigTable(lis);
     }
 
+    private  boolean timechongtu(String stuId, int classId){
+        List<Map> maps = classDao.findStudentClassTime(stuId);
+        List<long[]> times = StudentTimeLoad.StudentTimeLoad(maps);
+        Map map =classDao.findClassTimeById(classId);
+        List<long[]> classTime = StudentTimeLoad.TimeLoad(map);
+
+        return TimeConflict.confilct(times,classTime);
+    }
 
     @Override
     public int addCourse(int classId, String stuId) {
         //首先得到学生id
         boolean weixuan = gradeDao.selectGrade(classId, stuId).isEmpty();
         if (weixuan) {
-            boolean noShijianchongtu = studentDao.findTimeChongTu(stuId, classId).isEmpty();
-            if (noShijianchongtu) {
+////            boolean noShijianchongtu = studentDao.findTimeChongTu(stuId, classId).isEmpty();
 
+            boolean chongtu = timechongtu(stuId,classId);
+
+            if (!chongtu) {
                 ClassDomain course = classDao.findClassById(classId);
                 boolean noChaobiao = course.getClassChooseNum() < course.getClassUpperLimit();
                 if (noChaobiao) {

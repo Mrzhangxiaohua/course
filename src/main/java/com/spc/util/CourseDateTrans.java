@@ -13,6 +13,9 @@ public class CourseDateTrans {
     public static StringBuilder aToString(Integer a) {
         StringBuilder strs = new StringBuilder("");
         switch (a) {
+            case 0:
+                strs = strs.append("周一至周五");
+                break;
             case 1:
                 strs = strs.append("周一");
                 break;

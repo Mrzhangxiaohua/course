@@ -112,17 +112,17 @@ public class ManageScorePdfView extends AbstractPdfView {
             cell.setPaddingBottom(6);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(Integer.toString((Integer) t.get("wlzzxxGrade")), textFont));
+            cell = new PdfPCell(new Phrase((t.get("wlzzxxGrade")==null?"":String.valueOf(t.get("wlzzxxGrade"))), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase(Integer.toString((Integer) t.get("knskGrade")), textFont));
+            cell = new PdfPCell(new Phrase((t.get("knskGrade")==null?"":String.valueOf(t.get("knskGrade"))), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase(Integer.toString((Integer) t.get("xbsjGrade")), textFont));
+            cell = new PdfPCell(new Phrase((t.get("xbsjGrade")==null?"":String.valueOf(t.get("xbsjGrade"))), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
