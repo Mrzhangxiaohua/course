@@ -55,7 +55,7 @@ public class ManageServiceImpl implements ManageService {
 //            temp[(r - 1) * 2 + 1][l - 1] = context;
 //        }
 //        return temp;
-        return MakeTimeTable.makeBigTable(lis);
+        return MakeTimeTable.makeBigTable(lis,0);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ManageServiceImpl implements ManageService {
 //            temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
 //            temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
 //        }
-        return MakeTimeTable.makeBigTable(lis);
+        return MakeTimeTable.makeBigTable(lis,0);
     }
 
     @Override
@@ -250,10 +250,15 @@ public class ManageServiceImpl implements ManageService {
         return timeSwitchDao.updateTimeSwitch(timeSwitch);
     }
 
+    @Override
+    public int updateTimeSwitch2(String startDate, String endDate) {
+        return timeSwitchDao.updateTimeSwitch2( startDate,  endDate);
+    }
+
 
     @Override
     public List<Map> jilianSelect() {
-        List<ClassDomain> classes = classDao.selectClasses(88888888, "", "", "", 88888888, 88888888, 1, 88888888);
+        List<ClassDomain> classes = classDao.selectClasses(88888888, "", "", "", 88888888, 88888888, 1, 88888888,1,0);
 
         List<Map> res = new ArrayList<>();
 

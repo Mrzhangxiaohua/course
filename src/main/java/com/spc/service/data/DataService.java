@@ -10,4 +10,6 @@ public interface DataService {
 
     int storeUserInformation(UserInfoDto userInfoDto);
 
+    int getXuanKeStu(String stuId);
+
 }

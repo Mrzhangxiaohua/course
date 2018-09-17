@@ -16,4 +16,11 @@
         Department
     </select>
 
+    <select id="selectXuanKeStu" resultType="int">
+        select count(*)
+        from
+        XuanKeStu
+        where stuId=#{stuId}
+    </select>
+
 </mapper>

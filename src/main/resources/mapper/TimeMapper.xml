@@ -6,14 +6,26 @@
     <insert id="add">
   insert into course.TimeSwitch(scope,val)values('stu',#{timeSwitch})
 </insert>
-    <select id="get" resultType="int">
+    <select id="get" resultType="int" >
         select val
         from course.TimeSwitch
         where scope='stu'
     </select>
-    <update id="updateTimeSwitch">
+    <select id="get2" resultType="map" >
+        select c.start,c.end
+        from course.TimeSwitch2 c
+        where c.scope='stu'
+    </select>
+
+    <update id="updateTimeSwitch" flushCache="true">
         update course.TimeSwitch
         set val = #{timeSwitch}
         where scope='stu'
+    </update>
+
+    <update id="updateTimeSwitch2" flushCache="true">
+        update course.TimeSwitch2 c
+        set c.start = #{startDate},c.end = #{endDate}
+        where c.scope='stu'
     </update>
 </mapper>

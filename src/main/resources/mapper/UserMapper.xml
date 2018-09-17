@@ -23,7 +23,7 @@
     <!--on a.roleId = r.roleId-->
     <!--where a.uid = #{id}-->
     <!--</select>-->
-    <select id="findUsersById" resultType="com.spc.model.UserDomain">
+    <select id="findUsersById" resultType="com.spc.model.UserDomain" useCache="false">
       SELECT *
       FROM course.User
       where  stuId= #{stuId}

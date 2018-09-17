@@ -61,7 +61,7 @@ public class TeacherServiceImpl implements TeacherService {
 //            temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
 //
 //        }
-        return MakeTimeTable.makeBigTable(lis);
+        return MakeTimeTable.makeBigTable(lis,0);
     }
 
     @Override
@@ -76,7 +76,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public int issueGrade(int classId) {
-        return issueGradeDao.insert(classId,1);
+    public int issueGrade(int classId,int model1,int model2) {
+        if(issueGradeDao.select(classId)==null){
+            issueGradeDao.insert(classId,model1,model2);
+        }else{
+            issueGradeDao.update(classId,model1,model2);
+        }
+        return 0;
     }
 }

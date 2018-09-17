@@ -8,7 +8,7 @@
     </sql>
 
 
-    <select id="selectGrade" resultType="com.spc.model.GradeDomain" parameterType="int">
+    <select id="selectGrade" resultType="com.spc.model.GradeDomain" parameterType="int" >
         select distinct
         g.classId,g.wlzzxxGrade,g.knskGrade,g.xbsjGrade,g.stuId,c.className,c.classSemester,c.classGradePoint
         from

@@ -61,5 +61,4 @@ public class TimeConflict {
         }
         System.out.println(TimeConflict.confilct(times,classTime));
     }
-
 }

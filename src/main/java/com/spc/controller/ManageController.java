@@ -1,6 +1,8 @@
 package com.spc.controller;
 
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.model.*;
@@ -10,6 +12,7 @@ import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,7 +39,7 @@ import java.util.*;
  */
 @RequestMapping("/manage")
 @Controller
-public class ManageController extends Base{
+public class ManageController extends Base {
 
     @Autowired
     private ClassService classService;
@@ -63,9 +67,9 @@ public class ManageController extends Base{
      * 查询学生提交的改课申请
      *
      * @param tabKey：所要查询的申请的状态
-     * @param currentPage ：当前页码
-     * @param pageSize ： 页面大小
-     * @return Map<String, Object>
+     * @param currentPage       ：当前页码
+     * @param pageSize          ： 页面大小
+     * @return Map<String   ,       Object>
      */
     @RequestMapping("/checked/message")
     @ResponseBody
@@ -169,12 +173,12 @@ public class ManageController extends Base{
             try {
                 Date date = new Date();
                 date = fmt.parse(mydate);
-                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date, 1,shenQingRenName );
+                result = manageService.checkedClassMessageAndDate(shenQingRenId, className, date, 1, shenQingRenName);
             } catch (ParseException e) {
                 System.out.println(e);
             }
         } else {
-            result = manageService.checkedClassMessage(shenQingRenId, className, 1,shenQingRenName);
+            result = manageService.checkedClassMessage(shenQingRenId, className, 1, shenQingRenName);
         }
         System.out.println(result);
         Map<String, Object> res = new HashMap<>();
@@ -213,6 +217,7 @@ public class ManageController extends Base{
 
     /**
      * 确认了老师开课申请
+     *
      * @param request
      * @return
      */
@@ -238,7 +243,7 @@ public class ManageController extends Base{
         JSONObject obj = null;
         try {
             JSONArray Jarray = new JSONArray(json);
-            for (int i=0;i<Jarray.length();i++){
+            for (int i = 0; i < Jarray.length(); i++) {
                 obj = Jarray.getJSONObject(i);
                 Integer id = obj.getInt("id");
                 String className = obj.getString("className");
@@ -257,9 +262,9 @@ public class ManageController extends Base{
         JSONObject obj = null;
         try {
             JSONArray Jarray = new JSONArray(json);
-            for (int i=0;i<Jarray.length();i++){
+            for (int i = 0; i < Jarray.length(); i++) {
                 obj = Jarray.getJSONObject(i);
-                System.out.println("提交的实体是"+ obj);
+                System.out.println("提交的实体是" + obj);
                 Integer id = obj.getInt("id");
                 manageService.makeSureClassApplication(id);
             }
@@ -271,6 +276,7 @@ public class ManageController extends Base{
 
     /**
      * 拒绝学生改课申请
+     *
      * @param request
      * @return
      */
@@ -291,6 +297,7 @@ public class ManageController extends Base{
 
     /**
      * 拒绝老师开课申请
+     *
      * @param request
      * @return
      */
@@ -316,9 +323,9 @@ public class ManageController extends Base{
         JSONObject obj = null;
         try {
             JSONArray Jarray = new JSONArray(json);
-            for (int i=0;i<Jarray.length();i++){
+            for (int i = 0; i < Jarray.length(); i++) {
                 obj = Jarray.getJSONObject(i);
-                System.out.println("提交的实体是"+ obj);
+                System.out.println("提交的实体是" + obj);
                 Integer id = obj.getInt("id");
                 manageService.rejectClassApplication(id);
             }
@@ -330,6 +337,7 @@ public class ManageController extends Base{
 
     /**
      * 管理员端查询课程
+     *
      * @return
      */
     @RequestMapping("/find/classes")
@@ -348,6 +356,53 @@ public class ManageController extends Base{
 
     /**
      * 根据课程classStr下载学生名单
+     *
+     * @param classStr
+     * @return
+     */
+    @RequestMapping("/download/tableExcel")
+    public void downloadTableExcel(
+            @RequestParam(required = false, defaultValue = "") String classStr,
+            HttpServletResponse response,
+            HttpSession session
+    ) {
+        Map<String, Object> model = new HashMap<>();
+
+        String newStr = classStr.replace("(", ",").replace(")", "");
+        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+
+        String className = strs[0];
+        Integer classNum = Integer.parseInt(strs[1]);
+
+        int classId = manageService.getClassId(className, classNum);
+
+        List students = classService.findStudent(classId);
+
+
+        List<StudentExcelDomain> liC = new ArrayList<>();
+
+        for (int i = 0; i < students.size(); i = i + 1) {
+            Map<String, String> t = (Map<String, String>) students.get(i);
+            liC.add(new StudentExcelDomain(t.get("stuName"), t.get("stuId"), t.get("departName"), t.get("speciality"), t.get("tutoremployeeid"),t.get("wlzzxxGrade")==null?"":String.valueOf(t.get("wlzzxxGrade")), t.get("knskGrade")==null?"":String.valueOf(t.get("knskGrade")), t.get("xbsjGrade")==null?"":String.valueOf(t.get("xbsjGrade")) ));
+        }
+
+        response = ResponseWrap.setName(response, className + String.valueOf(classNum) + "班人名单", "xls");
+
+        ExportParams params = new ExportParams();
+        params.setTitle(className + String.valueOf(classNum) + "班人名单");
+
+        Workbook workbook = ExcelExportUtil.exportExcel(params, StudentExcelDomain.class, liC);
+
+        try {
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 根据课程classStr下载学生名单
+     *
      * @param classStr
      * @return
      */
@@ -360,13 +415,13 @@ public class ManageController extends Base{
         Map<String, Object> model = new HashMap<>();
         try {
 
-            String newStr = classStr.replace("(",",").replace(")","");
-            String[] strs = newStr.substring(0,newStr.length()-1).split(",");
+            String newStr = classStr.replace("(", ",").replace(")", "");
+            String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
             String className = strs[0];
             Integer classNum = Integer.parseInt(strs[1]);
 
-            int classId = manageService.getClassId(className,classNum);
+            int classId = manageService.getClassId(className, classNum);
 
 //            System.out.printf("classId %d", classId);
             List students = classService.findStudent(classId);
@@ -376,10 +431,10 @@ public class ManageController extends Base{
             model.put("res", res);
             model.put("style", "wider");
             model.put("name", classStr);
-            response = ResponseWrap.setName(response, className+String.valueOf(classNum)+"班人名单","pdf");
+            response = ResponseWrap.setName(response, className + String.valueOf(classNum) + "班人名单", "pdf");
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         return new ModelAndView(new ManageScorePdfView(), model);
@@ -387,17 +442,18 @@ public class ManageController extends Base{
 
     /**
      * 管理端：下载大课表
+     *
      * @return
      */
     @RequestMapping("/download/bigTable")
     public ModelAndView downloadTable(
-            @RequestParam(required = false, defaultValue = "")String  shenQingRenId,
-            @RequestParam(required = false, defaultValue = "") String  shenQingRenName,
-            @RequestParam(required = false, defaultValue = "") String  teaName,
+            @RequestParam(required = false, defaultValue = "") String shenQingRenId,
+            @RequestParam(required = false, defaultValue = "") String shenQingRenName,
+            @RequestParam(required = false, defaultValue = "") String teaName,
             HttpServletResponse response,
             HttpSession session
     ) {
-        String[][] strs = manageService.bigTable(shenQingRenId,shenQingRenName,teaName);
+        String[][] strs = manageService.bigTable(shenQingRenId, shenQingRenName, teaName);
         Map<String, Object> res = new HashMap<String, Object>();
 
         res.put("data", strs);
@@ -405,14 +461,48 @@ public class ManageController extends Base{
         model.put("res", res);
         model.put("style", "wider");
         model.put("student", 1);
-        String fileName = teaName==""?"all":teaName;
+        String fileName = teaName == "" ? "all" : teaName;
 
-        response = ResponseWrap.setName(response, fileName+"的课表","pdf");
+        response = ResponseWrap.setName(response, fileName + "的课表", "pdf");
         return new ModelAndView(new StudentTablePdfView(), model);
     }
 
     /**
+     * 管理端：下载大课表.excel 格式
+     *
+     * @return
+     */
+    @RequestMapping("/download/bigTableExcel")
+    public void downloadTableExcel(
+            @RequestParam(required = false, defaultValue = "") String shenQingRenId,
+            @RequestParam(required = false, defaultValue = "") String shenQingRenName,
+            @RequestParam(required = false, defaultValue = "") String teaName,
+            HttpServletResponse response,
+            HttpSession session
+    ){
+        String[][] tables = manageService.bigTable(shenQingRenId, shenQingRenName, teaName);
+        List<CourseTableExcelDomain> liC = new ArrayList<>();
+        for (int i = 0; i < tables.length; i = i + 2) {
+            liC.add(new CourseTableExcelDomain(i / 2, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
+                    , tables[i][4], tables[i][5], tables[i][6]));
+        }
+
+        response = ResponseWrap.setName(response, (teaName==""?"所有老师":teaName)+"的课表","xls");
+
+        ExportParams params = new ExportParams();
+        params.setTitle("课表");
+
+        Workbook workbook = ExcelExportUtil.exportExcel(params, CourseTableExcelDomain.class, liC);
+
+        try {
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
      * 添加课程
+     *
      * @return
      */
 //    @RequestMapping(value = "/add/course", method = RequestMethod.POST)
@@ -423,15 +513,13 @@ public class ManageController extends Base{
 //        manageService.addCourse(cd);
 //        return 0;
 //    }
-
-
     @RequestMapping(value = "/add/course", method = RequestMethod.POST)
     @ResponseBody
     public int addCourse(@RequestBody ClassDomainWithId cdwi) {
         cdwi.setClassDateDescription(cdwi.getClassDateDescriptionA() + ":" + cdwi.getClassDateDescriptionB());
         cdwi.setClassChooseNum(0);
         int id = cdwi.getId();
-        if(id!= 0){
+        if (id != 0) {
             manageService.deleteApplication(id);
         }
         manageService.addCourse(cdwi);
@@ -461,10 +549,10 @@ public class ManageController extends Base{
     @RequestMapping("/get/bigTable")
     @ResponseBody
     public String[][] getBigTable(
-            @RequestParam(required = false, defaultValue = "")String  shenQingRenId,
-                                  @RequestParam(required = false, defaultValue = "") String  shenQingRenName,
-                                  @RequestParam(required = false, defaultValue = "") String  teaName) {
-        return manageService.bigTable(shenQingRenId,shenQingRenName,teaName);
+            @RequestParam(required = false, defaultValue = "") String shenQingRenId,
+            @RequestParam(required = false, defaultValue = "") String shenQingRenName,
+            @RequestParam(required = false, defaultValue = "") String teaName) {
+        return manageService.bigTable(shenQingRenId, shenQingRenName, teaName);
     }
 
     /**
@@ -482,7 +570,7 @@ public class ManageController extends Base{
         try {
             obj = new JSONObject(json);
             String stuId = obj.getString("stuId");
-            System.out.println("==============="+stuId);
+            System.out.println("===============" + stuId);
 //            String stuName = obj.getString("stuName");
             String classStr = obj.getString("classStr");
             manageService.addCourseStudent(stuId, classStr);
@@ -509,9 +597,9 @@ public class ManageController extends Base{
     }
 
 
-
     /**
      * 通过班级名称以及班次查询学生
+     *
      * @param currentPage
      * @param pageSize
      * @param classStr
@@ -522,7 +610,8 @@ public class ManageController extends Base{
     public Map<String, Object> findStudentByClassnameAndNum(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false, defaultValue = "") String classStr
+            @RequestParam(required = false, defaultValue = "") String classStr,
+            HttpSession session
     ) {
         List students = new ArrayList();
         if (!classStr.equals("") && !classStr.isEmpty()) {
@@ -535,6 +624,9 @@ public class ManageController extends Base{
             students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
 
             List newStus = zhuanhuan(students);
+
+            putSession(session,students);
+
             logger.info("find student result:%s", newStus);
             Map<String, Object> res = new HashMap<>();
             res.put("status", "SUCCESS");
@@ -559,14 +651,37 @@ public class ManageController extends Base{
         }
     }
 
-    List zhuanhuan(List<Map<String,Object>> students){
-        for (Map li :students){
-            li.put("classStr",li.get("className")+"("+li.get("classNum")+"班)");
+    private int putSession(HttpSession session,List<HashMap> students){
+        Map scoreMap = (Map) session.getAttribute("updatescore");
+        scoreMap.clear();
+        for(HashMap li:students){
+            String className = (String) li.get("className");
+
+            String stuId = (String) li.get("stuId");
+            int classNum = (int) li.get("classNum");
+
+            int xbsjGrade = (int) li.get("xbsjGrade");
+            int knskGrade = (int) li.get("knskGrade");
+            int wlzzxxGrade = (int) li.get("wlzzxxGrade");
+
+            Map tempM = new HashMap();
+            tempM.put("wlzzxxGrade", wlzzxxGrade);
+            tempM.put("knskGrade", knskGrade);
+            tempM.put("xbsjGrade", xbsjGrade);
+
+            scoreMap.put(className + ":" + classNum + ":" + stuId, tempM);
+        }
+        return 0;
+    }
+
+    List zhuanhuan(List<Map<String, Object>> students) {
+        for (Map li : students) {
+            li.put("classStr", li.get("className") + "(" + li.get("classNum") + "班)");
         }
         return students;
     }
 
-    @RequestMapping(value = "/time/switch",method = RequestMethod.POST)
+    @RequestMapping(value = "/time/switch", method = RequestMethod.POST)
     @ResponseBody
     public int timeSwitch(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
@@ -584,10 +699,34 @@ public class ManageController extends Base{
         return 0;
     }
 
+    @RequestMapping(value = "/time/switch2", method = RequestMethod.POST)
+    @ResponseBody
+    public int timeSwitch2(HttpServletRequest request) {
+        String json = RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+//        JSONObject obj = null;
+        try {
+//            obj = new JSONObject(json);
+//            JSONObject sts = obj.getJSONObject("params").getJSONObject("values");
+//            JSONObject timeSwitchArray = sts.getJSONObject("timeSwitch2");
+            JSONArray Jarray = new JSONArray(json);
+
+            for (int i = 0; i < Jarray.length(); i++) {
+                String startDate = (String) Jarray.get(0);
+                String endDate = (String) Jarray.get(1);
+                manageService.updateTimeSwitch2(startDate,endDate);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
     @RequestMapping("/jilian/select")
     @ResponseBody
-    public List<Map>  jilianSelect(){
+    public List<Map> jilianSelect() {
         return manageService.jilianSelect();
     }
 

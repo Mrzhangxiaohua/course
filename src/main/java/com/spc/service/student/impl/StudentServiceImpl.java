@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service(value = "studentService")
@@ -33,7 +35,6 @@ public class StudentServiceImpl extends Base implements StudentService {
 
     @Autowired
     private TimeSwitchDao timeSwitchDao;
-
 
 
     @Override
@@ -66,16 +67,16 @@ public class StudentServiceImpl extends Base implements StudentService {
 //        }
 //
 //        return temp;
-        return MakeTimeTable.makeBigTable(lis);
+        return MakeTimeTable.makeBigTable(lis, 1);
     }
 
-    private  boolean timechongtu(String stuId, int classId){
+    private boolean timechongtu(String stuId, int classId) {
         List<Map> maps = classDao.findStudentClassTime(stuId);
         List<long[]> times = StudentTimeLoad.StudentTimeLoad(maps);
-        Map map =classDao.findClassTimeById(classId);
+        Map map = classDao.findClassTimeById(classId);
         List<long[]> classTime = StudentTimeLoad.TimeLoad(map);
 
-        return TimeConflict.confilct(times,classTime);
+        return TimeConflict.confilct(times, classTime);
     }
 
     @Override
@@ -85,7 +86,7 @@ public class StudentServiceImpl extends Base implements StudentService {
         if (weixuan) {
 ////            boolean noShijianchongtu = studentDao.findTimeChongTu(stuId, classId).isEmpty();
 
-            boolean chongtu = timechongtu(stuId,classId);
+            boolean chongtu = timechongtu(stuId, classId);
 
             if (!chongtu) {
                 ClassDomain course = classDao.findClassById(classId);
@@ -148,6 +149,8 @@ public class StudentServiceImpl extends Base implements StudentService {
         String classname = (String) map.get("classname");
         String teaname = (String) map.get("teaname");
         Integer hasWaiGuoYu = (Integer) map.get("hasWaiGuoYu");
+        Integer classNum = (Integer) map.get("classNum");
+        Integer classChooseNum = (Integer) map.get("classChooseNum");
 
         //这个是学生选择的课程
         List<GradeDomain> gradeDomains = gradeDao.selectGrade(88888888, stuId);
@@ -158,7 +161,7 @@ public class StudentServiceImpl extends Base implements StudentService {
 
 
         PageHelper.startPage(currentPage, pageSize);
-        List<ClassDomain> classes = classDao.selectClasses(departId, classname, teaname, teaId, startWeek, endWeek, hasWaiGuoYu, modelsId);
+        List<ClassDomain> classes = classDao.selectClasses(departId, classname, teaname, teaId, startWeek, endWeek, hasWaiGuoYu, modelsId, classNum, classChooseNum);
 
         System.out.println(classes);
         Set<Integer> haveAddClass = new HashSet<>();
@@ -199,27 +202,28 @@ public class StudentServiceImpl extends Base implements StudentService {
         }
         return classes;
     }
-        @Override
-        public Map getClassTime (String stuId){
-            List<Map<String, Object>> li1 = studentDao.getWaiStudyTime(stuId);
-            List<Map<String, Object>> li2 = studentDao.getNotWaiStudyTime(stuId);
 
-            int sum1 = 0;
-            for (Map<String, Object> l : li1) {
-                int temp = (int) l.get("classTime");
-                sum1 += temp;
-            }
-            int sum2 = 0;
-            for (Map<String, Object> l : li2) {
-                int temp = (int) l.get("classTime");
-                sum2 += temp;
-            }
+    @Override
+    public Map getClassTime(String stuId) {
+        List<Map<String, Object>> li1 = studentDao.getWaiStudyTime(stuId);
+        List<Map<String, Object>> li2 = studentDao.getNotWaiStudyTime(stuId);
 
-            Map<String, Object> res = new HashMap<>();
-            res.put("waiguoyu", sum1);
-            res.put("notwaiguoyu", sum2);
-            return res;
+        int sum1 = 0;
+        for (Map<String, Object> l : li1) {
+            int temp = (int) l.get("classTime");
+            sum1 += temp;
         }
+        int sum2 = 0;
+        for (Map<String, Object> l : li2) {
+            int temp = (int) l.get("classTime");
+            sum2 += temp;
+        }
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("waiguoyu", sum1);
+        res.put("notwaiguoyu", sum2);
+        return res;
+    }
 
 
 //    @Override
@@ -241,26 +245,40 @@ public class StudentServiceImpl extends Base implements StudentService {
 //    }
 
 
-        @Override
-        public List<HashMap<String, Object>> findAllClassName ( int student, String stuId){
-            if (student == 1) {
-                List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
-                return lis;
+    @Override
+    public List<HashMap<String, Object>> findAllClassName(int student, String stuId) {
+        if (student == 1) {
+            List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
+            return lis;
 
-            } else {
-                List<HashMap<String, Object>> liM = studentDao.findAllClassName();
-                for (HashMap<String, Object> aM : liM) {
-                    String className = (String) aM.get("className");
-                    String classNum = Integer.toString((Integer) aM.get("classNum"));
-                    aM.put("classStr", className + "(" + classNum + "班)");
-                }
-                return liM;
+        } else {
+            List<HashMap<String, Object>> liM = studentDao.findAllClassName();
+            for (HashMap<String, Object> aM : liM) {
+                String className = (String) aM.get("className");
+                String classNum = Integer.toString((Integer) aM.get("classNum"));
+                aM.put("classStr", className + "(" + classNum + "班)");
             }
-
+            return liM;
         }
 
-        @Override
-        public int getTimeSwtich () {
-            return timeSwitchDao.get();
-        }
     }
+
+    @Override
+    public int getTimeSwtich() {
+        Map map = timeSwitchDao.get2();
+        System.out.println("时间西段是："+map);
+        java.sql.Timestamp start = (java.sql.Timestamp) map.get("start");
+        java.sql.Timestamp end = (java.sql.Timestamp) map.get("end");
+        System.out.println(start);
+
+        Date now = null;
+        java.util.Date sdate = new java.util.Date(start.getTime());
+        java.util.Date edate = new java.util.Date(end.getTime());
+        now = new Date();
+        System.out.println("现在是=" + now + "开始是" + sdate + "结束时" + edate);
+        if (now.before(sdate) || now.after(edate)) {
+            return 0;
+        }
+        return 1;
+    }
+}

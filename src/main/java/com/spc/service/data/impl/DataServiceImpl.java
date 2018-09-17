@@ -29,4 +29,9 @@ public class DataServiceImpl implements DataService {
     public int storeUserInformation(UserInfoDto userInfoDto) {
         return userInfo.addInformation(userInfoDto);
     }
+
+    @Override
+    public int getXuanKeStu(String stuId) {
+        return dataDao.selectXuanKeStu(stuId);
+    }
 }

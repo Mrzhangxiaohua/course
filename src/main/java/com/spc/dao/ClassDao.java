@@ -20,7 +20,8 @@ public interface ClassDao {
     List<ClassDomain> selectClasses(@Param("departId") Integer departId, @Param("className") String className,
                                     @Param("teaName") String teaName, @Param("teaId") String teaId, @Param("startWeek") int startWeek,
                                     @Param("endWeek") int endWeek, @Param("hasWaiGuoYu") int hasWaiGuoYu,
-                                    @Param("modelsId") int modelsId);
+                                    @Param("modelsId") int modelsId,@Param("classNum") int classNum
+            ,@Param("classChooseNum") int classChooseNum);
 
     int updateScore1(@Param("className") String className, @Param("classNum") int classNum,@Param("stuId") String stuId,
                     @Param("wlzzxxGrade") int wlzzxxGrade, @Param("knskGrade") int knskGrade);

@@ -277,7 +277,9 @@ public class StudentController extends Base{
             @RequestParam(required = false, defaultValue = "") String teaId,
             @RequestParam(required = false, defaultValue = "88888888") int startWeek,
             @RequestParam(required = false, defaultValue = "88888888") int endWeek,
-            @RequestParam(required = false, defaultValue = "88888888") int hasWaiGuoYu) {
+            @RequestParam(required = false, defaultValue = "88888888") int hasWaiGuoYu,
+            @RequestParam(required = false, defaultValue = "88888888") int courseSorting) {
+        System.out.println("courseSorting = "+ courseSorting);
         Map map = new HashMap<String, Object>();
         map.put("currentPage", currentPage);
         map.put("pageSize", pageSize);
@@ -292,6 +294,8 @@ public class StudentController extends Base{
 
         map.put("stuId", stuId);
         map.put("hasWaiGuoYu", hasWaiGuoYu);
+        map.put("classChooseNum", courseSorting);
+        map.put("classNum",courseSorting==2?1:0 );
 
         List<ClassDomain> classes = studentService.selectClassed(map);
 

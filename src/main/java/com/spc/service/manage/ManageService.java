@@ -46,6 +46,7 @@ public interface ManageService {
 
     int addTimeSwitch(int timeSwitch);
     int updateTimeSwitch(int timeSwitch);
+    int updateTimeSwitch2(String startDate,String endDate);
 
     public List<Map> jilianSelect();
 }

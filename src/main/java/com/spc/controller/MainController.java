@@ -25,7 +25,7 @@ import java.util.Map;
  * @author yuhongchao
  */
 @Controller
-public class MainController extends Base{
+public class MainController extends Base {
 
 
     @Autowired
@@ -37,63 +37,42 @@ public class MainController extends Base{
     GetInfo getInfo;
 
 
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(HttpServletRequest request) {
 
 
         HttpSession httpSession = request.getSession();
 
-        BaseInfo baseInfo = new BaseInfo();
-
-
-        httpSession.setAttribute("authentication",baseInfo.getAuthentication());
-        httpSession.setAttribute("username",baseInfo.getUsername());
-        httpSession.setAttribute("userId",baseInfo.getUserId());
-        httpSession.setAttribute("userRole",baseInfo.getUserRole());
-
-        UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
-//        将用户信息存储
-        dataService.storeUserInformation(userDetails);
-
-        logger.info("登录的用户是{}，角色是{}",baseInfo.getUsername(), baseInfo.getUserRole());
-
+        httpSession = putInfo(httpSession);
         String res = null;
 
+        String userRole = (String) httpSession.getAttribute("userRole");
+        String userId = (String) httpSession.getAttribute("userId");
         //为了缓存老师更新的数据而在内存中建立的hashMap
-        Map updateScore = new HashMap<>();
-        updateScore.put("operator",baseInfo.getUsername());
 
-
-        if (baseInfo.getUserRole().equals("学生")) {
-            logger.info("登录的是学生端");
-            res = "student/index";
-
-        } else if (baseInfo.getUserRole().equals("教职工")) {//这个是教职工的情况
-            UserDomain userDomain = userService.findUsersById(userDetails.getUserno());
+        if (userRole.equals("学生")) {
+            if (InXuanKeStu(userId)) {
+                logger.info("登录的是学生端");
+                res = "student/index";
+            } else {
+                logger.info("该学生不在名单内！");
+                res = "student/notIn";
+            }
+        } else if (userRole.equals("教职工")) {//这个是教职工的情况
+            UserDomain userDomain = userService.findUsersById(userId);
 
             if (userDomain == null) {
                 logger.info("登录的是教师端");
-
-                httpSession.setAttribute("updatescore1",updateScore);
-                httpSession.setAttribute("updatescore2",updateScore);
                 res = "teacher/index";
             } else {
                 if (userDomain.getRole().equals("学院管理员")) {
-                    httpSession.setAttribute("updatescore3",updateScore);
                     logger.info("登录的是学院管理员端");
                     res = "dmanage/index";
                 } else if (userDomain.getRole().equals("超级管理员")) {
-                    httpSession.setAttribute("updatescore3",updateScore);
                     logger.info("登录的是超级管理员端");
                     res = "manage/index";
-
-                } else{
-                    httpSession.setAttribute("updatescore1",updateScore);
-                    httpSession.setAttribute("updatescore2",updateScore);
+                } else {
                     logger.info("登录的是教师端");
-
-                    System.out.println("产生了map");
                     res = "teacher/index";
                 }
             }
@@ -101,9 +80,38 @@ public class MainController extends Base{
         return res;
     }
 
+
+    private HttpSession putInfo(HttpSession session) {
+
+        //首先获得用户信息
+        BaseInfo baseInfo = new BaseInfo();
+        //将用户信息放置于session 中
+        session.setAttribute("authentication", baseInfo.getAuthentication());
+        session.setAttribute("username", baseInfo.getUsername());
+        session.setAttribute("userId", baseInfo.getUserId());
+        session.setAttribute("userRole", baseInfo.getUserRole());
+
+        //将这个用户信息存储与用户信息库里面
+        UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
+        dataService.storeUserInformation(userDetails);
+        logger.info("登录的用户是{}，角色是{}", baseInfo.getUsername(), baseInfo.getUserRole());
+
+        //存储一个更新分数的map
+        Map updateScore = new HashMap<>();
+        updateScore.put("operator", baseInfo.getUsername());
+        session.setAttribute("updatescore", updateScore);
+
+        return session;
+
+    }
+
+    private boolean InXuanKeStu(String stuId) {
+        return dataService.getXuanKeStu(stuId) == 1 ? true : false;
+    }
+
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request) {
-        logger.info("{}退出了",request.getSession().getAttribute("username"));
+        logger.info("{}退出了", request.getSession().getAttribute("username"));
         return "/psc/logout";
     }
 

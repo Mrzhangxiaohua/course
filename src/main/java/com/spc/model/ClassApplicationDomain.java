@@ -20,6 +20,7 @@ public class ClassApplicationDomain  implements Serializable {
     private String shenQingRenName;
     private int classModuleNum;
     private String modelsName;
+    private String homepage;
 
     public int getId() {
         return id;
@@ -142,5 +143,13 @@ public class ClassApplicationDomain  implements Serializable {
 
     public void setModelsName(String modelsName) {
         this.modelsName = modelsName;
+    }
+
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
     }
 }

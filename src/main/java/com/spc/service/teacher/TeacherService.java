@@ -14,6 +14,6 @@ public interface TeacherService {
     List<Map<String,Object>> findApplication(String teaId);
 
     List findStudentByClassnameAndNum(String className,int classNum);
-    public int issueGrade(int classId);
+    public int issueGrade(int classId,int model1,int model2);
 
 }
