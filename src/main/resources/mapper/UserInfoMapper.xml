@@ -19,7 +19,7 @@
           polity,roomnumber, roomphone, speciality,studenttype,
           tutoremployeeid,userid, username, userno,usertype
           from XjtuUserInfo
-          where userno =#{id}
+          where userid =#{id}
     </select>
 
 

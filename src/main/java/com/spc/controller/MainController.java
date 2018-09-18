@@ -8,6 +8,7 @@ import com.spc.service.webservice.GetInfo;
 import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 import com.spc.util.AuthMess;
 import com.spc.util.StudentTimeLoad;
+import com.spc.util.XuanKeStu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -36,6 +38,9 @@ public class MainController extends Base {
     @Autowired
     GetInfo getInfo;
 
+    @Autowired
+    XuanKeStu xuanKeStu;
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(HttpServletRequest request) {
@@ -48,10 +53,11 @@ public class MainController extends Base {
 
         String userRole = (String) httpSession.getAttribute("userRole");
         String userId = (String) httpSession.getAttribute("userId");
+        String username = (String) httpSession.getAttribute("username");
         //为了缓存老师更新的数据而在内存中建立的hashMap
 
         if (userRole.equals("学生")) {
-            if (InXuanKeStu(userId)) {
+            if (InXuanKeStu(userId, username)) {
                 logger.info("登录的是学生端");
                 res = "student/index";
             } else {
@@ -105,8 +111,11 @@ public class MainController extends Base {
 
     }
 
-    private boolean InXuanKeStu(String stuId) {
-        return dataService.getXuanKeStu(stuId) == 1 ? true : false;
+    private boolean InXuanKeStu(String stuId, String name) {
+        Map map = new HashMap();
+        map.put("name", name);
+        map.put("stuId", stuId);
+        return xuanKeStu.inStuNames(map);
     }
 
     @RequestMapping("/logout")

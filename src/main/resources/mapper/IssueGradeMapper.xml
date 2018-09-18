@@ -13,6 +13,7 @@
         INSERT INTO IssueGrade
         (classId,model1, model2) VALUES (#{classId}, #{model1}, #{model2})
     </insert>
+
     <update id="update">
         update course.IssueGrade set
         <trim suffixOverrides=",">

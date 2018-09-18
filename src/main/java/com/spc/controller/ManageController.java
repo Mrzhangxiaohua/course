@@ -371,33 +371,36 @@ public class ManageController extends Base {
         String newStr = classStr.replace("(", ",").replace(")", "");
         String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
-        String className = strs[0];
-        Integer classNum = Integer.parseInt(strs[1]);
+        if(classStr!=""){
+            String className = strs[0];
+            Integer classNum = Integer.parseInt(strs[1]);
 
-        int classId = manageService.getClassId(className, classNum);
+            int classId = manageService.getClassId(className, classNum);
 
-        List students = classService.findStudent(classId);
+            List students = classService.findStudent(classId);
 
 
-        List<StudentExcelDomain> liC = new ArrayList<>();
+            List<StudentExcelDomain> liC = new ArrayList<>();
 
-        for (int i = 0; i < students.size(); i = i + 1) {
-            Map<String, String> t = (Map<String, String>) students.get(i);
-            liC.add(new StudentExcelDomain(t.get("stuName"), t.get("stuId"), t.get("departName"), t.get("speciality"), t.get("tutoremployeeid"),t.get("wlzzxxGrade")==null?"":String.valueOf(t.get("wlzzxxGrade")), t.get("knskGrade")==null?"":String.valueOf(t.get("knskGrade")), t.get("xbsjGrade")==null?"":String.valueOf(t.get("xbsjGrade")) ));
+            for (int i = 0; i < students.size(); i = i + 1) {
+                Map<String, String> t = (Map<String, String>) students.get(i);
+                liC.add(new StudentExcelDomain(t.get("stuName"), t.get("stuId"), t.get("departName"), t.get("speciality"), t.get("tutoremployeeid"),t.get("wlzzxxGrade")==null?"":String.valueOf(t.get("wlzzxxGrade")), t.get("knskGrade")==null?"":String.valueOf(t.get("knskGrade")), t.get("xbsjGrade")==null?"":String.valueOf(t.get("xbsjGrade")) ));
+            }
+
+            response = ResponseWrap.setName(response, className + String.valueOf(classNum) + "班人名单", "xls");
+
+            ExportParams params = new ExportParams();
+            params.setTitle(className + String.valueOf(classNum) + "班人名单");
+
+            Workbook workbook = ExcelExportUtil.exportExcel(params, StudentExcelDomain.class, liC);
+
+            try {
+                workbook.write(response.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        response = ResponseWrap.setName(response, className + String.valueOf(classNum) + "班人名单", "xls");
-
-        ExportParams params = new ExportParams();
-        params.setTitle(className + String.valueOf(classNum) + "班人名单");
-
-        Workbook workbook = ExcelExportUtil.exportExcel(params, StudentExcelDomain.class, liC);
-
-        try {
-            workbook.write(response.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -408,23 +411,23 @@ public class ManageController extends Base {
      */
     @RequestMapping("/download/table")
     public ModelAndView downloadTable(
-            @RequestParam(required = false, defaultValue = "") String classStr,
+            @RequestParam(required = true, defaultValue = "") String classStr,
             HttpServletResponse response,
             HttpSession session
     ) {
         Map<String, Object> model = new HashMap<>();
         try {
+                String newStr = classStr.replace("(", ",").replace(")", "");
+                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
-            String newStr = classStr.replace("(", ",").replace(")", "");
-            String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+                String className = strs[0];
+                Integer classNum = Integer.parseInt(strs[1]);
 
-            String className = strs[0];
-            Integer classNum = Integer.parseInt(strs[1]);
-
-            int classId = manageService.getClassId(className, classNum);
+                int classId = manageService.getClassId(className, classNum);
 
 //            System.out.printf("classId %d", classId);
-            List students = classService.findStudent(classId);
+                List students = classService.findStudent(classId);
+
             Map<String, Object> res = new HashMap<String, Object>();
 
             res.put("data", students);
@@ -439,6 +442,7 @@ public class ManageController extends Base {
         }
         return new ModelAndView(new ManageScorePdfView(), model);
     }
+
 
     /**
      * 管理端：下载大课表
@@ -460,7 +464,7 @@ public class ManageController extends Base {
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "wider");
-        model.put("student", 1);
+        model.put("student", 0);
         String fileName = teaName == "" ? "all" : teaName;
 
         response = ResponseWrap.setName(response, fileName + "的课表", "pdf");

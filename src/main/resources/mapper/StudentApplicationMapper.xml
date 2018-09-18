@@ -3,7 +3,7 @@
 
 <mapper namespace="com.spc.dao.StudentApplicationDao">
 
-    <cache/>
+    <!--<cache/>-->
     <sql id="BASE_TABLE">
         StudentApplication
     </sql>

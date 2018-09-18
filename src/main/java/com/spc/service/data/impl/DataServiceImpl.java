@@ -34,4 +34,9 @@ public class DataServiceImpl implements DataService {
     public int getXuanKeStu(String stuId) {
         return dataDao.selectXuanKeStu(stuId);
     }
+
+    @Override
+    public List<Map<String, String>> allXuanKeStu() {
+        return dataDao.allXuanKeStu();
+    }
 }

@@ -36,7 +36,9 @@ public class GetInfo {
         UserInfoPortType proxy = new UserInfoPortTypeProxy();
         UserInfoDto stu = null;
         stu = userInfoDao.selectById(netId);
+        System.out.println(stu);
         if(stu == null){
+            System.out.println("===============run here ===============");
             try {
                 stu = proxy.getInfoById("diff",netId);
             } catch (RemoteException e) {

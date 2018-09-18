@@ -3,7 +3,7 @@
 
 <mapper namespace="com.spc.dao.ClassApplicationDao">
 
-    <cache></cache>
+    <!--<cache></cache>-->
     <sql id="BASE_TABLE">
        ClassApplication
     </sql>
@@ -19,7 +19,7 @@
 
     <select id="findallClass" resultType="com.spc.model.ClassApplicationDomain">
         select c.id, c.teaId
-        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName,f.modelsName
+        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName,f.modelsName,c.classModuleNum
         from ClassApplication c
         left join Application_Check a
         on c.checked = a.id
@@ -42,7 +42,7 @@
     </select>
     <select id="findallClassWithDate" resultType="com.spc.model.ClassApplicationDomain">
         select c.id, c.teaId
-        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName,f.modelsName
+        ,c.checked,c.className,c.classTime,c.teacherInfo,c.courseInfo,c.mainLecturer,c.mydate,a.checkStr,c.shenQingRenId,c.shenQingRenName,f.modelsName,c.classModuleNum
         from ClassApplication c
         left join Application_Check a
         on c.checked = a.id

@@ -12,4 +12,6 @@ public interface DataService {
 
     int getXuanKeStu(String stuId);
 
+    List<Map<String, String>> allXuanKeStu();
+
 }

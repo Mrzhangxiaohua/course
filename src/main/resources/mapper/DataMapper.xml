@@ -16,11 +16,17 @@
         Department
     </select>
 
-    <select id="selectXuanKeStu" resultType="int">
+    <select id="selectXuanKeStu" resultType="int" useCache="false">
         select count(*)
         from
         XuanKeStu
         where stuId=#{stuId}
+    </select>
+    
+    <select id="allXuanKeStu" resultType="map">
+        select *
+        from
+        XuanKeStu
     </select>
 
 </mapper>

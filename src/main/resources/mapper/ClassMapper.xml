@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.spc.dao.ClassDao">
-    <cache/>
+    <!--<cache/>-->
     <sql id="BASE_TABLE">
         Course
     </sql>
@@ -48,7 +48,7 @@
     </insert>
 
 
-    <select id="selectClasses" resultType="com.spc.model.ClassDomain">
+    <select id="selectClasses" resultType="com.spc.model.ClassDomain" useCache="false">
         select
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
         classPlace,classLength,classModuleNum,m.modelsName as

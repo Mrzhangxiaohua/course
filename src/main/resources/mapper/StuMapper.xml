@@ -3,7 +3,7 @@
 
 <mapper namespace="com.spc.dao.StudentDao">
 
-    <cache/>
+    <!--<cache/>-->
     <sql id="BASE_COLUMN">
       stuId,className,classDateDescription,classPlace,teaName,classNum,startWeek,endWeek
     </sql>
