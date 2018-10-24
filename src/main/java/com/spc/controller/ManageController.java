@@ -593,6 +593,7 @@ public class ManageController extends Base {
             obj = new JSONObject(json);
             String stuId = obj.getString("stuId");
             String classStr = obj.getString("classStr");
+            System.out.println(stuId + classStr);
             manageService.deleteCourseStudent(stuId, classStr);
         } catch (Exception e) {
             System.out.println(e);
