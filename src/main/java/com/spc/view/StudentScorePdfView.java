@@ -1,14 +1,8 @@
 package com.spc.view;
 
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
 import com.spc.model.GradeDomain;
 import com.spc.util.AuthMess;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +27,7 @@ public class StudentScorePdfView extends AbstractPdfView {
         String userId = (String) map.get("stuId");
         String userName = (String) map.get("stuName");
 
-        List<GradeDomain> scores = (List<GradeDomain>) map.get("scores");
+        List<GradeDomain> scores = (List<GradeDomain>) map.get("data");
 
 
         PdfPTable table = new PdfPTable(4);
@@ -111,5 +107,19 @@ public class StudentScorePdfView extends AbstractPdfView {
 
         }
         document.add(table);
+
+//        PdfStamper stp = PdfStamper.createSignature(reader, fout, '\0');
+        Rectangle pageRect =document.getPageSize();
+        System.out.println(pageRect);
+        Rectangle rect = new Rectangle(600, -120, 1000, -80);
+
+        PdfContentByte cb = writer.getDirectContent();
+        cb.rectangle(rect);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Phrase p = new Phrase("签名:   _________\n时间:   " + df.format(new Date()), textFont);
+        ColumnText ct = new ColumnText(cb);
+        ct.setSimpleColumn(rect);
+        ct.addText(p);
+        ct.go();
     }
 }

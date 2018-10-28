@@ -9,18 +9,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.plaf.basic.BasicHTML;
+
 import com.spc.util.RequestPayload;
 
 /**
- * Created by Administrator on 2017/8/16.
+ * 这个类提供用户管理的路由。
+ *
+ * @author yuhongchao
+ * @version 1.0
  */
 @Controller
 @RequestMapping(path = "/user")
-public class UserController {
-
-
-    @Autowired
-    RequestPayload requestPayload;
+public class UserController extends Base {
 
 
     @Autowired
@@ -30,28 +31,31 @@ public class UserController {
     @PostMapping(value = "/add")
     public boolean addUser(HttpServletRequest request) {
         try {
-            String json = requestPayload.getRequestPayload(request);
+            String json = RequestPayload.getRequestPayload(request);
             System.out.println(json);
             JSONObject obj = new JSONObject(json);
 
-            UserDomain userDomain= new UserDomain();
+            UserDomain userDomain = new UserDomain();
 
             JSONObject sts = obj.getJSONObject("params").getJSONObject("values");
 
-            userDomain.setStuId(sts.getInt("stuId"));
-            userDomain.setPassword(sts.getString("password"));
-            userDomain.setUserName(sts.getString("userName"));
-            userDomain.setRole(null);
+            userDomain.setStuId(sts.getString("teaId"));
 
             Integer roleId = sts.getInt("roleId");
-
+            System.out.println("roleId");
+            switch (roleId){
+                case 1:
+                    userDomain.setRole("学院管理员");
+                    break;
+                case 2:
+                    userDomain.setRole("超级管理员");
+                    break;
+            }
             //多表关联插入
-            return userService.addUser(userDomain,roleId);
+            return userService.addUser(userDomain);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
         }
-    };
-
-
+    }
 }

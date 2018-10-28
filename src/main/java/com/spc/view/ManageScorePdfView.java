@@ -1,19 +1,22 @@
 package com.spc.view;
 
 
-import com.itextpdf.text.*;
+import com.alibaba.druid.sql.visitor.functions.Char;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
-public class ManageTablePdfView extends AbstractPdfView {
+public class ManageScorePdfView extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model,
@@ -21,14 +24,14 @@ public class ManageTablePdfView extends AbstractPdfView {
                                     HttpServletResponse response) throws Exception {
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
-        List<Map> students = (List<Map>) map.get("students");
+        List<Map> students = (List<Map>) map.get("data");
 
         System.out.println(students);
 
-        PdfPTable table = new PdfPTable(6);
+        PdfPTable table = new PdfPTable(8);
 
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{2,2, 2, 2, 2, 2});
+        table.setWidths(new int[]{2, 2, 2, 2, 2, 2, 2, 2});
 
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -65,7 +68,15 @@ public class ManageTablePdfView extends AbstractPdfView {
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
 
-        hcell = new PdfPCell(new Phrase("成绩", headFont));
+        hcell = new PdfPCell(new Phrase("网络自主学习成绩", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
+        table.addCell(hcell);
+        hcell = new PdfPCell(new Phrase("课内授课成绩", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
+        table.addCell(hcell);
+        hcell = new PdfPCell(new Phrase("小班实践成绩", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
@@ -73,7 +84,7 @@ public class ManageTablePdfView extends AbstractPdfView {
         System.out.println(students);
         for (int i = 0; i < students.size(); i = i + 1) {
 
-            Map<String,Object> t = students.get(i);
+            Map<String, Object> t = students.get(i);
             PdfPCell cell;
 //            System.out.println(t.get("teaName"));
 
@@ -82,7 +93,7 @@ public class ManageTablePdfView extends AbstractPdfView {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase(Integer.toString((Integer) t.get("stuId")), textFont));
+            cell = new PdfPCell(new Phrase((String) t.get("stuId"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
@@ -92,19 +103,29 @@ public class ManageTablePdfView extends AbstractPdfView {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase(" ", textFont));
+            cell = new PdfPCell(new Phrase((String) t.get("speciality"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(" ", textFont));
+            cell = new PdfPCell(new Phrase((String) t.get("tutoremployeeid"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(Integer.toString((Integer) t.get("score")), textFont));
+            cell = new PdfPCell(new Phrase(String.valueOf(t.get("wlzzxxGrade")).charAt(0)== (int)'0'? "" : String.valueOf(t.get("wlzzxxGrade")) , textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase(String.valueOf(t.get("knskGrade")).charAt(0)== (int)'0'? "" : String.valueOf(t.get("knskGrade")), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase(String.valueOf(t.get("xbsjGrade")).charAt(0)== (int)'0'?"" : String.valueOf(t.get("xbsjGrade")), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);

@@ -9,14 +9,14 @@ import java.util.List;
  */
 public interface ClassService {
 
-    int addClass(ClassDomain classDomain);
+    void addClass(ClassDomain classDomain);
 
-    List<ClassDomain> findAllClass(Integer departId,String className,int teaId,int startWeek,int endWeek);
+    List<ClassDomain> findAllClass(Integer departId, String className, String teaId, int startWeek, int endWeek);
 
-    List findStudent(String className, int classId);
+    List findStudent(int classId);
 
-    int updateScore(String className,int stuId,int score);
 
-    String[][] findCourseTable(int teaId);
-
+//    int updateScore1(String className,int classNum, String stuId, int wlzzxxGrade,int knskGrade);
+//    int updateScore2(String className,int classNum, String stuId, int xbsjGrade);
+    int updateScore3(String className,int classNum, String stuId, int xbsjGrade,int wlzzxxGrade,int knskGrade);
 }

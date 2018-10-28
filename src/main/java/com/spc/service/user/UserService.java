@@ -1,17 +1,21 @@
 package com.spc.service.user;
 
 import com.spc.model.UserDomain;
+import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/4/19.
  */
 public interface UserService {
 
-    boolean addUser(UserDomain user,int role);
 
-    UserDomain findUsersByName(String name);
+
+    boolean addUser(UserDomain user);
+
+    UserDomain findUsersById(String id);
 
 }

@@ -1,6 +1,8 @@
 package com.spc.model;
 
-public class RoleDomain {
+import java.io.Serializable;
+
+public class RoleDomain  implements Serializable {
     private Integer roleId;  //角色的id
 
     private String roleName; //角色的名称

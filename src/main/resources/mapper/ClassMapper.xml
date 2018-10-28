@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.spc.dao.ClassDao" >
+<mapper namespace="com.spc.dao.ClassDao">
+    <!--<cache/>-->
     <sql id="BASE_TABLE">
         Course
     </sql>
 
-    <sql id="BASE_COLUMN">
-        classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,classTime
+    <sql id="Table">
+        classDateDescription,teaName,classPlace,endWeek,startWeek,classNum,className
     </sql>
 
-    <insert id="insert" parameterType="com.spc.model.ClassDomain">
+    <sql id="BASE_COLUMN">
+        classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
+        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,departId,classSemester,classGradePoint,endWeek,startWeek,classTime,mainLecturer,classEncode,shenQingRenId
+    </sql>
+
+    <select id="findStudentClassTime" resultType="map">
+        select s.classDateDescription,s.startWeek,s.endWeek
+        from course.Course s
+        join
+          (
+            select classId
+            from course.Course_choose
+            where stuId = #{stuId}
+          )b
+        on s.classId = b.classId;
+    </select>
+    <select id="findClassTimeById" resultType="map">
+        select classDateDescription,startWeek,endWeek
+        from course.Course
+        where classId = #{classId}
+    </select>
+
+    <insert id="insert" parameterType="com.spc.model.ClassDomain" flushCache="true">
         insert into
         <include refid="BASE_TABLE"/>
         <trim prefix=" (" suffix=" )">
@@ -20,61 +42,151 @@
         values
         <trim prefix="( " suffix=" )">
             #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
-            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester} ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime}
+            #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester}
+            ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime},#{mainLecturer},#{classEncode},#{shenQingRenId}
         </trim>
     </insert>
 
 
-    <select id="selectClasses" resultType="com.spc.model.ClassDomain">
+    <select id="selectClasses" resultType="com.spc.model.ClassDomain" useCache="false">
         select
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,m.modelsName,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,classTime
+        classPlace,classLength,classModuleNum,m.modelsName as
+        modelsName,teacherInfo,courseInfo,a.departId,classSemester,classGradePoint,endWeek,startWeek,
+        classEncode,classTime,mainLecturer,b.departName as departName
         from
-        <include refid="BASE_TABLE"/> a
-        left join  Department b
+        <include refid="BASE_TABLE"/>
+        a
+        left join Department b
         on a.departId = b.departId
-        left join  models m
+        left join models m
         on a.classModuleNum = m.modelsId
         <where>
-          <if test="departId!=88888888 ">
-              b.departId = #{departId}
-          </if>
-          <if test="className!=null and className!='' ">
-              and a.className like  "%"#{className}"%"
-          </if>
-          <if test="teaName!=null and teaName!='' ">
-              and a.teaName like  "%"#{teaName}"%"
-          </if>
-          <if test="teaId!=88888888">
-              and a.teaId = #{teaId}
-          </if>
-          <if test="startWeek!=88888888">
-              and a.startWeek >= #{startWeek}
-          </if>
-          <if test="endWeek!=88888888">
-              and #{endWeek} >= a.endWeek
-          </if>
+            <if test="departId!=88888888 ">
+                and b.departId = #{departId}
+            </if>
+            <if test="modelsId!=88888888 ">
+                and a.classModuleNum = #{modelsId}
+            </if>
+            <if test="className!=null and className!='' ">
+                and a.className like "%"#{className}"%"
+            </if>
+            <if test="teaName!=null and teaName!='' ">
+                and a.teaName like "%"#{teaName}"%"
+            </if>
+            <if test="teaId!=null and teaId!=''">
+                and a.teaId = #{teaId}
+            </if>
+            <if test="startWeek!=88888888">
+                and a.startWeek >= #{startWeek}
+            </if>
+            <if test="endWeek!=88888888">
+                and #{endWeek} >= a.endWeek
+            </if>
+            <if test="hasWaiGuoYu != 1">
+                and a.departId != 12
+            </if>
         </where>
+        <if test="classNum==1">
+            order by classNum asc
+        </if>
+        <if test="classChooseNum==1">
+            order by classChooseNum asc
+        </if>
     </select>
 
+    <select id="findClassById" resultType="com.spc.model.ClassDomain">
+        select *
+        from course.Course
+        where classId = #{classId}
+        order by className, classNum asc
+    </select>
+
+
+    <select id="findAllClasseSimpleMess" resultType="map">
+        select
+        classDateDescription,teaName,classPlace,endWeek,startWeek,classNum,className,mainLecturer
+        from Course c
+        left join XjtuUserInfo x
+        on x.userno = c.shenQingRenId
+        <where>
+            <if test="shenQingRenId != ''">
+                and c.shenQingRenId =#{shenQingRenId}
+            </if>
+            <if test="shenQingRenName != ''">
+                and x.username =#{shenQingRenName}
+            </if>
+            <if test="teaName !=''">
+                and c.teaName=#{teaName}
+            </if>
+        </where>
+        order by c.className,c.classNum asc
+    </select>
 
 
     <select id="findCourseTable" resultType="hashmap">
         select
-        classDateDescription,teaName,classPlace
-        from  Course
+        <include refid="Table"/>
+        from Course
         <where>
             teaId = #{teaId}
         </where>
     </select>
-    
-    <update id="updateScore">
+
+    <!--<update id="updateScore1" flushCache="true">-->
+        <!--UPDATE Course_choose c-->
+        <!--INNER JOIN Course a-->
+        <!--ON c.classId = a.classId-->
+        <!--SET c.wlzzxxGrade = #{wlzzxxGrade},c.knskGrade = #{knskGrade}-->
+        <!--WHERE a.className = #{className} and a.classNum = #{classNum}-->
+        <!--and c.stuId = #{stuId}-->
+    <!--</update>-->
+    <!--<update id="updateScore2" flushCache="true">-->
+        <!--UPDATE Course_choose c-->
+        <!--INNER JOIN Course a-->
+        <!--ON c.classId = a.classId-->
+        <!--SET c.xbsjGrade = #{xbsjGrade}-->
+        <!--WHERE a.className = #{className} and a.classNum = #{classNum}-->
+        <!--and c.stuId = #{stuId}-->
+    <!--</update>-->
+    <update id="updateScore3" flushCache="true">
         UPDATE Course_choose c
         INNER JOIN Course a
         ON c.classId = a.classId
-        SET c.score = #{score}
-        WHERE a.className = #{className}
+        SET
+        <trim  suffixOverrides="," >
+            <if test="xbsjGrade!=88888888">
+                c.xbsjGrade = #{xbsjGrade},
+            </if>
+            <if test="wlzzxxGrade!=88888888">
+                c.wlzzxxGrade = #{wlzzxxGrade},
+            </if>
+            <if test="knskGrade!=88888888">
+                c.knskGrade = #{knskGrade},
+            </if>
+        </trim>
+        WHERE a.className = #{className} and a.classNum = #{classNum}
         and c.stuId = #{stuId}
     </update>
+
+    <update id="updateChooseNum" flushCache="true">
+        update course.Course a
+        set classChooseNum  = classChooseNum+#{num}
+        where classId = #{classId}
+    </update>
+
+    <delete id="delete" flushCache="true">
+        delete
+        from course.Course
+        where classId =#{classId}
+    </delete>
+
+
+    <select id="haveStuInClass" resultType="map">
+        select stuId,classId
+        from course.Course_choose
+        where stuId=#{stuId} and classId=#{classId}
+    </select>
+
 
 </mapper>

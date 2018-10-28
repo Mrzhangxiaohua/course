@@ -1,8 +1,8 @@
 package com.spc.view;
 
 
-
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,16 +37,19 @@ public abstract class AbstractPdfView extends AbstractView {
     protected final void renderMergedOutputModel(Map<String, Object> model,
                                                  HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+
         ByteArrayOutputStream baos = createTemporaryOutputStream();
 
         Document document = new Document();
-        if(model.get("style").equals("wider")){
+        if (model.get("style").equals("wider")) {
             Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
             pageSize.rotate();
             document.setPageSize(pageSize);
-        }else{
+        } else if (model.get("style").equals("higher")) {
             Rectangle pageSize = new Rectangle(PageSize.A4.getHeight(), PageSize.A4.getWidth());
             document.setPageSize(pageSize);
+        } else {
+
         }
 
         PdfWriter writer = PdfWriter.getInstance(document, baos);

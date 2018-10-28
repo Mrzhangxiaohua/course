@@ -1,31 +1,37 @@
 package com.spc.util;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.spc.service.xjtu.webservice.info.UserInfo;
+import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.List;
 
 @Configuration
 public class AuthMess {
 
-
-//    private Authentication authentication;
-
-//    public AuthMess(){
-//        authentication= SecurityContextHolder.getContext().getAuthentication();
-//    }
-
-    public int userId(){
-        return 2018000001;
-//        return authentication.getAuthorities().toArray()[0];
+    public static UserInfoDto userDetails(Authentication authentication){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserInfoDto userDetails = (UserInfoDto) authentication.getPrincipal();
+        return userDetails;
     }
 
-    public int teacherId(){
-        return 2018124001;
+    public static String userId(Authentication authentication) {
+        String stuId = userDetails(authentication).getUserno();
+        return stuId;
+    }
+    public static String userName( Authentication authentication) {
+        String username = userDetails(authentication).getUsername();
+        return username;
     }
 
-    public String userName(){
-        return "于";
+    public static String userRole( Authentication authentication) {
+        List<GrantedAuthority> authentications = (List<GrantedAuthority>) userDetails(authentication).getAuthorities();
+        return authentications.get(0).getAuthority();
     }
 
 

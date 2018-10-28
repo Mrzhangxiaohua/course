@@ -1,21 +1,17 @@
 package com.spc.model;
 
-public class GradeDomain {
+import java.io.Serializable;
+
+public class GradeDomain  implements Serializable {
     private Integer chooseId;
-    private Integer stuId;
+    private String stuId;
     private String className;
     private Integer classId;
     private Integer score;
     private String classSemester;
     private Integer classGradePoint;
 
-    public Integer getStuId() {
-        return stuId;
-    }
 
-    public void setStuId(Integer stuId) {
-        this.stuId = stuId;
-    }
 
 
     public String getClassName() {
@@ -65,6 +61,14 @@ public class GradeDomain {
 
     public void setClassGradePoint(Integer classGradePoint) {
         this.classGradePoint = classGradePoint;
+    }
+
+    public String getStuId() {
+        return stuId;
+    }
+
+    public void setStuId(String stuId) {
+        this.stuId = stuId;
     }
 }
 

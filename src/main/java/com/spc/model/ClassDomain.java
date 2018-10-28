@@ -1,33 +1,44 @@
 package com.spc.model;
 
 
+import com.spc.util.CourseDateTrans;
 import org.apache.ibatis.type.Alias;
 
+import java.io.Serializable;
+
 @Alias("ClassDomain")
-public class ClassDomain {
+public class ClassDomain implements Serializable {
 
     private String teacherInfo;
     private String courseInfo;
     private Integer classId; //课程编号
     private String className;
     private Integer classNum; //课程的班次
-    private Integer teaId; //老师的工号
+    private String teaId; //老师的工号
     private String teaName;
     private Integer classChooseNum;
     private Integer classUpperLimit;
     private String classDateDescription;
+    private String classDateDescriptionA;
+    private String classDateDescriptionB;
     private String classPlace;
     private Integer classLength;
     private String modelsName;
     private Integer departId;
     private Integer classModuleNum;
-    private Integer classSemester;
+    private String classSemester;
     private Integer classGradePoint;
     private Integer startWeek;
     private Integer endWeek;
     private Integer classTime;
     private boolean notShowAddButton;
     private boolean showDeleteButton;
+    private String buttonGroup;
+    private String mainLecturer;
+    private String classEncode;
+    private String shenQingRenId;
+    private String classStr;
+    private String departName;
 
     public Integer getClassId() {
         return classId;
@@ -53,13 +64,7 @@ public class ClassDomain {
         this.className = className;
     }
 
-    public Integer getTeaId() {
-        return teaId;
-    }
 
-    public void setTeaId(Integer teaId) {
-        this.teaId = teaId;
-    }
 
     public String getTeaName() {
         return teaName;
@@ -86,7 +91,6 @@ public class ClassDomain {
     }
 
     public String getClassDateDescription() {
-
         return classDateDescription;
     }
 
@@ -134,13 +138,7 @@ public class ClassDomain {
         this.classModuleNum = classModuleNum;
     }
 
-    public Integer getClassSemester() {
-        return classSemester;
-    }
 
-    public void setClassSemester(Integer classSemester) {
-        this.classSemester = classSemester;
-    }
 
     public String getTeacherInfo() {
         return teacherInfo;
@@ -204,5 +202,85 @@ public class ClassDomain {
 
     public void setShowDeleteButton(boolean showDeleteButton) {
         this.showDeleteButton = showDeleteButton;
+    }
+
+    public String getButtonGroup() {
+        return buttonGroup;
+    }
+
+    public void setButtonGroup(String buttonGroup) {
+        this.buttonGroup = buttonGroup;
+    }
+
+    public String getMainLecturer() {
+        return mainLecturer;
+    }
+
+    public void setMainLecturer(String mainLecturer) {
+        this.mainLecturer = mainLecturer;
+    }
+
+    public String getClassDateDescriptionA() {
+        return classDateDescriptionA;
+    }
+
+    public void setClassDateDescriptionA(String classDateDescriptionA) {
+        this.classDateDescriptionA = classDateDescriptionA;
+    }
+
+    public String getClassDateDescriptionB() {
+        return classDateDescriptionB;
+    }
+
+    public void setClassDateDescriptionB(String classDateDescriptionB) {
+        this.classDateDescriptionB = classDateDescriptionB;
+    }
+
+    public String getTeaId() {
+        return teaId;
+    }
+
+    public void setTeaId(String teaId) {
+        this.teaId = teaId;
+    }
+
+    public String getClassEncode() {
+        return classEncode;
+    }
+
+    public void setClassEncode(String classEncode) {
+        this.classEncode = classEncode;
+    }
+
+    public String getClassSemester() {
+        return classSemester;
+    }
+
+    public void setClassSemester(String classSemester) {
+        this.classSemester = classSemester;
+    }
+
+    public String getShenQingRenId() {
+        return shenQingRenId;
+    }
+
+    public void setShenQingRenId(String shenQingRenId) {
+        this.shenQingRenId = shenQingRenId;
+    }
+
+    public String getClassStr() {
+        return classStr;
+    }
+
+    public void setClassStr(String classStr) {
+        this.classStr = classStr;
+    }
+
+    public String getDepartName() {
+        return departName;
+    }
+
+    public void setDepartName(String departName) {
+        this.departName = departName;
     }
 }

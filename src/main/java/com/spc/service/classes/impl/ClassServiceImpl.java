@@ -22,44 +22,37 @@ public class ClassServiceImpl implements ClassService {
     private StudentDao studentDao;
 
     @Override
-    public int addClass(ClassDomain classDomain) {
-        return classDao.insert(classDomain);
+    public void addClass(ClassDomain classDomain) {
+        classDao.insert(classDomain);
     }
 
     @Override
-    public List<ClassDomain> findAllClass(Integer departId, String className, int teaId,int startWeek,int endWeek) {
+    public List<ClassDomain> findAllClass(Integer departId, String className, String teaId, int startWeek, int endWeek) {
 
-        return classDao.selectClasses(departId, className,"", teaId,startWeek,endWeek);
+        return classDao.selectClasses(departId, className, "", teaId, startWeek, endWeek, 1,88888888,1,0);
     }
 
     @Override
-    public List findStudent(String className, int classId) {
-        return studentDao.findStudent(className, classId);
+    public List findStudent(int classId) {
+        return studentDao.findStudent(classId);
     }
 
+//    @Override
+//    public int updateScore1(String className,int classNum, String stuId, int wlzzxxGrade, int knskGrade) {
+//        return classDao.updateScore1(className, classNum,stuId, wlzzxxGrade,knskGrade);
+//    }
+//
+////    @Override
+////    public int updateScore2(String className, int classNum,String stuId, int xbsjGrade) {
+////        return classDao.updateScore2(className,classNum, stuId, xbsjGrade);
+////    }
     @Override
-    public int updateScore(String className, int stuId, int score) {
-        return classDao.updateScore(className, stuId, score);
-
+    public int updateScore3(String className,int classNum, String stuId, int xbsjGrade,int wlzzxxGrade, int knskGrade) {
+        return classDao.updateScore3(className,classNum, stuId, xbsjGrade, wlzzxxGrade,  knskGrade);
     }
 
-    @Override
-    public String[][] findCourseTable(int teaId) {
-        List<HashMap<String, String>> lis = classDao.findCourseTable(teaId);
-        String temp[][] = new String[10][7];
-        for (HashMap<String, String> li : lis) {
-            String date = li.get("classDateDescription");
-            String classPlace = li.get("classPlace");
-            String teaName = li.get("teaName");
 
-            String[] ints = date.split(":");
-            Integer r = ints[0].toCharArray()[0] - '0';
-            Integer l = ints[1].toCharArray()[0] - '0';
 
-            String context = li.get("className") + ',' + classPlace + ',' + teaName;
-            temp[(r - 1) * 2][l - 1] = context;
-            temp[(r - 1) * 2 + 1][l - 1] = context;
-        }
-        return temp;
-    }
 }
+
+

@@ -8,15 +8,16 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectKey;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserDao {
 
-//    @Insert("insert into User(userName, password) values(#{userName}, #{password})")
-//    @SelectKey(statement="call identity()", keyProperty="uid", before=false, resultType=long.class)
-    int  insert(UserDomain user);
+    int insert(UserDomain user);
+    int udpate(UserDomain user);
+//
+//    @Insert("insert into Role_user(roleId, uId) values(#{roleId}, #{uId})")
+//    int insertRole(@Param("roleId") Integer roleId, @Param("uId") Integer uId);
 
-    @Insert("insert into Role_user(roleId, uId) values(#{roleId}, #{uId})")
-    int insertRole(@Param("roleId")Integer roleId,@Param("uId")Integer uId);
+    UserDomain findUsersById(@Param("stuId") String stuId);
 
-    UserDomain findUsersByName(@Param("userName")String userName);
 }

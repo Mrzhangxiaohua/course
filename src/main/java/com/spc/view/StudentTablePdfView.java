@@ -2,12 +2,14 @@ package com.spc.view;
 
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import org.apache.tomcat.jni.Time;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
+import java.util.Timer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,13 +22,31 @@ public class StudentTablePdfView extends AbstractPdfView {
 
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
-        String[][] tables = (String[][]) map.get("tables");
+        int studentSwitch = (int) model.get("student");
+        String[][] tables = (String[][]) map.get("data");
 
         System.out.println(tables);
         PdfPTable table = new PdfPTable(8);
 
+
+        boolean[] widthCellB = new boolean[]{false,false,false,false,false,false,false};
+        int[] widthCell = new int[]{1,1,1,1,1,1,1,1};
+        for (int i = 0; i < tables.length; i = i + 2) {
+            String[] t = tables[i];
+            boolean have = false;
+            for(int k =0;k<t.length;k++){
+                if(tables[i][k]!=null & tables[i][k]!=""){
+                    widthCellB[k] = true;
+                }
+            }
+        }
+        for (int j = 0;j<widthCellB.length;j++) {
+            widthCell[j+1]=widthCellB[j]==true?3:1;
+        }
+
+
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{2,2, 2, 2, 2, 2, 2, 2});
+        table.setWidths(widthCell);
 
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -83,32 +103,42 @@ public class StudentTablePdfView extends AbstractPdfView {
         table.addCell(hcell);
 
         for (int i = 0; i < tables.length; i = i + 2) {
-
-
             String[] t = tables[i];
             PdfPCell cell;
-            System.out.println(t);
-
-
-            cell = new PdfPCell(new Phrase(Integer.toString(i/2 +1)+"-"+ Integer.toString(i/2 +2)+"节", textFont));
+            cell = new PdfPCell(new Phrase(Integer.toString(i  + 1) + "-" + Integer.toString(i + 2) + "节", textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
 
             for (int j = 0; j < t.length; j++) {
-                StringBuilder newStrs = null;
-                if(t[j]!=null){
-                    String[] strs = t[j].replace(",","\n ").split(" ");
-                    newStrs = new StringBuilder("课程:".concat(strs[0]).concat("地点:").concat(strs[1]).concat("教师:").concat(strs[2]));
+                StringBuilder newStrs = new StringBuilder("");
+                if (t[j] != null) {
+                    String[] strs = t[j].replace(",", "\n ").split(" ");
+                    if (strs != null && !(strs.length == 0)) {
+                        for (String li : strs) {
+                            newStrs = li != null && li != "" ? newStrs.append(li) : newStrs;
+                        }
+                    }
                 }
 
-                cell = new PdfPCell(new Phrase(t[j] != null ? newStrs.toString(): " ", textFont));
+                cell = new PdfPCell(new Phrase(t[j] != null ? newStrs.toString() : " ", textFont));
                 cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 cell.setPaddingBottom(6);
                 table.addCell(cell);
             }
-
         }
         document.add(table);
+        Rectangle rect = new Rectangle(600, 10, 1000, 120);
+        PdfContentByte cb = writer.getDirectContent();
+        cb.rectangle(rect);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Phrase p = new Phrase("主讲老师签名:   _________\n授课老师签名:   _________\n时间:   " + df.format(new Date()), textFont);
+        ColumnText ct = new ColumnText(cb);
+
+        if(studentSwitch != 1) {
+            ct.setSimpleColumn(rect);
+            ct.addText(p);
+            ct.go();
+        }
     }
 }
