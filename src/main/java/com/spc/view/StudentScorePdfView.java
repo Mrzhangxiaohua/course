@@ -100,7 +100,7 @@ public class StudentScorePdfView extends AbstractPdfView {
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase(Integer.toString(gradeDomain.getScore()), textFont));
+            cell = new PdfPCell(new Phrase(Integer.toString(gradeDomain.getZzGrade()), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);

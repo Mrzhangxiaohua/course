@@ -1,11 +1,10 @@
 package com.spc.util;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class MakeTimeTable {
     public static String[][] makeBigTable(List<HashMap<String, Object>> lis, int student) {
-        String temp[][] = new String[10][7];
+        String temp[][] = new String[12][7];
         for (HashMap<String, Object> li : lis) {
             String date = (String) li.get("classDateDescription");
             String classPlace = (String) li.get("classPlace");
@@ -20,8 +19,9 @@ public class MakeTimeTable {
             String[] ints = date.split(":");
             Integer t = ints[0].toCharArray()[0] - '0';
             Integer l = ints[1].toCharArray()[0] - '0';
+
             if (t == 0) {
-                for (int r = 1; r <= 5; r++) {
+                for (int r = 1; r <= 6; r++) {
                     String context =encode1(className,  classPlace,  teacherName, mainLecturer, startWeek,  endWeek,  classNum, student);
                     temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
                     temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
@@ -42,11 +42,14 @@ public class MakeTimeTable {
     }
 
 
-    public static String[][] makeTable(List<HashMap<String, Object>> lis) {
+    public static String[][] makeTable(List<Map<String, Object>> lis) {
         String temp[][] = new String[10][7];
-        System.out.println(lis);
+//        String temp[][] = new String[24][7];
+//        System.out.println("=============================lis========================");
+//        System.out.println(lis);
+//        System.out.println("=============================lis========================");
         if (!lis.isEmpty()) {
-            for (HashMap<String, Object> li : lis) {
+            for (Map<String, Object> li : lis) {
                 System.out.println("=======检测============");
                 System.out.println(li.get("startWeek"));
                 String date = (String) li.get("classDateDescription");
@@ -59,6 +62,7 @@ public class MakeTimeTable {
                 String className = (String) li.get("className");
 
                 String[] ints = date.split(":");
+                //r表示周几，l表示第几节课
                 Integer r = ints[0].toCharArray()[0] - '0';
                 Integer l = ints[1].toCharArray()[0] - '0';
 
@@ -67,7 +71,31 @@ public class MakeTimeTable {
                 temp[(l - 1) * 2 + 1][r - 1] = context;
             }
         }
-
+//        System.out.println(temp);
+//        for(int i = 0 ;i< 24; i++){
+//            for (int j = 0; j<7; j++){
+//                System.out.print(temp[i][j] + "\t");
+//            }
+//            System.out.println();
+//        }
         return temp;
+    }
+
+    public static void main(String[] args) {
+        List<Map<String, Object>> ls = new ArrayList<>();
+        Map<String, Object> m = new HashMap<>();
+        m.put("startWeek", 4);
+        m.put("teaName", "Amy");
+        m.put("stuId", "03118105316");
+        m.put("classPlace", "外文楼A502");
+        m.put("className", "英语实用口语实践");
+        m.put("classNum", 9);
+        m.put("endWeek", 12);
+        m.put("classDateDescription", "2:5");
+        ls.add(m);
+//        ls.add()
+//                [{startWeek=4, teaName=Amy, stuId=3118105316, classPlace=外文楼A502,
+//                className=英语实用口语实践, classNum=9, endWeek=11, classDateDescription=2:5}]
+        makeTable(ls);
     }
 }

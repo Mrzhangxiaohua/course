@@ -7,11 +7,44 @@ public class GradeDomain  implements Serializable {
     private String stuId;
     private String className;
     private Integer classId;
-    private Integer score;
+    private Integer wlzzxxGrade;
+    private Integer knskGrade;
+    private Integer xbsjGrade;
+    private Integer zzGrade;
     private String classSemester;
     private Integer classGradePoint;
 
+    public Integer getWlzzxxGrade() {
+        return wlzzxxGrade;
+    }
 
+    public void setWlzzxxGrade(Integer wlzzxxGrade) {
+        this.wlzzxxGrade = wlzzxxGrade;
+    }
+
+    public Integer getKnskGrade() {
+        return knskGrade;
+    }
+
+    public void setKnskGrade(Integer knskGrade) {
+        this.knskGrade = knskGrade;
+    }
+
+    public Integer getXbsjGrade() {
+        return xbsjGrade;
+    }
+
+    public void setXbsjGrade(Integer xbsjGrade) {
+        this.xbsjGrade = xbsjGrade;
+    }
+
+    public Integer getZzGrade() {
+        return zzGrade;
+    }
+
+    public void setZzGrade(Integer zzGrade) {
+        this.zzGrade = zzGrade;
+    }
 
 
     public String getClassName() {
@@ -31,13 +64,13 @@ public class GradeDomain  implements Serializable {
     }
 
 
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
+//    public Integer getScore() {
+//        return score;
+//    }
+//
+//    public void setScore(Integer score) {
+//        this.score = score;
+//    }
 
     public Integer getChooseId() {
         return chooseId;
