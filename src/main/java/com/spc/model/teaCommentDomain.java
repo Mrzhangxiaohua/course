@@ -4,8 +4,7 @@ import org.apache.ibatis.type.Alias;
 
 import java.io.Serializable;
 
-@Alias("StudentCommentDomain")
-public class StudentCommentDomain implements Serializable {
+public class teaCommentDomain implements Serializable{
     private Integer stuId; //学生的Id
     private Integer classId; //课程的Id
     private String className;
@@ -78,6 +77,4 @@ public class StudentCommentDomain implements Serializable {
     public void setStuSuggestion(String stuSuggestion) {
         this.stuSuggestion = stuSuggestion;
     }
-
-
 }
