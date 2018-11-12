@@ -118,4 +118,10 @@
         from course.Course
         where className=#{className} and classNum = #{classNum}
     </select>
+
+    <!--Do not involve high concurrency without opening the cache.-->
+    <insert id="addComment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO course.StuComment(stuId, teaId, stuEvaluate, stuSuggestion) VALUES (#{stuId}, 0, #{score}, #{words})
+    </insert>
+
 </mapper>

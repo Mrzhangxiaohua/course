@@ -13,6 +13,7 @@ import com.spc.util.ResponseWrap;
 import com.spc.view.StudentScorePdfView;
 import com.spc.view.StudentTablePdfView;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 这个类提供学生端的路由。
@@ -79,7 +77,7 @@ public class StudentController extends Base{
     @RequestMapping(value = "/add/application", method = RequestMethod.POST)
     public int addApplcation(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
-       logger.info("添加课程的json = %s", json);
+        logger.info("添加课程的json = %s", json);
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
@@ -99,6 +97,40 @@ public class StudentController extends Base{
         }
         return 0;
     }
+    /**
+     * 学生端:进行教师评价
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/evaluateTeacher", method = RequestMethod.POST)
+    public int addComment(HttpServletRequest request){
+        String json = RequestPayload.getRequestPayload(request);
+        logger.info("增加=================================== %s", json);
+        try {
+            JSONObject obj = new JSONObject(json);
+            String classType = obj.getString("classType");
+            String className = obj.getString("className");
+            String words = obj.getString("words");
+            JSONArray scoreJS = obj.getJSONArray("score");
+            //--------------------------------------------------------------
+            List lists = new ArrayList<>();
+            for (int i = 0; i < scoreJS.length(); i++) {
+                lists.add(i, scoreJS.getJSONObject(i).get("i"));
+            }
+            String[] score = (String[]) lists.toArray(new String[lists.size()]);//list转score
+            //------------------------------------------------------
+            String stuId = (String) request.getSession().getAttribute("userId");
+            System.out.println(stuId);
+            return studentService.addComment(classType, className, words, stuId, score);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
+        System.out.println(json);
+        return 0;
+    }
+
 
     /**
      * 学生端：可以根据课程id 添加课程
@@ -159,7 +191,6 @@ public class StudentController extends Base{
             @RequestParam(required = false, defaultValue = "") String stuId,
             @RequestParam(required = false, defaultValue = "88888888") Integer classId,
     HttpSession session) {
-
         stuId = (String) session.getAttribute("userId");
         return gradeService.selectGrade(classId, stuId);
     }

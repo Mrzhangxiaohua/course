@@ -17,11 +17,13 @@ public interface StudentService {
     public int deleteCourse(int classId,String stuId);
 
 
-    public int addApplication(int classId, int states, String reason , int classNum,String stuId);
+    public int addApplication(int classId, int states, String reason , int classNum, String stuId);
 
     public List<ClassDomain> selectClassed(Map<String, Object> map);
 
     public int getTimeSwtich();
 
     public Map getClassTime(String stuId);
+
+    public int addComment(String classType, String className, String words, String stuId, String[] score);
 }

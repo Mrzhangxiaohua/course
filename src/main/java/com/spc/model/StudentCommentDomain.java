@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Alias("StudentCommentDomain")
 public class StudentCommentDomain implements Serializable {
-    private Integer stuId; //学生的Id
+    private String stuId; //学生的Id
     private Integer classId; //课程的Id
     private String className;
     private Integer classNum;
@@ -15,11 +15,11 @@ public class StudentCommentDomain implements Serializable {
     private String stuEvaluate; //学生细则评分
     private String stuSuggestion; //学生评价
 
-    public Integer getStuId() {
+    public String getStuId() {
         return stuId;
     }
 
-    public void setStuId(Integer stuId) {
+    public void setStuId(String stuId) {
         this.stuId = stuId;
     }
 

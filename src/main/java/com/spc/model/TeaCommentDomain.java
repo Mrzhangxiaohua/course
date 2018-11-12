@@ -3,9 +3,9 @@ package com.spc.model;
 import org.apache.ibatis.type.Alias;
 
 import java.io.Serializable;
-
-public class teaCommentDomain implements Serializable{
-    private Integer stuId; //学生的Id
+@Alias("TeaCommentDomain")
+public class TeaCommentDomain implements Serializable{
+    private String stuId; //学生的Id
     private Integer classId; //课程的Id
     private String className;
     private Integer classNum;
@@ -14,11 +14,11 @@ public class teaCommentDomain implements Serializable{
     private String stuEvaluate; //学生细则评分
     private String stuSuggestion; //学生评价
 
-    public Integer getStuId() {
+    public String getStuId() {
         return stuId;
     }
 
-    public void setStuId(Integer stuId) {
+    public void setStuId(String stuId) {
         this.stuId = stuId;
     }
 

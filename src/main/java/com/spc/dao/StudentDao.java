@@ -34,4 +34,6 @@ public interface StudentDao {
 
     Map<String,Object> findClassesByNameAndNum(@Param("className")String className,@Param("classNum") int classNum);
 
+    int addComment(@Param("stuId") String stuId, @Param("classType") String classType, @Param("className") String className,
+                   @Param("words") String words, @Param("score") int score);
 }

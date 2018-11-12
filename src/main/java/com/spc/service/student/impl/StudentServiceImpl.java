@@ -258,4 +258,14 @@ public class StudentServiceImpl extends Base implements StudentService {
         }
         return 1;
     }
+
+    @Override
+    public int addComment(String classType, String className, String words, String stuId, String[] score) {
+        int scores = 0;
+        for (int i = 0; i < score.length; i++){
+            scores = scores + Integer.parseInt(score[i]);
+        }
+        System.out.println("===========添加评论============");
+        return studentDao.addComment(stuId, classType, className, words, scores);
+    }
 }
