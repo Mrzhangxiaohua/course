@@ -268,4 +268,14 @@ public class StudentServiceImpl extends Base implements StudentService {
         System.out.println("===========添加评论============");
         return studentDao.addComment(stuId, classType, className, words, scores);
     }
+
+    @Override
+    public List<Map<String, Object>> selectList(String stuId) {
+        return studentDao.selectList(stuId);
+    }
+
+    @Override
+    public List<Map<String, Object>> showTeacomment(String stuId) {
+        return studentDao.showTeacomment(stuId);
+    }
 }

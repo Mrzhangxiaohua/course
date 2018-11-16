@@ -98,6 +98,16 @@ public class StudentController extends Base{
         return 0;
     }
     /**
+     * 学生端：获取学生所选择的课程列表
+     *
+     */
+    @RequestMapping("/select/list")
+    public List<Map<String, Object>> selectList(HttpSession session){
+            String stuId = (String) session.getAttribute("userId");
+            return studentService.selectList(stuId);
+    }
+
+    /**
      * 学生端:进行教师评价
      *
      * @param
@@ -114,7 +124,7 @@ public class StudentController extends Base{
             String words = obj.getString("words");
             JSONArray scoreJS = obj.getJSONArray("score");
             //--------------------------------------------------------------
-            List lists = new ArrayList<>();
+            List lists = new ArrayList<>();             //对数组进行处理
             for (int i = 0; i < scoreJS.length(); i++) {
                 lists.add(i, scoreJS.getJSONObject(i).get("i"));
             }
@@ -129,6 +139,14 @@ public class StudentController extends Base{
 
         System.out.println(json);
         return 0;
+    }
+    /**
+     * 学生端：显示老师的打分及其评语
+     */
+    @RequestMapping(value = "/show/teacomment")
+    public List<Map<String, Object>> showTeacomment(HttpSession session){
+        String stuId = (String)session.getAttribute("userId");
+        return studentService.showTeacomment(stuId);
     }
 
 
@@ -151,7 +169,6 @@ public class StudentController extends Base{
             e.printStackTrace();
         }
         return 0;
-
     }
 
     /**
@@ -271,7 +288,6 @@ public class StudentController extends Base{
                                       HttpSession session) {
         String stuId = (String) session.getAttribute("userId");
 //        stuId = 2018000006;
-
         List<GradeDomain> scores = gradeService.selectGrade(classId, stuId);
         System.out.println("tun here");
         Map res = new HashMap();

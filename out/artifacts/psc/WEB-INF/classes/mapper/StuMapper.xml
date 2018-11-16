@@ -121,7 +121,35 @@
 
     <!--Do not involve high concurrency without opening the cache.-->
     <insert id="addComment" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO course.StuComment(stuId, teaId, stuEvaluate, stuSuggestion) VALUES (#{stuId}, 0, #{score}, #{words})
+        INSERT INTO course.StuWGYComment(stuId, teaId, stuEvaluate, stuSuggestion)
+--         VALUES (#{stuId}, 0, #{score}, #{words})
+--             select b.teaId
+--             from course.Course_choose a
+--             left join course.Course b
+--                 on a.classId = b.classId
+--             where a.stuId = '3118105316'#{stuId}
+        VALUES (#{stuId}, 0, #{score}, #{words})
     </insert>
+
+    <select id="selectList" resultType="map">
+        SELECT c.*, d.stuId, d.classId, e.departName
+        FROM course.Course c
+        LEFT JOIN course.Course_choose d
+        ON d.classId = c.classId
+        LEFT JOIN course.Department e
+        ON c.departId = e.departId
+        WHERE d.stuId = #{stuId}
+    </select>
+
+    <select id="showTeacomment" resultType="map">
+        SELECT a.*, b.classId, c.className, c.teaName
+        FROM course.TeaComment a
+        LEFT JOIN course.Course_choose b
+        ON a.stuId = b.stuId
+        LEFT JOIN course.Course c
+        ON b.classId = c.classId
+        WHERE a.stuId = #{stuId} AND b.classId = a.classId
+--         若出现多个课程，则需要根据courseId对应起来，否则出现一对多
+    </select>
 
 </mapper>

@@ -26,4 +26,8 @@ public interface StudentService {
     public Map getClassTime(String stuId);
 
     public int addComment(String classType, String className, String words, String stuId, String[] score);
+
+    public List<Map<String, Object>> selectList(String stuId);
+
+    public List<Map<String, Object>> showTeacomment(String stuId);
 }

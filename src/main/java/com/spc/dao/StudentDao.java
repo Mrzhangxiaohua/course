@@ -36,4 +36,8 @@ public interface StudentDao {
 
     int addComment(@Param("stuId") String stuId, @Param("classType") String classType, @Param("className") String className,
                    @Param("words") String words, @Param("score") int score);
+
+    public List<Map<String, Object>> selectList(@Param("stuId") String stuId);
+
+    public List<Map<String, Object>> showTeacomment(@Param("stuId") String stuId);
 }
