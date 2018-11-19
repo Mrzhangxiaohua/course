@@ -1,10 +1,12 @@
 package com.spc.model;
 
 import org.apache.ibatis.type.Alias;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 
 import java.io.Serializable;
 @Alias("TeaCommentDomain")
 public class TeaCommentDomain implements Serializable{
+    private Integer teaCommentId;
     private String stuId; //学生的Id
     private Integer classId; //课程的Id
     private String className;

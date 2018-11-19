@@ -1,18 +1,19 @@
 package com.spc.service.teacher.impl;
 
-import com.spc.dao.ClassApplicationDao;
-import com.spc.dao.ClassDao;
-import com.spc.dao.IssueGradeDao;
-import com.spc.dao.StudentDao;
-import com.spc.model.ClassApplicationDomain;
-import com.spc.service.teacher.TeacherService;
-import com.spc.util.MakeTimeTable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+        import com.spc.dao.ClassApplicationDao;
+        import com.spc.dao.ClassDao;
+        import com.spc.dao.IssueGradeDao;
+        import com.spc.dao.StudentDao;
+        import com.spc.dao.TeacherDao;
+        import com.spc.model.ClassApplicationDomain;
+        import com.spc.service.teacher.TeacherService;
+        import com.spc.util.MakeTimeTable;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Map;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -24,6 +25,8 @@ public class TeacherServiceImpl implements TeacherService {
     ClassDao classDao;
     @Autowired
     StudentDao studentDao;
+    @Autowired
+    TeacherDao teacherDao;
 
     @Autowired
     IssueGradeDao issueGradeDao;
@@ -83,5 +86,25 @@ public class TeacherServiceImpl implements TeacherService {
             issueGradeDao.update(classId,model1,model2);
         }
         return 0;
+    }
+
+    @Override
+    public int addComment(String classType, String className, String words, String teaId, String[] scores,String stuId) {
+        int totalScore = 0;
+        for (String score:scores){
+            totalScore+= Integer.parseInt(score);
+        }
+        System.out.println("===========添加评论============");
+        return teacherDao.addComment(stuId, classType, className, words, totalScore,teaId);
+    }
+
+    @Override
+    public List<Map<String, Object>> courseList(String teaId) {
+        return teacherDao.courseList(teaId);
+    }
+
+    @Override
+    public List<Map<String, Object>> courseStudentList( String classId) {
+        return teacherDao.courseStudentList(classId);
     }
 }

@@ -16,6 +16,7 @@ import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -670,4 +671,48 @@ public class TeacherController extends Base {
             httpSession.setAttribute("updatescore2", updateScore);
         }
     }
+    /*
+    * 教师端对学生进行评价
+    * */
+    @RequestMapping(value = "comment/evaluateStudent", method = RequestMethod.POST)
+    @ResponseBody
+    public int addComment(HttpServletRequest request) {
+        String teaId = (String) request.getSession().getAttribute("userId");
+        String json = RequestPayload.getRequestPayload(request);
+        logger.info("增加=================================== %s", json);
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(json);
+            String classType = obj.getString("classType");
+            String className = obj.getString("className");
+            String stuId=obj.getString("stuId");
+            String words = obj.getString("words");
+            JSONArray scoreJS=obj.getJSONArray("score");
+
+            List lists=new ArrayList<>(); //对数组进行处理
+        for(int i=0;i<scoreJS.length();i++){
+            lists.add(i,scoreJS.getJSONObject(i).get("i"));
+        }
+        String[] scores=(String[])lists.toArray(new String[lists.size()]);
+        return teacherService.addComment(classType,className,words,teaId,scores,stuId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        System.out.println(json);
+        return 0;
+    }
+    @RequestMapping("/comment/courses")
+    @ResponseBody
+    public List<Map<String, Object>> selectList(HttpSession session){
+        String teaId = (String) session.getAttribute("userId");
+        return teacherService.courseList(teaId);
+    }
+
+    @RequestMapping("/comment/courses")
+    @ResponseBody
+    public List<Map<String, Object>> courseStudentList(HttpServletRequest request){
+        String classId = (String) request.getAttribute("classId");
+        return teacherService.courseStudentList(classId);
+    }
+
 }
