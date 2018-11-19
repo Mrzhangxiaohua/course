@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.TeacherDao">
+
+
+    <insert id="addComment" useGeneratedKeys="true" keyProperty="teaCommentId" flushCache="true">
+        insert into TeaComment(stuId, classId,teaId,teaEvaluate,teaSuggestion)
+        values(#{stuId}, #{classId},#{teaId},#{totalScore},#{words})
+    </insert>
+    <select id="courseList" resultType="map">
+        select classId,classNum,className,classChooseNum,classSemester,startWeek,endWeek
+        from course.Course
+        where c.teaId=#{teaId}
+    </select>
+
+    <select id="courseStudentList" resultType="map">
+        select s.username,s.stuId
+        from course.Course_choose c
+        left join course.stuInfo s
+        on c.stuId=s.stuId
+        where c.classId=#{classId}
+    </select>
+
+</mapper>
