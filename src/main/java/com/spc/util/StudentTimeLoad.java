@@ -26,16 +26,19 @@ public class StudentTimeLoad {
         String description = (String) map.get("classDateDescription");
 
         String[] des = description.split(":");
+        //取索引用来制作所选课程的信息表
         int firstIndex = Integer.parseInt(des[0]);
         int secondIndex = Integer.parseInt(des[1]);
-        List<long[]> lis = new ArrayList<>();
+        int thirdIndex = Integer.parseInt(des[2]); //课程时长
+
+        List<long[]> lis = new ArrayList<>();//用来存储课程信息
 
         if (firstIndex != 0) {
             int xingqiji = firstIndex;
-            int begin = switchSecondTime(secondIndex);
-            int chixu = 2;
-            lis.addAll(toHours(sW, eW, xingqiji, begin, chixu));
-        } else {
+            int begin = switchSecondTime(secondIndex);//转换课程的时间为几点开始
+            int chixu = thirdIndex;                            //课程持续时间几节课
+            lis.addAll(toHours(sW, eW, xingqiji, begin, chixu));//将选择的课程放入lis中
+        } else {/////////////////////////////////
             for (int i = 1; i <= 5; i++) {
                 int xingqiji = i;
                 int begin = switchSecondTime(secondIndex);
@@ -47,7 +50,7 @@ public class StudentTimeLoad {
     }
 
     private  static int switchSecondTime(int secondIndex) {
-        int res = 0;
+        int res = 0;        //res表示开课时间是几点
         switch (secondIndex) {
             case 1:
                 res = 8;
@@ -56,12 +59,15 @@ public class StudentTimeLoad {
                 res = 10;
                 break;
             case 3:
-                res = 14;
+                res = 12;
                 break;
             case 4:
-                res = 16;
+                res = 14;
                 break;
             case 5:
+                res = 16;
+                break;
+            case 6:
                 res = 19;
                 break;
             default:
@@ -80,15 +86,15 @@ public class StudentTimeLoad {
 
     //将（第几周，周几，开始时间，结束时间）时间格式转化为[hours,hours]
     private  static long[] zhouCiToHours(int weekNo, int xingqiji, int begin, int chixu) {
-        int resDay = (weekNo - 1) * 7 + xingqiji - 1;
+        int resDay = (weekNo - 1) * 7 + xingqiji - 1;   //为形成时间格式yyyy-MM-dd HH:mm:ss做准备
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long[] res = new long[2];
         try {
-            Date date = df.parse(CHUSHISHIJIAN);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            cal.add(Calendar.DATE, resDay);
+            Date date = df.parse(CHUSHISHIJIAN);//拿到初试选课时间
+            Calendar cal = Calendar.getInstance();//用来获取当前时间或者指定时间
+            cal.setTime(date);                    //拿到系统初始时间
+            cal.add(Calendar.DATE, resDay);       //对初始时间DATE加上resDay
             cal.add(Calendar.HOUR, begin);
             long b = cal.getTime().getTime() / (1000 * 3600);
             res[0] = b;

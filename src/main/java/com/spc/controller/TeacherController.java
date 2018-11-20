@@ -708,11 +708,10 @@ public class TeacherController extends Base {
         return teacherService.courseList(teaId);
     }
 
-    @RequestMapping("/comment/courses")
-    @ResponseBody
-    public List<Map<String, Object>> courseStudentList(HttpServletRequest request){
-        String classId = (String) request.getAttribute("classId");
-        return teacherService.courseStudentList(classId);
-    }
-
+//    @RequestMapping("/comment/courses")
+//    @ResponseBody
+//    public List<Map<String, Object>> courseStudentList(HttpServletRequest request){
+//        String classId = (String) request.getAttribute("classId");
+//        return teacherService.courseStudentList(classId);
+//    }
 }
