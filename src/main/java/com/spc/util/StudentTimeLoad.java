@@ -91,7 +91,7 @@ public class StudentTimeLoad {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long[] res = new long[2];
         try {
-            Date date = df.parse(CHUSHISHIJIAN);//拿到初试选课时间
+            Date date = df.parse(CHUSHISHIJIAN);//拿到初始选课时间
             Calendar cal = Calendar.getInstance();//用来获取当前时间或者指定时间
             cal.setTime(date);                    //拿到系统初始时间
             cal.add(Calendar.DATE, resDay);       //对初始时间DATE加上resDay
@@ -126,4 +126,42 @@ public class StudentTimeLoad {
         return hours;
     }
 
+
+    public static void main(String[] args) {
+//        String CHUSHISHIJIAN = "2018-09-02 00:00:00";//每一个学期的第一周的星期一
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = df.parse(CHUSHISHIJIAN);//拿到初始选课时间
+//            System.out.println(date);
+            Date beg = df.parse("2018-11-20 00:00:00");
+            Date end = df.parse("2018-11-19 23:59:59");
+            Date now = df.parse(df.format(new Date()));
+            System.out.println(beg);
+            System.out.println(end);
+            System.out.println(now);
+            Calendar dat = Calendar.getInstance();
+            dat.setTime(now);
+//            dat2.add(Calendar.DATE, 6);
+//            System.out.println(df.format(dat2.getTime()));
+            for (int i = 1; i <= 3; i++){
+                Calendar dat1 = Calendar.getInstance();
+                Calendar dat2 = Calendar.getInstance();
+                dat1.setTime(beg);
+                dat2.setTime(end);
+
+                dat1.add(Calendar.DATE, 7 * (i-1));
+                dat2.add(Calendar.DATE, 7 * i);
+
+                if(dat.after(dat1) && dat.before(dat2)){
+                    System.out.println(df.format(dat.getTime()) + "---------"+ "\n" + df.format(dat1.getTime()) + "---------"+ "\n"+ df.format(dat2.getTime()) +  "\n");
+                    System.out.println(i);
+                }else {
+                    System.out.println(df.format(dat.getTime()) + "---------"+ "\n" + df.format(dat1.getTime()) + "---------"+ "\n"+ df.format(dat2.getTime()) +  "\n");
+                    System.out.println("第" + i + "次不在评价周内");
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 }

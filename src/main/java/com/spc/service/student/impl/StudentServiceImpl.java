@@ -278,4 +278,63 @@ public class StudentServiceImpl extends Base implements StudentService {
     public List<Map<String, Object>> showTeacomment(String stuId) {
         return studentDao.showTeacomment(stuId);
     }
+
+    @Override
+    public int addCommentWeekly() {
+        /**
+         * 获取上课开始时间，并计算第几周
+         * 获得学生本次是否评价，若评价则不可重复评价，若未评价，则允许评价
+         */
+        String CHUSHISHIJIAN = "2018-09-02 00:00:00";//每一个学期的第一周的星期一
+        String CHUSHISHIJIAN2 = "2018-09-01 23:59:59";//每一个学期的第一周的星期一
+        int startWeek = 0;
+        int endWeek = 0;
+        List<Map<String, Object>> li= studentDao.selectList("3118105316");
+        for (Map map : li){
+            for (Object k : map.keySet()){
+                startWeek = (int) map.get("startWeek");
+                endWeek = (int) map.get("endWeek");
+            }
+        }
+//        System.out.println(startWeek);
+        int week = endWeek - startWeek + 1;//总的周数
+        //课程开始时间
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        startWeek = (startWeek - 1) * 7;
+//        endWeek = (endWeek - 1) * 7;
+        try {
+            Date date = df.parse(CHUSHISHIJIAN);
+            Date data = df.parse(CHUSHISHIJIAN2);
+            //获取当前系统时间
+            Date now = df.parse(df.format(new Date()));
+            Calendar calNow = Calendar.getInstance();
+            calNow.setTime(now);
+            //每周开始时间
+            Calendar calStart = Calendar.getInstance();
+            calStart.setTime(date);
+            Calendar calEnd= Calendar.getInstance();
+            calEnd.setTime(data);
+            for (int i = 1; i <= week; i++){
+                calStart.add(Calendar.DATE,7 * (i - 1));
+                calEnd.add(Calendar.DATE, 7 * i);
+                if(calNow.after(calStart) && calNow.before(calEnd)){
+                    System.out.println(i);
+                    return i;
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<Map<String, Object>> addCommentWeeklyTrue() {
+        return studentDao.addCommentWeeklyTrue("3118105316");
+    }
+
+    @Override
+    public int addCommentWeeklyFinal() {
+        return studentDao.addCommentWeeklyFinal();
+    }
 }

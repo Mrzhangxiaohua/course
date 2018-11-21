@@ -152,4 +152,15 @@
 --         若出现多个课程，则需要根据courseId对应起来，否则出现一对多
     </select>
 
+    <!--<insert id="addChooseCourse" useGeneratedKeys="true" keyProperty="chooseId" flushCache="true">-->
+    <select id="addCommentWeeklyTrue" resultType="map">
+        SELECT a.stuId,a.commentFlag
+        FROM course.StuWGYWeekComment a
+        WHERE stuId=#{stuId}
+    </select>
+
+    <insert id="addCommentWeeklyFinal" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO course.StuWGYWeekComment
+        VALUES (NULL,'3118105316', '0000011423', '66', '牛逼', 'commentFlag')
+    </insert>
 </mapper>

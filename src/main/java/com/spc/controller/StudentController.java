@@ -108,7 +108,7 @@ public class StudentController extends Base{
     }
 
     /**
-     * 学生端:进行教师评价
+     * 学生端:进行教师评价总评
      *
      * @param
      * @return
@@ -148,6 +148,46 @@ public class StudentController extends Base{
         String stuId = (String)session.getAttribute("userId");
         return studentService.showTeacomment(stuId);
     }
+
+    /**
+     * 学生按照课时评论老师
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/evaluateTeacherWeekly", method = RequestMethod.POST)
+    @ResponseBody
+    public int  addCommentWeekly(HttpServletRequest request){
+        String json = RequestPayload.getRequestPayload(request);
+        try {
+            JSONObject obj = new JSONObject();
+            /**
+             * 此处拿到学生评教老师的各种字段
+             */
+            int theWeeks = studentService.addCommentWeekly();//第几周评价
+
+            if(theWeeks != 0){ //2
+                List<Map<String, Object>> add = studentService.addCommentWeeklyTrue();
+                for (Map<String, Object> m : add){
+                    int week = (int) m.get("commentFlag");//从数据库中查找评论过哪次
+                    //
+                    if (theWeeks != week){
+                        continue;
+                    }else {
+                        return 0;
+                    }
+                }
+                //调用插入
+                return studentService.addCommentWeeklyFinal();
+            }
+            return 0;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+
 
 
     /**
