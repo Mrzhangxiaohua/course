@@ -260,18 +260,27 @@ public class StudentServiceImpl extends Base implements StudentService {
     }
 
     @Override
-    public int addComment(String classType, String className, String words, String stuId, String[] score) {
-        int scores = 0;
+    public int addComment(String stuId, String teaId, String[] score, String words) {
+        int num = 0;
         for (int i = 0; i < score.length; i++){
-            scores = scores + Integer.parseInt(score[i]);
+            num = num + Integer.parseInt(score[i]);
         }
-        System.out.println("===========添加评论============");
-        return studentDao.addComment(stuId, classType, className, words, scores);
+        String scores = String.valueOf(num);
+        System.out.println(stuId + "---------" + teaId + "---------" + scores + "------------" + words);
+        return studentDao.addComment(stuId, teaId, scores, words);
     }
 
     @Override
     public List<Map<String, Object>> selectList(String stuId) {
-        return studentDao.selectList(stuId);
+        List<Map<String, Object>> list= studentDao.selectList(stuId);
+        //判断是否评教过
+        Map<String, Object> m = studentDao.findIsComment(stuId);
+        if(m == null){
+            list.get(0).put("isComment", '0');//0表示未评教
+        }else {
+            list.get(0).put("isComment", '1');
+        }
+        return list;
     }
 
     @Override

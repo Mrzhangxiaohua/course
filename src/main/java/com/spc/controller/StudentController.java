@@ -113,7 +113,7 @@ public class StudentController extends Base{
      * @param
      * @return
      */
-    @RequestMapping(value = "/evaluateTeacher", method = RequestMethod.POST)
+    @RequestMapping(value = "/stutotea/addComment", method = RequestMethod.POST)
     public int addComment(HttpServletRequest request){
         String json = RequestPayload.getRequestPayload(request);
         logger.info("增加=================================== %s", json);
@@ -121,18 +121,16 @@ public class StudentController extends Base{
             JSONObject obj = new JSONObject(json);
             String classType = obj.getString("classType");
             String className = obj.getString("className");
-            String words = obj.getString("words");
+            String words = obj.getString("comment");
+            String teaId = obj.getString("teaId");
             JSONArray scoreJS = obj.getJSONArray("score");
-            //--------------------------------------------------------------
-            List lists = new ArrayList<>();             //对数组进行处理
-            for (int i = 0; i < scoreJS.length(); i++) {
-                lists.add(i, scoreJS.getJSONObject(i).get("i"));
-            }
-            String[] score = (String[]) lists.toArray(new String[lists.size()]);//list转score
-            //------------------------------------------------------
             String stuId = (String) request.getSession().getAttribute("userId");
-            System.out.println(stuId);
-            return studentService.addComment(classType, className, words, stuId, score);
+            List<String> li = new ArrayList<>();
+            for (int i=0; i<scoreJS.length(); i++) {
+                li.add( scoreJS.getString(i));
+            }
+            String[] score = li.toArray(new String[li.size()]);
+            return studentService.addComment(stuId, teaId, score, words);
         }catch (Exception e){
             System.out.println(e);
         }
@@ -145,7 +143,8 @@ public class StudentController extends Base{
      */
     @RequestMapping(value = "/show/teacomment")
     public List<Map<String, Object>> showTeacomment(HttpSession session){
-        String stuId = (String)session.getAttribute("userId");
+//        String stuId = (String)session.getAttribute("userId");
+        String stuId = (String) session.getAttribute("userId");
         return studentService.showTeacomment(stuId);
     }
 
@@ -185,8 +184,6 @@ public class StudentController extends Base{
         }
         return 0;
     }
-
-
 
 
 

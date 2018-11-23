@@ -122,13 +122,7 @@
     <!--Do not involve high concurrency without opening the cache.-->
     <insert id="addComment" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO course.StuWGYComment(stuId, teaId, stuEvaluate, stuSuggestion)
---         VALUES (#{stuId}, 0, #{score}, #{words})
---             select b.teaId
---             from course.Course_choose a
---             left join course.Course b
---                 on a.classId = b.classId
---             where a.stuId = '3118105316'#{stuId}
-        VALUES (#{stuId}, 0, #{score}, #{words})
+        VALUES (#{stuId}, #{teaId}, #{scores}, #{words})
     </insert>
 
     <select id="selectList" resultType="map">
@@ -141,6 +135,12 @@
         WHERE d.stuId = #{stuId}
     </select>
 
+    <select id="findIsComment" resultType="map">
+        SELECT s.stuId
+        FROM course.StuWGYComment s
+        WHERE s.stuId = #{stuId}
+    </select>
+
     <select id="showTeacomment" resultType="map">
         SELECT a.*, b.classId, c.className, c.teaName
         FROM course.TeaComment a
@@ -149,7 +149,16 @@
         LEFT JOIN course.Course c
         ON b.classId = c.classId
         WHERE a.stuId = #{stuId} AND b.classId = a.classId
---         若出现多个课程，则需要根据courseId对应起来，否则出现一对多
     </select>
 
+    <select id="addCommentWeeklyTrue" resultType="map">
+        SELECT a.stuId,a.commentFlag
+        FROM course.StuWGYWeekComment a
+        WHERE stuId=#{stuId}
+    </select>
+
+    <insert id="addCommentWeeklyFinal" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO course.StuWGYWeekComment
+        VALUES (NULL,'3118105316', '0000011423', '66', '牛逼', 'commentFlag')
+    </insert>
 </mapper>
