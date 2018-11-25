@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class CalculateWeekth{
     public static int weekth(String firstWeek){
-        //shijian
+        
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date firstWeekDate=sdf.parse(firstWeek);
