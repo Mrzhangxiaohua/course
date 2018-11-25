@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service(value = "classService")
 public class ClassServiceImpl implements ClassService {
@@ -31,6 +32,16 @@ public class ClassServiceImpl implements ClassService {
 
         return classDao.selectClasses(departId, className, "", teaId, startWeek, endWeek, 1,88888888,1,0);
     }
+    @Override
+    public List<Map<String,Object>> findClass(Integer departId, String className, String teaId, int startWeek, int endWeek) {
+        return classDao.findClasses(departId, className, "", teaId, startWeek, endWeek, 1,88888888,1,0);
+    }
+
+    @Override
+    public List<Map<String, Object>> findWeekCourses(String teaId,String semester,int weekth) {
+       return classDao.findWeekCourses(teaId,semester,weekth);
+    }
+
 
     @Override
     public List findStudent(int classId) {

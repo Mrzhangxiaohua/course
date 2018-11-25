@@ -11,6 +11,7 @@ package com.spc.service.teacher.impl;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.stereotype.Service;
 
+        import java.util.ArrayList;
         import java.util.HashMap;
         import java.util.List;
         import java.util.Map;
@@ -89,13 +90,14 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public int addComment(String classType, String className, String words, String teaId, String[] scores,String stuId) {
+    public int addComment(String classId,String suggestion, String teaId, List<String> scores,String stuId) {
         int totalScore = 0;
         for (String score:scores){
             totalScore+= Integer.parseInt(score);
         }
         System.out.println("===========添加评论============");
-        return teacherDao.addComment(stuId, classType, className, words, totalScore,teaId);
+
+        return teacherDao.addComment(stuId, classId,suggestion, totalScore,teaId);
     }
 
     @Override
@@ -106,5 +108,42 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public List<Map<String, Object>> courseStudentList( String classId) {
         return teacherDao.courseStudentList(classId);
+    }
+    @Override
+    public List<Map<String, Object>> findStudentAndStatus(int classId,String teaId){
+        List students = studentDao.findStudent(classId);
+
+       List<Map<String,Object>>studentList=new ArrayList<>();
+       if(students.size()>0) {
+           for (int i = 0; i < students.size(); i++) {
+               Map<String, Object> studentMap = new HashMap<>();
+               studentMap.put("stuId",  ((Map<String, Object>) students.get(i)).get("stuId"));
+               studentMap.put("stuName",  ((Map<String, Object>) students.get(i)).get("stuName"));
+               studentMap.put("departName",((Map<String, Object>) students.get(i)).get("departName"));
+               int commentStatus = 0;//0表示未评价
+               String stuId = (String) ((Map<String, Object>) students.get(i)).get("stuId");
+               int count = teacherDao.findCommentStatus(stuId, teaId, Integer.toString(classId));
+               if (count >= 1) {
+                   commentStatus = 1;//1表示已评价
+               }
+               studentMap.put("commentStatus", commentStatus);
+               studentList.add(studentMap);
+           }
+       }
+       return studentList;
+    }
+
+    @Override
+    public Map<String, Object> findCommentByClassIdAndStuId(int classId, int stuId) {
+        List<Map<String, Object>> comment = teacherDao.findCommentByClassIdAndStuId(classId, stuId);
+        if(comment.size()==0){
+            return null;
+        }
+        return comment.get(0);
+    }
+
+    @Override
+    public Map<String, Object> findCurrentCalendar() {
+         return classDao.CurrentCalendar();
     }
 }
