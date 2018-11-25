@@ -17,8 +17,9 @@ public class MakeTimeTable {
             String className = (String) li.get("className");
 
             String[] ints = date.split(":");
-            Integer t = ints[0].toCharArray()[0] - '0';
-            Integer l = ints[1].toCharArray()[0] - '0';
+            Integer t = ints[0].toCharArray()[0] - '0';//星期几
+            Integer l = ints[1].toCharArray()[0] - '0';//第几节开始
+            Integer z = ints[2].toCharArray()[0] - '0';//上几节课
 
             if (t == 0) {
                 for (int r = 1; r <= 6; r++) {
@@ -29,8 +30,11 @@ public class MakeTimeTable {
             } else {
                 int r = t;
                 String context =encode1(className,  classPlace,  teacherName, mainLecturer, startWeek,  endWeek,  classNum, student);
-                temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
-                temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
+                for (int i = 0; i< z; i++){
+                    temp[(l-1) * 2 + i][r - 1] = temp[(l-1) * 2 + i][r - 1] != null ? temp[(l-1) * 2 + i][r - 1] + ','+ context : context;
+                }
+//                temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
+//                temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
             }
         }
         return temp;

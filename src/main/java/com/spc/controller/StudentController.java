@@ -108,12 +108,12 @@ public class StudentController extends Base{
     }
 
     /**
-     * 学生端:进行教师评价
+     * 学生端:进行教师评价总评
      *
      * @param
      * @return
      */
-    @RequestMapping(value = "/evaluateTeacher", method = RequestMethod.POST)
+    @RequestMapping(value = "/stutotea/addComment", method = RequestMethod.POST)
     public int addComment(HttpServletRequest request){
         String json = RequestPayload.getRequestPayload(request);
         logger.info("增加=================================== %s", json);
@@ -121,18 +121,16 @@ public class StudentController extends Base{
             JSONObject obj = new JSONObject(json);
             String classType = obj.getString("classType");
             String className = obj.getString("className");
-            String words = obj.getString("words");
+            String words = obj.getString("comment");
+            String teaId = obj.getString("teaId");
             JSONArray scoreJS = obj.getJSONArray("score");
-            //--------------------------------------------------------------
-            List lists = new ArrayList<>();             //对数组进行处理
-            for (int i = 0; i < scoreJS.length(); i++) {
-                lists.add(i, scoreJS.getJSONObject(i).get("i"));
-            }
-            String[] score = (String[]) lists.toArray(new String[lists.size()]);//list转score
-            //------------------------------------------------------
             String stuId = (String) request.getSession().getAttribute("userId");
-            System.out.println(stuId);
-            return studentService.addComment(classType, className, words, stuId, score);
+            List<String> li = new ArrayList<>();
+            for (int i=0; i<scoreJS.length(); i++) {
+                li.add( scoreJS.getString(i));
+            }
+            String[] score = li.toArray(new String[li.size()]);
+            return studentService.addComment(stuId, teaId, score, words);
         }catch (Exception e){
             System.out.println(e);
         }
@@ -145,9 +143,48 @@ public class StudentController extends Base{
      */
     @RequestMapping(value = "/show/teacomment")
     public List<Map<String, Object>> showTeacomment(HttpSession session){
-        String stuId = (String)session.getAttribute("userId");
+//        String stuId = (String)session.getAttribute("userId");
+        String stuId = (String) session.getAttribute("userId");
         return studentService.showTeacomment(stuId);
     }
+
+    /**
+     * 学生按照课时评论老师
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/evaluateTeacherWeekly", method = RequestMethod.POST)
+    @ResponseBody
+    public int  addCommentWeekly(HttpServletRequest request){
+        String json = RequestPayload.getRequestPayload(request);
+        try {
+            JSONObject obj = new JSONObject();
+            /**
+             * 此处拿到学生评教老师的各种字段
+             */
+            int theWeeks = studentService.addCommentWeekly();//第几周评价
+
+            if(theWeeks != 0){ //2
+                List<Map<String, Object>> add = studentService.addCommentWeeklyTrue();
+                for (Map<String, Object> m : add){
+                    int week = (int) m.get("commentFlag");//从数据库中查找评论过哪次
+                    //
+                    if (theWeeks != week){
+                        continue;
+                    }else {
+                        return 0;
+                    }
+                }
+                //调用插入
+                return studentService.addCommentWeeklyFinal();
+            }
+            return 0;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
 
     /**

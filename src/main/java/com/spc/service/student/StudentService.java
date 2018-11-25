@@ -16,7 +16,6 @@ public interface StudentService {
 
     public int deleteCourse(int classId,String stuId);
 
-
     public int addApplication(int classId, int states, String reason , int classNum, String stuId);
 
     public List<ClassDomain> selectClassed(Map<String, Object> map);
@@ -25,9 +24,15 @@ public interface StudentService {
 
     public Map getClassTime(String stuId);
 
-    public int addComment(String classType, String className, String words, String stuId, String[] score);
+    public int addComment(String stuId, String teaId, String[] score, String words);
 
     public List<Map<String, Object>> selectList(String stuId);
 
     public List<Map<String, Object>> showTeacomment(String stuId);
+
+    public int addCommentWeekly();
+
+    public List<Map<String, Object>> addCommentWeeklyTrue();
+
+    public int addCommentWeeklyFinal();
 }

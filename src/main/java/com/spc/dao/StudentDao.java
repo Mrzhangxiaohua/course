@@ -34,10 +34,16 @@ public interface StudentDao {
 
     Map<String,Object> findClassesByNameAndNum(@Param("className")String className,@Param("classNum") int classNum);
 
-    int addComment(@Param("stuId") String stuId, @Param("classType") String classType, @Param("className") String className,
-                   @Param("words") String words, @Param("score") int score);
+    int addComment(@Param("stuId") String stuId,@Param("teaId") String teaId, @Param("scores") String scores, @Param("words") String words);
 
     public List<Map<String, Object>> selectList(@Param("stuId") String stuId);
 
+    Map<String,Object> findIsComment(@Param("stuId") String stuId);
+
     public List<Map<String, Object>> showTeacomment(@Param("stuId") String stuId);
+
+    public List<Map<String, Object>> addCommentWeeklyTrue(@Param("stuId") String stuId);
+
+    public int addCommentWeeklyFinal();
+
 }

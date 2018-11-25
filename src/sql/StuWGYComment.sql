@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS StuWGYComment;
 
 CREATE TABLE StuWGYComment(
-  id INT AUTO_INCREMENT PRIMARY KEY ,
+  id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
   stuId varchar(11) NOT NULL ,
   teaId varchar(11) NOT NULL ,
   stuEvaluate varchar(11),
