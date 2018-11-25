@@ -39,5 +39,14 @@ public interface ClassDao {
     ClassDomain findClassById(@Param("classId") int classId);
 
     List haveStuInClass(@Param("classId")int  classId,@Param("stuId")String stuId);
+    List<Map<String,Object>> findClasses(@Param("departId") Integer departId, @Param("className") String className,
+                                    @Param("teaName") String teaName, @Param("teaId") String teaId, @Param("startWeek") int startWeek,
+                                    @Param("endWeek") int endWeek, @Param("hasWaiGuoYu") int hasWaiGuoYu,
+                                    @Param("modelsId") int modelsId,@Param("classNum") int classNum
+            ,@Param("classChooseNum") int classChooseNum);
 
+
+    List<Map<String,Object>> findWeekCourses(@Param("teaId") String teaId,@Param("semester") String semester,@Param("weekth")int weekth);
+
+    Map<String, Object> CurrentCalendar();
 }
