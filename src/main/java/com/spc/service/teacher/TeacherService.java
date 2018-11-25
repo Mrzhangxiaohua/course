@@ -14,11 +14,17 @@ public interface TeacherService {
     List<Map<String,Object>> findApplication(String teaId);
 
     List findStudentByClassnameAndNum(String className,int classNum);
-    public int issueGrade(int classId,int model1,int model2);
+     int issueGrade(int classId,int model1,int model2);
 
-    public int addComment(String classType, String className, String words, String teaId, String[] scores, String stuId);
+    int addComment(String classId, String suggestion, String teaId, List<String> scores, String stuId);
 
     List<Map<String, Object>> courseList(String teaId);
 
     List<Map<String, Object>> courseStudentList(String classId);
+
+    List<Map<String, Object>> findStudentAndStatus(int classId,String teaId);
+
+    Map<String,Object> findCommentByClassIdAndStuId(int classId, int stuId);
+
+    Map<String,Object> findCurrentCalendar();
 }

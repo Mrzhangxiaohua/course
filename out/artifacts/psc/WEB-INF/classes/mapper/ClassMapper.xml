@@ -189,4 +189,65 @@
     </select>
 
 
+    <select id="findClasses" resultType="map" useCache="false">
+        select
+        classId,className,classNum,teaId,teaName,classSemester,classGradePoint,endWeek,startWeek,
+        classEncode,classTime
+        from
+        <include refid="BASE_TABLE"/>
+        a
+        left join Department b
+        on a.departId = b.departId
+        left join models m
+        on a.classModuleNum = m.modelsId
+        <where>
+            <if test="departId!=88888888 ">
+                and b.departId = #{departId}
+            </if>
+            <if test="modelsId!=88888888 ">
+                and a.classModuleNum = #{modelsId}
+            </if>
+            <if test="className!=null and className!='' ">
+                and a.className like "%"#{className}"%"
+            </if>
+            <if test="teaName!=null and teaName!='' ">
+                and a.teaName like "%"#{teaName}"%"
+            </if>
+            <if test="teaId!=null and teaId!=''">
+                and a.teaId = #{teaId}
+            </if>
+            <if test="startWeek!=88888888">
+                and a.startWeek >= #{startWeek}
+            </if>
+            <if test="endWeek!=88888888">
+                and #{endWeek} >= a.endWeek
+            </if>
+            <if test="hasWaiGuoYu != 1">
+                and a.departId != 12
+            </if>
+        </where>
+        <if test="classNum==1">
+            order by classNum asc
+        </if>
+        <if test="classChooseNum==1">
+            order by classChooseNum asc
+        </if>
+    </select>
+    <select id="currentCalendar" resultType="Map">
+        select *
+        from course.schoolCalendar
+        where flag=1
+        limit 1
+    </select>
+    <select id="findWeekCourses" resultType="Map">
+        select classId,classNum,className,classChooseNum,classDateDescription,classModuleNum,departId,startWeek,endWeek,classSemester
+        from course.Course
+        where teaId=#{teaId}
+        and classSemester=#{semester}
+        and startWeek &lt;= #{weekth}
+        and endWeek &gt;= #{weekth}
+
+    </select>
+
+
 </mapper>

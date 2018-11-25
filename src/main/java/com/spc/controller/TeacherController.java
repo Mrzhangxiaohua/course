@@ -5,6 +5,7 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
+import com.github.pagehelper.PageInfo;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.model.CourseTableExcelDomain;
@@ -12,6 +13,7 @@ import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
 import com.spc.service.teacher.TeacherService;
 
+import com.spc.util.CalculateWeekth;
 import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
@@ -22,6 +24,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.spc.util.RequestPayload;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -672,46 +676,283 @@ public class TeacherController extends Base {
         }
     }
     /*
-    * 教师端对学生进行评价
+    * 教师端对某学生添加评价
     * */
-    @RequestMapping(value = "comment/evaluateStudent", method = RequestMethod.POST)
+    @RequestMapping(value = "/addComment", method = RequestMethod.POST)
     @ResponseBody
     public int addComment(HttpServletRequest request) {
         String teaId = (String) request.getSession().getAttribute("userId");
-        String json = RequestPayload.getRequestPayload(request);
-        logger.info("增加=================================== %s", json);
-        JSONObject obj = null;
+        String jsonString = RequestPayload.getRequestPayload(request);
         try {
-            obj = new JSONObject(json);
-            String classType = obj.getString("classType");
-            String className = obj.getString("className");
-            String stuId=obj.getString("stuId");
-            String words = obj.getString("words");
-            JSONArray scoreJS=obj.getJSONArray("score");
+            JSONObject json=new JSONObject(jsonString);
+            System.out.println("json"+json);
+            JSONObject valuejson = json.getJSONObject("value");
+            String stuId=valuejson.getString("stuId");
+            String classId=valuejson.getString("classId");
+            String suggestion=valuejson.getString("evaluation");
+            List<String> scores=new ArrayList<>();
+            for(int i=0;i<5;i++){
+                scores.add(valuejson.getString("value"+Integer.toString(i+1)));
+            }
 
-            List lists=new ArrayList<>(); //对数组进行处理
-        for(int i=0;i<scoreJS.length();i++){
-            lists.add(i,scoreJS.getJSONObject(i).get("i"));
-        }
-        String[] scores=(String[])lists.toArray(new String[lists.size()]);
-        return teacherService.addComment(classType,className,words,teaId,scores,stuId);
+
+           return teacherService.addComment(classId,suggestion,teaId,scores,stuId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println(json);
         return 0;
     }
-    @RequestMapping("/comment/courses")
+  /*
+  * 教师开课课程
+  * */
+    @RequestMapping("/courses")
     @ResponseBody
-    public List<Map<String, Object>> selectList(HttpSession session){
-        String teaId = (String) session.getAttribute("userId");
-        return teacherService.courseList(teaId);
+    public Map<String, Object> courseList(HttpSession session){
+        String teaId = (String)session.getAttribute("userId");
+        Map<String, Object> res = new HashMap<>();
+        List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
+        if(courses.size()==0){
+            res.put("status","success");
+            res.put("msg","0");
+            return res;
+        }
+        res.put("courses",courses);
+        res.put("msg",1);
+        res.put("courseSize",courses.size());
+        res.put("status", "success");
+
+        return res;
     }
 
-//    @RequestMapping("/comment/courses")
-//    @ResponseBody
-//    public List<Map<String, Object>> courseStudentList(HttpServletRequest request){
-//        String classId = (String) request.getAttribute("classId");
-//        return teacherService.courseStudentList(classId);
-//    }
+    /*
+    * 课程学生翻页
+    * */
+    @RequestMapping(value="/comment/pageStudent")
+    @ResponseBody
+    public Map<String, Object> pageStudent(HttpServletRequest request,
+                                           @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                           @RequestParam(required = false, defaultValue = "88888888") int classId){
+       /* System.out.println(1111);
+        System.out.println(request.getAttribute("classId"));
+        int classId = Integer.parseInt((String) request.getAttribute("classId"));
+
+        System.out.println(222222);
+        String currentPage = (String) request.getAttribute("currentPage");
+
+        System.out.println(classId);
+        System.out.println(currentPage);
+        int pageSize=10;*/
+        String teaId = (String) request.getSession().getAttribute("userId");
+       /* if((Integer.toString(classId)==null)){
+            List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
+            classId= Integer.parseInt( (String)courses.get(0).get("classId"));
+        }
+        if(currentPage==null){
+            currentPage="1";
+            Integer.parseInt(currentPage);
+        }
+*/
+       if(classId==88888888){
+           List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
+           classId= (int) courses.get(0).get("classId");
+       }
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List students = teacherService.findStudentAndStatus(classId,teaId);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        res.put("total",page.getPages());
+
+
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("students",pageList);
+        res.put("currentPage",currentPage);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+        /*String jsonString = RequestPayload.getRequestPayload(request);
+        System.out.println(jsonString);
+        JSONObject json= null;
+        Map<String,Object> res=new HashMap<>();
+        try {
+            json = new JSONObject(jsonString);
+            int currentPage= (int) json.get("currentPage");
+            int classId= Integer.parseInt((String) json.get("classId"));
+            PageHelper.startPage(currentPage, 10);
+            List students = teacherService.findStudentAndStatus(classId,teaId);
+            PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+            List<Map<String,Object>> pageList=pageInfo.getList();
+            Map<String, Object> data = new HashMap<>();
+            data.put("students",pageList);
+            data.put("currentPage", currentPage);
+            res.put("data", data);
+            res.put("status", "SUCCESS");
+            System.out.println(res);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }*/
+
+    }
+/*
+* 查看某个学生已评价的信息
+* */
+    @RequestMapping("/comment/info")
+    @ResponseBody
+    public Map<String, Object> commentInfo(HttpSession session,
+                                           @RequestParam(required = true) int classId,
+                                           @RequestParam(required = true) int stuId
+    ){
+       // String teaId = (String)session.getAttribute("userId");
+        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> comment = teacherService.findCommentByClassIdAndStuId(classId, stuId);
+        res.put("comment",comment);
+        return res;
+    }
+    /*weekCourse*/
+    @RequestMapping("/weekCourses")
+    @ResponseBody
+    public Map<String, Object> weekCourse(HttpSession session){
+        String teaId = (String)session.getAttribute("userId");
+        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
+        int weekth= CalculateWeekth.weekth(firstWeek);
+        String semester=(String) teacherService.findCurrentCalendar().get("semester");
+        List<Map<String,Object>> courses = classService.findWeekCourses(teaId,semester,weekth);
+        Map<String, Object> res = new HashMap<>();
+        res.put("courses",courses);
+        res.put("courseSize",courses.size());
+        res.put("status", "success");
+        return res;
+    }
+
+    @RequestMapping("/weekCourseStudent")
+    @ResponseBody
+    public Map<String, Object> weekCourseStudent(HttpSession session){
+        String teaId = (String)session.getAttribute("userId");
+        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
+        int weekth= CalculateWeekth.weekth(firstWeek);
+        String semester=(String) teacherService.findCurrentCalendar().get("semester");
+        List<Map<String,Object>> courses = classService.findWeekCourses(teaId,semester,weekth);
+        Map<String, Object> res = new HashMap<>();
+        res.put("courses",courses);
+        res.put("courseSize",courses.size());
+        res.put("status", "success");
+        return res;
+    }
+
+    /*
+     * 切换classTab
+     * */
+   /* @RequestMapping("/comment/changeClass")
+    @ResponseBody
+    public Map<String, Object> changeClass(HttpSession session,
+                                           @RequestParam(required = true) int classId,
+                                           @RequestParam(required = true) int stuId
+    ){
+        // String teaId = (String)session.getAttribute("userId");
+        Map<String, Object> res = new HashMap<>();
+        Map<String, Object> comment = teacherService.findCommentByClassIdAndStuId(classId, stuId);
+        res.put("comment",comment);
+        return res;
+    }*/
+
+   /* @RequestMapping("/weekComment")
+    @ResponseBody
+    public Map<String, Object> weekCourseStudent(HttpSession session){
+        //int week=;第几周
+        String teaId = (String)session.getAttribute("userId");
+        Map<String, Object> res = new HashMap<>();
+        List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
+        res.put("courses",courses);
+        if(courses.size()==0){
+            res.put("status","success");
+            res.put("msg","0");
+            return res;
+        }
+        res.put("status", "success");
+        res.put("msg",1);
+        res.put("courseSize",courses.size());
+        return res;
+    *//*    String teaId = (String)session.getAttribute("userId");
+        Map<String, Object> res = new HashMap<>();
+        List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
+        res.put("courses",courses);
+        if(courses.size()==0){
+            res.put("status","success");
+            res.put("msg","0");
+            return res;
+        }
+        res.put("status", "success");
+        res.put("msg",1);
+        res.put("courseSize",courses.size());
+
+        Map<String, Object> data = new HashMap<>();
+        for(int i=0;i<courses.size();i++){
+            int classId= (int) courses.get(i).get("classId");
+            PageHelper.startPage(1, 10);
+            List students = teacherService.findStudentAndStatus(classId,teaId);
+            PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+            List<Map<String,Object>> pageList=pageInfo.getList();
+            data.put("class"+Integer.toString(i),pageList);
+        }
+        res.put("data", data);
+        return res;*//*
+    }*/
+
+
+
+  /* @RequestMapping("/comment/courseStudent")
+    @ResponseBody
+    public Map<String, Object> courseStudentList(HttpSession session,
+                                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                                 @RequestParam(required = false, defaultValue = "88888888") int classId,
+                                                 @RequestParam(required = false, defaultValue = "") String classname
+                                                 ){
+        String teaId = (String)session.getAttribute("userId");
+        Map<String, Object> res = new HashMap<>();
+        List<Map<String,Object>> courses=teacherService.courseList(teaId);
+        if(courses.size()==0){
+            res.put("status","success");
+            res.put("msg","0");
+            return res;
+        }
+        if(classId==88888888){
+            classId= (int) courses.get(0).get(classId);
+        }
+        PageHelper.startPage(currentPage, pageSize);
+        List students = teacherService.findStudentAndStatus(classId,teaId);
+        res.put("status", "SUCCESS");
+        res.put("msg",1);
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", ((Page) students).getTotal());
+        System.out.printf("total = %s\n", ((Page) students).getTotal());
+        data.put("pageSize", pageSize);
+        data.put("currentPage", currentPage);
+        data.put("list", students);
+        res.put("courses",courses);
+        res.put("data", data);
+        return res;
+    }*/
+
+/*    @RequestMapping("/courses")
+    @ResponseBody
+    public Map<String,Object> courses(HttpSession session){
+        String teaId=(String)session.getAttribute("userId");
+        Map<String,Object> res=new HashMap<>();
+        List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
+        if(courses.size()==0){
+            res.put("status","success");
+            res.put("msg","0");
+            return res;
+        }
+        res.put("courses",courses);
+        res.put("status", "success");
+        res.put("msg",1);
+        res.put("courseSize",courses.size());
+        return res;
+    }*/
+
+
 }

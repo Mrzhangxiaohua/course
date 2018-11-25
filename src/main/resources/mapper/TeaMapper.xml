@@ -6,12 +6,12 @@
 
     <insert id="addComment" useGeneratedKeys="true" keyProperty="teaCommentId" flushCache="true">
         insert into TeaComment(stuId, classId,teaId,teaEvaluate,teaSuggestion)
-        values(#{stuId}, #{classId},#{teaId},#{totalScore},#{words})
+        values(#{stuId}, #{classId},#{teaId},#{totalScore},#{suggestion})
     </insert>
     <select id="courseList" resultType="map">
         select classId,classNum,className,classChooseNum,classSemester,startWeek,endWeek
         from course.Course
-        where c.teaId=#{teaId}
+        where teaId=#{teaId}
     </select>
 
     <select id="courseStudentList" resultType="map">
@@ -21,5 +21,21 @@
         on c.stuId=s.stuId
         where c.classId=#{classId}
     </select>
+
+    <select id="findCommentStatus" resultType="int">
+        select COUNT(*)
+        from course.TeaComment
+        where stuId=#{stuId}
+        and teaId=#{teaId}
+        and classId=#{classId}
+        order by stuId
+    </select>
+    <select id="findCommentByClassIdAndStuId" resultType="map">
+        select stuId,classId,teaEvaluate,teaSuggestion
+        from course.TeaComment
+        where stuId=#{stuId}
+        and classId=#{classId}
+    </select>
+
 
 </mapper>
