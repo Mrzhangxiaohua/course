@@ -108,6 +108,24 @@ public class StudentController extends Base{
     }
 
     /**
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping("/evaluate/perClass")
+    public Map<String, Object> selectList1(HttpSession session){
+        String stuId = (String) session.getAttribute("userId");
+        Map<String, Object> m1 = new HashMap<>();
+        m1 = studentService.selectList1(stuId);
+        String classId = m1.get("classId").toString();
+        Map<String, Object> m2 = new HashMap<>();
+        m2.put(classId, m1);
+        Map<String, Object> m3 = new HashMap<>();
+        m3.put("data", m2);
+        return m3;
+    }
+
+    /**
      * 学生端:进行教师评价总评
      *
      * @param

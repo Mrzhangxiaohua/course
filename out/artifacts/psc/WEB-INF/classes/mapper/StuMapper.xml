@@ -135,6 +135,16 @@
         WHERE d.stuId = #{stuId}
     </select>
 
+    <select id="selectList1" resultType="map">
+        SELECT c.*, d.stuId, d.classId, e.departName
+        FROM course.Course c
+        LEFT JOIN course.Course_choose d
+        ON d.classId = c.classId
+        LEFT JOIN course.Department e
+        ON c.departId = e.departId
+        WHERE d.stuId = #{stuId}
+    </select>
+
     <select id="findIsComment" resultType="map">
         SELECT s.stuId
         FROM course.StuWGYComment s

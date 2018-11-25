@@ -346,4 +346,17 @@ public class StudentServiceImpl extends Base implements StudentService {
     public int addCommentWeeklyFinal() {
         return studentDao.addCommentWeeklyFinal();
     }
+
+    @Override
+    public Map selectList1(String stuId) {
+        Map<String, Object> list= studentDao.selectList1(stuId);
+        //判断是否评教过
+//        Map<String, Object> m = studentDao.findIsComment(stuId);
+//        if(m == null){
+//            list.get(0).put("isComment", '0');//0表示未评教
+//        }else {
+//            list.get(0).put("isComment", '1');
+//        }
+        return list;
+    }
 }
