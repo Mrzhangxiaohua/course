@@ -37,5 +37,9 @@
         and classId=#{classId}
     </select>
 
+    <insert id="insertWeekComment" useGeneratedKeys="true" keyProperty="teaWeekCommentId" flushCache="true">
+        insert into course.teaWeekComment(stuId,teaId,classId,listen,speak,read,write,week,dateTime)
+        values(#{stuId},#{teaId},#{classId},#{listen},#{speak},#{read},#{write},#{weekth},#{date})
+    </insert>
 
 </mapper>

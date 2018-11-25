@@ -249,5 +249,11 @@
 
     </select>
 
+    <select id="weekCourseStatus" resultType="int">
+        select COUNT(*)
+        from course.teaWeekComment
+        where classId=#{classId}
+
+    </select>
 
 </mapper>

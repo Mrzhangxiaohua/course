@@ -46,7 +46,9 @@ public interface ClassDao {
             ,@Param("classChooseNum") int classChooseNum);
 
 
-    List<Map<String,Object>> findWeekCourses(@Param("teaId") String teaId,@Param("semester") String semester,@Param("weekth")int weekth);
+    List<Map<String,Object>> findWeekCourses(@Param("teaId") String teaId,@Param("semester") String semester,@Param("weekth")String weekth);
 
-    Map<String, Object> CurrentCalendar();
+    Map<String, Object> currentCalendar();
+
+    int weekCourseStatus(Object classId);
 }

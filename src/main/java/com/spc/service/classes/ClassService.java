@@ -25,4 +25,6 @@ public interface ClassService {
     List<Map<String,Object>> findClass(Integer departId, String className, String teaId, int startWeek, int endWeek);
 
     List<Map<String, Object>> findWeekCourses(String teaId, String semester,int weekth);
+
+    ClassDomain findClassById(int classId);
 }

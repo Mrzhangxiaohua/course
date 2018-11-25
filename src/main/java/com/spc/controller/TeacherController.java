@@ -17,6 +17,7 @@ import com.spc.util.CalculateWeekth;
 import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
+import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -710,7 +711,7 @@ public class TeacherController extends Base {
     public Map<String, Object> courseList(HttpSession session){
         String teaId = (String)session.getAttribute("userId");
         Map<String, Object> res = new HashMap<>();
-        List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
+        List<Map<String,Object>> courses = classService.findClass(88888888, "", teaId, 88888888, 88888888);
         if(courses.size()==0){
             res.put("status","success");
             res.put("msg","0");
@@ -733,28 +734,11 @@ public class TeacherController extends Base {
                                            @RequestParam(required = false, defaultValue = "1") int currentPage,
                                            @RequestParam(required = false, defaultValue = "10") int pageSize,
                                            @RequestParam(required = false, defaultValue = "88888888") int classId){
-       /* System.out.println(1111);
-        System.out.println(request.getAttribute("classId"));
-        int classId = Integer.parseInt((String) request.getAttribute("classId"));
 
-        System.out.println(222222);
-        String currentPage = (String) request.getAttribute("currentPage");
-
-        System.out.println(classId);
-        System.out.println(currentPage);
-        int pageSize=10;*/
         String teaId = (String) request.getSession().getAttribute("userId");
-       /* if((Integer.toString(classId)==null)){
-            List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
-            classId= Integer.parseInt( (String)courses.get(0).get("classId"));
-        }
-        if(currentPage==null){
-            currentPage="1";
-            Integer.parseInt(currentPage);
-        }
-*/
+
        if(classId==88888888){
-           List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
+           List<Map<String,Object>> courses = classService.findClass(88888888, "", teaId, 88888888, 88888888);
            classId= (int) courses.get(0).get("classId");
        }
         Map<String,Object> res=new HashMap<>();
@@ -771,28 +755,6 @@ public class TeacherController extends Base {
         res.put("data", data);
         res.put("status", "SUCCESS");
         return res;
-        /*String jsonString = RequestPayload.getRequestPayload(request);
-        System.out.println(jsonString);
-        JSONObject json= null;
-        Map<String,Object> res=new HashMap<>();
-        try {
-            json = new JSONObject(jsonString);
-            int currentPage= (int) json.get("currentPage");
-            int classId= Integer.parseInt((String) json.get("classId"));
-            PageHelper.startPage(currentPage, 10);
-            List students = teacherService.findStudentAndStatus(classId,teaId);
-            PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
-            List<Map<String,Object>> pageList=pageInfo.getList();
-            Map<String, Object> data = new HashMap<>();
-            data.put("students",pageList);
-            data.put("currentPage", currentPage);
-            res.put("data", data);
-            res.put("status", "SUCCESS");
-            System.out.println(res);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
 
     }
 /*
@@ -815,10 +777,14 @@ public class TeacherController extends Base {
     @ResponseBody
     public Map<String, Object> weekCourse(HttpSession session){
         String teaId = (String)session.getAttribute("userId");
+        teaId="0002017115";
+        System.out.println(teaId);
         String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
         int weekth= CalculateWeekth.weekth(firstWeek);
+        System.out.println(weekth);
         String semester=(String) teacherService.findCurrentCalendar().get("semester");
         List<Map<String,Object>> courses = classService.findWeekCourses(teaId,semester,weekth);
+        System.out.println(courses.size());
         Map<String, Object> res = new HashMap<>();
         res.put("courses",courses);
         res.put("courseSize",courses.size());
@@ -828,34 +794,40 @@ public class TeacherController extends Base {
 
     @RequestMapping("/weekCourseStudent")
     @ResponseBody
-    public Map<String, Object> weekCourseStudent(HttpSession session){
+    public Map<String, Object> weekCourseStudent(HttpSession session,
+                                                 @RequestParam(required = true) int classId){
         String teaId = (String)session.getAttribute("userId");
-        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
-        int weekth= CalculateWeekth.weekth(firstWeek);
-        String semester=(String) teacherService.findCurrentCalendar().get("semester");
-        List<Map<String,Object>> courses = classService.findWeekCourses(teaId,semester,weekth);
+        List<Map<String,Object>> students=classService.findStudent(classId);
         Map<String, Object> res = new HashMap<>();
-        res.put("courses",courses);
-        res.put("courseSize",courses.size());
+        res.put("students",students);
         res.put("status", "success");
         return res;
     }
-
-    /*
-     * 切换classTab
-     * */
-   /* @RequestMapping("/comment/changeClass")
+    @RequestMapping("/addWeekComment")
     @ResponseBody
-    public Map<String, Object> changeClass(HttpSession session,
-                                           @RequestParam(required = true) int classId,
-                                           @RequestParam(required = true) int stuId
-    ){
-        // String teaId = (String)session.getAttribute("userId");
-        Map<String, Object> res = new HashMap<>();
-        Map<String, Object> comment = teacherService.findCommentByClassIdAndStuId(classId, stuId);
-        res.put("comment",comment);
+    public Map<String,Object> addWeekComment(HttpServletRequest request,
+                              @RequestParam(required = true) int classId,
+                              @RequestParam(required = true) int weekth,
+                              @RequestParam(required = true) List<Map<String,Object>> commentList
+                              ){
+        String teaId= (String) request.getSession().getAttribute("userId");
+        int courseSize=classService.findClassById(classId).getClassChooseNum();
+        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
+        int currentWeekth= CalculateWeekth.weekth(firstWeek);
+        Map<String,Object> res=new HashMap<>();
+        String status="";
+        if((currentWeekth-weekth)>1){
+            res.put("status","超过评价时间");
+            return res;
+        }
+       int  flag=teacherService.addWeekComment(classId,teaId,weekth,commentList);
+        if(flag==1){
+           status="success";
+        }
+        res.put("status",status);
         return res;
-    }*/
+    }
+
 
    /* @RequestMapping("/weekComment")
     @ResponseBody
@@ -902,57 +874,8 @@ public class TeacherController extends Base {
 
 
 
-  /* @RequestMapping("/comment/courseStudent")
-    @ResponseBody
-    public Map<String, Object> courseStudentList(HttpSession session,
-                                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
-                                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                                 @RequestParam(required = false, defaultValue = "88888888") int classId,
-                                                 @RequestParam(required = false, defaultValue = "") String classname
-                                                 ){
-        String teaId = (String)session.getAttribute("userId");
-        Map<String, Object> res = new HashMap<>();
-        List<Map<String,Object>> courses=teacherService.courseList(teaId);
-        if(courses.size()==0){
-            res.put("status","success");
-            res.put("msg","0");
-            return res;
-        }
-        if(classId==88888888){
-            classId= (int) courses.get(0).get(classId);
-        }
-        PageHelper.startPage(currentPage, pageSize);
-        List students = teacherService.findStudentAndStatus(classId,teaId);
-        res.put("status", "SUCCESS");
-        res.put("msg",1);
-        Map<String, Object> data = new HashMap<>();
-        data.put("total", ((Page) students).getTotal());
-        System.out.printf("total = %s\n", ((Page) students).getTotal());
-        data.put("pageSize", pageSize);
-        data.put("currentPage", currentPage);
-        data.put("list", students);
-        res.put("courses",courses);
-        res.put("data", data);
-        return res;
-    }*/
 
-/*    @RequestMapping("/courses")
-    @ResponseBody
-    public Map<String,Object> courses(HttpSession session){
-        String teaId=(String)session.getAttribute("userId");
-        Map<String,Object> res=new HashMap<>();
-        List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
-        if(courses.size()==0){
-            res.put("status","success");
-            res.put("msg","0");
-            return res;
-        }
-        res.put("courses",courses);
-        res.put("status", "success");
-        res.put("msg",1);
-        res.put("courseSize",courses.size());
-        return res;
-    }*/
+
 
 
 }

@@ -11,10 +11,8 @@ package com.spc.service.teacher.impl;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.stereotype.Service;
 
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
-        import java.util.Map;
+        import java.text.SimpleDateFormat;
+        import java.util.*;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -144,6 +142,17 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Map<String, Object> findCurrentCalendar() {
-         return classDao.CurrentCalendar();
+         return classDao.currentCalendar();
+    }
+
+    @Override
+    public int addWeekComment(int classId,String teaId,int weekth, List<Map<String, Object>> commentList) {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String date=sdf.format(new Date());
+        for(Map<String,Object> comment:commentList){
+             teacherDao.insertWeekComment((String) comment.get("stuId"), teaId, classId, (String) comment.get("listen"),
+                    (String) comment.get("speak"), (String) comment.get("read"), (String) comment.get("write"), weekth, date);
+        }
+        return 1;
     }
 }
