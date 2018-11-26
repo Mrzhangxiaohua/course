@@ -716,7 +716,7 @@ public class TeacherController extends Base {
        for(Map<String,Object> course:courses){
            String classInfo="";
            String[] classDate = ((String) course.get("classDateDescription")).split(":");
-           classInfo+=weekDays[Integer.parseInt(classDate[0])]+"第"+classDate[1]+"-"+(Integer.parseInt(classDate[1])+Integer.parseInt(classDate[2])-1)+"节";
+           classInfo+=weekDays[Integer.parseInt(classDate[0])-1]+"第"+classDate[1]+"-"+(Integer.parseInt(classDate[1])+Integer.parseInt(classDate[2])-1)+"节";
            course.put("classInfo",classInfo);
            int evaluationStatus= classService.CommentStatus(Integer.toString((int) course.get("classId")));
            course.put("evaluationStatus",evaluationStatus);
