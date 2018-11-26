@@ -161,7 +161,6 @@ public class StudentController extends Base{
      */
     @RequestMapping(value = "/show/teacomment")
     public List<Map<String, Object>> showTeacomment(HttpSession session){
-//        String stuId = (String)session.getAttribute("userId");
         String stuId = (String) session.getAttribute("userId");
         return studentService.showTeacomment(stuId);
     }
@@ -175,26 +174,34 @@ public class StudentController extends Base{
     @ResponseBody
     public int  addCommentWeekly(HttpServletRequest request){
         String json = RequestPayload.getRequestPayload(request);
+        boolean flag = false;
         try {
-            JSONObject obj = new JSONObject();
-            /**
-             * 此处拿到学生评教老师的各种字段
-             */
             int theWeeks = studentService.addCommentWeekly();//第几周评价
-
-            if(theWeeks != 0){ //2
-                List<Map<String, Object>> add = studentService.addCommentWeeklyTrue();
-                for (Map<String, Object> m : add){
-                    int week = (int) m.get("commentFlag");//从数据库中查找评论过哪次
-                    //
-                    if (theWeeks != week){
-                        continue;
-                    }else {
-                        return 0;
+            if(theWeeks != 0){ //如果周次不为0说明可以对第n周进行评价
+                JSONObject obj = new JSONObject();
+                /**
+                 * 此处拿到学生评教老师的各种字段
+                 */
+                List<Map<String, Object>> add = studentService.addCommentWeeklyTrue();//获取上面参数并进行数据库插入操作
+                if(add != null) {//当有过评论
+                    for (Map<String, Object> m : add) {
+                        int week = (int) m.get("commentFlag");//从数据库中查找评论过哪次
+                        if (theWeeks == week) {
+                            flag = false;
+                            break;
+                        }else {
+                            flag = true;
+                            continue;
+                        }
                     }
+//                    flag = true;
+                    //调用插入
+                    if (flag == true){
+                        return studentService.addCommentWeeklyFinal();
+                    }
+                }else {//当一次都没有添加过评论
+                    return studentService.addCommentWeeklyFinal();
                 }
-                //调用插入
-                return studentService.addCommentWeeklyFinal();
             }
             return 0;
         }catch (Exception e){
@@ -202,8 +209,6 @@ public class StudentController extends Base{
         }
         return 0;
     }
-
-
 
     /**
      * 学生端：可以根据课程id 添加课程

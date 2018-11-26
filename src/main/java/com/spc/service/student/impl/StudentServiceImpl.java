@@ -323,6 +323,8 @@ public class StudentServiceImpl extends Base implements StudentService {
             calStart.setTime(date);
             Calendar calEnd= Calendar.getInstance();
             calEnd.setTime(data);
+            calStart.add(Calendar.DATE, 7 * (startWeek - 1));//开始周加上初始上课周的时间
+            calEnd.add(Calendar.DATE, 7 * (startWeek - 1));
             for (int i = 1; i <= week; i++){
                 calStart.add(Calendar.DATE,7 * (i - 1));
                 calEnd.add(Calendar.DATE, 7 * i);
