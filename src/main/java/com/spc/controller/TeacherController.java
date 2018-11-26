@@ -798,7 +798,13 @@ public class TeacherController extends Base {
        // teaId="0002017115";
         String semester=(String) teacherService.findCurrentCalendar().get("semester");
         List<Map<String,Object>> courses = classService.findWeekCourses(teaId,semester,weekth);
-        System.out.println(courses.size());
+        String[] weekDays={"周一","周二","周三","周四","周五","周六","周日"};
+        for(Map<String,Object> course:courses){
+            String classInfo="";
+            String[] classDate = ((String) course.get("classDateDescription")).split(":");
+            classInfo+=weekDays[Integer.parseInt(classDate[0])-1]+"第"+classDate[1]+"-"+(Integer.parseInt(classDate[1])+Integer.parseInt(classDate[2])-1)+"节";
+            course.put("classInfo",classInfo);
+        }
         Map<String, Object> res = new HashMap<>();
         res.put("courses",courses);
         res.put("courseSize",courses.size());
