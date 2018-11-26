@@ -27,4 +27,6 @@ public interface TeacherService {
     Map<String,Object> findCommentByClassIdAndStuId(int classId, int stuId);
 
     Map<String,Object> findCurrentCalendar();
+
+    int addWeekComment(int classId,String teaId, int weekth, List<Map<String, Object>> commentList);
 }

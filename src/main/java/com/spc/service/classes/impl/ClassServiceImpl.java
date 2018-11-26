@@ -39,7 +39,40 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public List<Map<String, Object>> findWeekCourses(String teaId,String semester,int weekth) {
-       return classDao.findWeekCourses(teaId,semester,weekth);
+        System.out.println(teaId+","+semester+","+weekth);
+        List<Map<String, Object>> weekCourses = classDao.findWeekCourses(teaId, semester, Integer.toString(weekth));
+        System.out.println(teaId+","+semester+","+weekth);
+       // List<Map<String, Object>> CoursesWithStatus = classDao.findWeekCourses(teaId, semester, weekth);
+        for(Map<String,Object> course:weekCourses){
+            int status=0;
+            int count=classDao.weekCourseStatus(course.get("classId"));
+            if(count>=1){
+                status=1;//表示已评价
+            }
+            course.put("commentStatus",status);
+        }
+
+        return weekCourses;
+    }
+
+    @Override
+    public ClassDomain findClassById(int classId) {
+        return classDao.findClassById(classId);
+    }
+
+    @Override
+    public int CommentStatus(String classId) {
+        int chooseNumber=findClassById(Integer.parseInt(classId)).getClassChooseNum();
+        int commentNumber=classDao.findCommentNumber(classId);
+        int msg=-1;
+        if(commentNumber==0){
+            msg=0;//表示未评价
+        }else if(commentNumber==chooseNumber){
+            msg=1;//表示已评价
+        }else if(commentNumber>0&&commentNumber<chooseNumber){
+            msg=2;//表示部分未评价
+        }
+        return msg;
     }
 
 

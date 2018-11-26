@@ -192,7 +192,7 @@
     <select id="findClasses" resultType="map" useCache="false">
         select
         classId,className,classNum,teaId,teaName,classSemester,classGradePoint,endWeek,startWeek,
-        classEncode,classTime
+        classEncode,classTime,classDateDescription
         from
         <include refid="BASE_TABLE"/>
         a
@@ -245,9 +245,20 @@
         where teaId=#{teaId}
         and classSemester=#{semester}
         and startWeek &lt;= #{weekth}
-        and endWeek &gt;= #{weekth}
+        and #{weekth}-endWEEK &lt;=1
 
     </select>
 
+    <select id="weekCourseStatus" resultType="int">
+        select COUNT(*)
+        from course.teaWeekComment
+        where classId=#{classId}
 
+    </select>
+    <select id="findCommentNumber" resultType="int">
+        select COUNT(distinct stuId)
+        from course.TeaComment
+        where classId=#{classId}
+
+    </select>
 </mapper>
