@@ -35,4 +35,6 @@ public interface StudentService {
     public List<Map<String, Object>> addCommentWeeklyTrue();
 
     public int addCommentWeeklyFinal();
+
+    public Map selectList1(String stuId);
 }

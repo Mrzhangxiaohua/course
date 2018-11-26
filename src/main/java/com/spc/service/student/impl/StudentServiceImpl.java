@@ -323,6 +323,8 @@ public class StudentServiceImpl extends Base implements StudentService {
             calStart.setTime(date);
             Calendar calEnd= Calendar.getInstance();
             calEnd.setTime(data);
+            calStart.add(Calendar.DATE, 7 * (startWeek - 1));//开始周加上初始上课周的时间
+            calEnd.add(Calendar.DATE, 7 * (startWeek - 1));
             for (int i = 1; i <= week; i++){
                 calStart.add(Calendar.DATE,7 * (i - 1));
                 calEnd.add(Calendar.DATE, 7 * i);
@@ -345,5 +347,18 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Override
     public int addCommentWeeklyFinal() {
         return studentDao.addCommentWeeklyFinal();
+    }
+
+    @Override
+    public Map selectList1(String stuId) {
+        Map<String, Object> list= studentDao.selectList1(stuId);
+        //判断是否评教过
+//        Map<String, Object> m = studentDao.findIsComment(stuId);
+//        if(m == null){
+//            list.get(0).put("isComment", '0');//0表示未评教
+//        }else {
+//            list.get(0).put("isComment", '1');
+//        }
+        return list;
     }
 }
