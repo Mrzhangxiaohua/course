@@ -779,22 +779,30 @@ public class TeacherController extends Base {
         res.put("comment",comment);
         return res;
     }
+    /*currentWeek*/
+    @RequestMapping("/currentWeek")
+    @ResponseBody
+    public Map<String,Object> currentWeek(HttpServletRequest request){
+        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
+        int weekth= CalculateWeekth.weekth(firstWeek);
+        Map<String,Object> res=new HashMap<>();
+        res.put("weekth",weekth);
+        return res;
+    }
     /*weekCourse*/
     @RequestMapping("/weekCourses")
     @ResponseBody
-    public Map<String, Object> weekCourse(HttpSession session){
+    public Map<String, Object> weekCourse(HttpSession session,
+                                           @RequestParam(required = true) int weekth){
         String teaId = (String)session.getAttribute("userId");
-        teaId="0002017115";
-        System.out.println(teaId);
-        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
-        int weekth= CalculateWeekth.weekth(firstWeek);
-        System.out.println(weekth);
+       // teaId="0002017115";
         String semester=(String) teacherService.findCurrentCalendar().get("semester");
         List<Map<String,Object>> courses = classService.findWeekCourses(teaId,semester,weekth);
         System.out.println(courses.size());
         Map<String, Object> res = new HashMap<>();
         res.put("courses",courses);
         res.put("courseSize",courses.size());
+        res.put("weekth",weekth);
         res.put("status", "success");
         return res;
     }
@@ -818,7 +826,6 @@ public class TeacherController extends Base {
                               @RequestParam(required = true) List<Map<String,Object>> commentList
                               ){
         String teaId= (String) request.getSession().getAttribute("userId");
-        int courseSize=classService.findClassById(classId).getClassChooseNum();
         String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
         int currentWeekth= CalculateWeekth.weekth(firstWeek);
         Map<String,Object> res=new HashMap<>();
@@ -838,55 +845,6 @@ public class TeacherController extends Base {
         res.put("status",status);
         return res;
     }
-
-
-   /* @RequestMapping("/weekComment")
-    @ResponseBody
-    public Map<String, Object> weekCourseStudent(HttpSession session){
-        //int week=;第几周
-        String teaId = (String)session.getAttribute("userId");
-        Map<String, Object> res = new HashMap<>();
-        List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
-        res.put("courses",courses);
-        if(courses.size()==0){
-            res.put("status","success");
-            res.put("msg","0");
-            return res;
-        }
-        res.put("status", "success");
-        res.put("msg",1);
-        res.put("courseSize",courses.size());
-        return res;
-    *//*    String teaId = (String)session.getAttribute("userId");
-        Map<String, Object> res = new HashMap<>();
-        List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
-        res.put("courses",courses);
-        if(courses.size()==0){
-            res.put("status","success");
-            res.put("msg","0");
-            return res;
-        }
-        res.put("status", "success");
-        res.put("msg",1);
-        res.put("courseSize",courses.size());
-
-        Map<String, Object> data = new HashMap<>();
-        for(int i=0;i<courses.size();i++){
-            int classId= (int) courses.get(i).get("classId");
-            PageHelper.startPage(1, 10);
-            List students = teacherService.findStudentAndStatus(classId,teaId);
-            PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
-            List<Map<String,Object>> pageList=pageInfo.getList();
-            data.put("class"+Integer.toString(i),pageList);
-        }
-        res.put("data", data);
-        return res;*//*
-    }*/
-
-
-
-
-
 
 
 }
