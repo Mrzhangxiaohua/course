@@ -51,4 +51,6 @@ public interface ClassDao {
     Map<String, Object> currentCalendar();
 
     int weekCourseStatus(Object classId);
+
+    int findCommentNumber(String classId);
 }

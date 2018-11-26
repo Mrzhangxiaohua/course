@@ -27,4 +27,6 @@ public interface ClassService {
     List<Map<String, Object>> findWeekCourses(String teaId, String semester,int weekth);
 
     ClassDomain findClassById(int classId);
+
+    int CommentStatus(String classId);
 }

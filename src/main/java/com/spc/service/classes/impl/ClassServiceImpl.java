@@ -60,6 +60,21 @@ public class ClassServiceImpl implements ClassService {
         return classDao.findClassById(classId);
     }
 
+    @Override
+    public int CommentStatus(String classId) {
+        int chooseNumber=findClassById(Integer.parseInt(classId)).getClassChooseNum();
+        int commentNumber=classDao.findCommentNumber(classId);
+        int msg=-1;
+        if(commentNumber==0){
+            msg=0;//表示未评价
+        }else if(commentNumber==chooseNumber){
+            msg=1;//表示已评价
+        }else if(commentNumber>0&&commentNumber<chooseNumber){
+            msg=2;//表示部分未评价
+        }
+        return msg;
+    }
+
 
     @Override
     public List findStudent(int classId) {

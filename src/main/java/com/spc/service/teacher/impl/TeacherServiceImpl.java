@@ -110,7 +110,6 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public List<Map<String, Object>> findStudentAndStatus(int classId,String teaId){
         List students = studentDao.findStudent(classId);
-
        List<Map<String,Object>>studentList=new ArrayList<>();
        if(students.size()>0) {
            for (int i = 0; i < students.size(); i++) {

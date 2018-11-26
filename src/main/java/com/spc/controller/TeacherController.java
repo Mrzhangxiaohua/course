@@ -711,7 +711,16 @@ public class TeacherController extends Base {
     public Map<String, Object> courseList(HttpSession session){
         String teaId = (String)session.getAttribute("userId");
         Map<String, Object> res = new HashMap<>();
-        List<Map<String,Object>> courses = classService.findClass(88888888, "", teaId, 88888888, 88888888);
+        List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
+        String[] weekDays={"周一","周二","周三","周四","周五","周六","周日"};
+       for(Map<String,Object> course:courses){
+           String classInfo="";
+           String[] classDate = ((String) course.get("classDateDescription")).split(":");
+           classInfo+=weekDays[Integer.parseInt(classDate[0])]+"第"+classDate[1]+"-"+(Integer.parseInt(classDate[1])+Integer.parseInt(classDate[2])-1)+"节";
+           course.put("classInfo",classInfo);
+           int evaluationStatus= classService.CommentStatus(Integer.toString((int) course.get("classId")));
+           course.put("evaluationStatus",evaluationStatus);
+       }
         if(courses.size()==0){
             res.put("status","success");
             res.put("msg","0");
@@ -745,9 +754,7 @@ public class TeacherController extends Base {
         Page page=PageHelper.startPage(currentPage, pageSize);
         List students = teacherService.findStudentAndStatus(classId,teaId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
-        res.put("total",page.getPages());
-
-
+        res.put("total",page.getTotal());
         List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
         data.put("students",pageList);
@@ -818,6 +825,10 @@ public class TeacherController extends Base {
         String status="";
         if((currentWeekth-weekth)>1){
             res.put("status","超过评价时间");
+            return res;
+        }
+        if(currentWeekth<weekth){
+            res.put("status","未到评价时间");
             return res;
         }
        int  flag=teacherService.addWeekComment(classId,teaId,weekth,commentList);
