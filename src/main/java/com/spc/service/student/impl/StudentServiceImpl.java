@@ -289,16 +289,17 @@ public class StudentServiceImpl extends Base implements StudentService {
     }
 
     @Override
-    public int addCommentWeekly() {
+    public int addCommentWeekly(String stuId) {
         /**
          * 获取上课开始时间，并计算第几周
          * 获得学生本次是否评价，若评价则不可重复评价，若未评价，则允许评价
          */
+//        CalculateWeekth week = new CalculateWeekth();
         String CHUSHISHIJIAN = "2018-09-02 00:00:00";//每一个学期的第一周的星期一
         String CHUSHISHIJIAN2 = "2018-09-01 23:59:59";//每一个学期的第一周的星期一
         int startWeek = 0;
         int endWeek = 0;
-        List<Map<String, Object>> li= studentDao.selectList("3118105316");
+        List<Map<String, Object>> li= studentDao.selectList(stuId);
         for (Map map : li){
             for (Object k : map.keySet()){
                 startWeek = (int) map.get("startWeek");
@@ -330,7 +331,7 @@ public class StudentServiceImpl extends Base implements StudentService {
                 calEnd.add(Calendar.DATE, 7 * i);
                 if(calNow.after(calStart) && calNow.before(calEnd)){
                     System.out.println(i);
-                    return i;
+                    return i + startWeek;
                 }
             }
         } catch (ParseException e) {
@@ -340,13 +341,16 @@ public class StudentServiceImpl extends Base implements StudentService {
     }
 
     @Override
-    public List<Map<String, Object>> addCommentWeeklyTrue() {
-        return studentDao.addCommentWeeklyTrue("3118105316");
+    public List<Map<String, Object>> addCommentWeeklyTrue(String stuId) {
+        return studentDao.addCommentWeeklyTrue(stuId);
     }
 
     @Override
-    public int addCommentWeeklyFinal() {
-        return studentDao.addCommentWeeklyFinal();
+    public int addCommentWeeklyFinal(String stuId, String classId, String comment, String currWeek,
+                                     String teaId, int score1, int score2, int score3, int score4) {
+        int scor = score1 + score2 + score3 + score4;
+        String score = String.valueOf(scor);
+        return studentDao.addCommentWeeklyFinal(stuId, classId, score, comment, currWeek, teaId, score1, score2, score3, score4);
     }
 
     @Override
@@ -361,40 +365,67 @@ public class StudentServiceImpl extends Base implements StudentService {
         System.out.println("======" + list + "========");
         int startWeek = 0;
         int endWeek = 0;
-        List<Map<String, Object>> li = studentDao.selectList("3118105316");
+        List<Map<String, Object>> li = studentDao.selectList(stuId);
         for (Map map : li){
             for (Object k : map.keySet()){
                 startWeek = (int) map.get("startWeek");
                 endWeek = (int) map.get("endWeek");
             }
         }
-//        System.out.println(li);
-        int week = endWeek - startWeek + 1;//总的周数
-        int k = week - list.size(); // 先生成一个完整的数组，大小为需要评价的周次数
+        int week = endWeek - startWeek + 1;//总的周数   11-4 + 1 = 8
+        int b = list.size(); //作为补充
+        int k = week - list.size(); // 先生成一个完整的数组，大小为需要评价的周次数  8 - 3
         System.out.println(week);
-        for (int i = 0; i < k; i++){
-            Map<String, Object> m = new HashMap<>();
-            m.put("commentFlag", "0");
-            list.add(m);
-        }
-//        System.out.println("======================================" + week + "list下标" + list);
 
-        for (int i = 1; i<= week; i++){
-            if((list.get(i - 1).get("commentFlag")) != String.valueOf(i)){
-                System.out.println(list);
+        if(list.size() != 0 ){
+            for (int i = 0; i < k; i++){
                 Map<String, Object> m = new HashMap<>();
-                m.put("commentFlag","0");
-                list.add(i, m);
-                i = i + 1;
+                m.put("commentFlag", "0");              //0表示未评价
+                list.add(m);
             }
-            System.out.println(list);
+//            System.out.println("添加后完全的list" + list);
+            int start = startWeek;
+            for (int i = 1; i<= week; i++){
+                if((list.get(i - 1).get("classWeek")) != String.valueOf(start)){
+                    start = start + 1;
+//                System.out.println(list);
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("commentFlag","0");
+                    list.add(i, m);
+                    i = i + 1;
+                }
+            }
+            System.out.println("插入后完整的list" + list);//12个
+            int len = list.size() - 1;
+            System.out.println(len + "-----------");
+            for (int i = len; i > len - b ; i--){//清除冗余
+                list.remove(i);
+            }
+            //数据格式的转换
+            Map<String, Object> m1 = new HashMap<>();
+            m1.put("data", list);
+            Map<String, Object> m2 = new HashMap<>();
+            m2.put("startWeek",startWeek);
+            List <Map<String, Object>>l = new ArrayList<>();
+            l.add(m2);
+            l.add(m1);
+            System.out.println("最终的list" + l);
+            return l;
+        }else {
+            List <Map<String, Object>>l = new ArrayList<>();
+            for (int i = 0; i < k; i++){
+                Map<String, Object> m = new HashMap<>();
+                m.put("commentFlag", "0");
+                list.add(i, m);
+            }
+            Map<String, Object> m2 = new HashMap<>();
+            m2.put("startWeek",startWeek);
+            Map<String, Object> m1 = new HashMap<>();
+            m1.put("data", list);
+            l.add(m2);
+            l.add(m1);
+            System.out.println("添加后完全的list" + l);
+            return l;
         }
-        System.out.println(list);
-        int len = list.size() - 1;
-        for (int i = len; i > k + 1; i--){//清除冗余
-            list.remove(i);
-        }
-//        System.out.println(list);
-        return list;
     }
 }

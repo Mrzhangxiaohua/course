@@ -30,11 +30,12 @@ public interface StudentService {
 
     public List<Map<String, Object>> showTeacomment(String stuId);
 
-    public int addCommentWeekly();
+    public int addCommentWeekly(String stuId);
 
-    public List<Map<String, Object>> addCommentWeeklyTrue();
+    public List<Map<String, Object>> addCommentWeeklyTrue(String stuId);
 
-    public int addCommentWeeklyFinal();
+    public int addCommentWeeklyFinal(String stuId, String classId, String comment, String currWeek,
+                                     String teaId, int score1, int score2, int score3, int score4);
 
     public Map selectList1(String stuId);
 

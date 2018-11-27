@@ -44,7 +44,10 @@ public interface StudentDao {
 
     public List<Map<String, Object>> addCommentWeeklyTrue(@Param("stuId") String stuId);
 
-    public int addCommentWeeklyFinal();
+    public int addCommentWeeklyFinal(@Param("stuId") String stuId,@Param("classId") String classId, @Param("score") String score,
+                                     @Param("comment") String comment,
+                                     @Param("currWeek") String currWeek, @Param("teaId") String teaId, @Param("score1") int score1,
+                                     @Param("score2") int score2,  @Param("score3")int score3,  @Param("score4")int score4);
 
     public Map selectList1(@Param("stuId") String stuId);
 

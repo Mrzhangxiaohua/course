@@ -162,13 +162,19 @@
     </select>
 
     <select id="addCommentWeeklyTrue" resultType="map">
-        SELECT a.stuId,a.commentFlag
+        SELECT a.*
         FROM course.StuWGYWeekComment a
         WHERE stuId=#{stuId}
     </select>
 
     <insert id="addCommentWeeklyFinal" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO course.StuWGYWeekComment
-        VALUES (NULL,'3118105316', '0000011423', '66', '牛逼', 'commentFlag')
+        INSERT INTO course.StuWGYWeekComment(stuId, classId, stuEvaluate, stuSuggestion, classWeek, teaId, score1, score2, score3, score4, commentFlag)
+        VALUES (#{stuId}, #{classId}, #{score} ,#{comment}, #{currWeek}, #{teaId}, #{score1}, #{score2}, #{score3}, #{score4}, '1')
     </insert>
+
+    <select id="showCommentList" resultType="map">
+        SELECT c.*
+        FROM course.StuWGYWeekComment c
+        WHERE stuId = #{stuId} AND classId = #{classId}
+    </select>
 </mapper>
