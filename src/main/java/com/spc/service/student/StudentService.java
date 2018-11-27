@@ -37,4 +37,6 @@ public interface StudentService {
     public int addCommentWeeklyFinal();
 
     public Map selectList1(String stuId);
+
+    public List<Map<String, Object>> showCommentList(String stuId, String classId);
 }

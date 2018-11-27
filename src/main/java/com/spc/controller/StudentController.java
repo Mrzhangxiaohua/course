@@ -108,7 +108,7 @@ public class StudentController extends Base{
     }
 
     /**
-     *
+     *此段代码暂时不用
      * @param session
      * @return
      */
@@ -123,6 +123,22 @@ public class StudentController extends Base{
         Map<String, Object> m3 = new HashMap<>();
         m3.put("data", m2);
         return m3;
+    }
+
+    @RequestMapping("/chakanpingjiaqingkuang")
+    public List<Map<String, Object>> showCommentList(HttpServletRequest request){
+//        String stuId = (String)request.getSession().getAttribute("userId");
+//        String json = RequestPayload.getRequestPayload(request);
+        try {
+            String stuId = "3118105316";
+//            JSONObject obj = new JSONObject(json);
+//            String classId = obj.getString("classId");
+            String classId = "4";
+            return studentService.showCommentList(stuId, classId);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return null;
     }
 
     /**
@@ -152,7 +168,6 @@ public class StudentController extends Base{
         }catch (Exception e){
             System.out.println(e);
         }
-
         System.out.println(json);
         return 0;
     }

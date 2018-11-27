@@ -47,4 +47,6 @@ public interface StudentDao {
     public int addCommentWeeklyFinal();
 
     public Map selectList1(@Param("stuId") String stuId);
+
+    public List<Map<String, Object>> showCommentList(@Param("stuId") String stuId, @Param("classId") String classId);
 }

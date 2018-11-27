@@ -6,6 +6,7 @@ CREATE TABLE StuWGYWeekComment(
   teaId varchar(11) NOT NULL ,
   stuEvaluate varchar(11),
   stuSuggestion varchar(100),
-  commentFlag varchar (2)
+  commentFlag varchar (2),
+  classId varchar (11)
 )
 comment '存储学生周评教信息'

@@ -352,13 +352,49 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Override
     public Map selectList1(String stuId) {
         Map<String, Object> list= studentDao.selectList1(stuId);
-        //判断是否评教过
-//        Map<String, Object> m = studentDao.findIsComment(stuId);
-//        if(m == null){
-//            list.get(0).put("isComment", '0');//0表示未评教
-//        }else {
-//            list.get(0).put("isComment", '1');
-//        }
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> showCommentList(String stuId, String classId) {
+        List<Map<String, Object>> list = studentDao.showCommentList(stuId, classId);
+        System.out.println("======" + list + "========");
+        int startWeek = 0;
+        int endWeek = 0;
+        List<Map<String, Object>> li = studentDao.selectList("3118105316");
+        for (Map map : li){
+            for (Object k : map.keySet()){
+                startWeek = (int) map.get("startWeek");
+                endWeek = (int) map.get("endWeek");
+            }
+        }
+//        System.out.println(li);
+        int week = endWeek - startWeek + 1;//总的周数
+        int k = week - list.size(); // 先生成一个完整的数组，大小为需要评价的周次数
+        System.out.println(week);
+        for (int i = 0; i < k; i++){
+            Map<String, Object> m = new HashMap<>();
+            m.put("commentFlag", "0");
+            list.add(m);
+        }
+//        System.out.println("======================================" + week + "list下标" + list);
+
+        for (int i = 1; i<= week; i++){
+            if((list.get(i - 1).get("commentFlag")) != String.valueOf(i)){
+                System.out.println(list);
+                Map<String, Object> m = new HashMap<>();
+                m.put("commentFlag","0");
+                list.add(i, m);
+                i = i + 1;
+            }
+            System.out.println(list);
+        }
+        System.out.println(list);
+        int len = list.size() - 1;
+        for (int i = len; i > k + 1; i--){//清除冗余
+            list.remove(i);
+        }
+//        System.out.println(list);
         return list;
     }
 }
