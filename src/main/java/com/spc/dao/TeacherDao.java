@@ -16,5 +16,7 @@ public interface TeacherDao {
     int findCommentStatus(@Param("stuId") String stuId,@Param("teaId") String teaId,@Param("classId") String classId);
 
     List<Map<String,Object>> findCommentByClassIdAndStuId(int classId, int stuId);
+
+    int insertWeekComment(@Param("stuId") String stuId, @Param("teaId") String teaId, @Param("classId") int classId,@Param("listen") String listen,@Param("speak") String speak,@Param("read") String read, @Param("write") String write,@Param("weekth") int weekth,@Param("date") String date);
 }
 
