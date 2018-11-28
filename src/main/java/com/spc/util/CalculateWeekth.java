@@ -21,6 +21,6 @@ public class CalculateWeekth{
 
 //    public static void main(String[] args) {
 //
-//        System.out.println("\n"+weekth("2018-09-03"));
+//        System.out.println("\n"+weekth("2018-10-03"));
 //    }
 }

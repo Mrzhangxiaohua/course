@@ -361,7 +361,7 @@ public class StudentServiceImpl extends Base implements StudentService {
 
     @Override
     public List<Map<String, Object>> showCommentList(String stuId, String classId) {
-        List<Map<String, Object>> list = studentDao.showCommentList(stuId, classId);
+        List<Map<String, Object>> list = studentDao.showCommentList(stuId, classId);//获取学生真正的评价信息
         System.out.println("======" + list + "========");
         int startWeek = 0;
         int endWeek = 0;
@@ -374,31 +374,41 @@ public class StudentServiceImpl extends Base implements StudentService {
         }
         int week = endWeek - startWeek + 1;//总的周数   11-4 + 1 = 8
         int b = list.size(); //作为补充
-        int k = week - list.size(); // 先生成一个完整的数组，大小为需要评价的周次数  8 - 3
+        int k = week - list.size(); // 先生成一个完整的数组，大小为需要评价的周次数  8 - 1
         System.out.println(week);
 
         if(list.size() != 0 ){
+            //先生成相应的八个信息
             for (int i = 0; i < k; i++){
                 Map<String, Object> m = new HashMap<>();
                 m.put("commentFlag", "0");              //0表示未评价
                 list.add(m);
             }
-//            System.out.println("添加后完全的list" + list);
+            System.out.println("添加后完全的list" + list);//生成八个信息
+            System.out.println(list.get(0).get("classWeek")+ "-----------" + list.get(1).get("classWeek"));
+            //学生周次是4-11周
             int start = startWeek;
+            int index = 0;
+
             for (int i = 1; i<= week; i++){
-                if((list.get(i - 1).get("classWeek")) != String.valueOf(start)){
-                    start = start + 1;
+                if(!(String.valueOf(list.get(index).get("classWeek"))).equals(String.valueOf(start))){
+                    System.out.println(list.get(index).get("classWeek") + "=========" + String.valueOf(start));
 //                System.out.println(list);
                     Map<String, Object> m = new HashMap<>();
                     m.put("commentFlag","0");
-                    list.add(i, m);
-                    i = i + 1;
+                    m.put("test", "2333");
+                    list.add(index, m);
+                    System.out.println("未走到else");
+                    index = index + 1;
+                    start = start + 1;
+                }else {
+                    start = start + 1;
+                    index = index + 1;//索引后移一位
                 }
             }
-            System.out.println("插入后完整的list" + list);//12个
+            System.out.println("插入后完整的list" + list);//生成l 16个
             int len = list.size() - 1;
-            System.out.println(len + "-----------");
-            for (int i = len; i > len - b ; i--){//清除冗余
+            for (int i = len; i > week - 1 ; i--){//清除冗余 b = list.size()
                 list.remove(i);
             }
             //数据格式的转换

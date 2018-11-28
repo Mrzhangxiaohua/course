@@ -196,9 +196,8 @@ public class StudentController extends Base{
         System.out.println(json);
         boolean flag = false;
         try {
-//            int theWeeks = studentService.addCommentWeekly(stuId);//第几周评价
-            int theWeeks = CalculateWeekth.weekth("2018-09-03");
-            System.out.println("看看周次zzzzzzzzzzz" + theWeeks);
+            int theWeeks = CalculateWeekth.weekth("2018-10-03");//时间控件，最终需要调整
+            System.out.println("看看周次zzzzzzzzzzz" + theWeeks);//当前为第九周
             if(theWeeks != 0){ //如果周次不为0说明可以对第n周进行评价
                 JSONObject obj = new JSONObject(json);
                 /**
@@ -223,10 +222,12 @@ public class StudentController extends Base{
                         endWeek = (int) map.get("endWeek");
                     }
                 }
-//                System.out.println(add);
-                if(add != null) {//当有过评论
+                System.out.println("add------------" + add);
+
+                if(add.size() != 0) {//当有过评论
                     for (Map<String, Object> m : add) {
                         int week = (int) m.get("classWeek");
+                        System.out.println("week=========" + week);
                         System.out.println(week+ "----------------");
                         if (theWeeks == week) {
                             flag = false;
@@ -243,9 +244,8 @@ public class StudentController extends Base{
                         System.out.println("添加不成功，因为周次不对");
                     }
                 }else {//当一次都没有添加过评论
-//                    return studentService.addCommentWeeklyFinal(stuId, classId, comment, currWeek, teaId, score1, score2, score3, score4);
-//                    System.out.println("添加不成功，因为周次不对");
-                    return 0;
+                    System.out.println("添加成功");
+                    return studentService.addCommentWeeklyFinal(stuId, classId, comment, currWeek, teaId, score1, score2, score3, score4);
                 }
             }
             return 0;
