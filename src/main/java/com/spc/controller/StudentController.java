@@ -8,6 +8,7 @@ import com.spc.model.CourseTableExcelDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
+import com.spc.util.CalculateWeekth;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentScorePdfView;
@@ -108,21 +109,33 @@ public class StudentController extends Base{
     }
 
     /**
-     *
+     *此段代码暂时不用
      * @param session
      * @return
      */
-    @RequestMapping("/evaluate/perClass")
-    public Map<String, Object> selectList1(HttpSession session){
+    @RequestMapping("/select/list1")
+    public List<Map<String, Object>> selectList1(HttpSession session){
         String stuId = (String) session.getAttribute("userId");
-        Map<String, Object> m1 = new HashMap<>();
-        m1 = studentService.selectList1(stuId);
-        String classId = m1.get("classId").toString();
-        Map<String, Object> m2 = new HashMap<>();
-        m2.put(classId, m1);
-        Map<String, Object> m3 = new HashMap<>();
-        m3.put("data", m2);
-        return m3;
+        return studentService.selectList1(stuId);
+    }
+
+    @RequestMapping(value = "/chakanpingjiaqingkuang", method = RequestMethod.POST)
+    public List<Map<String, Object>> showCommentList(HttpServletRequest request){
+        String stuId = (String)request.getSession().getAttribute("userId");
+        String json = RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+        try {
+            JSONObject obj = new JSONObject(json);
+//            String classId = obj.getString("classId");
+
+            String classId = "4";
+            System.out.println(classId);
+
+            return studentService.showCommentList(stuId, classId);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return null;
     }
 
     /**
@@ -152,7 +165,6 @@ public class StudentController extends Base{
         }catch (Exception e){
             System.out.println(e);
         }
-
         System.out.println(json);
         return 0;
     }
@@ -174,33 +186,64 @@ public class StudentController extends Base{
     @ResponseBody
     public int  addCommentWeekly(HttpServletRequest request){
         String json = RequestPayload.getRequestPayload(request);
+        String stuId = (String)request.getSession().getAttribute("userId");
+        System.out.println(json);
         boolean flag = false;
         try {
-            int theWeeks = studentService.addCommentWeekly();//第几周评价
+            int theWeeks = CalculateWeekth.weekth("2018-10-03");//时间控件，最终需要调整
+            System.out.println("看看周次zzzzzzzzzzz" + theWeeks);//当前为第九周
             if(theWeeks != 0){ //如果周次不为0说明可以对第n周进行评价
-                JSONObject obj = new JSONObject();
+                JSONObject obj = new JSONObject(json);
                 /**
                  * 此处拿到学生评教老师的各种字段
                  */
-                List<Map<String, Object>> add = studentService.addCommentWeeklyTrue();//获取上面参数并进行数据库插入操作
-                if(add != null) {//当有过评论
+                String classId = obj.getString("classId");
+                String comment = obj.getString("comment");
+                String currWeek = obj.getString("currWeek");
+                Integer score1 = obj.getInt("score1");
+                Integer score2 = obj.getInt("score2");
+                Integer score3 = obj.getInt("score3");
+                Integer score4 = obj.getInt("score4");
+                String teaId = obj.getString("teaId");
+                System.out.println(classId + "===" + comment + "===" + currWeek + "===" + teaId +  "===" + score1 + "===" + score2 + "===" + score3 + "===" + score4 + "===" + stuId);
+                List<Map<String, Object>> add = studentService.addCommentWeeklyTrue(stuId);//获取上面参数并进行数据库插入操作
+                int startWeek = 0;
+                int endWeek = 0;
+                List<Map<String, Object>> li= studentService.selectList(stuId);
+                for (Map map : li){
+                    for (Object k : map.keySet()){
+                        startWeek = (int) map.get("startWeek");
+                        endWeek = (int) map.get("endWeek");
+                    }
+                }
+                System.out.println("add------------" + add);
+
+                if(add.size() != 0) {//当有过评论
                     for (Map<String, Object> m : add) {
-                        int week = (int) m.get("commentFlag");//从数据库中查找评论过哪次
+                        int week = (int) m.get("classWeek");
+                        System.out.println("week=========" + week);
+                        System.out.println(week+ "----------------");
                         if (theWeeks == week) {
                             flag = false;
                             break;
-                        }else {
+                        }else if (theWeeks!= week && theWeeks>=startWeek && theWeeks<=endWeek && theWeeks==Integer.parseInt(currWeek)){
                             flag = true;
                             continue;
                         }
                     }
-//                    flag = true;
                     //调用插入
                     if (flag == true){
-                        return studentService.addCommentWeeklyFinal();
+                        return studentService.addCommentWeeklyFinal(stuId, classId, comment, currWeek, teaId, score1, score2, score3, score4);
+                    }else {
+                        System.out.println("添加不成功，因为周次不对");
                     }
                 }else {//当一次都没有添加过评论
-                    return studentService.addCommentWeeklyFinal();
+                    if (theWeeks>=startWeek && theWeeks<=endWeek && theWeeks==Integer.parseInt(currWeek)){
+                        System.out.println("添加成功");
+                        return studentService.addCommentWeeklyFinal(stuId, classId, comment, currWeek, teaId, score1, score2, score3, score4);
+                    }else {
+                        return 0;
+                    }
                 }
             }
             return 0;
