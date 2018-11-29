@@ -75,11 +75,24 @@ public class ClassServiceImpl implements ClassService {
         return msg;
     }
 
+    @Override
+    public List<Map<String, Object>> findWeekComment(String stuId, int weekth, String classId) {
+        return  classDao.findWeekComment(stuId, weekth, classId);
+
+
+    }
 
     @Override
-    public List findStudent(int classId) {
+    public List findStudent(int classId) { return studentDao.findStudent(classId); }
+  /*  @Override
+    public List findWeekStudent(int classId,int weekth) {
+        List<Map<String,Object>> students=studentDao.findStudent(classId);
+        for(Map<String,Object> student:students){
+            studentDao.findWeekComment((String) student.get("stuId"),weekth,classId);
+            student.put()
+        }
         return studentDao.findStudent(classId);
-    }
+    }*/
 
 //    @Override
 //    public int updateScore1(String className,int classNum, String stuId, int wlzzxxGrade, int knskGrade) {

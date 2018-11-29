@@ -1,6 +1,5 @@
 package com.spc.util;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +8,7 @@ import java.io.BufferedReader;
 @Configuration
 public class RequestPayload {
 
-    public static  String getRequestPayload(HttpServletRequest req) {
+    public static String getRequestPayload(HttpServletRequest req) {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = req.getReader();) {
             char[] buff = new char[1024];

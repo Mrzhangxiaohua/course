@@ -1,6 +1,7 @@
 package com.spc.service.classes;
 
 import com.spc.model.ClassDomain;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +30,5 @@ public interface ClassService {
     ClassDomain findClassById(int classId);
 
     int CommentStatus(String classId);
+    List<Map<String,Object>> findWeekComment(@RequestParam("stuId") String stuId, @RequestParam("weekth") int weekth, @RequestParam("classId") String classId);
 }

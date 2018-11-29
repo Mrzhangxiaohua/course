@@ -148,9 +148,27 @@ public class TeacherServiceImpl implements TeacherService {
     public int addWeekComment(int classId,String teaId,int weekth, List<Map<String, Object>> commentList) {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         String date=sdf.format(new Date());
+        System.out.println(date);
         for(Map<String,Object> comment:commentList){
-             teacherDao.insertWeekComment((String) comment.get("stuId"), teaId, classId, (String) comment.get("listen"),
-                    (String) comment.get("speak"), (String) comment.get("read"), (String) comment.get("write"), weekth, date);
+           List list= classDao.findWeekComment((String) comment.get("stuId"), weekth,Integer.toString(classId));
+            System.out.println(comment);
+           if(list.size()==0){
+               System.out.println("size=0");
+               System.out.println(comment.get("score1"));
+               System.out.println(comment.get("score2"));
+               System.out.println(comment.get("score3"));
+               System.out.println(comment.get("score4"));
+               System.out.println(weekth);
+               System.out.println(classId);
+               System.out.println(teaId);
+               System.out.println(comment.get("suggestion"));
+                teacherDao.insertWeekComment((String) comment.get("stuId"), teaId, classId, (String) comment.get("score1"),
+                        (String) comment.get("score2"), (String) comment.get("score3"), (String) comment.get("score4"), (String) comment.get("suggestion"), weekth, date);
+               System.out.println("size=0hou");
+           }else if(list.size()>0){
+               teacherDao.updateWeekComment((String) comment.get("stuId"), teaId, classId, (String) comment.get("score1"),
+                       (String) comment.get("score2"), (String) comment.get("score3"), (String) comment.get("score4"), (String) comment.get("suggestion"), weekth, date);
+           }
         }
         return 1;
     }

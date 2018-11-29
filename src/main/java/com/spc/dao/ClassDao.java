@@ -53,4 +53,6 @@ public interface ClassDao {
     int weekCourseStatus(Object classId);
 
     int findCommentNumber(String classId);
+
+    List<Map<String,Object>> findWeekComment(@Param("stuId") String stuId,@Param("weekth") int weekth, @Param("classId") String classId);
 }

@@ -261,4 +261,13 @@
         where classId=#{classId}
 
     </select>
+
+    <select id="findWeekComment" resultType="map">
+        SELECT *
+        FROM course.teaWeekComment
+        WHERE stuId=#{stuId}
+        and weekth=#{weekth}
+        and classId=#{classId}
+        order by dateTime desc
+    </select>
 </mapper>
