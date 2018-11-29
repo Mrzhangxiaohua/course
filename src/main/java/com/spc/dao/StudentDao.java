@@ -1,12 +1,15 @@
 package com.spc.dao;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.lang.annotation.Repeatable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public interface StudentDao {
+
 
     public List<HashMap<String, Object>> findClasses(@Param("stuId") String stuId);
 
@@ -47,4 +50,6 @@ public interface StudentDao {
     public int addCommentWeeklyFinal();
 
     public Map selectList1(@Param("stuId") String stuId);
+
+
 }

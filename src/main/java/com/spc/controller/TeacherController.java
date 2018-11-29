@@ -2,6 +2,7 @@ package com.spc.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
@@ -17,6 +18,7 @@ import com.spc.util.CalculateWeekth;
 import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
@@ -710,6 +712,8 @@ public class TeacherController extends Base {
     @ResponseBody
     public Map<String, Object> courseList(HttpSession session){
         String teaId = (String)session.getAttribute("userId");
+        teaId="0002017115";
+        System.out.println(teaId);
         Map<String, Object> res = new HashMap<>();
         List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
         String[] weekDays={"周一","周二","周三","周四","周五","周六","周日"};
@@ -745,7 +749,10 @@ public class TeacherController extends Base {
                                            @RequestParam(required = false, defaultValue = "88888888") int classId){
 
         String teaId = (String) request.getSession().getAttribute("userId");
-
+        teaId="0002017115";
+      /*  String jsonString = RequestPayload.getRequestPayload(request);
+        System.out.println(jsonString);*/
+        System.out.println(currentPage+"\n"+classId);
        if(classId==88888888){
            List<Map<String,Object>> courses = classService.findClass(88888888, "", teaId, 88888888, 88888888);
            classId= (int) courses.get(0).get("classId");
@@ -792,10 +799,13 @@ public class TeacherController extends Base {
     /*weekCourse*/
     @RequestMapping("/weekCourses")
     @ResponseBody
-    public Map<String, Object> weekCourse(HttpSession session,
-                                           @RequestParam(required = true) int weekth){
-        String teaId = (String)session.getAttribute("userId");
-       // teaId="0002017115";
+    public Map<String, Object> weekCourse(HttpServletRequest request,
+                                          @RequestParam(required = true) int weekth){
+        String teaId = (String)request.getSession().getAttribute("userId");
+//        teaId="0002017115";
+        String jsonString = RequestPayload.getRequestPayload(request);
+        System.out.println(jsonString);
+        System.out.println("weekth："+weekth);
         String semester=(String) teacherService.findCurrentCalendar().get("semester");
         List<Map<String,Object>> courses = classService.findWeekCourses(teaId,semester,weekth);
         String[] weekDays={"周一","周二","周三","周四","周五","周六","周日"};
@@ -816,21 +826,61 @@ public class TeacherController extends Base {
     @RequestMapping("/weekCourseStudent")
     @ResponseBody
     public Map<String, Object> weekCourseStudent(HttpSession session,
-                                                 @RequestParam(required = true) int classId){
+                                                 @RequestParam(required = true) String classId,
+                                                 @RequestParam(required = true) int week){
         String teaId = (String)session.getAttribute("userId");
-        List<Map<String,Object>> students=classService.findStudent(classId);
+        List<Map<String,Object>> students=classService.findStudent(Integer.parseInt(classId));
+
+        for(Map<String,Object>student:students){
+           List comments=classService.findWeekComment((String) student.get("stuId"),week,classId);
+           if(comments.size()==0){
+               for(int i=0;i<4;i++){
+                   student.put("score"+(i+1),0);
+               }
+               student.put("comment","0");
+           }else if(comments.size()>0){
+               Map<String,Object> comment= (Map<String, Object>) comments.get(0);
+               for(int i=0;i<4;i++){
+                   student.put("score"+(i+1),comment.get("score"+(i+1)));
+               }
+               student.put("comment",comment.get("suggestion"));
+
+           }
+        }
+        System.out.println(students);
         Map<String, Object> res = new HashMap<>();
         res.put("students",students);
         res.put("status", "success");
         return res;
     }
-    @RequestMapping("/addWeekComment")
+    @RequestMapping(value="/addWeekComment",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> addWeekComment(HttpServletRequest request,
-                              @RequestParam(required = true) int classId,
-                              @RequestParam(required = true) int weekth,
-                              @RequestParam(required = true) List<Map<String,Object>> commentList
-                              ){
+    public Map<String,Object> addWeekComment(HttpServletRequest request) throws JSONException {
+        String jsonString= RequestPayload.getRequestPayload(request);
+        JSONArray jsonArray=new JSONArray(jsonString);
+        JSONObject json=jsonArray.getJSONObject(0);
+        int weekth = (int) json.get("weekth");
+        int classId = Integer.parseInt((String) json.get("classId"));
+        System.out.println(weekth);
+        System.out.println(classId);
+        JSONArray studentjsonArray=json.getJSONArray("students");
+        List<Map<String,Object>> commentList =new ArrayList<>();
+        System.out.println("studentjsonArray"+studentjsonArray);
+        for (int i=0; i<studentjsonArray.length(); i++){
+            JSONObject studentJson=studentjsonArray.getJSONObject(i);
+            System.out.println(studentJson);
+            Map<String,Object> studentMap=new HashMap<>();
+            studentMap.put("stuId",studentJson.getString("stuId"));
+            System.out.println(studentJson.getString("stuId"));
+            for(int j=0;j<4;j++){
+                studentMap.put("score"+(j+1),studentJson.getString("score"+(j+1)));
+            }
+            studentMap.put("suggestion",studentJson.getString("comment"));
+            System.out.println(studentMap);
+            commentList.add(studentMap);
+        }
+        System.out.println("\ncommentList"+commentList);
+
         String teaId= (String) request.getSession().getAttribute("userId");
         String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
         int currentWeekth= CalculateWeekth.weekth(firstWeek);
@@ -844,12 +894,14 @@ public class TeacherController extends Base {
             res.put("status","未到评价时间");
             return res;
         }
-       int  flag=teacherService.addWeekComment(classId,teaId,weekth,commentList);
+        int  flag=teacherService.addWeekComment(classId,teaId,weekth,commentList);
+
         if(flag==1){
            status="success";
         }
         res.put("status",status);
         return res;
+
     }
 
 

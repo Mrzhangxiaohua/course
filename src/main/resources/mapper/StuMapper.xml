@@ -171,4 +171,7 @@
         INSERT INTO course.StuWGYWeekComment
         VALUES (NULL,'3118105316', '0000011423', '66', '牛逼', 'commentFlag')
     </insert>
+
+
+
 </mapper>
