@@ -38,7 +38,7 @@ public interface StudentDao {
 
     public List<Map<String, Object>> selectList(@Param("stuId") String stuId);
 
-    Map<String,Object> findIsComment(@Param("stuId") String stuId);
+    List<Map<String,Object>> findIsComment(@Param("stuId") String stuId);
 
     public List<Map<String, Object>> showTeacomment(@Param("stuId") String stuId);
 
@@ -49,7 +49,7 @@ public interface StudentDao {
                                      @Param("currWeek") String currWeek, @Param("teaId") String teaId, @Param("score1") int score1,
                                      @Param("score2") int score2,  @Param("score3")int score3,  @Param("score4")int score4);
 
-    public Map selectList1(@Param("stuId") String stuId);
+    public List<Map<String, Object>> selectList1(@Param("stuId") String stuId);
 
     public List<Map<String, Object>> showCommentList(@Param("stuId") String stuId, @Param("classId") String classId);
 }

@@ -37,7 +37,7 @@ public interface StudentService {
     public int addCommentWeeklyFinal(String stuId, String classId, String comment, String currWeek,
                                      String teaId, int score1, int score2, int score3, int score4);
 
-    public Map selectList1(String stuId);
+    public List<Map<String, Object>> selectList1(String stuId);
 
     public List<Map<String, Object>> showCommentList(String stuId, String classId);
 }

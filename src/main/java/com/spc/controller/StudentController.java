@@ -113,30 +113,24 @@ public class StudentController extends Base{
      * @param session
      * @return
      */
-    @RequestMapping("/evaluate/perClass")
-    public Map<String, Object> selectList1(HttpSession session){
+    @RequestMapping("/select/list1")
+    public List<Map<String, Object>> selectList1(HttpSession session){
         String stuId = (String) session.getAttribute("userId");
-        Map<String, Object> m1 = new HashMap<>();
-        m1 = studentService.selectList1(stuId);
-        String classId = m1.get("classId").toString();
-        Map<String, Object> m2 = new HashMap<>();
-        m2.put(classId, m1);
-        Map<String, Object> m3 = new HashMap<>();
-        m3.put("data", m2);
-        return m3;
+        return studentService.selectList1(stuId);
     }
 
-    @RequestMapping("/chakanpingjiaqingkuang")
+    @RequestMapping(value = "/chakanpingjiaqingkuang", method = RequestMethod.POST)
     public List<Map<String, Object>> showCommentList(HttpServletRequest request){
         String stuId = (String)request.getSession().getAttribute("userId");
         String json = RequestPayload.getRequestPayload(request);
         System.out.println(json);
-        System.out.println("-----------------------------------======================= " + stuId);
         try {
-//            JSONObject obj = new JSONObject(json);
+            JSONObject obj = new JSONObject(json);
 //            String classId = obj.getString("classId");
+
             String classId = "4";
             System.out.println(classId);
+
             return studentService.showCommentList(stuId, classId);
         }catch (Exception e){
             System.out.println(e);
@@ -232,7 +226,7 @@ public class StudentController extends Base{
                         if (theWeeks == week) {
                             flag = false;
                             break;
-                        }else if (theWeeks!= week && theWeeks>=startWeek && theWeeks<=endWeek){
+                        }else if (theWeeks!= week && theWeeks>=startWeek && theWeeks<=endWeek && theWeeks==Integer.parseInt(currWeek)){
                             flag = true;
                             continue;
                         }
@@ -244,8 +238,12 @@ public class StudentController extends Base{
                         System.out.println("添加不成功，因为周次不对");
                     }
                 }else {//当一次都没有添加过评论
-                    System.out.println("添加成功");
-                    return studentService.addCommentWeeklyFinal(stuId, classId, comment, currWeek, teaId, score1, score2, score3, score4);
+                    if (theWeeks>=startWeek && theWeeks<=endWeek && theWeeks==Integer.parseInt(currWeek)){
+                        System.out.println("添加成功");
+                        return studentService.addCommentWeeklyFinal(stuId, classId, comment, currWeek, teaId, score1, score2, score3, score4);
+                    }else {
+                        return 0;
+                    }
                 }
             }
             return 0;
