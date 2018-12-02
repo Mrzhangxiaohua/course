@@ -132,7 +132,7 @@ public class TeacherController extends Base {
         for (ClassDomain li : classes) {
             String[] is = li.getClassDateDescription().split(":");
             System.out.println(is[0] + ":::::::" + is[1]);
-            li.setClassDateDescription(String.valueOf(CourseDateTrans.dateToString(Integer.parseInt(is[0]), Integer.parseInt(is[1]))));
+            li.setClassDateDescription(String.valueOf(CourseDateTrans.dateToString(Integer.parseInt(is[0]), Integer.parseInt(is[1]), Integer.parseInt(is[2]))));
             li.setClassStr(li.getClassName() + "(" + li.getClassNum() + "班)");
         }
 

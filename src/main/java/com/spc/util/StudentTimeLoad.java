@@ -52,23 +52,62 @@ public class StudentTimeLoad {
     private  static int switchSecondTime(int secondIndex) {
         int res = 0;        //res表示开课时间是几点
         switch (secondIndex) {
+//            case 1:
+//                res = 8;
+//                break;
+//            case 2:
+//                res = 10;
+//                break;
+//            case 3:
+//                res = 12;
+//                break;
+//            case 4:
+//                res = 14;
+//                break;
+//            case 5:
+//                res = 16;
+//                break;
+//            case 6:
+//                res = 19;
+//                break;
             case 1:
                 res = 8;
                 break;
             case 2:
-                res = 10;
+                res = 9;
                 break;
             case 3:
-                res = 12;
+                res = 10;
                 break;
             case 4:
-                res = 14;
+                res = 11;
                 break;
             case 5:
-                res = 16;
+                res = 12;
                 break;
             case 6:
+                res = 13;
+                break;
+            case 7:
+                res = 14;
+                break;
+            case 8:
+                res = 15;
+                break;
+            case 9:
+                res = 16;
+                break;
+            case 10:
+                res = 17;
+                break;
+            case 11:
+                res = 18;
+                break;
+            case 12:
                 res = 19;
+                break;
+            case 13:
+                res = 20;
                 break;
             default:
                 break;
