@@ -51,4 +51,6 @@ public interface ManageService {
     int updateTimeSwitch2(String startDate,String endDate);
 
     public List<Map> jilianSelect();
+
+    int addSchoolCalendar(String year,String firstWeek, String semester);
 }
