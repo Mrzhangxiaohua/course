@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CourseDateTrans {
 
-    public static StringBuilder dateToString(Integer a, Integer b) {
-        return aToString(a).append(bToString(b));
+    public static StringBuilder dateToString(Integer a, Integer b, Integer c) {
+        return aToString(a).append(bToString(b, c));
     }
 
     public static StringBuilder aToString(Integer a) {
@@ -42,26 +42,26 @@ public class CourseDateTrans {
         return strs;
     }
 
-    public static StringBuilder bToString(Integer b) {
+    public static StringBuilder bToString(Integer b, Integer c) {
         StringBuilder strs = new StringBuilder("");
         switch (b) {
             case 1:
-                strs = strs.append("1-2节");
+                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
                 break;
             case 2:
-                strs = strs.append("3-4节");
+                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
                 break;
             case 3:
-                strs = strs.append("5-6节");
+                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
                 break;
             case 4:
-                strs = strs.append("7-8节");
+                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
                 break;
             default:
-                strs = strs.append("9-10节");
+                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
                 break;
         }
-        ;
+
         return strs;
     }
 

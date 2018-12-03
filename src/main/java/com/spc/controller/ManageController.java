@@ -616,33 +616,52 @@ public class ManageController extends Base {
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String classStr,
+            @RequestParam(required = false, defaultValue = "") String stuId,
             HttpSession session
     ) {
         List students = new ArrayList();
-        if (!classStr.equals("") && !classStr.isEmpty()) {
-            String newStr = classStr.replace("(", ",").replace(")", "");
-            String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+        if (stuId.equals("")){
+            if (!classStr.equals("") && !classStr.isEmpty()) {
+                String newStr = classStr.replace("(", ",").replace(")", "");
+                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
-            String className = strs[0];
-            Integer classNum = Integer.parseInt(strs[1]);
+                String className = strs[0];
+                Integer classNum = Integer.parseInt(strs[1]);
 
-            students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
+                students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
 
-            List newStus = zhuanhuan(students);
+                List newStus = zhuanhuan(students);
 
-            putSession(session,students);
+                putSession(session,students);
 
-            logger.info("find student result:%s", newStus);
-            Map<String, Object> res = new HashMap<>();
-            res.put("status", "SUCCESS");
+                logger.info("find student result:%s", newStus);
+                Map<String, Object> res = new HashMap<>();
+                res.put("status", "SUCCESS");
 
-            Map<String, Object> data = new HashMap<>();
-            data.put("total", ((Page) students).getTotal());
-            data.put("pageSize", pageSize);
-            data.put("currentPage", currentPage);
-            data.put("list", newStus);
-            res.put("data", data);
-            return res;
+                Map<String, Object> data = new HashMap<>();
+                data.put("total", ((Page) students).getTotal());
+                data.put("pageSize", pageSize);
+                data.put("currentPage", currentPage);
+                data.put("list", newStus);
+                res.put("data", data);
+                return res;
+            }
+        }else if (!stuId.equals("")){
+                String studentId = stuId;
+                students = manageService.findStudentByStudentId(pageSize, currentPage, stuId);
+                List newStus = zhuanhuan(students);/////
+                putSession(session,students);
+
+                Map<String, Object> res = new HashMap<>();
+                res.put("status", "SUCCESS");
+
+                Map<String, Object> data = new HashMap<>();
+                data.put("total", ((Page) students).getTotal());
+                data.put("pageSize", pageSize);
+                data.put("currentPage", currentPage);
+                data.put("list", newStus);
+                res.put("data", data);
+                return res;
         } else {
             Map<String, Object> res = new HashMap<>();
             res.put("status", "SUCCESS");
@@ -654,6 +673,7 @@ public class ManageController extends Base {
             res.put("data", data);
             return res;
         }
+        return null;
     }
 
     private int putSession(HttpSession session,List<HashMap> students){

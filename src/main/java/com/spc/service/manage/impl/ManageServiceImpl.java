@@ -1,5 +1,6 @@
 package com.spc.service.manage.impl;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.dao.*;
 import com.spc.model.ClassApplicationDomain;
@@ -229,6 +230,13 @@ public class ManageServiceImpl implements ManageService {
         PageHelper.startPage(currentPage, pageSize);
         return studentDao.findStudent(classId);
     }
+
+    @Override
+    public List findStudentByStudentId(int pageSize, int currentPage, String stuId) {
+        PageHelper.startPage(currentPage, pageSize);
+        return studentDao.findStudentByStudentId(stuId);
+    }
+
 
     @Override
     public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className,  int tabKey,String shenqingrenname) {

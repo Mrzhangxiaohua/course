@@ -175,7 +175,8 @@ public class StudentServiceImpl extends Base implements StudentService {
             String[] d = classDomain.getClassDateDescription().split(":");
             Integer a = Integer.parseInt(d[0]);
             Integer b = Integer.parseInt(d[1]);
-            classDomain.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b)));
+            Integer c = Integer.parseInt(d[2]);
+            classDomain.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b, c)));
         }
         return classes;
     }
@@ -277,8 +278,8 @@ public class StudentServiceImpl extends Base implements StudentService {
         System.out.println(list);
         //判断是否评教过
         List<Map<String, Object>> m = studentDao.findIsComment(stuId);
-//        System.out.println();
-        if(m == null){
+        System.out.println("================" + m + "=======libiao=========");
+        if(m.size() == 0){
             list.get(0).put("isComment", '0');//0表示未评教
         }else {
             list.get(0).put("isComment", '1');
@@ -291,7 +292,7 @@ public class StudentServiceImpl extends Base implements StudentService {
     public List<Map<String, Object>> selectList1(String stuId) {
         List<Map<String, Object>> list= studentDao.selectList(stuId);//找到学生所选课表
         for (int i = 0; i < list.size(); i++){
-            list.get(i).put("isComment", '1');
+            list.get(i).put("isComment", '0');
         }
 //        System.out.println(list);
         return list;

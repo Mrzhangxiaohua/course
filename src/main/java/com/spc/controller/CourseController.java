@@ -63,7 +63,8 @@ public class CourseController extends Base{
                 String[] d = l.getClassDateDescription().split(":");
                 int a = Integer.parseInt(d[0]);
                 int b = Integer.parseInt(d[1]);
-                l.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b)));
+                int c = Integer.parseInt(d[2]);
+                l.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b, c)));
                 l.setClassDateDescriptionA(Integer.toString(a));
                 l.setClassDateDescriptionB(Integer.toString(b));
             }

@@ -40,6 +40,8 @@ public interface ManageService {
 
     List findStudentByClassnameAndNum(String className,int classNum,int pageSize,int currentPage);
 
+    List findStudentByStudentId(int pageSize, int currentPage, String stuId);
+
     List<ClassApplicationDomain> checkedClassMessage(String teaId, String className, int tabKey,String shenqingrenname);
 
     List<ClassApplicationDomain> checkedClassMessageAndDate(String teaId, String className, Date date,int tabKey,String shenqingrenname);
