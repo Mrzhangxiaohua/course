@@ -22,6 +22,8 @@ public class ManageServiceImpl implements ManageService {
     private ClassDao classDao;
     @Autowired
     private GradeDao gradeDao;
+    @Autowired
+    private SchoolCalendarDao schoolCalendarDao;
 
     @Autowired
     private StudentApplicationDao studentApplicationDao;
@@ -355,6 +357,13 @@ public class ManageServiceImpl implements ManageService {
         List<Map> res  = (List<Map>) classMap.get("children");
         res.add(classStrMap);
         return classMap;
+    }
+    public int addSchoolCalendar(String year,String firstWeek,String semester){
+        schoolCalendarDao.updateCalendarFlag();
+
+        schoolCalendarDao.insertCalendar(year,semester,firstWeek);
+
+        return 1;
     }
 
 }
