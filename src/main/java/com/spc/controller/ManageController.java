@@ -747,7 +747,28 @@ public class ManageController extends Base {
         }
         return 0;
     }
-
+    @RequestMapping(value="/time/switch3",method=RequestMethod.POST)
+    @ResponseBody
+    public int timeSwithch3(HttpServletRequest request){
+        String json= RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+        try {
+            JSONObject jsonObject=new JSONObject(json);
+            String firstWeek=jsonObject.getString("time");
+            String year=firstWeek.split("-")[0];
+            Map<String,String> semesterMap=new HashMap<>();
+            semesterMap.put("spring","春");
+            semesterMap.put("autumn","秋");
+            String semester=year+semesterMap.get(jsonObject.getString("semester"));
+            System.out.println(year);
+            System.out.println(firstWeek);
+            System.out.println(semester);
+            manageService.addSchoolCalendar(year,firstWeek,semester);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     @RequestMapping("/jilian/select")
     @ResponseBody
