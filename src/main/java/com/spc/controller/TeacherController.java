@@ -170,7 +170,6 @@ public class TeacherController extends Base {
             students = classService.findStudent(classId);
 
             //将学生的信息放到session里面
-
             putSession(session,students);
 
 

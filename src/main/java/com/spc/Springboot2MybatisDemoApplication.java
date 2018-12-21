@@ -32,6 +32,5 @@ public class Springboot2MybatisDemoApplication extends SpringBootServletInitiali
 
     public static void main(String[] args) {
         SpringApplication.run(Springboot2MybatisDemoApplication.class, args);
-
     }
 }
