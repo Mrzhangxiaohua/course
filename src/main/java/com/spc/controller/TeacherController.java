@@ -30,18 +30,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.spc.util.RequestPayload;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.wsdl.Output;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 这个类提供教师端的路由。
@@ -904,5 +904,88 @@ public class TeacherController extends Base {
 
     }
 
+    @RequestMapping("/downloadTemplate")
+    @ResponseBody
+    public String downloadTemplate(HttpServletRequest request,HttpServletResponse response) {
+        Map<String, Object> fileInfo=teacherService.findTemplateFile();
+        String fileName=(String)fileInfo.get("fileName");
+        String path=(String)fileInfo.get("path");
+        File file=new File(path+fileName);
+        if(file.exists()){
+            response.setContentType("application/force-download");
+            try {
+                response.addHeader("Content-Disposition","attachment;fileName="+ URLEncoder.encode(fileName,"utf-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            byte[] buffer=new byte[1024];
+            FileInputStream fis=null;
+            BufferedInputStream bis=null;
+            try{
+                fis=new FileInputStream(file);
+                bis=new BufferedInputStream(fis);
+                OutputStream os=response.getOutputStream();
+                int i=bis.read(buffer);
+                while(i!=-1){
+                    os.write(buffer,0,i);
+                    i=bis.read(buffer);
+                }
+                return "下载成功";
+            }catch(Exception e){
+                e.printStackTrace();
+            }finally {
+                if (bis != null) {
+                    try {
+                        bis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return "下载失败";
+    }
 
+    @RequestMapping("/upload")
+    @ResponseBody
+    public String uploadPlan(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+        String teaId=(String)request.getSession().getAttribute("userId");
+        try {
+            if (file.isEmpty()) {
+                return "文件为空";
+            }
+            // 获取文件名
+            String fileName = file.getOriginalFilename();
+            logger.info("上传的文件名为：" + fileName);
+            // 获取文件的后缀名
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            logger.info("文件的后缀名为：" + suffixName);
+            // 设置文件存储路径
+            String filePath = "/E:/mi";
+            String path = filePath + fileName;
+            File dest = new File(path);
+            // 检测是否存在目录
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();// 新建文件夹
+            }
+            file.transferTo(dest);// 文件写入
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date=sdf.format(new Date());
+            teacherService.insertPlanFileInfo(teaId,fileName,path,date);
+            return "上传成功";
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "上传失败";
+
+    }
 }

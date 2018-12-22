@@ -29,4 +29,7 @@ public interface TeacherService {
     Map<String,Object> findCurrentCalendar();
 
     int addWeekComment(int classId,String teaId, int weekth, List<Map<String, Object>> commentList);
+    Map<String,Object> findTemplateFile();
+
+    int insertPlanFileInfo(String teaId, String fileName, String path,String date);
 }
