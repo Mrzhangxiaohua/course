@@ -23,6 +23,7 @@ public class StudentTablePdfView extends AbstractPdfView {
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
         int studentSwitch = (int) model.get("student");
+        // 拿到传过来的课程结构数据，12行7列，用于下面pdf的生成
         String[][] tables = (String[][]) map.get("data");
 
         System.out.println(tables);
@@ -31,17 +32,18 @@ public class StudentTablePdfView extends AbstractPdfView {
 
         boolean[] widthCellB = new boolean[]{false,false,false,false,false,false,false};
         int[] widthCell = new int[]{1,1,1,1,1,1,1,1};
-        for (int i = 0; i < tables.length; i = i + 2) {
+
+        for (int i = 0; i < tables.length; i = i + 1) { // 拿到课程结构的，制作表格，无单元格合并
             String[] t = tables[i];
             boolean have = false;
-            for(int k =0;k<t.length;k++){
+            for(int k =0; k < t.length; k++){   // 对列数中的内容进行遍历，制作pdf样式的大小
                 if(tables[i][k]!=null & tables[i][k]!=""){
                     widthCellB[k] = true;
                 }
             }
         }
         for (int j = 0;j<widthCellB.length;j++) {
-            widthCell[j+1]=widthCellB[j]==true?3:1;
+            widthCell[j+1]=widthCellB[j]==true?3:1;    //
         }
 
 
@@ -102,10 +104,19 @@ public class StudentTablePdfView extends AbstractPdfView {
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
 
-        for (int i = 0; i < tables.length; i = i + 2) {
+        for (int i = 0; i < tables.length; i = i + 1) {         // 对行进行处理
             String[] t = tables[i];
             PdfPCell cell;
-            cell = new PdfPCell(new Phrase(Integer.toString(i  + 1) + "-" + Integer.toString(i + 2) + "节", textFont));
+//            cell = new PdfPCell(new Phrase(Integer.toString(i  + 1) + "-" + Integer.toString(i + 2) + "节", textFont));
+            if (i<4){
+                cell = new PdfPCell(new Phrase(Integer.toString(i + 1) + "节", textFont));
+            }else if(i==4){
+                cell = new PdfPCell(new Phrase("N1"  + "节", textFont));
+            }else if(i == 5){
+                cell = new PdfPCell(new Phrase("N2"  + "节", textFont));
+            }else {
+                cell = new PdfPCell(new Phrase(Integer.toString(i - 1) + "节", textFont));
+            }
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);

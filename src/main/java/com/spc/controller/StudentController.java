@@ -361,8 +361,8 @@ public class StudentController extends Base{
         String[][] tables = studentService.findClasses((String) session.getAttribute("userId"));
 
         List<CourseTableExcelDomain> liC = new ArrayList<>();
-        for (int i = 0; i < tables.length; i = i + 2) {
-            liC.add(new CourseTableExcelDomain(i / 2, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
+        for (int i = 0; i < tables.length; i = i + 1) {
+            liC.add(new CourseTableExcelDomain(i , tables[i][0], tables[i][1], tables[i][2], tables[i][3]
                     , tables[i][4], tables[i][5], tables[i][6]));
         }
 
