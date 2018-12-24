@@ -30,7 +30,7 @@ public interface ClassDao {
     int updateScore3(@Param("className") String className,@Param("classNum") int classNum, @Param("stuId") String stuId,
                     @Param("xbsjGrade") int xbsjGrade ,@Param("wlzzxxGrade") int wlzzxxGrade, @Param("knskGrade") int knskGrade);
 
-    List<HashMap<String, Object>> findCourseTable(@Param("teaId") String teaId);
+    List<HashMap<String, Object>> findCourseTable(@Param("teaId") String teaId,@Param("semester") String semester);
 
     List<HashMap<String, Object>> findAllClasseSimpleMess(@Param("shenQingRenId") String shenQingRenId,@Param("shenQingRenName") String shenQingRenName,@Param("teaName")String teaName);
 

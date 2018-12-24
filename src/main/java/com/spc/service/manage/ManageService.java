@@ -53,4 +53,6 @@ public interface ManageService {
     public List<Map> jilianSelect();
 
     int addSchoolCalendar(String year,String firstWeek, String semester);
+
+    void addTemplateFileInfo(String teaId, String fileName, String path, String date);
 }

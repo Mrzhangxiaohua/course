@@ -54,6 +54,7 @@ public class MainController extends Base {
         String userRole = (String) httpSession.getAttribute("userRole");
         String userId = (String) httpSession.getAttribute("userId");
         String username = (String) httpSession.getAttribute("username");
+        System.out.println("登录："+httpSession.getAttribute("dep"));
         //为了缓存老师更新的数据而在内存中建立的hashMap
 
         if (userRole.equals("学生")) {
@@ -96,7 +97,7 @@ public class MainController extends Base {
         session.setAttribute("username", baseInfo.getUsername());
         session.setAttribute("userId", baseInfo.getUserId());
         session.setAttribute("userRole", baseInfo.getUserRole());
-
+        session.setAttribute("dep",baseInfo.getDep());
         //将这个用户信息存储与用户信息库里面
         UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
         dataService.storeUserInformation(userDetails);

@@ -30,6 +30,9 @@ public class TeacherServiceImpl implements TeacherService {
     @Autowired
     FileInfoDao fileInfoDao;
 
+    @Autowired
+    SchoolCalendarDao schoolCalendarDao;
+
 
 
 
@@ -40,8 +43,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public String[][] findCourseTable(String teaId) {
-
-        List<HashMap<String, Object>> lis = classDao.findCourseTable(teaId);
+        String semester=(String)schoolCalendarDao.currentCalendar().get("semester");
+        List<HashMap<String, Object>> lis = classDao.findCourseTable(teaId,semester);
 ////        System.out.println("教师端的课表：",lis);
 //        String temp[][] = new String[10][7];
 //        for (HashMap<String, Object> li : lis) {
@@ -141,7 +144,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Map<String, Object> findCurrentCalendar() {
-         return classDao.currentCalendar();
+         return schoolCalendarDao.currentCalendar();
     }
 
     @Override

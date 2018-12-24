@@ -130,6 +130,8 @@
         from Course
         <where>
             teaId = #{teaId}
+
+          and  classSemester = #{semester}
         </where>
     </select>
 

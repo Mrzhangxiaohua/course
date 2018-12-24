@@ -22,16 +22,23 @@ public class AuthMess {
 
     public static String userId(Authentication authentication) {
         String stuId = userDetails(authentication).getUserno();
+        System.out.println("AuthMess-userId:"+stuId);
         return stuId;
     }
     public static String userName( Authentication authentication) {
         String username = userDetails(authentication).getUsername();
+        System.out.println("AuthMess-username:"+username);
         return username;
     }
 
     public static String userRole( Authentication authentication) {
         List<GrantedAuthority> authentications = (List<GrantedAuthority>) userDetails(authentication).getAuthorities();
         return authentications.get(0).getAuthority();
+    }
+    public static String userDepart(Authentication authentication){
+        String dep = userDetails(authentication).getDep();
+        System.out.println("AuthMess-userDepart:"+dep);
+        return dep;
     }
 
 

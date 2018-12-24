@@ -35,6 +35,9 @@ public class ManageServiceImpl implements ManageService {
     @Autowired
     private TimeSwitchDao timeSwitchDao;
 
+    @Autowired
+    private TeacherDao teacherDao;
+
     @Override
     public String[][] findClasses(String stuId) {
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
@@ -373,5 +376,15 @@ public class ManageServiceImpl implements ManageService {
 
         return 1;
     }
+
+    @Override
+    public void addTemplateFileInfo(String teaId, String fileName, String path, String date) {
+
+    }
+/*
+    @Override
+    public int addTemplateFileInfo(String teaId, String fileName, String path, String date) {
+        String department=teacherDao.findDepartment(teaId);
+    }*/
 
 }

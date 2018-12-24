@@ -37,6 +37,7 @@ public class MakeTimeTable {
 //                temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
             }
         }
+        System.out.println(temp);
         return temp;
     }
 

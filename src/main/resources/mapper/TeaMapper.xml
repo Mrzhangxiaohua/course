@@ -51,4 +51,10 @@
 
     </update>
 
+    <select id="findDepartment" resultType="map">
+        select stuId,classId,teaEvaluate,teaSuggestion
+        from teaInfo
+        where teaId=#{teaId}
+    </select>
+
 </mapper>
