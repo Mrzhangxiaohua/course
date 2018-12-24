@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * 登录学生的基础信息类
+ *
  */
 
 public class BaseInfo {
