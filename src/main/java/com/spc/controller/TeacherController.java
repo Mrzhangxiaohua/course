@@ -450,10 +450,9 @@ public class TeacherController extends Base {
     public void downloadCourseTableExcel(HttpServletResponse response, HttpSession session) {
         String teaId = (String) session.getAttribute("userId");
         String[][] tables = teacherService.findCourseTable(teaId);
-
         List<CourseTableExcelDomain> liC = new ArrayList<>();
-        for (int i = 0; i < tables.length; i = i + 2) {
-            liC.add(new CourseTableExcelDomain(i / 2, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
+        for (int i = 0; i < tables.length; i = i + 1) {
+            liC.add(new CourseTableExcelDomain(i, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
                     , tables[i][4], tables[i][5], tables[i][6]));
         }
 

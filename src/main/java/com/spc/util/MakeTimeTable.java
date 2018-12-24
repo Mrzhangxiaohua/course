@@ -21,7 +21,7 @@ public class MakeTimeTable {
             Integer l = ints[1].toCharArray()[0] - '0';//第几节开始
             Integer z = ints[2].toCharArray()[0] - '0';//上几节课
 
-            if (t == 0) {
+            if (t == 0) {   // 针对特殊的课程，周一至周五每天都有的
                 for (int r = 1; r <= 6; r++) {
                     String context =encode1(className,  classPlace,  teacherName, mainLecturer, startWeek,  endWeek,  classNum, student);
                     temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
@@ -47,7 +47,7 @@ public class MakeTimeTable {
 
 
     public static String[][] makeTable(List<Map<String, Object>> lis) {
-        String temp[][] = new String[10][7];
+        String temp[][] = new String[12][7];
 //        String temp[][] = new String[24][7];
 //        System.out.println("=============================lis========================");
 //        System.out.println(lis);
