@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.GradePercentDao">
+
+    <insert id="insertGradePercent" useGeneratedKeys="true" keyProperty="gradePercentId" flushCache="true">
+        insert into gradePercent(KNSK, XBSJ, ZZXX, userId,time,flag )
+        values(#{knsk},#{xbsj},#{zzxx},#{userId},#{date},1)
+    </insert>
+
+    <update id="updateFlagZero">
+       update course.gradePercent set flag=0
+    </update>
+</mapper>
