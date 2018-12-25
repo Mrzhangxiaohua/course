@@ -29,11 +29,14 @@ public class AuthMess {
         return username;
     }
 
+    public static String userDep(Authentication authentication) {
+        String dep = userDetails(authentication).getDep();
+        return dep;
+    }
+
     public static String userRole( Authentication authentication) {
         List<GrantedAuthority> authentications = (List<GrantedAuthority>) userDetails(authentication).getAuthorities();
         return authentications.get(0).getAuthority();
     }
-
-
 
 }

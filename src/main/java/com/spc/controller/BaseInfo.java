@@ -13,12 +13,14 @@ public class BaseInfo {
     private String username;
     private String userId;
     private String userRole;
+    private String dep;
 
     BaseInfo() {
         this.authentication = SecurityContextHolder.getContext().getAuthentication();
         this.username = AuthMess.userName(authentication);
         this.userId = AuthMess.userId(authentication);
         this.userRole = AuthMess.userRole(authentication);
+        this.dep = AuthMess.userDep(authentication);
     }
 
     public Authentication getAuthentication() {
@@ -41,4 +43,11 @@ public class BaseInfo {
         return userRole;
     }
 
+    public String getDep() {
+        return dep;
+    }
+
+    public void setDep(String dep) {
+        this.dep = dep;
+    }
 }

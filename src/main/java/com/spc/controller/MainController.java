@@ -96,6 +96,7 @@ public class MainController extends Base {
         session.setAttribute("username", baseInfo.getUsername());
         session.setAttribute("userId", baseInfo.getUserId());
         session.setAttribute("userRole", baseInfo.getUserRole());
+        session.setAttribute("dep", baseInfo.getDep());
 
         //将这个用户信息存储与用户信息库里面
         UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());

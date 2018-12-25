@@ -582,17 +582,17 @@ public class TeacherController extends Base {
         for (Object i : map.keySet()) {
             if (!i.toString().equals("operator")) {
                 String[] strs = i.toString().split(":");
-                Map scoreMap = (Map) map.get(i);
+                Map scoreMap = (Map) map.get(i);        // 获得每一条数据
                 int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
-                int knskGrade = (int) scoreMap.get("knskGrade");
-                if(wlzzxxGrade==0||knskGrade==0){
+//                int knskGrade = (int) scoreMap.get("knskGrade");
+//                if(wlzzxxGrade==0||knskGrade==0){
+                if(wlzzxxGrade==0){
                     return 3;
                 }
             }
         }
         //保存模块一的成绩
         storeGrade1(request);
-
         String json = RequestPayload.getRequestPayload(request);
         System.out.println(json);
         try {
