@@ -54,5 +54,7 @@ public interface ManageService {
 
     int addSchoolCalendar(String year,String firstWeek, String semester);
 
-    void addTemplateFileInfo(String teaId, String fileName, String path, String date);
+    int addTemplateFileInfo(String teaId, String fileName, String path,int type,String dep, String date,int flag);
+
+    int addGradePercent(int knsk, int xbsj, int zzxx, String userId, String date);
 }

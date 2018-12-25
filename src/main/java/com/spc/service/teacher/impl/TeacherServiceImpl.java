@@ -183,8 +183,8 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public int insertPlanFileInfo(String teaId, String fileName, String path,String date) {
-       return fileInfoDao.insertFileInfo(teaId,fileName,path,date);
-
+    public int addFileInfo(String teaId, String fileName, String path, int type, String dep, String date, int flag) {
+        return fileInfoDao.insertFileInfo(teaId,fileName,path,type,dep,date,flag);
     }
+
 }

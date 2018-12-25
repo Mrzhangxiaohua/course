@@ -955,6 +955,7 @@ public class TeacherController extends Base {
     @ResponseBody
     public String uploadPlan(@RequestParam("file") MultipartFile file,HttpServletRequest request){
         String teaId=(String)request.getSession().getAttribute("userId");
+        String dep=(String) request.getSession().getAttribute("dep");
         try {
             if (file.isEmpty()) {
                 return "文件为空";
@@ -976,7 +977,8 @@ public class TeacherController extends Base {
             file.transferTo(dest);// 文件写入
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            teacherService.insertPlanFileInfo(teaId,fileName,path,date);
+            teacherService.addFileInfo(teaId,fileName,path,2,dep,date,1);
+
             return "上传成功";
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -986,4 +988,6 @@ public class TeacherController extends Base {
         return "上传失败";
 
     }
+
+
 }

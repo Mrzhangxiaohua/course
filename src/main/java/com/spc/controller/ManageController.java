@@ -782,6 +782,7 @@ public class ManageController extends Base {
     @ResponseBody
     public String uploadTemplate(HttpServletRequest request, @RequestParam("file") MultipartFile file){
         String teaId=(String)request.getSession().getAttribute("userId");
+        String dep=(String)request.getSession().getAttribute("dep");
         try {
             if (file.isEmpty()) {
                 return "文件为空";
@@ -803,7 +804,7 @@ public class ManageController extends Base {
             file.transferTo(dest);// 文件写入
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            manageService.addTemplateFileInfo(teaId,fileName,path,date);
+            manageService.addTemplateFileInfo(teaId,fileName,path,1,dep,date,1);
             return "上传成功";
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -813,4 +814,28 @@ public class ManageController extends Base {
         return "上传失败";
     }
 
+    /*
+    * 超级管理员设置成绩比例
+    * */
+    @RequestMapping("/setGradePercent")
+    @ResponseBody
+    public String setGradePercent(HttpServletRequest request){
+        String userId= (String) request.getSession().getAttribute("userId");
+        String jsonString = RequestPayload.getRequestPayload(request);
+        try {
+            JSONObject json=new JSONObject(jsonString);
+            System.out.println("json"+json);
+            JSONObject valuejson = json.getJSONObject("value");
+            int XBSJ= (int) valuejson.get("XBSJ");
+            int ZZXX= (int) valuejson.get("ZZXX");
+            int KNSK= (int) valuejson.get("KNSK");
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date=sdf.format(new Date());
+            manageService.addGradePercent(KNSK,XBSJ,ZZXX,userId,date);
+        return "设置成功";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "设置失败";
+    }
 }
