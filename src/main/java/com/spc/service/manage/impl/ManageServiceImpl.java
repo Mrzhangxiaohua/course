@@ -35,6 +35,15 @@ public class ManageServiceImpl implements ManageService {
     @Autowired
     private TimeSwitchDao timeSwitchDao;
 
+    @Autowired
+    private TeacherDao teacherDao;
+
+    @Autowired
+    FileInfoDao fileInfoDao;
+
+    @Autowired
+    GradePercentDao gradePercentDao;
+
     @Override
     public String[][] findClasses(String stuId) {
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
@@ -58,13 +67,13 @@ public class ManageServiceImpl implements ManageService {
 //            temp[(r - 1) * 2 + 1][l - 1] = context;
 //        }
 //        return temp;
-        return MakeTimeTable.makeBigTable(lis,0);
+        return MakeTimeTable.makeBigTable(lis, 0);
     }
 
     @Override
-    public String[][] bigTable(String shenQingRenId, String shenQingRenName,String teaName) {
+    public String[][] bigTable(String shenQingRenId, String shenQingRenName, String teaName) {
 
-        List<HashMap<String, Object>> lis = classDao.findAllClasseSimpleMess( shenQingRenId,  shenQingRenName, teaName);
+        List<HashMap<String, Object>> lis = classDao.findAllClasseSimpleMess(shenQingRenId, shenQingRenName, teaName);
 //        String temp[][] = new String[10][7];
 //        for (HashMap<String, Object> li : lis) {
 ////            System.out.println(li);
@@ -85,7 +94,7 @@ public class ManageServiceImpl implements ManageService {
 //            temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
 //            temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
 //        }
-        return MakeTimeTable.makeBigTable(lis,0);
+        return MakeTimeTable.makeBigTable(lis, 0);
     }
 
     @Override
@@ -103,9 +112,9 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     @Transactional
-    public int  chooseCourse(int classId,String stuId){
-        System.out.println(classDao.haveStuInClass(classId,stuId));
-        if(classDao.haveStuInClass(classId,stuId).isEmpty()){
+    public int chooseCourse(int classId, String stuId) {
+        System.out.println(classDao.haveStuInClass(classId, stuId));
+        if (classDao.haveStuInClass(classId, stuId).isEmpty()) {
             classDao.updateChooseNum(classId, 1);
             studentDao.addChooseCourse(stuId, classId);
         }
@@ -121,7 +130,7 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public int makeSure(int id,String classStr) {
+    public int makeSure(int id, String classStr) {
         //通过的话就要将checked设置为1
         //通过的话要根据请求的内容做相应的调整
         StudentApplicationDomain studentApplicationDomain = studentApplicationDao.selectById(id);
@@ -129,29 +138,29 @@ public class ManageServiceImpl implements ManageService {
         int classNum = studentApplicationDomain.getClassNum();
         int oldClassId = studentApplicationDomain.getClassId();
 
-        switch (studentApplicationDomain.getCategory()){
+        switch (studentApplicationDomain.getCategory()) {
             case "新增课程":
                 System.out.println("新增课程");
                 List<Map<String, Object>> res = studentDao.findTimeChongTu(stuId, oldClassId);
                 boolean canAdd = gradeDao.selectGrade(oldClassId, stuId).isEmpty() && res.isEmpty();
                 if (canAdd) {
-                    chooseCourse(oldClassId,stuId);
+                    chooseCourse(oldClassId, stuId);
                 }
                 break;
             case "调整班级":
                 System.out.println("调整班级");
-                deleteCourse(oldClassId,stuId);
-                int newClassId = studentDao.findClassNewId(oldClassId,classNum);
-                chooseCourse(newClassId,stuId);
+                deleteCourse(oldClassId, stuId);
+                int newClassId = studentDao.findClassNewId(oldClassId, classNum);
+                chooseCourse(newClassId, stuId);
                 break;
             case "重修课程":
                 System.out.println("重修课程");
-                chooseCourse(oldClassId,stuId);
+                chooseCourse(oldClassId, stuId);
                 break;
             case "退选计划":
                 System.out.println("退选计划");
 //                chooseCourse(oldClassId,stuId);
-                deleteCourse(oldClassId,stuId);
+                deleteCourse(oldClassId, stuId);
                 break;
         }
         return studentApplicationDao.checked(id, 1);
@@ -175,7 +184,7 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public void addCourse(ClassDomain cd) {
-       classDao.insert(cd);
+        classDao.insert(cd);
     }
 
     @Override
@@ -184,37 +193,36 @@ public class ManageServiceImpl implements ManageService {
     }
 
 
-
     @Override
     public int addCourseStudent(String stuId, String classStr) {
-        String newStr = classStr.replace("(",",").replace(")","");
-        String[] strs = newStr.substring(0,newStr.length()-1).split(",");
+        String newStr = classStr.replace("(", ",").replace(")", "");
+        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
         System.out.println(strs);
         String className = strs[0];
         Integer classNum = Integer.parseInt(strs[1]);
-        int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
-        System.out.println("run here ="+classId);
-        chooseCourse(classId,stuId);
+        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
+        System.out.println("run here =" + classId);
+        chooseCourse(classId, stuId);
         return 0;
     }
 
     @Override
     public int deleteCourseStudent(String stuId, String classStr) {
-        String newStr = classStr.replace("(",",").replace(")","");
-        String[] strs = newStr.substring(0,newStr.length()-1).split(",");
+        String newStr = classStr.replace("(", ",").replace(")", "");
+        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
         System.out.println(newStr);
         String className = strs[0];
         Integer classNum = Integer.parseInt(strs[1]);
-        int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
-        deleteCourse(classId,stuId);
+        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
+        deleteCourse(classId, stuId);
         return 0;
     }
 
     @Override
     public int getClassId(String className, int classNum) {
-        return   (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
+        return (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
     }
 
     @Override
@@ -224,8 +232,8 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public List findStudentByClassnameAndNum(String className, int classNum,int pageSize,int currentPage) {
-        int classId = (int) studentDao.findClassesByNameAndNum(className,classNum).get("classId");
+    public List findStudentByClassnameAndNum(String className, int classNum, int pageSize, int currentPage) {
+        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
 
         PageHelper.startPage(currentPage, pageSize);
         return studentDao.findStudent(classId);
@@ -239,15 +247,15 @@ public class ManageServiceImpl implements ManageService {
 
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className,  int tabKey,String shenqingrenname) {
-        return classApplicationDao.findallClass(shenQingRenId, className, tabKey,shenqingrenname);
+    public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className, int tabKey, String shenqingrenname) {
+        return classApplicationDao.findallClass(shenQingRenId, className, tabKey, shenqingrenname);
     }
 
     @Override
-    public List<ClassApplicationDomain> checkedClassMessageAndDate(String shenQingRenId, String className, Date date, int tabKey,String shenqingrenname) {
+    public List<ClassApplicationDomain> checkedClassMessageAndDate(String shenQingRenId, String className, Date date, int tabKey, String shenqingrenname) {
         java.sql.Date dateSql = new java.sql.Date(date.getTime());
-        System.out.println("时间time是======"+dateSql);
-        return classApplicationDao.findallClassWithDate(shenQingRenId, className, date, tabKey,shenqingrenname);
+        System.out.println("时间time是======" + dateSql);
+        return classApplicationDao.findallClassWithDate(shenQingRenId, className, date, tabKey, shenqingrenname);
     }
 
     @Override
@@ -262,13 +270,13 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public int updateTimeSwitch2(String startDate, String endDate) {
-        return timeSwitchDao.updateTimeSwitch2( startDate,  endDate);
+        return timeSwitchDao.updateTimeSwitch2(startDate, endDate);
     }
 
 
     @Override
     public List<Map> jilianSelect() {
-        List<ClassDomain> classes = classDao.selectClasses(88888888, "", "", "", 88888888, 88888888, 1, 88888888,1,0);
+        List<ClassDomain> classes = classDao.selectClasses(88888888, "", "", "", 88888888, 88888888, 1, 88888888, 1, 0);
 
         List<Map> res = new ArrayList<>();
 
@@ -284,12 +292,12 @@ public class ManageServiceImpl implements ManageService {
             String allClassName = cd.getDepartName() + cd.getClassName();
 
             boolean in = false;
-            if(departTemp.size()!=0){
+            if (departTemp.size() != 0) {
                 for (String s : departTemp) {
                     if (s.equals(departName)) in = true;
                 }
             }
-            if(!in) departTemp.add(departName);
+            if (!in) departTemp.add(departName);
             //没有这个学院
             if (!in) {
                 //创造课程
@@ -307,12 +315,12 @@ public class ManageServiceImpl implements ManageService {
             } else {
                 //判断有没有这个课程
                 boolean in2 = false;
-                if(classTemp.size()!=0){
+                if (classTemp.size() != 0) {
                     for (String s : classTemp) {
                         if (s.equals(allClassName)) in2 = true;
                     }
                 }
-                if(!in2) classTemp.add(allClassName);
+                if (!in2) classTemp.add(allClassName);
 //                System.out.println(allClassName);
                 //没有这个课程
                 if (!in2) {
@@ -347,13 +355,14 @@ public class ManageServiceImpl implements ManageService {
     }
 
 
-    public Map creatClassStrMap(String className,int classNum){
+    public Map creatClassStrMap(String className, int classNum) {
         Map tempChild2 = new HashMap();
         tempChild2.put("value", className + "(" + classNum + "班)");
         tempChild2.put("label", classNum + "班");
         return tempChild2;
     }
-    public Map creatClassOrDepartMap(String className,int classId){
+
+    public Map creatClassOrDepartMap(String className, int classId) {
         Map tempChild2 = new HashMap();
         tempChild2.put("value", classId);
         tempChild2.put("label", className);
@@ -361,17 +370,33 @@ public class ManageServiceImpl implements ManageService {
         tempChild2.put("children", res);
         return tempChild2;
     }
-    public Map addClassOrDepart(Map classMap ,Map classStrMap){
-        List<Map> res  = (List<Map>) classMap.get("children");
+
+    public Map addClassOrDepart(Map classMap, Map classStrMap) {
+        List<Map> res = (List<Map>) classMap.get("children");
         res.add(classStrMap);
         return classMap;
     }
-    public int addSchoolCalendar(String year,String firstWeek,String semester){
+
+    public int addSchoolCalendar(String year, String firstWeek, String semester) {
         schoolCalendarDao.updateCalendarFlag();
 
-        schoolCalendarDao.insertCalendar(year,semester,firstWeek);
+        schoolCalendarDao.insertCalendar(year, semester, firstWeek);
 
         return 1;
     }
+
+    @Override
+    public int addTemplateFileInfo(String teaId, String fileName, String path, int type, String dep, String date, int flag) {
+        fileInfoDao.updateFlagZero(dep,type);
+        return fileInfoDao.insertFileInfo(teaId, fileName, path, type, dep, date, flag);
+
+    }
+
+    @Override
+    public int addGradePercent(int knsk, int xbsj, int zzxx, String userId, String date) {
+       gradePercentDao.updateFlagZero();
+        return gradePercentDao.insertGradePercent(knsk,xbsj,zzxx,userId,date);
+    }
+
 
 }

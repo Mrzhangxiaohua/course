@@ -31,5 +31,5 @@ public interface TeacherService {
     int addWeekComment(int classId,String teaId, int weekth, List<Map<String, Object>> commentList);
     Map<String,Object> findTemplateFile();
 
-    int insertPlanFileInfo(String teaId, String fileName, String path,String date);
+    int addFileInfo(String teaId, String fileName, String path, int type, String dep, String date, int flag);
 }

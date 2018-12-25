@@ -11,8 +11,13 @@
        and flag=1
     </select>
     <insert id="insertFileInfo" useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true">
-    insert into fileInfo(fileName, path, type, userId, time, flag )
-    values(#{fileName},#{path},2,#{teaId},#{time},1)
+    insert into fileInfo(fileName, path, type, userId, department, time, flag )
+    values(#{fileName},#{path},2,#{teaId},#{dep},#{time},1)
     </insert>
 
+    <update id="updateFlagZero">
+       update course.fileInfo set flag=0
+       where type=#{type}
+       and dep=#{dep}
+    </update>
 </mapper>

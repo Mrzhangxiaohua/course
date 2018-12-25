@@ -20,11 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -776,4 +778,64 @@ public class ManageController extends Base {
         return manageService.jilianSelect();
     }
 
+    @RequestMapping(value="/uploadTemplate")
+    @ResponseBody
+    public String uploadTemplate(HttpServletRequest request, @RequestParam("file") MultipartFile file){
+        String teaId=(String)request.getSession().getAttribute("userId");
+        String dep=(String)request.getSession().getAttribute("dep");
+        try {
+            if (file.isEmpty()) {
+                return "文件为空";
+            }
+            // 获取文件名
+            String fileName = file.getOriginalFilename();
+            logger.info("上传的文件名为：" + fileName);
+            // 获取文件的后缀名
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            logger.info("文件的后缀名为：" + suffixName);
+            // 设置文件存储路径
+            String filePath = "/E:/mi";
+            String path = filePath + fileName;
+            File dest = new File(path);
+            // 检测是否存在目录
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();// 新建文件夹
+            }
+            file.transferTo(dest);// 文件写入
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date=sdf.format(new Date());
+            manageService.addTemplateFileInfo(teaId,fileName,path,1,dep,date,1);
+            return "上传成功";
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "上传失败";
+    }
+
+    /*
+    * 超级管理员设置成绩比例
+    * */
+    @RequestMapping("/setGradePercent")
+    @ResponseBody
+    public String setGradePercent(HttpServletRequest request){
+        String userId= (String) request.getSession().getAttribute("userId");
+        String jsonString = RequestPayload.getRequestPayload(request);
+        try {
+            JSONObject json=new JSONObject(jsonString);
+            System.out.println("json"+json);
+            JSONObject valuejson = json.getJSONObject("value");
+            int XBSJ= (int) valuejson.get("XBSJ");
+            int ZZXX= (int) valuejson.get("ZZXX");
+            int KNSK= (int) valuejson.get("KNSK");
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date=sdf.format(new Date());
+            manageService.addGradePercent(KNSK,XBSJ,ZZXX,userId,date);
+        return "设置成功";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "设置失败";
+    }
 }
