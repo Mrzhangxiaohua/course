@@ -108,7 +108,10 @@ public class ClassServiceImpl implements ClassService {
         return classDao.updateScore3(className,classNum, stuId, xbsjGrade, wlzzxxGrade,  knskGrade);
     }
 
-
+    @Override
+    public int zzGrade(String className, int classNum, String stuId, int zzGrade, int flag) {
+        return classDao.zzGrade(className, classNum, stuId, zzGrade, flag);
+    }
 
 }
 

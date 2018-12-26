@@ -187,4 +187,17 @@ public class TeacherServiceImpl implements TeacherService {
         return fileInfoDao.insertFileInfo(teaId,fileName,path,type,dep,date,flag);
     }
 
+    /**
+     * 查询管理员设置的成绩比例，KNSK表示课内授课的成绩百分比，XBSJ表示小班实践成绩百分比，ZZXX表示自主学习成绩百分比
+     * @return
+     */
+    @Override
+    public Map<String, Object> findGradePercent() {
+        return teacherDao.findGradePercent();
+    }
+
+    @Override
+    public Map<String, Object> findCourseClassTime(String classNum, String stuId) {
+        return teacherDao.findCourseClassTime(classNum, stuId);
+    }
 }

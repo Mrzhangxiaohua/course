@@ -13,6 +13,7 @@ public class GradeDomain  implements Serializable {
     private Integer zzGrade;
     private String classSemester;
     private Integer classGradePoint;
+    private Integer flag;
 
     public Integer getWlzzxxGrade() {
         return wlzzxxGrade;
@@ -94,6 +95,14 @@ public class GradeDomain  implements Serializable {
 
     public void setStuId(String stuId) {
         this.stuId = stuId;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
     }
 }
 
