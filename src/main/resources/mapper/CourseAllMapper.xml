@@ -4,36 +4,38 @@
 <mapper namespace="com.spc.dao.CourseAllDao">
 
     <select id="select" resultType="com.spc.model.CourseAll" useCache="false">
+        <!-- 课程名称模糊匹配 -->
         select * from course.CourseAll
         <where>
-            <if test="id!=null">
+            <if test="id != null">
                 and id = #{id}
             </if>
-            <if test="departId!=null">
+            <if test="departId != null">
                 and departId = #{departId}
             </if>
-            <if test="moduleId!=null">
+            <if test="moduleId != null">
                 and moduleId = #{moduleId}
             </if>
-            <if test="courseId!=null">
+            <if test="courseId != null and courseId !=''">
                 and courseId = #{courseId}
             </if>
-            <if test="courseName!=null">
-                and courseName = #{courseName}
+            <if test="courseName != null and courseName !=''">
+                <bind name="pattern" value="'%'+ courseName +'%'"/>
+                and (courseNameCHS like #{pattern} or courseNameEN like #{pattern})
             </if>
-            <if test="teacherId!=null">
+            <if test="teacherId != null and teacherId !=''">
                 and teacherId = #{teacherId}
             </if>
-            <if test="teacherName!=null">
+            <if test="teacherName != null and teacherName !=''">
                 and teacherName = #{teacherName}
             </if>
-            <if test="classSemester!=null">
+            <if test="classSemester != null and classSemester !=''">
                 and classSemester = #{classSemester}
             </if>
-            <if test="classDateDesc!=null">
+            <if test="classDateDesc != null and classDateDesc !=''">
                 and classDateDesc = #{classDateDesc}
             </if>
-            <if test="classPlace!=null">
+            <if test="classPlace != null and classPlace !=''">
                 and classPlace = #{classPlace}
             </if>
         </where>

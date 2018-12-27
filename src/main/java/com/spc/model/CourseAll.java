@@ -266,4 +266,36 @@ public class CourseAll {
     public void setConflictDesc(String conflictDesc) {
         this.conflictDesc = conflictDesc;
     }
+
+    @Override
+    public String toString() {
+        return "CourseAll{" +
+                "id=" + id +
+                ", departId=" + departId +
+                ", modelId=" + modelId +
+                ", courseId=" + courseId +
+                ", courseNameCHS='" + courseNameCHS + '\'' +
+                ", courseNameEN='" + courseNameEN + '\'' +
+                ", courseInfo='" + courseInfo + '\'' +
+                ", teacherId='" + teacherId + '\'' +
+                ", teacherName='" + teacherName + '\'' +
+                ", instructorName='" + instructorName + '\'' +
+                ", instructorInfo='" + instructorInfo + '\'' +
+                ", teachingTeamIds='" + teachingTeamIds + '\'' +
+                ", teachingTeamNames='" + teachingTeamNames + '\'' +
+                ", applicantId='" + applicantId + '\'' +
+                ", applicantName='" + applicantName + '\'' +
+                ", classId=" + classId +
+                ", classSemester='" + classSemester + '\'' +
+                ", classHours=" + classHours +
+                ", classGradePoint=" + classGradePoint +
+                ", classChooseNum=" + classChooseNum +
+                ", classUpperBound=" + classUpperBound +
+                ", startWeek=" + startWeek +
+                ", endWeek=" + endWeek +
+                ", classDateDesc='" + classDateDesc + '\'' +
+                ", classPlace='" + classPlace + '\'' +
+                ", conflictDesc='" + conflictDesc + '\'' +
+                '}';
+    }
 }

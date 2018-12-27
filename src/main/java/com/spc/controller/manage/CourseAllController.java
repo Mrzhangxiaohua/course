@@ -2,6 +2,7 @@ package com.spc.controller.manage;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.spc.controller.Base;
 import com.spc.model.CourseAll;
 import com.spc.service.manage.CourseAllService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.util.Map;
  **/
 @RequestMapping("/manage")
 @Controller
-public class CourseAllController {
+public class CourseAllController extends Base {
 
     @Autowired
     private CourseAllService courseAllService;

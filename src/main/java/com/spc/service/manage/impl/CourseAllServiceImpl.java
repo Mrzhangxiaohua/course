@@ -1,5 +1,6 @@
 package com.spc.service.manage.impl;
 
+import com.spc.controller.Base;
 import com.spc.dao.CourseAllDao;
 import com.spc.model.CourseAll;
 import com.spc.service.manage.CourseAllService;
@@ -17,7 +18,7 @@ import java.util.Map;
  * @date 2018-12-25
  */
 @Service
-public class CourseAllServiceImpl implements CourseAllService {
+public class CourseAllServiceImpl extends Base implements CourseAllService{
 
     // 每天一共12个学时
     private static final int CLASS_HOURS_PER_DAY = 12;
@@ -176,8 +177,9 @@ public class CourseAllServiceImpl implements CourseAllService {
                 if (c.getEndWeek() < course.getStartWeek() || c.getStartWeek() > course.getEndWeek()) {
                     continue;
                 }
+                logger.info(c.toString());
                 // step2: 上课时间冲突判断
-                String[] classDates = course.getClassDateDesc().split(",");
+                String[] classDates = c.getClassDateDesc().split(",");
                 for (int k = 0; k < classDates.length; k++) {
                     String[] indexes = classDates[k].split("-");
                     int i = Integer.parseInt(indexes[0]);
