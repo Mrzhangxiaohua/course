@@ -387,7 +387,7 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public int addTemplateFileInfo(String teaId, String fileName, String path, int type, String dep, String date, int flag) {
-        fileInfoDao.updateFlagZero(dep,type);
+        fileInfoDao.updateFlagZero(type);
         return fileInfoDao.insertFileInfo(teaId, fileName, path, type, dep, date, flag);
 
     }
