@@ -88,8 +88,8 @@ public class TeacsCurriculumsInfo {
         return list;
     }
 
-//    public static void main(String[] args) {
-//        TeacsCurriculumsInfo aClass = new TeacsCurriculumsInfo();
-//        aClass.queryTeacherOccupyTime("3118105316", "张发", "0000008742", "2018-2019-1");
-//    }
+    public static void main(String[] args) {
+        TeacsCurriculumsInfo aClass = new TeacsCurriculumsInfo();
+        aClass.queryTeacherOccupyTime("3118105316", "张发", "0000008742", "2018-2019-1");
+    }
 }

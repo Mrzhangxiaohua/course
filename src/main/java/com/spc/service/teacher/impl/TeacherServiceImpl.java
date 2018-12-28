@@ -2,6 +2,7 @@ package com.spc.service.teacher.impl;
 
         import com.spc.dao.*;
         import com.spc.model.ClassApplicationDomain;
+        import com.spc.model.FileInfo;
         import com.spc.service.teacher.TeacherService;
         import com.spc.util.MakeTimeTable;
         import org.joda.time.DateTime;
@@ -179,12 +180,22 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Map<String, Object> findTemplateFile() {
         Map<String, Object> fileInfo = fileInfoDao.selectTemplateFile().get(0);
+        System.out.println(fileInfo);
         return fileInfo;
     }
 
     @Override
     public int addFileInfo(String teaId, String fileName, String path, int type, String dep, String date, int flag) {
-        return fileInfoDao.insertFileInfo(teaId,fileName,path,type,dep,date,flag);
+       FileInfo fileInfo=new FileInfo();
+       fileInfo.setUserId(teaId);
+       fileInfo.setFileName(fileName);
+       fileInfo.setPath(path);
+       fileInfo.setType(type);
+       fileInfo.setDep(dep);
+       fileInfo.setTime(date);
+       fileInfo.setFlag(flag);
+       fileInfoDao.insertFile(fileInfo);
+       return fileInfo.getFileInfoId();
     }
 
 }

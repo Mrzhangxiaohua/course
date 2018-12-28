@@ -19,6 +19,7 @@ import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
@@ -36,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.plaf.multi.MultiMenuItemUI;
 import javax.wsdl.Output;
 
 import java.io.*;
@@ -473,7 +475,9 @@ public class TeacherController extends Base {
     @RequestMapping(value = "/add/classApplication", method = RequestMethod.POST)
     @ResponseBody
     public int addClassApplication(@RequestBody ClassApplicationDomain cad,
-                                   HttpSession session) {
+                                   HttpSession session)  {
+
+        System.out.println(cad);
         cad.setChecked(2);
         boolean urlTou = cad.getHomepage().contains("http://");
         String homePage = cad.getHomepage();
@@ -931,6 +935,7 @@ public class TeacherController extends Base {
                 return "下载成功";
             }catch(Exception e){
                 e.printStackTrace();
+                System.out.println(e);
             }finally {
                 if (bis != null) {
                     try {
@@ -953,21 +958,21 @@ public class TeacherController extends Base {
 
     @RequestMapping("/upload")
     @ResponseBody
-    public String uploadPlan(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+    public Map<String, Object> uploadPlan(@RequestParam("file") MultipartFile file,HttpServletRequest request){
         String teaId=(String)request.getSession().getAttribute("userId");
         String dep=(String) request.getSession().getAttribute("dep");
+        Map<String,Object> res=new HashMap<>();
         try {
             if (file.isEmpty()) {
-                return "文件为空";
+                res.put("status","文件为空");
+                return res;
             }
             // 获取文件名
             String fileName = file.getOriginalFilename();
             logger.info("上传的文件名为：" + fileName);
-            // 获取文件的后缀名
-            String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            logger.info("文件的后缀名为：" + suffixName);
+
             // 设置文件存储路径
-            String filePath = "/E:/mi";
+            String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
             String path = filePath + fileName;
             File dest = new File(path);
             // 检测是否存在目录
@@ -977,15 +982,16 @@ public class TeacherController extends Base {
             file.transferTo(dest);// 文件写入
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            teacherService.addFileInfo(teaId,fileName,path,2,dep,date,1);
-
-            return "上传成功";
+            int fileInfoId=teacherService.addFileInfo(teaId,fileName,path,2,dep,date,1);
+            res.put("status","上传成功");
+            res.put("fileInfoId",fileInfoId);
+            return res;
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "上传失败";
+        return res;
 
     }
 

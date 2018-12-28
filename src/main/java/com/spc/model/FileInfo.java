@@ -3,20 +3,29 @@ package com.spc.model;
 import org.joda.time.DateTime;
 
 public class FileInfo {
-    private int fileId;
+    private int fileInfoId;
     private String fileName;
     private String path;
-    private String type;
+    private int type;
     private String userId;
-    private DateTime time;
+    private String time;
+    private String dep;
     private int flag;
 
-    public int getFileId() {
-        return fileId;
+    public String getDep() {
+        return dep;
     }
 
-    public void setFileId(int fileId) {
-        this.fileId = fileId;
+    public void setDep(String dep) {
+        this.dep = dep;
+    }
+
+    public int getFileInfoId() {
+        return fileInfoId;
+    }
+
+    public void setFileInfoId(int fileInfoId) {
+        this.fileInfoId = fileInfoId;
     }
 
     public String getFileName() {
@@ -35,13 +44,9 @@ public class FileInfo {
         this.path = path;
     }
 
-    public String getType() {
-        return type;
-    }
+    public void setType(int type) { this.type = type; }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+    public int getType() { return type; }
 
     public String getUserId() {
         return userId;
@@ -51,13 +56,9 @@ public class FileInfo {
         this.userId = userId;
     }
 
-    public DateTime getTime() {
-        return time;
-    }
+    public String getTime() { return time;  }
 
-    public void setTime(DateTime time) {
-        this.time = time;
-    }
+    public void setTime(String time) { this.time = time; }
 
     public int getFlag() {
         return flag;

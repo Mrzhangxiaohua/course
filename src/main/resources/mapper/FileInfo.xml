@@ -4,20 +4,25 @@
 <mapper namespace="com.spc.dao.FileInfoDao">
 
 
-    <select id="selectTemplateFile">
+    <select id="selectTemplateFile" resultType="map">
        select *
        from course.fileInfo
        where type=1
        and flag=1
     </select>
-    <insert id="insertFileInfo" useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true">
+    <insert id="insertFileInfo" useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true" >
     insert into fileInfo(fileName, path, type, userId, department, time, flag )
-    values(#{fileName},#{path},2,#{teaId},#{dep},#{time},1)
+    values(#{fileName},#{path},#{type},#{teaId},#{dep},#{time},1)
+    </insert>
+
+    <insert id="insertFile" parameterType="com.spc.model.FileInfo" useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true"  keyColumn="fileInfoId">
+    insert into fileInfo(fileName, path, type, userId, department, time, flag )
+    values(#{fileName},#{path},#{type},#{userId},#{dep},#{time},1)
     </insert>
 
     <update id="updateFlagZero">
        update course.fileInfo set flag=0
        where type=#{type}
-       and dep=#{dep}
+       and flag=1
     </update>
 </mapper>
