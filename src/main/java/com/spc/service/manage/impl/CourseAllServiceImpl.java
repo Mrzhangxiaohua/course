@@ -72,7 +72,7 @@ public class CourseAllServiceImpl extends Base implements CourseAllService{
                     sb.append(",教室：").append(course.getClassPlace());
                     sb.append(",授课教师：").append(course.getInstructorName());
                     sb.append(",周次：").append(course.getStartWeek()).append("-").append(course.getEndWeek());
-                    sb.append(",班次：").append(course.getCourseId());
+                    sb.append(",班次：").append(course.getClassId());
                     timetable[i][j] = sb.toString();
                 }
             }
