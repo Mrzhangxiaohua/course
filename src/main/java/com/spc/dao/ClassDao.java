@@ -2,6 +2,7 @@ package com.spc.dao;
 
 import com.spc.model.ClassDomain;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.HashMap;
 import java.util.List;
@@ -55,4 +56,7 @@ public interface ClassDao {
     int findCommentNumber(String classId);
 
     List<Map<String,Object>> findWeekComment(@Param("stuId") String stuId,@Param("weekth") int weekth, @Param("classId") String classId);
+
+    int zzGrade(@Param("className") String className, @Param("classNum") int classNum, @Param("stuId")String stuId,
+                @Param("zzGrade")int zzGrade, @Param("flag")int flag);
 }

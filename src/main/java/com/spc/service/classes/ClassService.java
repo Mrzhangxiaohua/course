@@ -31,4 +31,6 @@ public interface ClassService {
 
     int CommentStatus(String classId);
     List<Map<String,Object>> findWeekComment(@RequestParam("stuId") String stuId, @RequestParam("weekth") int weekth, @RequestParam("classId") String classId);
+
+    int zzGrade(String className,int classNum, String stuId, int zzGrade, int flag);
 }

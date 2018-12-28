@@ -32,4 +32,8 @@ public interface TeacherService {
     Map<String,Object> findTemplateFile();
 
     int addFileInfo(String teaId, String fileName, String path, int type, String dep, String date, int flag);
+
+    Map<String, Object> findGradePercent(); // 获取成绩百分比
+
+    Map<String, Object> findCourseClassTime(String classNum, String stuId);
 }
