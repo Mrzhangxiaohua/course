@@ -231,7 +231,8 @@ public class ManageController extends Base {
         try {
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
-            return manageService.makeSureClassApplication(id);
+            manageService.makeSureClassApplication(id);
+            return 1;
         } catch (Exception e) {
             System.out.println(e);
         }

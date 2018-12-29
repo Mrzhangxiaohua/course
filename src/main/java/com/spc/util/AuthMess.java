@@ -42,8 +42,11 @@ public class AuthMess {
     }
     public static String userDepart(Authentication authentication){
         String dep = userDetails(authentication).getDep();
-        System.out.println("AuthMess-userDepart:"+dep);
         return dep;
     }
-
+    public static String userDepid(Authentication authentication){
+        String depid = userDetails(authentication).getDepid();
+        System.out.println("AuthMess-userDepartid:"+depid);
+        return depid;
+    }
 }

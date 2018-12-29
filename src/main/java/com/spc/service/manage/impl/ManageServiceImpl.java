@@ -168,7 +168,11 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public int makeSureClassApplication(int id) {
-        return classApplicationDao.checkedClass(id, 1);
+        classApplicationDao.checkedClass(id, 1);
+        ClassApplicationDomain cad = classApplicationDao.findById(id).get(0);
+        classApplicationDao.addFirstClass(cad);
+
+        return 1;
     }
 
     @Override
