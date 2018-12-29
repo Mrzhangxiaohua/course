@@ -12,5 +12,11 @@
     values(#{year},#{semester},#{firstWeek},1)
     </insert>
 
+    <select id="currentCalendar" resultType="Map">
+        select *
+        from course.schoolCalendar
+        where flag=1
+        limit 1
+    </select>
 
 </mapper>

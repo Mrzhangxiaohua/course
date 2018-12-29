@@ -783,6 +783,8 @@ public class ManageController extends Base {
     public String uploadTemplate(HttpServletRequest request, @RequestParam("file") MultipartFile file){
         String teaId=(String)request.getSession().getAttribute("userId");
         String dep=(String)request.getSession().getAttribute("dep");
+        System.out.println(file);
+
         try {
             if (file.isEmpty()) {
                 return "文件为空";
@@ -794,8 +796,8 @@ public class ManageController extends Base {
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
             logger.info("文件的后缀名为：" + suffixName);
             // 设置文件存储路径
-            String filePath = "/E:/mi";
-            String path = filePath + fileName;
+            String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
+            String path = filePath+fileName;
             File dest = new File(path);
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
@@ -804,7 +806,7 @@ public class ManageController extends Base {
             file.transferTo(dest);// 文件写入
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            manageService.addTemplateFileInfo(teaId,fileName,path,1,dep,date,1);
+            manageService.addTemplateFileInfo(teaId,fileName,filePath,1,dep,date,1);
             return "上传成功";
         } catch (IllegalStateException e) {
             e.printStackTrace();

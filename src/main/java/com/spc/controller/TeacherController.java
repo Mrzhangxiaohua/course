@@ -19,6 +19,7 @@ import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
@@ -36,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.plaf.multi.MultiMenuItemUI;
 import javax.wsdl.Output;
 
 import java.io.*;
@@ -473,7 +475,9 @@ public class TeacherController extends Base {
     @RequestMapping(value = "/add/classApplication", method = RequestMethod.POST)
     @ResponseBody
     public int addClassApplication(@RequestBody ClassApplicationDomain cad,
-                                   HttpSession session) {
+                                   HttpSession session)  {
+
+        System.out.println(cad);
         cad.setChecked(2);
         boolean urlTou = cad.getHomepage().contains("http://");
         String homePage = cad.getHomepage();
@@ -578,21 +582,37 @@ public class TeacherController extends Base {
     @ResponseBody
     public int issueGrade1(HttpServletRequest request) {
         Map map = (Map) request.getSession(false).getAttribute("updatescore");
-        //不能出现空的分数
+
+        //读取设置的成绩设置的百分比，并转化成小数
+        Map<String, Object> m = teacherService.findGradePercent();
+        float KNSKPercent = Float.valueOf(String.valueOf(m.get("KNSK"))) / 100;     //课内授课百分比
+        float XBSJercent = Float.valueOf(String.valueOf(m.get("XBSJ"))) / 100;      //小班实践百分比
+        float ZZXXPercent = Float.valueOf(String.valueOf(m.get("ZZXX"))) / 100;     //在线学习百分比
+        System.out.println(KNSKPercent + "---" + XBSJercent + "---" + ZZXXPercent);
+
+        // 不能出现空的分数
         for (Object i : map.keySet()) {
             if (!i.toString().equals("operator")) {
+                //获取到学生的班级名称，班级号，学生学号
                 String[] strs = i.toString().split(":");
-                Map scoreMap = (Map) map.get(i);
+                String className = strs[0];
+                String classNum = strs[1];
+                String stuId = strs[2];
+                Map scoreMap = (Map) map.get(i);        // 获得每一条数据
                 int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
                 int knskGrade = (int) scoreMap.get("knskGrade");
-                if(wlzzxxGrade==0||knskGrade==0){
-                    return 3;
-                }
+                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
+
+                // 获取选修的该门课程，判断对应的学时，并进行填写成绩，若为16学时，小班实践成绩百分比为50%*XBSJercent，若为32学时，为XBSJercent
+                Map<String, Object> l = teacherService.findCourseClassTime(classNum, stuId);
+                int xueshi = (int) l.get("classTime");
+                int flag = 0;
+                zuizhongchengji(xueshi,XBSJercent,ZZXXPercent,KNSKPercent,wlzzxxGrade, knskGrade,xbsjGrade,className,
+                        classNum,stuId,flag);
             }
         }
         //保存模块一的成绩
         storeGrade1(request);
-
         String json = RequestPayload.getRequestPayload(request);
         System.out.println(json);
         try {
@@ -605,6 +625,22 @@ public class TeacherController extends Base {
         return 0;
     }
 
+    public void zuizhongchengji(int xueshi,float XBSJercent, float ZZXXPercent, float KNSKPercent, int wlzzxxGrade,
+                                int knskGrade, int xbsjGrade, String className, String classNum, String stuId, int flag){
+        if (xueshi == 16) {
+            // 小班实践比例减半
+            float pe = (float) (XBSJercent / 2.0);
+            //计算总成绩
+            System.out.println("-------------------------------" + pe + " ------------" + xbsjGrade * pe);
+            int zzGrade = (int) ((wlzzxxGrade * ZZXXPercent) + (knskGrade * KNSKPercent) + (xbsjGrade * pe));
+            classService.zzGrade(className, Integer.parseInt(classNum), stuId, zzGrade, flag);
+        }else if(xueshi == 32){
+            float pe = (float) (XBSJercent / 2.0);
+            flag = 1;
+            int zzGrade = (int) ((wlzzxxGrade * ZZXXPercent) + (knskGrade * KNSKPercent) + (xbsjGrade * pe));
+            classService.zzGrade(className, Integer.parseInt(classNum), stuId, zzGrade, flag);
+        }
+    }
 
     @RequestMapping(value = "/issue/grade2", method = RequestMethod.POST)
     @ResponseBody
@@ -612,6 +648,11 @@ public class TeacherController extends Base {
         String json = RequestPayload.getRequestPayload(request);
 
         Map map = (Map) request.getSession(false).getAttribute("updatescore");
+        //读取设置的成绩设置的百分比，并转化成小数
+        Map<String, Object> m = teacherService.findGradePercent();
+        float KNSKPercent = Float.valueOf(String.valueOf(m.get("KNSK"))) / 100;     //课内授课百分比
+        float XBSJercent = Float.valueOf(String.valueOf(m.get("XBSJ"))) / 100;      //小班实践百分比
+        float ZZXXPercent = Float.valueOf(String.valueOf(m.get("ZZXX"))) / 100;     //在线学习百分比
         for (Object i : map.keySet()) {
             if (!i.toString().equals("operator")) {
                 String[] strs = i.toString().split(":");
@@ -619,8 +660,14 @@ public class TeacherController extends Base {
                 String classNum = strs[1];
                 String stuId = strs[2];
                 Map scoreMap = (Map) map.get(i);
+                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
+                int knskGrade = (int) scoreMap.get("knskGrade");
                 int xbsjGrade = (int) scoreMap.get("xbsjGrade");
-
+                Map<String, Object> l = teacherService.findCourseClassTime(classNum, stuId);
+                int xueshi = (int) l.get("classTime");
+                int flag = 0;
+                zuizhongchengji(xueshi,XBSJercent,ZZXXPercent,KNSKPercent,wlzzxxGrade, knskGrade,xbsjGrade,className,
+                        classNum,stuId,flag);
                 classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade,88888888,88888888);
             }
         }
@@ -639,6 +686,12 @@ public class TeacherController extends Base {
     @ResponseBody
     public int issueGrade3(HttpServletRequest request) {
         Map map = (Map) request.getSession(false).getAttribute("updatescore");
+        //读取设置的成绩设置的百分比，并转化成小数
+        Map<String, Object> m = teacherService.findGradePercent();
+        float KNSKPercent = Float.valueOf(String.valueOf(m.get("KNSK"))) / 100;     //课内授课百分比
+        float XBSJercent = Float.valueOf(String.valueOf(m.get("XBSJ"))) / 100;      //小班实践百分比
+        float ZZXXPercent = Float.valueOf(String.valueOf(m.get("ZZXX"))) / 100;     //在线学习百分比
+
         for (Object i : map.keySet()) {
             if (!i.toString().equals("operator")) {
                 String[] strs = i.toString().split(":");
@@ -646,9 +699,14 @@ public class TeacherController extends Base {
                 String classNum = strs[1];
                 String stuId = strs[2];
                 Map scoreMap = (Map) map.get(i);
-                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
                 int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
                 int knskGrade = (int) scoreMap.get("knskGrade");
+                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
+                Map<String, Object> l = teacherService.findCourseClassTime(classNum, stuId);
+                int xueshi = (int) l.get("classTime");
+                int flag = 0;
+                zuizhongchengji(xueshi,XBSJercent,ZZXXPercent,KNSKPercent,wlzzxxGrade, knskGrade,xbsjGrade,className,
+                        classNum,stuId,flag);
                 classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade, wlzzxxGrade, knskGrade);
             }
         }
@@ -931,6 +989,7 @@ public class TeacherController extends Base {
                 return "下载成功";
             }catch(Exception e){
                 e.printStackTrace();
+                System.out.println(e);
             }finally {
                 if (bis != null) {
                     try {
@@ -953,21 +1012,21 @@ public class TeacherController extends Base {
 
     @RequestMapping("/upload")
     @ResponseBody
-    public String uploadPlan(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+    public Map<String, Object> uploadPlan(@RequestParam("file") MultipartFile file,HttpServletRequest request){
         String teaId=(String)request.getSession().getAttribute("userId");
         String dep=(String) request.getSession().getAttribute("dep");
+        Map<String,Object> res=new HashMap<>();
         try {
             if (file.isEmpty()) {
-                return "文件为空";
+                res.put("status","文件为空");
+                return res;
             }
             // 获取文件名
             String fileName = file.getOriginalFilename();
             logger.info("上传的文件名为：" + fileName);
-            // 获取文件的后缀名
-            String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            logger.info("文件的后缀名为：" + suffixName);
+
             // 设置文件存储路径
-            String filePath = "/E:/mi";
+            String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
             String path = filePath + fileName;
             File dest = new File(path);
             // 检测是否存在目录
@@ -977,15 +1036,16 @@ public class TeacherController extends Base {
             file.transferTo(dest);// 文件写入
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            teacherService.addFileInfo(teaId,fileName,path,2,dep,date,1);
-
-            return "上传成功";
+            int fileInfoId=teacherService.addFileInfo(teaId,fileName,path,2,dep,date,1);
+            res.put("status","上传成功");
+            res.put("fileInfoId",fileInfoId);
+            return res;
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "上传失败";
+        return res;
 
     }
 

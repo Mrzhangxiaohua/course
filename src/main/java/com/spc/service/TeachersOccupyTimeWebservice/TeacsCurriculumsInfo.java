@@ -14,7 +14,7 @@ public class TeacsCurriculumsInfo {
      * @param userId   查询者的userId
      * @param userName 查询者的userName
      * @param teaId    被查询者（教师）的teaId
-     * @param xnxqdm   查询课程的时间段,学年学期代码（例2017-2018学年第一学期：2017-2018-1）
+     * @param xnxqdm   查询课程的时间段,学年学期代码（2018秋就是2018-2019-1 2019春就是2018-2019-2）
      * @return 返回一个list, 里面map放的每个课程的信息,
      * skxq: 周几有课    ksjc: 课程开始节次    jsjc: 课程结束节次       ksz:课程开始周       jsz:课程结束周
      * 如:
@@ -90,6 +90,7 @@ public class TeacsCurriculumsInfo {
 
     public static void main(String[] args) {
         TeacsCurriculumsInfo aClass = new TeacsCurriculumsInfo();
-        aClass.queryTeacherOccupyTime("3118105316", "张发", "0000008742", "2018-2019-1");
+//        aClass.queryTeacherOccupyTime("3118105316", "张发", "0002009029", "2018-2019-2");
+        aClass.queryTeacherOccupyTime("3118105316", "张发", "0000008742", "2018-2019-2");
     }
 }

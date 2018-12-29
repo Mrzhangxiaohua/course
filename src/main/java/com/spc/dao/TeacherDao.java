@@ -22,5 +22,9 @@ public interface TeacherDao {
     void updateWeekComment(@Param("stuId") String stuId, @Param("teaId") String teaId, @Param("classId") int classId,@Param("score1") String score1,@Param("score2") String score2,@Param("score3") String score3, @Param("score4") String score4,@Param("suggestion")String suggestion,@Param("weekth") int weekth,@Param("date") String date);
 
     String findDepartment(@Param("teaId") String teaId);
+
+    Map<String, Object> findGradePercent();
+
+    Map<String, Object> findCourseClassTime(@Param("classNum") String classNum, @Param("stuId") String stuId);
 }
 

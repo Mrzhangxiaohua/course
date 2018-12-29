@@ -1,5 +1,7 @@
 package com.spc.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
@@ -21,6 +23,15 @@ public class ClassApplicationDomain  implements Serializable {
     private int classModuleNum;
     private String modelsName;
     private String homepage;
+    private int fileInfoId;
+
+    public int getFileInfoId() {
+        return fileInfoId;
+    }
+
+    public void setFileInfoId(int fileInfoId) {
+        this.fileInfoId = fileInfoId;
+    }
 
     public int getId() {
         return id;
