@@ -11,7 +11,7 @@ public class CourseAll {
 
     private String courseNameEN;
 
-    private Integer moduleId;
+    private String moduleId;
 
     private String academicYear;
 
@@ -79,11 +79,11 @@ public class CourseAll {
         this.courseNameEN = courseNameEN == null ? null : courseNameEN.trim();
     }
 
-    public Integer getModuleId() {
+    public String getModuleId() {
         return moduleId;
     }
 
-    public void setModuleId(Integer moduleId) {
+    public void setModuleId(String moduleId) {
         this.moduleId = moduleId;
     }
 

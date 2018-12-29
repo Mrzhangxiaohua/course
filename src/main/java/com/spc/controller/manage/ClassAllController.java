@@ -4,7 +4,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.controller.Base;
 import com.spc.model.ClassAll;
+import com.spc.model.IceSelectDataSource;
 import com.spc.service.manage.ClassAllService;
+import com.spc.service.manage.SchoolDistrictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,9 @@ public class ClassAllController extends Base {
 
     @Autowired
     private ClassAllService classAllService;
+
+    @Autowired
+    private SchoolDistrictService schoolDistrictService;
 
     /**
      * 获取课程列表
@@ -78,6 +83,17 @@ public class ClassAllController extends Base {
     @ResponseBody
     public String[][] getTeacherTimetable(String teacherId, String academicYear, String classSemester) {
         return classAllService.getTeacherTimetable(teacherId, academicYear, classSemester);
+    }
+
+    /**
+     * 获取所有校区
+     *
+     * @return
+     */
+    @RequestMapping("/getSchoolDistricts")
+    @ResponseBody
+    public List<IceSelectDataSource> getSchoolDistricts() {
+        return schoolDistrictService.getAllSchoolDistricts();
     }
 
     /**
