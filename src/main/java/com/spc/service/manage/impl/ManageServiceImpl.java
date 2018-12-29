@@ -394,7 +394,7 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public int addGradePercent(int knsk, int xbsj, int zzxx, String userId, String date) {
-       gradePercentDao.updateFlagZero();
+        gradePercentDao.updateFlagZero();
         return gradePercentDao.insertGradePercent(knsk,xbsj,zzxx,userId,date);
     }
 
