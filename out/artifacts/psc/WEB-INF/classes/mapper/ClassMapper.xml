@@ -180,6 +180,15 @@
         and c.stuId = #{stuId}
     </update>
 
+    <update id="zzGrade" flushCache="true">
+        UPDATE Course_choose c
+        INNER JOIN Course a
+        ON c.classId = a.classId
+        SET c.zzGrade = #{zzGrade}, c.flag = #{flag}
+        WHERE a.className = #{className} and a.classNum = #{classNum}
+        and c.stuId = #{stuId}
+    </update>
+
     <update id="updateChooseNum" flushCache="true">
         update course.Course a
         set classChooseNum  = classChooseNum+#{num}

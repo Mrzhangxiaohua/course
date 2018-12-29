@@ -51,4 +51,23 @@
 
     </update>
 
+    <select id="findDepartment" resultType="map">
+        select stuId,classId,teaEvaluate,teaSuggestion
+        from teaInfo
+        where teaId=#{teaId}
+    </select>
+
+    <select id="findGradePercent" resultType="map">
+        select a.*
+        from course.gradePercent a
+        where a.flag = 1
+    </select>
+
+    <select id="findCourseClassTime" resultType="Map">
+        SELECT a.classTime, a.classId
+        FROM course.Course a
+        LEFT JOIN course.Course_choose b
+        ON a.classId = b.classId
+        WHERE b.stuId = #{stuId} AND a.classNum = #{classNum}
+    </select>
 </mapper>
