@@ -57,6 +57,10 @@ public class MainController extends Base {
         System.out.println("登录："+httpSession.getAttribute("depid"));
         //为了缓存老师更新的数据而在内存中建立的hashMap
 
+        // just for test
+//        userRole = "教职工";
+//        userId = "007";
+
         if (userRole.equals("学生")) {
             if (InXuanKeStu(userId, username)) {
                 logger.info("登录的是学生端");
