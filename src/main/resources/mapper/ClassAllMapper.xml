@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.ClassAllDao">
+
+    <select id="selectClassAll" resultType="com.spc.model.ClassAll" useCache="false">
+        select * from course.ClassAll
+        <where>
+            <if test="departId != null">
+                and departId = #{departId}
+            </if>
+            <if test="academicYear != null and academicYear !=''">
+                and academicYear = #{academicYear}
+            </if>
+            <if test="classSemester != null and classSemester !=''">
+                and classSemester = #{classSemester}
+            </if>
+            <if test="teacherId != null and teacherId !=''">
+                and teacherId = #{teacherId}
+            </if>
+            <if test="classPlaceId != null and classPlaceId !=''">
+                and classPlaceId = #{classPlaceId}
+            </if>
+            <if test="courseName != null and courseName !=''">
+                <bind name="pattern" value="'%'+ courseName +'%'"/>
+                and (courseNameCHS like #{pattern} or courseNameEN like #{pattern})
+            </if>
+            <if test="teacherName != null and teacherName !=''">
+                and teacherName = #{teacherName}
+            </if>
+        </where>
+        order by id asc
+    </select>
+
+    <!--<select id="selectCourseById" resultType="com.spc.model.CourseAll" useCache="false">-->
+        <!--select * from course.CourseAll where id = #{id}-->
+    <!--</select>-->
+
+    <!--<select id="selectCoursesByTeacherIdAndClassSemester" resultType="com.spc.model.CourseAll" useCache="false">-->
+        <!--select * from course.CourseAll-->
+        <!--where teacherId = #{teacherId}-->
+        <!--and classSemester = #{classSemester}-->
+        <!--and classDateDesc is not null-->
+    <!--</select>-->
+
+    <!--<select id="selectCoursesByClassPlaceAndClassSemester" resultType="com.spc.model.CourseAll" useCache="false">-->
+        <!--select * from course.CourseAll-->
+        <!--where classPlace = #{classPlace}-->
+        <!--and classSemester = #{classSemester}-->
+        <!--and classDateDesc is not null-->
+    <!--</select>-->
+
+    <!--<update id="updateCourseSchedule" flushCache="true">-->
+        <!--update course.CourseAll-->
+        <!--<set>-->
+            <!--classDateDesc = #{classDateDesc},-->
+            <!--classPlace = #{classPlace},-->
+            <!--conflictDesc = #{conflictDesc}-->
+        <!--</set>-->
+        <!--where id=#{id}-->
+    <!--</update>-->
+
+</mapper>

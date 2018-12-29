@@ -1,6 +1,6 @@
 package com.spc.model;
 
-public class CourseAll {
+public class ClassAll {
     private Integer id;
 
     private Integer departId;
@@ -29,9 +29,25 @@ public class CourseAll {
 
     private String teachingTeamNames;
 
-    private String courseInfo;
+    private Integer schoolDistrictId;
 
-    private String teacherInfo;
+    private String className;
+
+    private String instructorId;
+
+    private String instructorName;
+
+    private Integer startWeek;
+
+    private Integer endWeek;
+
+    private String classDateDesc;
+
+    private String classPlaceId;
+
+    private String classPlaceName;
+
+    private String conflictDesc;
 
     private String operatorId;
 
@@ -151,20 +167,84 @@ public class CourseAll {
         this.teachingTeamNames = teachingTeamNames == null ? null : teachingTeamNames.trim();
     }
 
-    public String getCourseInfo() {
-        return courseInfo;
+    public Integer getSchoolDistrictId() {
+        return schoolDistrictId;
     }
 
-    public void setCourseInfo(String courseInfo) {
-        this.courseInfo = courseInfo == null ? null : courseInfo.trim();
+    public void setSchoolDistrictId(Integer schoolDistrictId) {
+        this.schoolDistrictId = schoolDistrictId;
     }
 
-    public String getTeacherInfo() {
-        return teacherInfo;
+    public String getClassName() {
+        return className;
     }
 
-    public void setTeacherInfo(String teacherInfo) {
-        this.teacherInfo = teacherInfo == null ? null : teacherInfo.trim();
+    public void setClassName(String className) {
+        this.className = className == null ? null : className.trim();
+    }
+
+    public String getInstructorId() {
+        return instructorId;
+    }
+
+    public void setInstructorId(String instructorId) {
+        this.instructorId = instructorId == null ? null : instructorId.trim();
+    }
+
+    public String getInstructorName() {
+        return instructorName;
+    }
+
+    public void setInstructorName(String instructorName) {
+        this.instructorName = instructorName == null ? null : instructorName.trim();
+    }
+
+    public Integer getStartWeek() {
+        return startWeek;
+    }
+
+    public void setStartWeek(Integer startWeek) {
+        this.startWeek = startWeek;
+    }
+
+    public Integer getEndWeek() {
+        return endWeek;
+    }
+
+    public void setEndWeek(Integer endWeek) {
+        this.endWeek = endWeek;
+    }
+
+    public String getClassDateDesc() {
+        return classDateDesc;
+    }
+
+    public void setClassDateDesc(String classDateDesc) {
+        this.classDateDesc = classDateDesc == null ? null : classDateDesc.trim();
+    }
+
+    public String getClassPlaceId() {
+        return classPlaceId;
+    }
+
+    public void setClassPlaceId(String classPlaceId) {
+        this.classPlaceId = classPlaceId == null ? null : classPlaceId.trim();
+    }
+
+    public String getClassPlaceName() {
+        return classPlaceName;
+    }
+
+    public void setClassPlaceName(String classPlaceName) {
+        this.classPlaceName = classPlaceName == null ? null : classPlaceName.trim();
+    }
+
+    public String getConflictDesc() {
+        return conflictDesc;
+    }
+
+    public void setConflictDesc(String conflictDesc) {
+        this.conflictDesc = conflictDesc == null ? null : conflictDesc.trim();
     }
 
     public String getOperatorId() {
