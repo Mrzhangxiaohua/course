@@ -39,6 +39,10 @@
             keyColumn="uid">
       insert  into  course.User (stuId, role) values(#{stuId}, #{role})
     </insert>
-
+    <select id="findDepId" resultType="map">
+        select departId
+        from Department
+        where departCode=#{departCode}
+    </select>
 
 </mapper>

@@ -15,6 +15,7 @@ public class BaseInfo {
     private String userId;
     private String userRole;
     private String dep;
+    private String depid;
 
 
     BaseInfo() {
@@ -23,6 +24,7 @@ public class BaseInfo {
         this.userId = AuthMess.userId(authentication);
         this.userRole = AuthMess.userRole(authentication);
         this.dep=AuthMess.userDepart(authentication);
+        this.depid=AuthMess.userDepid(authentication);
     }
 
     public Authentication getAuthentication() {
@@ -51,5 +53,13 @@ public class BaseInfo {
 
     public void setDep(String department) {
         this.dep = department;
+    }
+
+    public String getDepid() {
+        return depid;
+    }
+
+    public void setDepid(String depid) {
+        this.depid = depid;
     }
 }

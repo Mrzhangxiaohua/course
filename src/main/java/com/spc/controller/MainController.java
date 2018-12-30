@@ -54,7 +54,7 @@ public class MainController extends Base {
         String userRole = (String) httpSession.getAttribute("userRole");
         String userId = (String) httpSession.getAttribute("userId");
         String username = (String) httpSession.getAttribute("username");
-        System.out.println("登录："+httpSession.getAttribute("dep"));
+        System.out.println("登录："+httpSession.getAttribute("depid"));
         //为了缓存老师更新的数据而在内存中建立的hashMap
 
         // just for test
@@ -102,10 +102,17 @@ public class MainController extends Base {
         session.setAttribute("userId", baseInfo.getUserId());
         session.setAttribute("userRole", baseInfo.getUserRole());
         session.setAttribute("dep",baseInfo.getDep());
+        session.setAttribute("departCode",baseInfo.getDepid());
+        String departCode=baseInfo.getDepid();
+        int departId=0;
+        if(!(departCode==null&&departCode=="")){
+            departId= (int) userService.findDepId(departCode).get("departId");
+        }
+        session.setAttribute("departId",departId);
         //将这个用户信息存储与用户信息库里面
         UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
         dataService.storeUserInformation(userDetails);
-        logger.info("登录的用户是{}，角色是{}", baseInfo.getUsername(), baseInfo.getUserRole());
+        logger.info("登录的用户是{}，角色是{},学院id是{}", baseInfo.getUsername(), baseInfo.getUserRole(),departId);
 
         //存储一个更新分数的map
         Map updateScore = new HashMap<>();

@@ -44,6 +44,12 @@ public class ManageServiceImpl implements ManageService {
     @Autowired
     GradePercentDao gradePercentDao;
 
+    @Autowired
+    ClassAllDao classAllDao;
+
+    @Autowired
+    CourseAllDao courseAllDao;
+
     @Override
     public String[][] findClasses(String stuId) {
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
@@ -167,8 +173,22 @@ public class ManageServiceImpl implements ManageService {
     }
 
     @Override
-    public int makeSureClassApplication(int id) {
-        return classApplicationDao.checkedClass(id, 1);
+    @Transactional
+    public int makeSureClassApplication(int id,String courseId,int departId) {
+        classApplicationDao.checkedClass(id, 1);
+        ClassApplicationDomain cad = classApplicationDao.findById(id).get(0);
+        String className = cad.getClassName();
+        int classModuleNum = cad.getClassModuleNum();
+        int classTime = cad.getClassTime();
+        String teaId = cad.getTeaId();
+        String teaName = cad.getTeaName();
+        String courseInfo = cad.getCourseInfo();
+        String teacherInfo = cad.getTeacherInfo();
+        courseAllDao.insertCourse(departId,className,classModuleNum,classTime,teaId,teaName,courseInfo,teacherInfo,courseId);
+
+        classAllDao.insertFirstClass(departId,className,classModuleNum,classTime,teaId,teaName,courseId,"1班");
+
+        return 1;
     }
 
     @Override

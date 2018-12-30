@@ -18,7 +18,7 @@ public interface ManageService {
     List<StudentApplicationDomain> checkedMessageAndDate(int key, String stuId, Date date);
 
     int makeSure(int id,String classStr);
-    int makeSureClassApplication(int id);
+    int makeSureClassApplication(int id,String courseId,int departId);
 
     int reject(int id);
     int rejectClassApplication(int id);

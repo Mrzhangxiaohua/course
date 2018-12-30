@@ -20,4 +20,5 @@ public interface UserDao {
 
     UserDomain findUsersById(@Param("stuId") String stuId);
 
+    List<Map<String,Object>> findDepId( @Param("departCode") String departCode);
 }

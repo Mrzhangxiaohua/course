@@ -3,4 +3,8 @@
 
 <mapper namespace="com.spc.dao.CourseAllDao">
 
+    <insert id="insertCourse"  useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true" >
+      insert into CourseAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,courseInfo,teacherInfo)
+      values(#{departId},#{courseId},#{className},null,#{classModuleNum},null,null,#{classTime},null,#{teaId},#{teaName},#{courseInfo},#{teacherInfo})
+    </insert>
 </mapper>

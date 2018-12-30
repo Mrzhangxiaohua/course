@@ -21,4 +21,11 @@ public interface ClassAllDao {
                                   @Param("teacherId") String teacherId,
                                   @Param("teacherName") String teacherName,
                                   @Param("classPlaceId") String classPlaceId);
+
+    int insertFirstClass(@Param("departId") int departId, @Param("courseNameCHS") String courseNameCHS,
+                         @Param("classModuleNum") int classModuleNum, @Param("classTime") int classTime,
+                         @Param("teaId") String teaId, @Param("teaName") String teaName,
+                         @Param("courseId") String courseId, @Param("className") String className);
+
+
 }
