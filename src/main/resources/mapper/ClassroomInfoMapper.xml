@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.ClassroomInfoDao">
+
+    <select id="selectAll" resultType="com.spc.model.ClassroomInfo" useCache="true">
+        select JASDM, JASMC, SKZWS, JXLMC, MC  from course.ClassroomInfo
+        <where>
+            SFYXPK = 1
+            <if test="schoolDistrictId != null and schoolDistrictId !=''">
+                and XXXQDM = #{schoolDistrictId}
+            </if>
+            <if test="classroomName != null and classroomName !=''">
+                <bind name="pattern" value="'%'+ classroomName +'%'"/>
+                and JASMC like #{pattern}
+            </if>
+        </where>
+        order by XXXQDM, JASDM asc
+    </select>
+
+</mapper>

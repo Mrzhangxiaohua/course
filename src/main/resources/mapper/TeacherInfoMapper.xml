@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.TeacherInfoDao">
+
+    <select id="selectAll" resultType="com.spc.model.TeacherInfo" useCache="true">
+        select JSBH, JSXM, XBM, XSMC, EMAIL, JSGRZYCLJ from course.TeacherInfo
+        <where>
+            <if test="departId != null">
+                and cast(YXSH as SIGNED INTEGER) = #{departId}
+            </if>
+            <if test="teacherName != null and teacherName !=''">
+                <bind name="pattern" value="'%'+ teacherName +'%'"/>
+                and JSXM like #{pattern}
+            </if>
+        </where>
+        order by YXSH, JSBH asc
+    </select>
+
+</mapper>

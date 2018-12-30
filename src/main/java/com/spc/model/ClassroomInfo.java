@@ -1,6 +1,6 @@
 package com.spc.model;
 
-public class ClassRoomInfo {
+public class ClassroomInfo {
     private String JASDM;
 
     private String WID;
@@ -66,6 +66,19 @@ public class ClassRoomInfo {
     private String SFKSWH;
 
     private String XLSXH;
+
+    /**
+     * 是否存在冲突
+     */
+    private boolean conflict;
+
+    public boolean isConflict() {
+        return conflict;
+    }
+
+    public void setConflict(boolean conflict) {
+        this.conflict = conflict;
+    }
 
     public String getJASDM() {
         return JASDM;

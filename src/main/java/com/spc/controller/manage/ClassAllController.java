@@ -4,15 +4,18 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.controller.Base;
 import com.spc.model.ClassAll;
+import com.spc.model.ClassroomInfo;
 import com.spc.model.IceSelectDataSource;
-import com.spc.service.manage.ClassAllService;
-import com.spc.service.manage.SchoolDistrictService;
+import com.spc.model.TeacherInfo;
+import com.spc.service.manage.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,15 @@ public class ClassAllController extends Base {
 
     @Autowired
     private SchoolDistrictService schoolDistrictService;
+
+    @Autowired
+    private TeacherInfoService teacherInfoService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private ClassroomInfoService classroomInfoService;
 
     /**
      * 获取课程列表
@@ -65,7 +77,6 @@ public class ClassAllController extends Base {
 
         Map<String, Object> data = new HashMap<>();
         data.put("total", ((Page) courses).getTotal());
-        System.out.printf("total = %s\n", ((Page) courses).getTotal());
         data.put("pageSize", pageSize);
         data.put("currentPage", currentPage);
         data.put("list", courses);
@@ -97,22 +108,88 @@ public class ClassAllController extends Base {
     }
 
     /**
-     * 对某门课程进行排课处理
+     * 获取所有老师
      *
-     * @param id
-     * @param rowIndex   第几节，下标自0开始
-     * @param colIndex   周几，下标自0开始
-     * @param classPlace
-     * @param force      是否在有冲突时仍强制排课
      * @return
      */
-    @RequestMapping("/scheduleCourse")
+    @RequestMapping("/getTeachers")
     @ResponseBody
-    public Map<String, Object> scheduleCourse(@RequestParam int id,
-                                              @RequestParam int rowIndex,
-                                              @RequestParam int colIndex,
-                                              @RequestParam String classPlace,
-                                              @RequestParam(required = false, defaultValue = "false") boolean force) {
+    public Map<String, Object> getTeachers(@RequestParam(required = false, defaultValue = "1") int currentPage,
+                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                           @RequestParam(required = false) Integer departId,
+                                           @RequestParam(required = false) String teacherName) {
+        PageHelper.startPage(currentPage, pageSize);
+        List<TeacherInfo> teachers = teacherInfoService.getAllTeachers(departId, teacherName);
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("status", "SUCCESS");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", ((Page) teachers).getTotal());
+        data.put("pageSize", pageSize);
+        data.put("currentPage", currentPage);
+        data.put("list", teachers);
+        res.put("data", data);
+        return res;
+    }
+
+    /**
+     * 获取所有教室（可排课）
+     *
+     * @return
+     */
+    @RequestMapping("/getClassrooms")
+    @ResponseBody
+    public Map<String, Object> getTeachers(@RequestParam(required = false, defaultValue = "1") int currentPage,
+                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                           @RequestParam(required = false) String schoolDistrictId,
+                                           @RequestParam(required = false) String classroomName) {
+        PageHelper.startPage(currentPage, pageSize);
+        List<ClassroomInfo> classrooms = classroomInfoService.getClassrooms(schoolDistrictId, classroomName);
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("status", "SUCCESS");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", ((Page) classrooms).getTotal());
+        data.put("pageSize", pageSize);
+        data.put("currentPage", currentPage);
+        data.put("list", classrooms);
+        res.put("data", data);
+        return res;
+    }
+
+    /**
+     * 获取所有学院
+     *
+     * @return
+     */
+    @RequestMapping("/getDepartments")
+    @ResponseBody
+    public List<IceSelectDataSource> getDepartments() {
+        return departmentService.getDepartments();
+    }
+
+    /**
+     * 对某门课程进行排课处理
+     *
+     * @param id    如果有，表示修改，如果没有，表示新增
+     * @param force 是否在有冲突时仍强制排课
+     * @return
+     */
+    @RequestMapping(value = "/scheduleCourse", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> scheduleCourse(Integer id, Integer departId, String courseId,
+                                              String courseNameCHS, String courseNameEN, String moduleId,
+                                              String academicYear, String classSemester, Integer classHour,
+                                              Integer stuNumUpperLimit, String teacherId, String teacherName,
+                                              String teachingTeamIds, String teachingTeamNames,
+                                              Integer schoolDistrictId, String className,
+                                              String instructorId, String instructorName,
+                                              int startWeek, int endWeek, String classDateDesc,
+                                              String classPlaceId, String classPlaceName,
+                                              boolean force, HttpServletRequest request) {
+
 //        return courseAllService.scheduleCourse(id, rowIndex, colIndex, classPlace, force);
         return null;
     }
