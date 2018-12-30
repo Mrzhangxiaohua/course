@@ -70,4 +70,8 @@
         where id=#{id}
     </update>
 
+    <insert id="insertCourse"  useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true" >
+      insert into CourseAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,courseInfo,teacherInfo)
+      values(#{departId},#{courseId},#{className},"英语名字",#{classModuleNum},"academicYear","classSemester",#{classTime},"25",#{teaId},#{teaName},#{courseInfo},#{teacherInfo})
+    </insert>
 </mapper>

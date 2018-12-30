@@ -227,11 +227,16 @@ public class ManageController extends Base {
     @ResponseBody
     public int convertClassStatus(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+        System.out.println(request.getSession().getAttribute("departId"));
+        int departId= (int) request.getSession().getAttribute("departId");
+        System.out.println(departId);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
-            manageService.makeSureClassApplication(id);
+            String courseId=obj.getString("classId");
+            manageService.makeSureClassApplication(id,courseId,departId);
             return 1;
         } catch (Exception e) {
             System.out.println(e);
@@ -258,10 +263,12 @@ public class ManageController extends Base {
         return 0;
     }
 
+    /*一键审核*/
     @RequestMapping(value = "/makeSure/classApplications", method = RequestMethod.POST)
     @ResponseBody
     public int convertClassApplications(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
+        int departId= Integer.parseInt((String) request.getSession().getAttribute("departId"));
         JSONObject obj = null;
         try {
             JSONArray Jarray = new JSONArray(json);
@@ -269,7 +276,8 @@ public class ManageController extends Base {
                 obj = Jarray.getJSONObject(i);
                 System.out.println("提交的实体是" + obj);
                 Integer id = obj.getInt("id");
-                manageService.makeSureClassApplication(id);
+                String courseId=obj.getString("courseId");
+                manageService.makeSureClassApplication(id,courseId,departId);
             }
         } catch (Exception e) {
             System.out.println(e);

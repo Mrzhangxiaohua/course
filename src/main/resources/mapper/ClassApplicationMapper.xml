@@ -87,13 +87,13 @@
     </delete>
     <select id="findById" resultType="com.spc.model.ClassApplicationDomain">
      select *
-     from classApplication
+     from course.ClassApplication
      where id=#{id}
     </select>
 
     <insert id="addFirstClass" useGeneratedKeys="true" keyProperty="id" parameterType="com.spc.model.ClassApplicationDomain" flushCache="true">
         insert into
-        <include refid="BASE_TABLE"/>
+
         (className,mainLecturer,teacherInfo,courseInfo,classTime,checked,shenQingRenId,shenQingRenName,classModuleNum,fileInfoId)
         values
         (#{className}, #{mainLecturer},

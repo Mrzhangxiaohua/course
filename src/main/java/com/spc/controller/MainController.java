@@ -102,11 +102,17 @@ public class MainController extends Base {
         session.setAttribute("userId", baseInfo.getUserId());
         session.setAttribute("userRole", baseInfo.getUserRole());
         session.setAttribute("dep",baseInfo.getDep());
-        session.setAttribute("depid",baseInfo.getDepid());
+        session.setAttribute("departCode",baseInfo.getDepid());
+        String departCode=baseInfo.getDepid();
+        int departId=0;
+        if(!(departCode==null&&departCode=="")){
+            departId= (int) userService.findDepId(departCode).get("departId");
+        }
+        session.setAttribute("departId",departId);
         //将这个用户信息存储与用户信息库里面
         UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
         dataService.storeUserInformation(userDetails);
-        logger.info("登录的用户是{}，角色是{},学院id是{}", baseInfo.getUsername(), baseInfo.getUserRole(),baseInfo.getDepid());
+        logger.info("登录的用户是{}，角色是{},学院id是{}", baseInfo.getUsername(), baseInfo.getUserRole(),departId);
 
         //存储一个更新分数的map
         Map updateScore = new HashMap<>();

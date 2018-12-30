@@ -1,17 +1,13 @@
 package com.spc.service.user.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.spc.dao.UserDao;
 import com.spc.dao.UserInfoDao;
-import com.spc.model.RoleDomain;
 import com.spc.model.UserDomain;
 import com.spc.service.user.UserService;
-import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,5 +49,16 @@ public class UserServiceImpl implements UserService {
     public UserDomain findUsersById(String id) {
         System.out.println("id is "+id);
         return userDao.findUsersById(id);
+    }
+
+    @Override
+    public Map<String, Object> findDepId(String departCode) {
+        int size=userDao.findDepId(departCode).size();
+        if(size==0){
+            Map map=new HashMap<>();
+            map.put("departId",0);
+            return map;
+        }
+        return userDao.findDepId(departCode).get(0);
     }
 }
