@@ -62,6 +62,6 @@
 
     <insert id="insertFirstClass"  useGeneratedKeys="true" keyProperty="id" flushCache="true" >
       insert into course.ClassAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,className)
-      values(#{departId},#{courseId},#{courseNameCHS},"英语名字",#{classModuleNum},"academicYear","classSemester",#{classTime},"25",#{teaId},#{teaName},#{className})
+      values(#{departId},#{courseId},#{courseNameCHS},null,#{classModuleNum},null,null,#{classTime},null,#{teaId},#{teaName},#{className})
     </insert>
 </mapper>
