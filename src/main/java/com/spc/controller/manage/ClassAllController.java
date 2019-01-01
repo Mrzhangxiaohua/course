@@ -10,12 +10,10 @@ import com.spc.model.TeacherInfo;
 import com.spc.service.manage.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,19 +54,27 @@ public class ClassAllController extends Base {
      * @param classSemester
      * @return
      */
-    @RequestMapping("/getCourseAll")
+    @RequestMapping("/getClassAll")
     @ResponseBody
-    public Map<String, Object> getCourseAll(@RequestParam(required = false, defaultValue = "1") int currentPage,
-                                            @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                            @RequestParam(required = false) String academicYear,
-                                            @RequestParam(required = false) String classSemester,
-                                            @RequestParam(required = false) String courseName,
-                                            @RequestParam(required = false) String teacherId,
-                                            @RequestParam(required = false) String teacherName,
-                                            @RequestParam(required = false) String classPlaceId) {
+    public Map<String, Object> getClassAll(@RequestParam(required = false, defaultValue = "1") int currentPage,
+                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                           @RequestParam(required = false) String academicYear,
+                                           @RequestParam(required = false) String classSemester,
+                                           @RequestParam(required = false) String courseName,
+                                           @RequestParam(required = false) String teacherId,
+                                           @RequestParam(required = false) String teacherName,
+                                           @RequestParam(required = false) String classPlaceId,
+                                           HttpServletRequest request) {
+        // get user's departId
+        HttpSession httpSession = request.getSession();
+        Object departIdObject = httpSession.getAttribute("departId");
+        if (null == departIdObject) {
+            return null;
+        }
+        int departId = Integer.parseInt(departIdObject.toString());
+
+
         PageHelper.startPage(currentPage, pageSize);
-        // departId = 8. test
-        int departId = 8;
         List<ClassAll> courses = classAllService.getClassAll(departId, academicYear, classSemester, courseName,
                 teacherId, teacherName, classPlaceId);
 
@@ -92,7 +98,7 @@ public class ClassAllController extends Base {
      */
     @RequestMapping("/getTeacherTimetable")
     @ResponseBody
-    public String[][] getTeacherTimetable(String teacherId, String academicYear, String classSemester) {
+    public String[][] getTeacherTimetable(@RequestParam String teacherId, @RequestParam String academicYear, @RequestParam String classSemester) {
         return classAllService.getTeacherTimetable(teacherId, academicYear, classSemester);
     }
 
@@ -140,10 +146,10 @@ public class ClassAllController extends Base {
      */
     @RequestMapping("/getClassrooms")
     @ResponseBody
-    public Map<String, Object> getTeachers(@RequestParam(required = false, defaultValue = "1") int currentPage,
-                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                           @RequestParam(required = false) String schoolDistrictId,
-                                           @RequestParam(required = false) String classroomName) {
+    public Map<String, Object> getClassrooms(@RequestParam(required = false, defaultValue = "1") int currentPage,
+                                             @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                             @RequestParam(required = false) String schoolDistrictId,
+                                             @RequestParam(required = false) String classroomName) {
         PageHelper.startPage(currentPage, pageSize);
         List<ClassroomInfo> classrooms = classroomInfoService.getClassrooms(schoolDistrictId, classroomName);
 
@@ -172,26 +178,52 @@ public class ClassAllController extends Base {
 
     /**
      * 对某门课程进行排课处理
+     * <p>
+     * id    如果有，表示修改，如果没有，表示新增
+     * force 是否在有冲突时仍强制排课
      *
-     * @param id    如果有，表示修改，如果没有，表示新增
-     * @param force 是否在有冲突时仍强制排课
      * @return
      */
-    @RequestMapping(value = "/scheduleCourse", method = RequestMethod.POST)
+    @PostMapping(value = "/scheduleClass")
     @ResponseBody
-    public Map<String, Object> scheduleCourse(Integer id, Integer departId, String courseId,
-                                              String courseNameCHS, String courseNameEN, String moduleId,
-                                              String academicYear, String classSemester, Integer classHour,
-                                              Integer stuNumUpperLimit, String teacherId, String teacherName,
-                                              String teachingTeamIds, String teachingTeamNames,
-                                              Integer schoolDistrictId, String className,
-                                              String instructorId, String instructorName,
-                                              int startWeek, int endWeek, String classDateDesc,
-                                              String classPlaceId, String classPlaceName,
-                                              boolean force, HttpServletRequest request) {
+    public Map<String, String> scheduleClass(@RequestBody ClassAll classAll, HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        String operatorId = httpSession.getAttribute("userId").toString();
+        String operatorName = httpSession.getAttribute("username").toString();
 
-//        return courseAllService.scheduleCourse(id, rowIndex, colIndex, classPlace, force);
-        return null;
+        classAll.setOperatorId(operatorId);
+        classAll.setOperatorName(operatorName);
+        logger.info("scheduleClass: " + classAll.toString());
+
+        return classAllService.scheduleClass(classAll);
     }
 
+    /**
+     * 删除班级
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/delClass")
+    @ResponseBody
+    public Map<String, String> delClass(@RequestParam int id, HttpServletRequest request) {
+        logger.info("delClass, id: " + id);
+        HttpSession httpSession = request.getSession();
+        String operatorId = httpSession.getAttribute("userId").toString();
+        String operatorName = httpSession.getAttribute("username").toString();
+
+        return classAllService.delClass(id, operatorId, operatorName);
+    }
+
+    /**
+     * 获取某个学院的上课课表
+     *
+     * @param classSemester 春、秋
+     * @return
+     */
+    @RequestMapping("/getDepartTimeTable")
+    @ResponseBody
+    public String[][] getDepartTimeTable(@RequestParam int departId, @RequestParam String academicYear, @RequestParam String classSemester) {
+        return classAllService.getDepartTimeTable(departId, academicYear, classSemester);
+    }
 }

@@ -1,12 +1,13 @@
 package com.spc.service.wsdl.GetUndergradFreeClassrooms;
 
+import com.spc.controller.Base;
 import org.springframework.stereotype.Service;
 
 /**
  * 仅适用于本科
  */
 @Service
-public class GetUndergradFreeClassroomInfo {
+public class GetUndergradFreeClassroomInfo extends Base {
     public String getFreeClassrooms(SpareClassRoom[] spareClassRoom, String userId, String userName) {
         QueryConfig config = new QueryConfig();
         config.setPageSize(0);
@@ -19,10 +20,13 @@ public class GetUndergradFreeClassroomInfo {
             ClassroomResourceReadLocator locator = new ClassroomResourceReadLocator();
             ClassroomResourceReadPortSoapBindingStub bindingStub = (ClassroomResourceReadPortSoapBindingStub) locator.getClassroomResourceReadPort();
             ClassRoomResult classRoomResult = bindingStub.querySpareClassRoomForOtherSystem(spareClassRoom, config, null, userInfo);
-            System.out.println(classRoomResult.getMsg());
+            if (classRoomResult.getCode() == 0) {
+                logger.error(classRoomResult.getMsg());
+                return null;
+            }
             msg = classRoomResult.getMsg();
         } catch (Exception e) {
-            System.err.println(e);
+            logger.error(e.getMessage());
         }
         return msg;
     }
@@ -39,11 +43,12 @@ public class GetUndergradFreeClassroomInfo {
     public static void main(String[] args) {
         GetUndergradFreeClassroomInfo getUndergradFreeClassroomInfo = new GetUndergradFreeClassroomInfo();
 
-        SpareClassRoom classRoom1 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019-1", "0000000001000000000000000", 2, 1, 8);
-        SpareClassRoom classRoom2 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019-1", "0000000001000000000000000", 3, 1, 8);
+        SpareClassRoom classRoom1 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019-1", "0000000001000000", 2, 1, 1);
+        SpareClassRoom classRoom2 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019-1", "0000000001000000", 3, 1, 1);
         SpareClassRoom[] classRooms = {classRoom1, classRoom2};
 
-        getUndergradFreeClassroomInfo.getFreeClassrooms(classRooms, "3118105316", "张发");
+        String res = getUndergradFreeClassroomInfo.getFreeClassrooms(classRooms, "3118105316", "张发");
+        System.out.println(res);
 
     }
 }

@@ -24,7 +24,10 @@ public interface ClassAllService {
                                String classPlaceId);
 
     String[][] getTeacherTimetable(String teacherId, String academicYear, String classSemester);
-//
-//    Map<String, Object> scheduleCourse(int id, int rowIndex, int colIndex, String classPlace, boolean force);
 
+    Map<String, String> scheduleClass(ClassAll classAll);
+
+    Map<String, String> delClass(int id, String operatorId, String operatorName);
+
+    String[][] getDepartTimeTable(int departId, String academicYear, String classSemester);
 }

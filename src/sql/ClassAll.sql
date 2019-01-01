@@ -49,3 +49,39 @@ CREATE TABLE `ClassAll` (
   `operateDate` varchar(255) DEFAULT NULL COMMENT '操作时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='排课';
+
+
+INSERT INTO ClassAll (
+	departId,
+	courseId,
+	courseNameCHS,
+	courseNameEN,
+	moduleId,
+	academicYear,
+	classSemester,
+	classHour,
+	stuNumUpperLimit,
+	teacherId,
+	teacherName,
+	teachingTeamIds,
+	teachingTeamNames,
+	operatorId,
+	operatorName
+) SELECT
+	departId,
+	courseId,
+	courseNameCHS,
+	courseNameEN,
+	moduleId,
+	academicYear,
+	classSemester,
+	classHour,
+	stuNumUpperLimit,
+	teacherId,
+	teacherName,
+	teachingTeamIds,
+	teachingTeamNames,
+	operatorId,
+	operatorName
+FROM
+	CourseAll;

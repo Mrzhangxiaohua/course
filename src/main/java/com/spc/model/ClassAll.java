@@ -1,5 +1,7 @@
 package com.spc.model;
 
+import java.util.Date;
+
 public class ClassAll {
     private Integer id;
 
@@ -49,11 +51,87 @@ public class ClassAll {
 
     private String conflictDesc;
 
+    private Integer scheduled;
+
     private String operatorId;
 
     private String operatorName;
 
-    private String operateDate;
+    private Date operateDate;
+
+    private boolean force;
+
+    public ClassAll() {
+    }
+
+    public ClassAll(Integer id, Integer departId, String courseId, String courseNameCHS, String courseNameEN, String moduleId, String academicYear, String classSemester, Integer classHour, Integer stuNumUpperLimit, String teacherId, String teacherName, String teachingTeamIds, String teachingTeamNames, Integer schoolDistrictId, String className, String instructorId, String instructorName, Integer startWeek, Integer endWeek, String classDateDesc, String classPlaceId, String classPlaceName, String conflictDesc, Integer scheduled, String operatorId, String operatorName) {
+        this.id = id;
+        this.departId = departId;
+        this.courseId = courseId;
+        this.courseNameCHS = courseNameCHS;
+        this.courseNameEN = courseNameEN;
+        this.moduleId = moduleId;
+        this.academicYear = academicYear;
+        this.classSemester = classSemester;
+        this.classHour = classHour;
+        this.stuNumUpperLimit = stuNumUpperLimit;
+        this.teacherId = teacherId;
+        this.teacherName = teacherName;
+        this.teachingTeamIds = teachingTeamIds;
+        this.teachingTeamNames = teachingTeamNames;
+        this.schoolDistrictId = schoolDistrictId;
+        this.className = className;
+        this.instructorId = instructorId;
+        this.instructorName = instructorName;
+        this.startWeek = startWeek;
+        this.endWeek = endWeek;
+        this.classDateDesc = classDateDesc;
+        this.classPlaceId = classPlaceId;
+        this.classPlaceName = classPlaceName;
+        this.conflictDesc = conflictDesc;
+        this.scheduled = scheduled;
+        this.operatorId = operatorId;
+        this.operatorName = operatorName;
+    }
+
+    public ClassAll(Integer id, Integer departId, String courseId, String courseNameCHS, String courseNameEN, String moduleId, String academicYear, String classSemester, Integer classHour, Integer stuNumUpperLimit, String teacherId, String teacherName, String teachingTeamIds, String teachingTeamNames, Integer schoolDistrictId, String className, String instructorId, String instructorName, Integer startWeek, Integer endWeek, String classDateDesc, String classPlaceId, String classPlaceName, String conflictDesc, Integer scheduled, String operatorId, String operatorName, Date operateDate) {
+        this.id = id;
+        this.departId = departId;
+        this.courseId = courseId;
+        this.courseNameCHS = courseNameCHS;
+        this.courseNameEN = courseNameEN;
+        this.moduleId = moduleId;
+        this.academicYear = academicYear;
+        this.classSemester = classSemester;
+        this.classHour = classHour;
+        this.stuNumUpperLimit = stuNumUpperLimit;
+        this.teacherId = teacherId;
+        this.teacherName = teacherName;
+        this.teachingTeamIds = teachingTeamIds;
+        this.teachingTeamNames = teachingTeamNames;
+        this.schoolDistrictId = schoolDistrictId;
+        this.className = className;
+        this.instructorId = instructorId;
+        this.instructorName = instructorName;
+        this.startWeek = startWeek;
+        this.endWeek = endWeek;
+        this.classDateDesc = classDateDesc;
+        this.classPlaceId = classPlaceId;
+        this.classPlaceName = classPlaceName;
+        this.conflictDesc = conflictDesc;
+        this.scheduled = scheduled;
+        this.operatorId = operatorId;
+        this.operatorName = operatorName;
+        this.operateDate = operateDate;
+    }
+
+    public Integer getScheduled() {
+        return scheduled;
+    }
+
+    public void setScheduled(Integer scheduled) {
+        this.scheduled = scheduled;
+    }
 
     public Integer getId() {
         return id;
@@ -263,11 +341,54 @@ public class ClassAll {
         this.operatorName = operatorName == null ? null : operatorName.trim();
     }
 
-    public String getOperateDate() {
+    public Date getOperateDate() {
         return operateDate;
     }
 
-    public void setOperateDate(String operateDate) {
-        this.operateDate = operateDate == null ? null : operateDate.trim();
+    public void setOperateDate(Date operateDate) {
+        this.operateDate = operateDate;
+    }
+
+    public boolean getForce() {
+        return force;
+    }
+
+    public void setForce(boolean force) {
+        this.force = force;
+    }
+
+    @Override
+    public String toString() {
+        return "ClassAll{" +
+                "id=" + id +
+                ", departId=" + departId +
+                ", courseId='" + courseId + '\'' +
+                ", courseNameCHS='" + courseNameCHS + '\'' +
+                ", courseNameEN='" + courseNameEN + '\'' +
+                ", moduleId='" + moduleId + '\'' +
+                ", academicYear='" + academicYear + '\'' +
+                ", classSemester='" + classSemester + '\'' +
+                ", classHour=" + classHour +
+                ", stuNumUpperLimit=" + stuNumUpperLimit +
+                ", teacherId='" + teacherId + '\'' +
+                ", teacherName='" + teacherName + '\'' +
+                ", teachingTeamIds='" + teachingTeamIds + '\'' +
+                ", teachingTeamNames='" + teachingTeamNames + '\'' +
+                ", schoolDistrictId=" + schoolDistrictId +
+                ", className='" + className + '\'' +
+                ", instructorId='" + instructorId + '\'' +
+                ", instructorName='" + instructorName + '\'' +
+                ", startWeek=" + startWeek +
+                ", endWeek=" + endWeek +
+                ", classDateDesc='" + classDateDesc + '\'' +
+                ", classPlaceId='" + classPlaceId + '\'' +
+                ", classPlaceName='" + classPlaceName + '\'' +
+                ", conflictDesc='" + conflictDesc + '\'' +
+                ", scheduled=" + scheduled +
+                ", operatorId='" + operatorId + '\'' +
+                ", operatorName='" + operatorName + '\'' +
+                ", operateDate=" + operateDate +
+                ", force=" + force +
+                '}';
     }
 }

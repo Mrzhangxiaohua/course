@@ -1,5 +1,7 @@
 package com.spc.model;
 
+import java.util.Date;
+
 public class CourseAll {
     private Integer id;
 
@@ -37,7 +39,7 @@ public class CourseAll {
 
     private String operatorName;
 
-    private String operateDate;
+    private Date operateDate;
 
     public Integer getId() {
         return id;
@@ -183,11 +185,11 @@ public class CourseAll {
         this.operatorName = operatorName == null ? null : operatorName.trim();
     }
 
-    public String getOperateDate() {
+    public Date getOperateDate() {
         return operateDate;
     }
 
-    public void setOperateDate(String operateDate) {
-        this.operateDate = operateDate == null ? null : operateDate.trim();
+    public void setOperateDate(Date operateDate) {
+        this.operateDate = operateDate;
     }
 }

@@ -13,7 +13,8 @@
                 and academicYear = #{academicYear}
             </if>
             <if test="classSemester != null and classSemester !=''">
-                and classSemester = #{classSemester}
+                <bind name="classSemesterLike" value="'%'+ classSemester +'%'"/>
+                and classSemester like #{classSemesterLike}
             </if>
             <if test="teacherId != null and teacherId !=''">
                 and teacherId = #{teacherId}
@@ -26,42 +27,127 @@
                 and (courseNameCHS like #{pattern} or courseNameEN like #{pattern})
             </if>
             <if test="teacherName != null and teacherName !=''">
-                and teacherName = #{teacherName}
+                <bind name="teacherNameLike" value="'%'+ teacherName +'%'"/>
+                and teacherName like #{teacherNameLike}
             </if>
         </where>
         order by id asc
     </select>
 
-    <!--<select id="selectCourseById" resultType="com.spc.model.CourseAll" useCache="false">-->
-        <!--select * from course.CourseAll where id = #{id}-->
-    <!--</select>-->
+    <select id="selectClassAllExcludeId" resultType="com.spc.model.ClassAll" useCache="false">
+        select * from course.ClassAll
+        <where>
+            <if test="academicYear != null and academicYear !=''">
+                and academicYear = #{academicYear}
+            </if>
+            <if test="classSemester != null and classSemester !=''">
+                and classSemester = #{classSemester}
+            </if>
+            <if test="instructorId != null and instructorId !=''">
+                <bind name="pattern" value="'%'+ instructorId +'%'"/>
+                and instructorId like #{pattern}
+            </if>
+            <if test="classPlaceId != null and classPlaceId !=''">
+                and classPlaceId = #{classPlaceId}
+            </if>
+            <if test="id != null">
+                and id != #{id}
+            </if>
+        </where>
+    </select>
 
-    <!--<select id="selectCoursesByTeacherIdAndClassSemester" resultType="com.spc.model.CourseAll" useCache="false">-->
-        <!--select * from course.CourseAll-->
-        <!--where teacherId = #{teacherId}-->
-        <!--and classSemester = #{classSemester}-->
-        <!--and classDateDesc is not null-->
-    <!--</select>-->
-
-    <!--<select id="selectCoursesByClassPlaceAndClassSemester" resultType="com.spc.model.CourseAll" useCache="false">-->
-        <!--select * from course.CourseAll-->
-        <!--where classPlace = #{classPlace}-->
-        <!--and classSemester = #{classSemester}-->
-        <!--and classDateDesc is not null-->
-    <!--</select>-->
-
-    <!--<update id="updateCourseSchedule" flushCache="true">-->
-        <!--update course.CourseAll-->
-        <!--<set>-->
-            <!--classDateDesc = #{classDateDesc},-->
-            <!--classPlace = #{classPlace},-->
-            <!--conflictDesc = #{conflictDesc}-->
-        <!--</set>-->
-        <!--where id=#{id}-->
-    <!--</update>-->
-
-    <insert id="insertFirstClass"  useGeneratedKeys="true" keyProperty="id" flushCache="true" >
+    <insert id="insertFirstClass" useGeneratedKeys="true" keyProperty="id" flushCache="true">
       insert into course.ClassAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,className)
       values(#{departId},#{courseId},#{courseNameCHS},null,#{classModuleNum},null,null,#{classTime},null,#{teaId},#{teaName},#{className})
     </insert>
+
+    <select id="countClassAllByClassName" resultType="java.lang.Integer" useCache="false">
+        select count(id) from ClassAll
+        <where>
+            <if test="academicYear != null and academicYear !=''">
+                and academicYear = #{academicYear}
+            </if>
+            <if test="classSemester != null and classSemester !=''">
+                and classSemester = #{classSemester}
+            </if>
+            <if test="courseId != null and courseId !=''">
+                and courseId = #{courseId}
+            </if>
+            <if test="schoolDistrictId != null">
+                and schoolDistrictId = #{schoolDistrictId}
+            </if>
+            <if test="className != null and className !=''">
+                and className = #{className}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertClass" useGeneratedKeys="true" keyProperty="id" flushCache="true"
+            parameterType="com.spc.model.ClassAll">
+        insert into ClassAll (departId, courseId, courseNameCHS, courseNameEN, moduleId, academicYear, classSemester,
+        classHour, stuNumUpperLimit, teacherId, teacherName, teachingTeamIds, teachingTeamNames, schoolDistrictId,
+        className, instructorId, instructorName, startWeek, endWeek, classDateDesc, classPlaceId, classPlaceName,
+        conflictDesc, scheduled, operatorId, operatorName)
+        values
+        <trim prefix="(" suffix=")">
+            #{classAll.departId}, #{classAll.courseId}, #{classAll.courseNameCHS}, #{classAll.courseNameEN},
+            #{classAll.moduleId}, #{classAll.academicYear}, #{classAll.classSemester}, #{classAll.classHour},
+            #{classAll.stuNumUpperLimit}, #{classAll.teacherId}, #{classAll.teacherName}, #{classAll.teachingTeamIds},
+            #{classAll.teachingTeamNames}, #{classAll.schoolDistrictId}, #{classAll.className},
+            #{classAll.instructorId}, #{classAll.instructorName}, #{classAll.startWeek}, #{classAll.endWeek},
+            #{classAll.classDateDesc}, #{classAll.classPlaceId}, #{classAll.classPlaceName}, #{classAll.conflictDesc},
+            #{classAll.scheduled}, #{classAll.operatorId}, #{classAll.operatorName}
+        </trim>
+    </insert>
+
+    <update id="updateClass" flushCache="true">
+        update ClassAll
+        <set>
+            schoolDistrictId = #{classAll.schoolDistrictId},
+            className = #{classAll.className},
+            instructorId = #{classAll.instructorId},
+            instructorName = #{classAll.instructorName},
+            startWeek = #{classAll.startWeek},
+            endWeek = #{classAll.endWeek},
+            classDateDesc = #{classAll.classDateDesc},
+            classPlaceId = #{classAll.classPlaceId},
+            classPlaceName = #{classAll.classPlaceName},
+            conflictDesc = #{classAll.conflictDesc},
+            scheduled = #{classAll.scheduled},
+            operatorId = #{classAll.operatorId},
+            operatorName = #{classAll.operatorName}
+        </set>
+        where id = #{classAll.id}
+    </update>
+
+
+    <select id="selectClassAllById" resultType="com.spc.model.ClassAll" useCache="false">
+        select * from ClassAll
+        where id = #{id}
+    </select>
+
+    <delete id="delClassAllById" flushCache="true">
+        delete from ClassAll
+        where id = #{id}
+    </delete>
+
+    <update id="clearClassAllById" flushCache="true">
+        update ClassAll
+        <set>
+            schoolDistrictId = null,
+            className = null,
+            instructorId = null,
+            instructorName = null,
+            startWeek = null,
+            endWeek = null,
+            classDateDesc = null,
+            classPlaceId = null,
+            classPlaceName = null,
+            conflictDesc = null,
+            scheduled = 0,
+            operatorId = #{operatorId},
+            operatorName = #{operatorName}
+        </set>
+        where id = #{id}
+    </update>
 </mapper>
