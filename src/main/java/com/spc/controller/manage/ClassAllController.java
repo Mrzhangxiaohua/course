@@ -226,4 +226,20 @@ public class ClassAllController extends Base {
     public String[][] getDepartTimeTable(@RequestParam int departId, @RequestParam String academicYear, @RequestParam String classSemester) {
         return classAllService.getDepartTimeTable(departId, academicYear, classSemester);
     }
+
+    /**
+     * 获取departId
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/getDepartId")
+    @ResponseBody
+    public Integer getDepartId(HttpServletRequest request) {
+        Object departIdObject = request.getSession().getAttribute("departId");
+        if (null == departIdObject) {
+            return null;
+        }
+        return Integer.parseInt(departIdObject.toString());
+    }
 }

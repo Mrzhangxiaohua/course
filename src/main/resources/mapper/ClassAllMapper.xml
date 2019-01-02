@@ -90,13 +90,13 @@
         conflictDesc, scheduled, operatorId, operatorName)
         values
         <trim prefix="(" suffix=")">
-            #{classAll.departId}, #{classAll.courseId}, #{classAll.courseNameCHS}, #{classAll.courseNameEN},
-            #{classAll.moduleId}, #{classAll.academicYear}, #{classAll.classSemester}, #{classAll.classHour},
-            #{classAll.stuNumUpperLimit}, #{classAll.teacherId}, #{classAll.teacherName}, #{classAll.teachingTeamIds},
-            #{classAll.teachingTeamNames}, #{classAll.schoolDistrictId}, #{classAll.className},
-            #{classAll.instructorId}, #{classAll.instructorName}, #{classAll.startWeek}, #{classAll.endWeek},
-            #{classAll.classDateDesc}, #{classAll.classPlaceId}, #{classAll.classPlaceName}, #{classAll.conflictDesc},
-            #{classAll.scheduled}, #{classAll.operatorId}, #{classAll.operatorName}
+            #{departId}, #{courseId}, #{courseNameCHS}, #{courseNameEN},
+            #{moduleId}, #{academicYear}, #{classSemester}, #{classHour},
+            #{stuNumUpperLimit}, #{teacherId}, #{teacherName}, #{teachingTeamIds},
+            #{teachingTeamNames}, #{schoolDistrictId}, #{className},
+            #{instructorId}, #{instructorName}, #{startWeek}, #{endWeek},
+            #{classDateDesc}, #{classPlaceId}, #{classPlaceName}, #{conflictDesc},
+            #{scheduled}, #{operatorId}, #{operatorName}
         </trim>
     </insert>
 

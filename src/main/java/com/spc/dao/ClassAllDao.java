@@ -42,7 +42,7 @@ public interface ClassAllDao {
 
     int updateClass(@Param("classAll") ClassAll classAll);
 
-    int insertClass(@Param("classAll") ClassAll classAll);
+    int insertClass(ClassAll classAll);
 
     ClassAll selectClassAllById(@Param("id") int id);
 
