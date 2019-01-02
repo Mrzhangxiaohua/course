@@ -3,14 +3,16 @@ package com.spc.dao;
 import com.spc.model.ClassDomain;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public interface ClassDao {
 
-    void insert(ClassDomain record);
+    int insert(ClassDomain record);
 
     void delete(@Param("classId") int classId);
     void deleteByClassAllId(@Param("classAllId") int id);

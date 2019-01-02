@@ -1,5 +1,6 @@
 package com.spc.service.SynchroTable.impl;
 
+import com.spc.controller.Base;
 import com.spc.dao.ClassDao;
 import com.spc.dao.CourseAllDao;
 import com.spc.model.ClassAll;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SynchroTableImpl implements SynchroTable {
+public class SynchroTableImpl extends Base implements SynchroTable {
 
     @Autowired
     private ClassDao classDao;
@@ -21,14 +22,14 @@ public class SynchroTableImpl implements SynchroTable {
     @Autowired
     private CourseAllDao courseAllDao;
 
-
-
     @Override
-    public int synchroTable(ClassAll classAll) {
+    public int insertRecord(ClassAll classAll) {
 
-        CourseAll courseAll =courseAllDao.selectCourseAll(classAll.getCourseId());
+        CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId());
 
-        ClassDomain classDomain  = new ClassDomain();
+        logger.info(courseAll.toString());
+
+        ClassDomain classDomain = new ClassDomain();
 
         classDomain.setClassAllId(classAll.getId());
         classDomain.setClassName(courseAll.getCourseNameCHS());
@@ -47,7 +48,7 @@ public class SynchroTableImpl implements SynchroTable {
         classDomain.setDepartId(courseAll.getDepartId());
         classDomain.setStartWeek(classAll.getStartWeek());
         classDomain.setEndWeek(classAll.getEndWeek());
-        classDomain.setClassSemester(courseAll.getAcademicYear()+courseAll.getClassSemester());
+        classDomain.setClassSemester(courseAll.getAcademicYear() + courseAll.getClassSemester());
 
         classDomain.setCourseInfo(courseAll.getCourseInfo());
         classDomain.setTeacherInfo(courseAll.getTeacherInfo());
@@ -58,9 +59,13 @@ public class SynchroTableImpl implements SynchroTable {
         classDomain.setShenQingRenId(" ");
         classDomain.setSchoolDistrictId(classAll.getSchoolDistrictId());
 
-        classDao.insert(classDomain);
+        logger.info(classDomain.toString());
 
-        return 1;
+        int count = classDao.insert(classDomain);
+
+        logger.info("count: " + count);
+
+        return count;
 
     }
 
@@ -73,37 +78,37 @@ public class SynchroTableImpl implements SynchroTable {
     @Override
     public int updateRecord(ClassAll classAll) {
         removeRecord(classAll.getId());
-        synchroTable(classAll);
+        insertRecord(classAll);
         return 1;
     }
 
     private List<String> convertDateDesc(String classDateDesc) {
-         String[] descs = classDateDesc.split(",");
-         List<Integer[]> descInts = new ArrayList<>();
-         for(String desc:descs){
+        String[] descs = classDateDesc.split(",");
+        List<Integer[]> descInts = new ArrayList<>();
+        for (String desc : descs) {
             String[] descStrs = desc.split("-");
-            descInts.add(new Integer[]{Integer.parseInt(descStrs[1]),Integer.parseInt(descStrs[0])});
-         }
-         List<Integer[]> res = new ArrayList<>();
-         for(Integer[] ints:descInts){
-             if(res.isEmpty()){
-                 ints[2] = 0;
-                 res.add(ints);
-             }
-             for(Integer[] ints2:res){
-                if(ints2[0] == ints[0] & ints2[1] == (ints[1]-1) ){
-                    ints2[2] = ints2[2] +1;
-                }else if(ints2[0] == ints[0] & ints2[1] == (ints[1]+1) ){
-                    ints2[1] = ints2[1] -1;
-                    ints2[2] = ints2[2] +1;
+            descInts.add(new Integer[]{Integer.parseInt(descStrs[1]), Integer.parseInt(descStrs[0])});
+        }
+        List<Integer[]> res = new ArrayList<>();
+        for (Integer[] ints : descInts) {
+            if (res.isEmpty()) {
+                ints[2] = 0;
+                res.add(ints);
+            }
+            for (Integer[] ints2 : res) {
+                if (ints2[0] == ints[0] & ints2[1] == (ints[1] - 1)) {
+                    ints2[2] = ints2[2] + 1;
+                } else if (ints2[0] == ints[0] & ints2[1] == (ints[1] + 1)) {
+                    ints2[1] = ints2[1] - 1;
+                    ints2[2] = ints2[2] + 1;
                 }
-             }
-         }
-         List<String> resStr = new ArrayList<>();
-         for(Integer[] i:res){
-            resStr.add(Integer.toString(i[0]+1) + ":"+Integer.toString(i[1]+1)+":"+i[1]);
-         }
-         return resStr;
+            }
+        }
+        List<String> resStr = new ArrayList<>();
+        for (Integer[] i : res) {
+            resStr.add(Integer.toString(i[0] + 1) + ":" + Integer.toString(i[1] + 1) + ":" + i[1]);
+        }
+        return resStr;
 
     }
 
@@ -111,7 +116,7 @@ public class SynchroTableImpl implements SynchroTable {
         return Integer.parseInt(moduleId.split(",")[0]);
     }
 
-    private Integer getNum(String className){
-        return Integer.parseInt(className.substring(0,1));
+    private Integer getNum(String className) {
+        return Integer.parseInt(className.substring(0, 1));
     }
 }

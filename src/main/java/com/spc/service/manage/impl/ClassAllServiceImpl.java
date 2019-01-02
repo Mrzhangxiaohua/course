@@ -3,6 +3,7 @@ package com.spc.service.manage.impl;
 import com.spc.controller.Base;
 import com.spc.dao.ClassAllDao;
 import com.spc.model.ClassAll;
+import com.spc.service.SynchroTable.SynchroTable;
 import com.spc.service.manage.ClassAllService;
 import com.spc.service.wsdl.GetUndergradFreeClassrooms.GetUndergradFreeClassroomInfo;
 import com.spc.service.wsdl.GetUndergradFreeClassrooms.SpareClassRoom;
@@ -64,6 +65,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
 
     @Autowired
     private TeacherOccupy teacherOccupyService;
+
+    @Autowired
+    private SynchroTable synchroTableService;
 
     @Override
     public List<ClassAll> getClassAll(Integer departId, String academicYear, String classSemester, String courseName,
@@ -192,6 +196,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             boolean freeFlag = freeClassroomAndTeacher(classAllDao.selectClassAllById(classAll.getId()), res);
             // 修改记录
             int count = classAllDao.updateClass(classAll);
+            // TODO CHECK
+//            synchroTableService.updateRecord(classAll);
+
             logger.info("updateClass: " + classAll.toString());
             if (!freeFlag) {
                 return res;
@@ -216,6 +223,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         } else {
             // 新增记录
             int count = classAllDao.insertClass(classAll);
+            // TODO CHECK
+//            synchroTableService.insertRecord(classAll);
+
             logger.info("insertClass: " + classAll.toString());
             if (count > 0) {
                 // 先占用本科教务系统的老师、地点的相应时间
@@ -267,8 +277,13 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                                 // 回滚完毕
                                 if (del) {
                                     classAllDao.delClassAllById(classAll.getId());
+                                    // TODO CHECK
+//                                    synchroTableService.removeRecord(classAll.getId());
                                 } else {
                                     classAllDao.clearClassAllById(classAll.getId(), classAll.getOperatorId(), classAll.getOperatorName());
+                                    // TODO CHECK
+                                    clearUnusedField(classAll);
+//                                    synchroTableService.updateRecord(classAll);
                                 }
                                 res.put("status", "error");
                                 res.put("msg", "本科教务系统异常！");
@@ -280,6 +295,20 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             }
         }
         return false;
+    }
+
+    private void clearUnusedField(ClassAll classAll) {
+        classAll.setScheduled(null);
+        classAll.setClassName(null);
+        classAll.setInstructorId(null);
+        classAll.setInstructorName(null);
+        classAll.setStartWeek(null);
+        classAll.setEndWeek(null);
+        classAll.setClassDateDesc(null);
+        classAll.setClassPlaceId(null);
+        classAll.setClassPlaceName(null);
+        classAll.setConflictDesc(null);
+        classAll.setScheduled(0);
     }
 
     private boolean useClassroom(ClassAll classAll, Map<String, String> res, String xnxqdm, String[] classDates, int[] rows, int[] cols, boolean del) {
@@ -300,8 +329,13 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             // 占用失败
             if (del) {
                 classAllDao.delClassAllById(classAll.getId());
+                // TODO CHECK
+//                synchroTableService.removeRecord(classAll.getId());
             } else {
                 classAllDao.clearClassAllById(classAll.getId(), classAll.getOperatorId(), classAll.getOperatorName());
+                // TODO CHECK
+                clearUnusedField(classAll);
+//                synchroTableService.updateRecord(classAll);
             }
             res.put("status", "error");
             res.put("msg", "本科教务系统异常！");
@@ -572,9 +606,13 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         if (count > 1) {
             // del
             updateCount = classAllDao.delClassAllById(id);
+            // TODO CHECK
+//            synchroTableService.removeRecord(id);
         } else {
             // clear scheduled field
             updateCount = classAllDao.clearClassAllById(id, operatorId, operatorName);
+            clearUnusedField(classAll);
+//            synchroTableService.updateRecord(classAll);
         }
 
         if (updateCount > 0) {

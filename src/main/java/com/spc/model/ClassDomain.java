@@ -301,4 +301,42 @@ public class ClassDomain implements Serializable {
     public void setClassAllId(Integer classAllId) {
         this.classAllId = classAllId;
     }
+
+    @Override
+    public String toString() {
+        return "ClassDomain{" +
+                "teacherInfo='" + teacherInfo + '\'' +
+                ", courseInfo='" + courseInfo + '\'' +
+                ", classId=" + classId +
+                ", className='" + className + '\'' +
+                ", classNum=" + classNum +
+                ", teaId='" + teaId + '\'' +
+                ", teaName='" + teaName + '\'' +
+                ", classChooseNum=" + classChooseNum +
+                ", classUpperLimit=" + classUpperLimit +
+                ", classDateDescription='" + classDateDescription + '\'' +
+                ", classDateDescriptionA='" + classDateDescriptionA + '\'' +
+                ", classDateDescriptionB='" + classDateDescriptionB + '\'' +
+                ", classPlace='" + classPlace + '\'' +
+                ", classLength=" + classLength +
+                ", modelsName='" + modelsName + '\'' +
+                ", departId=" + departId +
+                ", classModuleNum=" + classModuleNum +
+                ", classSemester='" + classSemester + '\'' +
+                ", classGradePoint=" + classGradePoint +
+                ", startWeek=" + startWeek +
+                ", endWeek=" + endWeek +
+                ", classTime=" + classTime +
+                ", notShowAddButton=" + notShowAddButton +
+                ", showDeleteButton=" + showDeleteButton +
+                ", buttonGroup='" + buttonGroup + '\'' +
+                ", mainLecturer='" + mainLecturer + '\'' +
+                ", classEncode='" + classEncode + '\'' +
+                ", shenQingRenId='" + shenQingRenId + '\'' +
+                ", classStr='" + classStr + '\'' +
+                ", departName='" + departName + '\'' +
+                ", schoolDistrictId=" + schoolDistrictId +
+                ", classAllId=" + classAllId +
+                '}';
+    }
 }

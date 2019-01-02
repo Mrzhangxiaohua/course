@@ -192,4 +192,29 @@ public class CourseAll {
     public void setOperateDate(Date operateDate) {
         this.operateDate = operateDate;
     }
+
+    @Override
+    public String toString() {
+        return "CourseAll{" +
+                "id=" + id +
+                ", departId=" + departId +
+                ", courseId='" + courseId + '\'' +
+                ", courseNameCHS='" + courseNameCHS + '\'' +
+                ", courseNameEN='" + courseNameEN + '\'' +
+                ", moduleId='" + moduleId + '\'' +
+                ", academicYear='" + academicYear + '\'' +
+                ", classSemester='" + classSemester + '\'' +
+                ", classHour=" + classHour +
+                ", stuNumUpperLimit=" + stuNumUpperLimit +
+                ", teacherId='" + teacherId + '\'' +
+                ", teacherName='" + teacherName + '\'' +
+                ", teachingTeamIds='" + teachingTeamIds + '\'' +
+                ", teachingTeamNames='" + teachingTeamNames + '\'' +
+                ", courseInfo='" + courseInfo + '\'' +
+                ", teacherInfo='" + teacherInfo + '\'' +
+                ", operatorId='" + operatorId + '\'' +
+                ", operatorName='" + operatorName + '\'' +
+                ", operateDate=" + operateDate +
+                '}';
+    }
 }

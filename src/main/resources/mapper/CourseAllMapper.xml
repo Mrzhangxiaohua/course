@@ -18,7 +18,7 @@
         select
         <include refid="Base_Column_List" />
         from CourseAll
-        where id = #{courseId}
+        where courseId = #{courseId}
     </select>
 
 
