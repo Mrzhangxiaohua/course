@@ -120,7 +120,7 @@ public class ClassroomOccupy {
         ClassroomOccupy classroomOccupy = new ClassroomOccupy();
 
         ClassRoomUsed classRoomUsed = classroomOccupy.createClassRoomUsed("2018-2019-2", "1",
-                1, 8, "0", 1, 1,2,"2040206", "test001","test001");
+                1, 8, "0", 1, 1,2,"2040207", "1425","1425");
 
         ClassRoomUsed[] classRoomUseds = {classRoomUsed};
 //        int flag = classroomOccupy.addUsedClassroom(classRoomUseds, "3118105316", "张发");

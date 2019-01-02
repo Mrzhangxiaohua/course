@@ -606,13 +606,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         if (count > 1) {
             // del
             updateCount = classAllDao.delClassAllById(id);
-            // TODO CHECK
-//            synchroTableService.removeRecord(id);
         } else {
             // clear scheduled field
             updateCount = classAllDao.clearClassAllById(id, operatorId, operatorName);
-            clearUnusedField(classAll);
-//            synchroTableService.updateRecord(classAll);
         }
 
         if (updateCount > 0) {
@@ -624,6 +620,14 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         } else {
             res.put("status", "error");
             res.put("msg", "数据删除异常，请重试！");
+        }
+
+        if (count > 1) {
+            // TODO CHECK
+//            synchroTableService.removeRecord(id);
+        } else {
+            clearUnusedField(classAll);
+//            synchroTableService.updateRecord(classAll);
         }
         return res;
     }
