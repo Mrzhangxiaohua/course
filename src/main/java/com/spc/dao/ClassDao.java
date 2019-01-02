@@ -13,6 +13,7 @@ public interface ClassDao {
     void insert(ClassDomain record);
 
     void delete(@Param("classId") int classId);
+    void deleteByClassAllId(@Param("classAllId") int id);
 
     List<Map> findStudentClassTime(@Param("stuId") String stuId);
 

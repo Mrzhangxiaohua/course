@@ -200,6 +200,11 @@
         from course.Course
         where classId =#{classId}
     </delete>
+    <delete id="deleteByClassAllId">
+        delete
+        from course.Course
+        where classAllId =#{classAllId}
+    </delete>
 
 
     <select id="haveStuInClass" resultType="map">

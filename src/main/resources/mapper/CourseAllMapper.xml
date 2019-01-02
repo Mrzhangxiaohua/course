@@ -3,8 +3,23 @@
 
 <mapper namespace="com.spc.dao.CourseAllDao">
 
+    <sql id="Base_Column_List">
+    id, departId, courseId, courseNameCHS, courseNameEN, moduleId, academicYear, classSemester,
+    classHour, stuNumUpperLimit, teacherId, teacherName, teachingTeamIds, teachingTeamNames,
+    operatorId, operatorName, operateDate
+  </sql>
+
     <insert id="insertCourse"  useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true" >
       insert into CourseAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,courseInfo,teacherInfo)
       values(#{departId},#{courseId},#{className},null,#{classModuleNum},null,null,#{classTime},null,#{teaId},#{teaName},#{courseInfo},#{teacherInfo})
     </insert>
+
+    <select id="selectCourseAll" resultType="com.spc.model.CourseAll">
+        select
+        <include refid="Base_Column_List" />
+        from CourseAll
+        where id = #{courseId}
+    </select>
+
+
 </mapper>

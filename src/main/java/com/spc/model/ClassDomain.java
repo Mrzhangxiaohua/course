@@ -39,6 +39,8 @@ public class ClassDomain implements Serializable {
     private String shenQingRenId;
     private String classStr;
     private String departName;
+    private Integer schoolDistrictId;
+    private Integer classAllId;
 
     public Integer getClassId() {
         return classId;
@@ -282,5 +284,21 @@ public class ClassDomain implements Serializable {
 
     public void setDepartName(String departName) {
         this.departName = departName;
+    }
+
+    public Integer getSchoolDistrictId() {
+        return schoolDistrictId;
+    }
+
+    public void setSchoolDistrictId(Integer schoolDistrictId) {
+        this.schoolDistrictId = schoolDistrictId;
+    }
+
+    public Integer getClassAllId() {
+        return classAllId;
+    }
+
+    public void setClassAllId(Integer classAllId) {
+        this.classAllId = classAllId;
     }
 }

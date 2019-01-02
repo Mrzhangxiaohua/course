@@ -5,7 +5,6 @@ package com.spc.service.teacher.impl;
         import com.spc.model.FileInfo;
         import com.spc.service.teacher.TeacherService;
         import com.spc.util.MakeTimeTable;
-        import org.joda.time.DateTime;
         import org.springframework.beans.factory.annotation.Autowired;
         import org.springframework.stereotype.Service;
 
