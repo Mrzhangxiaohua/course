@@ -1,5 +1,6 @@
 package com.spc.dao;
 
+import com.spc.model.CourseAll;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,6 @@ public interface CourseAllDao {
                      @Param("teaId") String teaId, @Param("teaName") String teaName,
                      @Param("courseInfo") String courseInfo, @Param("teacherInfo") String teacherInfo,
                      @Param("courseId") String courseId);
+
+    CourseAll selectCourseAll(@Param("courseId") String courseId);
 }

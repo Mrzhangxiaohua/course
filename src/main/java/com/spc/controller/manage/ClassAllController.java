@@ -66,12 +66,13 @@ public class ClassAllController extends Base {
                                            @RequestParam(required = false) String classPlaceId,
                                            HttpServletRequest request) {
         // get user's departId
-        HttpSession httpSession = request.getSession();
-        Object departIdObject = httpSession.getAttribute("departId");
-        if (null == departIdObject) {
-            return null;
-        }
-        int departId = Integer.parseInt(departIdObject.toString());
+//        HttpSession httpSession = request.getSession();
+//        Object departIdObject = httpSession.getAttribute("departId");
+//        if (null == departIdObject) {
+//            return null;
+//        }
+//        int departId = Integer.parseInt(departIdObject.toString());
+        int departId = 8;
 
 
         PageHelper.startPage(currentPage, pageSize);

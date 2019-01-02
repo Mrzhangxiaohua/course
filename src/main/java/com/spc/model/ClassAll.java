@@ -59,6 +59,8 @@ public class ClassAll {
 
     private Date operateDate;
 
+    private Integer stuChooseNum;
+
     private boolean force;
 
     public ClassAll() {
@@ -390,5 +392,13 @@ public class ClassAll {
                 ", operateDate=" + operateDate +
                 ", force=" + force +
                 '}';
+    }
+
+    public Integer getStuChooseNum() {
+        return stuChooseNum;
+    }
+
+    public void setStuChooseNum(Integer stuChooseNum) {
+        this.stuChooseNum = stuChooseNum;
     }
 }
