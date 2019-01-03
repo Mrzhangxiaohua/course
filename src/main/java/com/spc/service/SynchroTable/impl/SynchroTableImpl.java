@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -33,17 +34,22 @@ public class SynchroTableImpl extends Base implements SynchroTable {
 
         classDomain.setClassAllId(classAll.getId());
         classDomain.setClassName(courseAll.getCourseNameCHS());
+
         classDomain.setClassNum(getNum(classAll.getClassName()));
 
         classDomain.setTeaId(courseAll.getTeacherId());
         classDomain.setTeaName(courseAll.getTeacherName());
         classDomain.setClassGradePoint(0);
+        logger.info("run 1");
         classDomain.setClassChooseNum(classAll.getStuChooseNum());
+        logger.info("run 2");
         classDomain.setClassUpperLimit(courseAll.getStuNumUpperLimit());
-        classDomain.setClassDateDescription(convertDateDesc(classAll.getClassDateDesc()).get(0));
+        logger.info("run 3");
+        classDomain.setClassDateDescription((convertDateDesc(classAll.getClassDateDesc())).get(0));
+        logger.info("run 4");
         classDomain.setClassPlace(classAll.getClassPlaceName());
         classDomain.setClassLength(0);
-
+        logger.info("run 5");
         classDomain.setClassModuleNum(getMI(courseAll.getModuleId()));
         classDomain.setDepartId(courseAll.getDepartId());
         classDomain.setStartWeek(classAll.getStartWeek());
@@ -56,7 +62,7 @@ public class SynchroTableImpl extends Base implements SynchroTable {
         classDomain.setMainLecturer(classAll.getTeacherName());
 
         classDomain.setClassEncode(courseAll.getCourseId());
-        classDomain.setShenQingRenId(" ");
+        classDomain.setShenQingRenId(null);
         classDomain.setSchoolDistrictId(classAll.getSchoolDistrictId());
 
         logger.info(classDomain.toString());
@@ -83,30 +89,39 @@ public class SynchroTableImpl extends Base implements SynchroTable {
     }
 
     private List<String> convertDateDesc(String classDateDesc) {
+        System.out.println(classDateDesc);
+        // 首先划分得到每一个小时粒度的课程
         String[] descs = classDateDesc.split(",");
         List<Integer[]> descInts = new ArrayList<>();
+        // 将所有的划分为一个数组
         for (String desc : descs) {
             String[] descStrs = desc.split("-");
             descInts.add(new Integer[]{Integer.parseInt(descStrs[1]), Integer.parseInt(descStrs[0])});
         }
-        List<Integer[]> res = new ArrayList<>();
+//        System.out.println(descInts.get(0)[0] + descInts.get(0)[1]);
+//        System.out.println(descInts.get(1)[0] + descInts.get(1)[1]);
+        List<List<Integer>> res = new ArrayList<>();
         for (Integer[] ints : descInts) {
             if (res.isEmpty()) {
-                ints[2] = 0;
-                res.add(ints);
+                List<Integer> temp=new ArrayList(Arrays.asList(ints));//**须定义时就进行转化**
+                temp.add(2,1);
+//                ints[2] = 0;
+                res.add(temp);
             }
-            for (Integer[] ints2 : res) {
-                if (ints2[0] == ints[0] & ints2[1] == (ints[1] - 1)) {
-                    ints2[2] = ints2[2] + 1;
-                } else if (ints2[0] == ints[0] & ints2[1] == (ints[1] + 1)) {
-                    ints2[1] = ints2[1] - 1;
-                    ints2[2] = ints2[2] + 1;
+            for (List<Integer> ints2 : res) {
+                if (ints2.get(0) == ints[0] & (ints2.get(1) == (ints[1] - 1))) {
+//                    ints2.get(2) = ints2.get(2) + 1;
+                    ints2.set(2,ints2.get(2) + 1);
+                } else if (ints2.get(0) == ints[0] & (ints2.get(1) == (ints[1] + 1))) {
+                    ints2.set(1,ints2.get(1) - 1);
+                    ints2.set(2,ints2.get(2) + 1);
                 }
             }
         }
+        System.out.println(res);
         List<String> resStr = new ArrayList<>();
-        for (Integer[] i : res) {
-            resStr.add(Integer.toString(i[0] + 1) + ":" + Integer.toString(i[1] + 1) + ":" + i[1]);
+        for (List<Integer> i : res) {
+            resStr.add(Integer.toString(i.get(0) + 1) + ":" + Integer.toString(i.get(1) + 1) + ":" + i.get(2));
         }
         return resStr;
 
@@ -118,5 +133,11 @@ public class SynchroTableImpl extends Base implements SynchroTable {
 
     private Integer getNum(String className) {
         return Integer.parseInt(className.substring(0, 1));
+    }
+
+    public static void main(String[] args) {
+        SynchroTableImpl stl = new SynchroTableImpl();
+        List res = stl.convertDateDesc("0-4,1-4,");
+        System.out.println(res);
     }
 }
