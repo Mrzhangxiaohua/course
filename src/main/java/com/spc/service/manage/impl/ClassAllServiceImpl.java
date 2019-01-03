@@ -14,6 +14,8 @@ import com.spc.service.wsdl.classroom.ClassroomOccupy;
 import com.spc.service.wsdl.teacher.KzJskb;
 import com.spc.service.wsdl.teacher.TeacherOccupy;
 import org.apache.commons.collections4.map.HashedMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +30,9 @@ import java.util.Map;
  * @date 2018-12-25
  */
 @Service
-public class ClassAllServiceImpl extends Base implements ClassAllService {
+public class ClassAllServiceImpl implements ClassAllService {
 
+    public  final Logger logger = LoggerFactory.getLogger(ClassAll.class);
     /**
      * 每学期共16周
      */
@@ -622,12 +625,15 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             res.put("msg", "数据删除异常，请重试！");
         }
 
+        logger.info("count: " + count);
         if (count > 1) {
+            logger.info("del");
             // TODO CHECK
 //            synchroTableService.removeRecord(id);
         } else {
+            logger.info("clear");
             clearUnusedField(classAll);
-//            synchroTableService.updateRecord(classAll);
+            synchroTableService.updateRecord(classAll);
         }
         return res;
     }

@@ -43,7 +43,7 @@ public class GetUndergradFreeClassroomInfo extends Base {
     public static void main(String[] args) {
         GetUndergradFreeClassroomInfo getUndergradFreeClassroomInfo = new GetUndergradFreeClassroomInfo();
 
-        SpareClassRoom classRoom1 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019-2", "0001110000000000", 1, 1, 2);
+        SpareClassRoom classRoom1 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019-2", "01111100000000000000000000", 7, 1, 2);
         SpareClassRoom classRoom2 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019-1", "0000000001000000", 3, 1, 1);
         SpareClassRoom[] classRooms = {classRoom1};
 

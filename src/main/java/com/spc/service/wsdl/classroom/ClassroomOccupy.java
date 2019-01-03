@@ -102,7 +102,7 @@ public class ClassroomOccupy {
         ClassRoomUsed classRoomUsed = new ClassRoomUsed();
 
         classRoomUsed.setXNXQDM(xnxqdm);
-        classRoomUsed.setXNXQDM(xxxqdm);
+        classRoomUsed.setXXXQDM(xxxqdm);
         classRoomUsed.setZYLXDM("10");
         classRoomUsed.setZC(this.ksjszcm(ksz, jsz, dsz));
         classRoomUsed.setXQ(xq);
