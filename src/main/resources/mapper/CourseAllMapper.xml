@@ -22,4 +22,22 @@
     </select>
 
 
+    <select id="selectCourseAllWithParams" resultType="com.spc.model.CourseAll">
+        select
+        <include refid="Base_Column_List" />
+        from CourseAll
+        <where>
+            <if test="academicYear != null and academicYear !=''">
+                and academicYear = #{academicYear}
+            </if>
+            <if test="classSemester != null and classSemester !=''">
+                and classSemester = #{classSemester}
+            </if>
+            <if test="courseId != null and courseId !=''">
+                and courseId = #{courseId}
+            </if>
+        </where>
+        limit 1
+    </select>
+
 </mapper>

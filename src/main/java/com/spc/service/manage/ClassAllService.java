@@ -18,6 +18,7 @@ public interface ClassAllService {
     List<ClassAll> getClassAll(Integer departId,
                                String academicYear,
                                String classSemester,
+                               String courseId,
                                String courseName,
                                String teacherId,
                                String teacherName,

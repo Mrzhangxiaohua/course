@@ -22,6 +22,9 @@
             <if test="classPlaceId != null and classPlaceId !=''">
                 and classPlaceId = #{classPlaceId}
             </if>
+            <if test="courseId != null and courseId !=''">
+                and courseId = #{courseId}
+            </if>
             <if test="courseName != null and courseName !=''">
                 <bind name="pattern" value="'%'+ courseName +'%'"/>
                 and (courseNameCHS like #{pattern} or courseNameEN like #{pattern})
@@ -50,6 +53,9 @@
             <if test="classPlaceId != null and classPlaceId !=''">
                 and classPlaceId = #{classPlaceId}
             </if>
+            <if test="scheduled != null">
+                and scheduled = #{scheduled}
+            </if>
             <if test="id != null">
                 and id != #{id}
             </if>
@@ -61,7 +67,7 @@
       values(#{departId},#{courseId},#{courseNameCHS},null,#{classModuleNum},null,null,#{classTime},null,#{teaId},#{teaName},#{className})
     </insert>
 
-    <select id="countClassAllByClassName" resultType="java.lang.Integer" useCache="false">
+    <select id="countClassAllByClassNameExcludeId" resultType="java.lang.Integer" useCache="false">
         select count(id) from ClassAll
         <where>
             <if test="academicYear != null and academicYear !=''">
@@ -78,6 +84,9 @@
             </if>
             <if test="className != null and className !=''">
                 and className = #{className}
+            </if>
+            <if test="id != null">
+                and id != #{id}
             </if>
         </where>
     </select>
@@ -135,7 +144,7 @@
         update ClassAll
         <set>
             schoolDistrictId = null,
-            className = null,
+            className = '1班',
             instructorId = null,
             instructorName = null,
             startWeek = null,

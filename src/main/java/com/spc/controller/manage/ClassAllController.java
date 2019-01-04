@@ -8,8 +8,11 @@ import com.spc.model.ClassroomInfo;
 import com.spc.model.IceSelectDataSource;
 import com.spc.model.TeacherInfo;
 import com.spc.service.manage.*;
+import com.spc.service.wsdl.GetUndergradFreeClassrooms.GetUndergradFreeClassroomInfo;
+import com.spc.service.wsdl.TeachersOccupyTimeWebservice.TeacherCurriculumInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +35,9 @@ public class ClassAllController extends Base {
     private ClassAllService classAllService;
 
     @Autowired
+    private CourseAllService courseAllService;
+
+    @Autowired
     private SchoolDistrictService schoolDistrictService;
 
     @Autowired
@@ -42,6 +48,12 @@ public class ClassAllController extends Base {
 
     @Autowired
     private ClassroomInfoService classroomInfoService;
+
+    @Autowired
+    private TeacherCurriculumInfo teacherCurriculumInfoService;
+
+    @Autowired
+    private GetUndergradFreeClassroomInfo freeClassroomService;
 
     /**
      * 获取课程列表
@@ -60,6 +72,7 @@ public class ClassAllController extends Base {
                                            @RequestParam(required = false, defaultValue = "10") int pageSize,
                                            @RequestParam(required = false) String academicYear,
                                            @RequestParam(required = false) String classSemester,
+                                           @RequestParam(required = false) String courseId,
                                            @RequestParam(required = false) String courseName,
                                            @RequestParam(required = false) String teacherId,
                                            @RequestParam(required = false) String teacherName,
@@ -75,8 +88,8 @@ public class ClassAllController extends Base {
 //        int departId = 8;
 
         PageHelper.startPage(currentPage, pageSize);
-        List<ClassAll> courses = classAllService.getClassAll(departId, academicYear, classSemester, courseName,
-                teacherId, teacherName, classPlaceId);
+        List<ClassAll> courses = classAllService.getClassAll(departId, academicYear, classSemester, courseId,
+                courseName, teacherId, teacherName, classPlaceId);
 
         Map<String, Object> res = new HashMap<>();
         res.put("status", "SUCCESS");
@@ -111,6 +124,21 @@ public class ClassAllController extends Base {
     @ResponseBody
     public List<IceSelectDataSource> getSchoolDistricts() {
         return schoolDistrictService.getAllSchoolDistricts();
+    }
+
+
+    /**
+     * 获取某门课程的授课老师
+     *
+     * @param courseId
+     * @param academicYear
+     * @param classSemester
+     * @return
+     */
+    @RequestMapping("/getTeachersByCourse")
+    @ResponseBody
+    public List<TeacherInfo> getTeachersByCourse(String courseId, String academicYear, String classSemester) {
+        return courseAllService.getTeachersByCourse(courseId, academicYear, classSemester);
     }
 
     /**
@@ -241,5 +269,24 @@ public class ClassAllController extends Base {
             return null;
         }
         return Integer.parseInt(departIdObject.toString());
+    }
+
+    @RequestMapping("/getTeacherOccupyTime")
+    @ResponseBody
+    public boolean[][] getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        String operatorId = httpSession.getAttribute("userId").toString();
+        String operatorName = httpSession.getAttribute("username").toString();
+        return teacherCurriculumInfoService.getTeacherOccupyTime(teacherId, academicYear, classSemester, startWeek, endWeek, operatorId, operatorName);
+    }
+
+    @RequestMapping("/getFreeClassrooms")
+    @ResponseBody
+    public String[] getFreeClassrooms(String academicYear, String classSemester, int startWeek, int endWeek, String classDateDesc, HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        String operatorId = httpSession.getAttribute("userId").toString();
+        String operatorName = httpSession.getAttribute("username").toString();
+
+        return freeClassroomService.getAllFreeClassrooms(academicYear, classSemester, startWeek, endWeek, classDateDesc, operatorId, operatorName);
     }
 }

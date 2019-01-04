@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class SynchroTableImpl extends Base implements SynchroTable {
@@ -35,21 +37,27 @@ public class SynchroTableImpl extends Base implements SynchroTable {
         classDomain.setClassAllId(classAll.getId());
         classDomain.setClassName(courseAll.getCourseNameCHS());
 
-        classDomain.setClassNum(getNum(classAll.getClassName()));
+        if (classAll.getClassName() != null && !classAll.getClassName().isEmpty()) {
+            classDomain.setClassNum(getNum(classAll.getClassName()));
+        }
 
         classDomain.setTeaId(courseAll.getTeacherId());
         classDomain.setTeaName(courseAll.getTeacherName());
         classDomain.setClassGradePoint(0);
-        logger.info("run 1");
+
+//        logger.info("run 1");
         classDomain.setClassChooseNum(classAll.getStuChooseNum());
-        logger.info("run 2");
+//        logger.info("run 2");
         classDomain.setClassUpperLimit(courseAll.getStuNumUpperLimit());
-        logger.info("run 3");
-        classDomain.setClassDateDescription((convertDateDesc(classAll.getClassDateDesc())).get(0));
-        logger.info("run 4");
+//        logger.info("run 3");
+
+        if (classAll.getClassDateDesc() != null && !classAll.getClassDateDesc().isEmpty()) {
+            classDomain.setClassDateDescription((convertDateDesc(classAll.getClassDateDesc())).get(0));
+        }
+//        logger.info("run 4");
         classDomain.setClassPlace(classAll.getClassPlaceName());
         classDomain.setClassLength(0);
-        logger.info("run 5");
+//        logger.info("run 5");
         classDomain.setClassModuleNum(getMI(courseAll.getModuleId()));
         classDomain.setDepartId(courseAll.getDepartId());
         classDomain.setStartWeek(classAll.getStartWeek());
@@ -103,18 +111,18 @@ public class SynchroTableImpl extends Base implements SynchroTable {
         List<List<Integer>> res = new ArrayList<>();
         for (Integer[] ints : descInts) {
             if (res.isEmpty()) {
-                List<Integer> temp=new ArrayList(Arrays.asList(ints));//**须定义时就进行转化**
-                temp.add(2,1);
+                List<Integer> temp = new ArrayList(Arrays.asList(ints));//**须定义时就进行转化**
+                temp.add(2, 1);
 //                ints[2] = 0;
                 res.add(temp);
             }
             for (List<Integer> ints2 : res) {
                 if (ints2.get(0) == ints[0] & (ints2.get(1) == (ints[1] - 1))) {
 //                    ints2.get(2) = ints2.get(2) + 1;
-                    ints2.set(2,ints2.get(2) + 1);
+                    ints2.set(2, ints2.get(2) + 1);
                 } else if (ints2.get(0) == ints[0] & (ints2.get(1) == (ints[1] + 1))) {
-                    ints2.set(1,ints2.get(1) - 1);
-                    ints2.set(2,ints2.get(2) + 1);
+                    ints2.set(1, ints2.get(1) - 1);
+                    ints2.set(2, ints2.get(2) + 1);
                 }
             }
         }
@@ -132,7 +140,10 @@ public class SynchroTableImpl extends Base implements SynchroTable {
     }
 
     private Integer getNum(String className) {
-        return Integer.parseInt(className.substring(0, 1));
+        String pattern = "[0-9]*";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(className);
+        return Integer.parseInt(m.group(0));
     }
 
     public static void main(String[] args) {

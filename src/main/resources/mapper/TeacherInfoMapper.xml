@@ -17,4 +17,15 @@
         order by YXSH, JSBH asc
     </select>
 
+    <!--List:forech中的collection属性类型是List,collection的值必须是:list,item的值可以随意,Dao接口中参数名字随意 -->
+    <select id="selectByTeacherIds" resultType="com.spc.model.TeacherInfo">
+        select *
+        from course.TeacherInfo
+        where JSBH in
+        <foreach collection="list" item="JSBH" index="index"
+                 open="(" close=")" separator=",">
+            #{JSBH}
+        </foreach>
+    </select>
+
 </mapper>

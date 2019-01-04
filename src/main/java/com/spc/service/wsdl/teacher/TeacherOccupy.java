@@ -1,5 +1,8 @@
 package com.spc.service.wsdl.teacher;
 
+import com.spc.service.wsdl.util.WebServiceUtil;
+import com.spc.util.LoggerUtil;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,43 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeacherOccupy {
 
-    /**
-     * dsz 0 连续周 1 单周 2 双周
-     *
-     * @param ksz
-     * @param jsz
-     * @param dsz
-     * @return
-     */
-    private String ksjszcm(Integer ksz, Integer jsz, String dsz) {
-        if (ksz == null || jsz == null || dsz == null) {
-            return null;
-        }
-
-        String zc = "";
-        for (int i = 1; i <= 26; i++) {
-            if (dsz.equals("0")) {
-                if (i >= ksz && i <= jsz) {
-                    zc += "1";
-                } else {
-                    zc += "0";
-                }
-            } else if (dsz.equals("1")) {
-                if (i >= ksz && i <= jsz && i % 2 == 1) {
-                    zc += "1";
-                } else {
-                    zc += "0";
-                }
-            } else if (dsz.equals("2")) {
-                if (i >= ksz && i <= jsz && i % 2 == 0) {
-                    zc += "1";
-                } else {
-                    zc += "0";
-                }
-            }
-        }
-        return zc;
-    }
+    private Logger logger = LoggerUtil.getLogger(this.getClass());
 
     /**
      * 老师占用
@@ -73,11 +40,17 @@ public class TeacherOccupy {
         return flag;
     }
 
-    public KzJskb createKzJskb(String xnxqdm, String xxxqdm, Integer ksz, Integer jsz, String dsz, Integer xq, Integer ksjc, Integer jsjc, String jsbh, String jxbid, String kbid) {
+    public KzJskb createKzJskb(String academicYear, String classSemester, String xxxqdm, Integer ksz, Integer jsz, Integer xq, Integer ksjc, Integer jsjc, String jsbh, String jxbid, String kbid) {
+        if (academicYear == null || classSemester == null || academicYear.isEmpty() || classSemester.isEmpty()) {
+            return null;
+        }
+
         KzJskb kzJskb = new KzJskb();
-        kzJskb.setXNXQDM(xnxqdm);
+        kzJskb.setXNXQDM(WebServiceUtil.getXNXQDM(academicYear, classSemester));
         kzJskb.setXXXQDM(xxxqdm);
-        kzJskb.setSKZC(this.ksjszcm(ksz, jsz, dsz));
+        if (ksz != null && jsz != null) {
+            kzJskb.setSKZC(WebServiceUtil.getZC(ksz, jsz));
+        }
         kzJskb.setSKXQ(xq);
         kzJskb.setKSJC(ksjc);
         kzJskb.setJSJC(jsjc);
@@ -95,6 +68,10 @@ public class TeacherOccupy {
      * 接口名称：deleteTeacherOccupyTime
      */
     public int deleteTeacherOccupyTime(KzJskb kzJskb, String pkrid, String pkrname) {
+        if (kzJskb == null) {
+            logger.info("deleteTeacherOccupyTime: kzJskb is null!");
+            return 0;
+        }
         int flag = 0;
         OperateResult operateResult;
         UserInfo userInfo = new UserInfo();
@@ -118,7 +95,7 @@ public class TeacherOccupy {
 //        int flag = teacherOccupy.addTeacherOccupyTime(ksJskb, "3118105316", "张发");
 //        System.out.println(flag);
 
-        KzJskb kzJskb = teacherOccupy.createKzJskb("2018-2019-2", "1", null, null, null, null, null, null, "0000000745", "1425", "1425");
+        KzJskb kzJskb = teacherOccupy.createKzJskb("2018-2019", "春季", "1", null, null, null, null, null, "0000000745", "1425", "1425");
         int flag2 = teacherOccupy.deleteTeacherOccupyTime(kzJskb, "3118105316", "张发");
         System.out.println(flag2);
     }

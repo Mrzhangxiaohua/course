@@ -1,5 +1,6 @@
 package com.spc.service.wsdl.classroom;
 
+import com.spc.service.wsdl.util.WebServiceUtil;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,43 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClassroomOccupy {
 
-    /**
-     * dsz 0 连续周 1 单周 2 双周
-     *
-     * @param ksz
-     * @param jsz
-     * @param dsz
-     * @return
-     */
-    private String ksjszcm(Integer ksz, Integer jsz, String dsz) {
-        if (ksz == null || jsz == null || dsz == null) {
-            return null;
-        }
-
-        String zc = "";
-        for (int i = 1; i <= 26; i++) {
-            if (dsz.equals("0")) {
-                if (i >= ksz && i <= jsz) {
-                    zc += "1";
-                } else {
-                    zc += "0";
-                }
-            } else if (dsz.equals("1")) {
-                if (i >= ksz && i <= jsz && i % 2 == 1) {
-                    zc += "1";
-                } else {
-                    zc += "0";
-                }
-            } else if (dsz.equals("2")) {
-                if (i >= ksz && i <= jsz && i % 2 == 0) {
-                    zc += "1";
-                } else {
-                    zc += "0";
-                }
-            }
-        }
-        return zc;
-    }
 
     /**
      * 占用教室
@@ -98,13 +62,13 @@ public class ClassroomOccupy {
         return flag;
     }
 
-    public ClassRoomUsed createClassRoomUsed(String xnxqdm, String xxxqdm, Integer ksz, Integer jsz, String dsz, int xq, int ksjc, int jsjc, String jasdm, String jxbid, String kbid) {
+    public ClassRoomUsed createClassRoomUsed(String academicYear, String classSemester, String xxxqdm, Integer ksz, Integer jsz, int xq, int ksjc, int jsjc, String jasdm, String jxbid, String kbid) {
         ClassRoomUsed classRoomUsed = new ClassRoomUsed();
 
-        classRoomUsed.setXNXQDM(xnxqdm);
+        classRoomUsed.setXNXQDM(WebServiceUtil.getXNXQDM(academicYear, classSemester));
         classRoomUsed.setXXXQDM(xxxqdm);
         classRoomUsed.setZYLXDM("10");
-        classRoomUsed.setZC(this.ksjszcm(ksz, jsz, dsz));
+        classRoomUsed.setZC(WebServiceUtil.getZC(ksz, jsz));
         classRoomUsed.setXQ(xq);
         classRoomUsed.setKSJC(ksjc);
         classRoomUsed.setJSJC(jsjc);
@@ -119,8 +83,8 @@ public class ClassroomOccupy {
 
         ClassroomOccupy classroomOccupy = new ClassroomOccupy();
 
-        ClassRoomUsed classRoomUsed = classroomOccupy.createClassRoomUsed("2018-2019-2", "1",
-                1, 8, "0", 1, 1,2,"2040207", "1425","1425");
+        ClassRoomUsed classRoomUsed = classroomOccupy.createClassRoomUsed("2018-2019","春季", null,
+                1, 8, 7, 1,2,"3001465", "1484","1484");
 
         ClassRoomUsed[] classRoomUseds = {classRoomUsed};
 //        int flag = classroomOccupy.addUsedClassroom(classRoomUseds, "3118105316", "张发");

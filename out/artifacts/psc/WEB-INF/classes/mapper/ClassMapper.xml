@@ -32,6 +32,13 @@
         from course.Course
         where classId = #{classId}
     </select>
+    <select id="kaiKe" resultType="map">
+        select
+        <include refid="BASE_COLUMN"/>
+        from course.Course
+        where departId = #{departId}
+    </select>
+
 
     <insert id="insert" parameterType="com.spc.model.ClassDomain">
         insert into
@@ -111,6 +118,13 @@
         where classId = #{classId}
         order by className, classNum asc
     </select>
+
+    <select id="findCourseByIdForUpdate" resultType="com.spc.model.ClassDomain">
+        select *
+        from course.Course
+        where classId = #{classId} for update
+    </select>
+
 
 
     <select id="findAllClasseSimpleMess" resultType="map">

@@ -14,4 +14,8 @@ public interface CourseAllDao {
                      @Param("courseId") String courseId);
 
     CourseAll selectCourseAll(@Param("courseId") String courseId);
+
+    CourseAll selectCourseAllWithParams(@Param("courseId") String courseId,
+                                        @Param("academicYear") String academicYear,
+                                        @Param("classSemester") String classSemester);
 }
