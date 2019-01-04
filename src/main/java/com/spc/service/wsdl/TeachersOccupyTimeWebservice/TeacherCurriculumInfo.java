@@ -1,6 +1,7 @@
 package com.spc.service.wsdl.TeachersOccupyTimeWebservice;
 
 import com.spc.controller.Base;
+import com.spc.service.wsdl.util.WebServiceUtil;
 import org.springframework.stereotype.Service;
 
 import javax.xml.rpc.ServiceException;
@@ -15,19 +16,30 @@ import java.util.Map;
  */
 @Service
 public class TeacherCurriculumInfo extends Base {
+
+    /**
+     * 每天一共13个学时
+     */
+    private static final int CLASS_HOURS_PER_DAY = 13;
+    /**
+     * 每周一共7天
+     */
+    private static final int CLASS_DAYS_PER_WEEK = 7;
+
     /**
      * 本段代码获取教师授课信息，上课周次，节次，星期
      *
      * @param userId   查询者的userId
      * @param userName 查询者的userName
-     * @param teaId    被查询者（教师）的teaId
-     * @param xnxqdm   查询课程的时间段,学年学期代码（2018秋就是2018-2019-1 2019春就是2018-2019-2）
+     * @param teacherId    被查询者（教师）的teaId
+     * @param academicYear 学年
+     * @param classSemester 开课季节，查询课程的时间段由学年和学期确定，学年学期代码（2018秋就是2018-2019-1 2019春就是2018-2019-2）
      * @return 返回一个list, 里面map放的每个课程的信息,
      * skxq: 周几有课    ksjc: 课程开始节次    jsjc: 课程结束节次       ksz:课程开始周       jsz:课程结束周
      * 如:
      * skxq:1         ksjc:5                jsjc:6                  ksz:9                jsz:13
      */
-    public List<TeacherOccupyTime> queryTeacherOccupyTime(String userId, String userName, String teaId, String xnxqdm) {
+    public List<TeacherOccupyTime> queryTeacherOccupyTime(String userId, String userName, String teacherId, String academicYear, String classSemester) {
         KzJskbResult kzJskbResult = new KzJskbResult();
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(userId);
@@ -37,8 +49,8 @@ public class TeacherCurriculumInfo extends Base {
 
         try {
             KzJskb kzJskb = new KzJskb();
-            kzJskb.setJSH(teaId);
-            kzJskb.setXNXQDM(xnxqdm);
+            kzJskb.setJSH(teacherId);
+            kzJskb.setXNXQDM(WebServiceUtil.getXNXQDM(academicYear, classSemester));
             PkCentrePkzyQueryLocator locator = new PkCentrePkzyQueryLocator();
             PkCentrePkzyQueryPortSoapBindingStub stub = null;
             try {
@@ -73,7 +85,7 @@ public class TeacherCurriculumInfo extends Base {
                 // 返回周次，000000001000000000000000000000，表示在第九周有一节课
                 String skzc = kzJskbs[i].getSKZC();
 
-                res.add(new TeacherOccupyTime(skzc, skxq - 1, ksjc - 1, jsjc - 1));
+                res.add(new TeacherOccupyTime(skzc, skxq - 1, getClassHourIndex(ksjc), getClassHourIndex(jsjc)));
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -82,11 +94,54 @@ public class TeacherCurriculumInfo extends Base {
         return res;
     }
 
+    /**
+     * 获取老师的占用时间表，true表示占用
+     * @param teacherId
+     * @param academicYear
+     * @param classSemester
+     * @param startWeek
+     * @param endWeek
+     * @param operatorId
+     * @param operatorName
+     * @return
+     */
+    public boolean[][] getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String operatorId, String operatorName) {
+        List<TeacherOccupyTime> teacherOccupyTimes = this.queryTeacherOccupyTime(operatorId, operatorName, teacherId, academicYear,classSemester);
+        boolean[][] res = new boolean[CLASS_HOURS_PER_DAY][CLASS_DAYS_PER_WEEK];
+        for (TeacherOccupyTime teacherOccupyTime : teacherOccupyTimes) {
+            logger.info(teacherOccupyTime.toString());
+            if (teacherOccupyTime.getWeeks().substring(startWeek - 1, endWeek).contains("1")) {
+                for (int i = teacherOccupyTime.getHourStartIndex(); i <= teacherOccupyTime.getHourEndIndex(); i++) {
+                    res[i][teacherOccupyTime.getDayIndex()] = true;
+                }
+            }
+        }
+        return res;
+    }
+
+    private int getClassHourIndex(int classHour) {
+        if (classHour <= 4) {
+            return classHour -1;
+        }
+        if (classHour <= 11) {
+            return classHour + 1;
+        }
+        return classHour - 17;
+    }
+
     public static void main(String[] args) {
         TeacherCurriculumInfo aClass = new TeacherCurriculumInfo();
-        List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0000001347", "2018-2019-2");
-        for (TeacherOccupyTime teacherOccupyTime: res) {
+        List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0002001021", "2018-2019", "春季");
+        boolean[][] occupyTimes = aClass.getTeacherOccupyTime("0002001021", "2018-2019", "春季", 1, 8, "3118105316", "张发");
+        for (TeacherOccupyTime teacherOccupyTime : res) {
             System.out.println(teacherOccupyTime);
         }
+        for (int i = 0; i < CLASS_HOURS_PER_DAY; i++) {
+            for (int j = 0; j < CLASS_DAYS_PER_WEEK; j++) {
+                System.out.print(occupyTimes[i][j] + "\t");
+            }
+            System.out.println();
+        }
+
     }
 }

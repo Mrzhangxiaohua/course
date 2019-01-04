@@ -6,7 +6,7 @@
     <select id="selectAll" resultType="com.spc.model.ClassroomInfo" useCache="true">
         select JASDM, JASMC, SKZWS, JXLMC, MC  from course.ClassroomInfo
         <where>
-            SFYXPK = 1
+            SFSY = '是'
             <if test="schoolDistrictId != null and schoolDistrictId !=''">
                 and XXXQDM = #{schoolDistrictId}
             </if>

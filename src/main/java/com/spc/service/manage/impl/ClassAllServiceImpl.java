@@ -17,6 +17,7 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -31,13 +32,9 @@ import java.util.Map;
 public class ClassAllServiceImpl extends Base implements ClassAllService {
 
     /**
-     * 每学期共16周
+     * 每天一共13个学时, 4+2+4+3
      */
-    private static final int WEEKS_PER_SEMESTER = 16;
-    /**
-     * 每天一共12个学时
-     */
-    private static final int CLASS_HOURS_PER_DAY = 12;
+    private static final int CLASS_HOURS_PER_DAY = 13;
     /**
      * 每周一共7天
      */
@@ -58,7 +55,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     private TeacherCurriculumInfo teacherCurriculumInfoService;
 
     @Autowired
-    private GetUndergradFreeClassroomInfo undergradFreeClassroomInfoService;
+    private GetUndergradFreeClassroomInfo freeClassroomService;
 
     @Autowired
     private ClassroomOccupy classroomOccupyService;
@@ -70,16 +67,16 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     private SynchroTable synchroTableService;
 
     @Override
-    public List<ClassAll> getClassAll(Integer departId, String academicYear, String classSemester, String courseName,
-                                      String teacherId, String teacherName, String classPlaceId) {
-        return classAllDao.selectClassAll(departId, academicYear, classSemester, courseName, teacherId, teacherName, classPlaceId);
+    public List<ClassAll> getClassAll(Integer departId, String academicYear, String classSemester, String courseId,
+                                      String courseName, String teacherId, String teacherName, String classPlaceId) {
+        return classAllDao.selectClassAll(departId, academicYear, classSemester, courseId, courseName, teacherId, teacherName, classPlaceId);
     }
 
 
     @Override
     public String[][] getTeacherTimetable(String teacherId, String academicYear, String classSemester) {
         List<ClassAll> classes = classAllDao.selectClassAll(null, academicYear, classSemester, null,
-                teacherId, null, null);
+                null, teacherId, null, null);
         return constructTimetable(classes);
     }
 
@@ -125,9 +122,8 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 }
                 sb.append("\n教室：").append(c.getClassPlaceName());
                 sb.append("\n授课教师：").append(c.getInstructorName());
-                sb.append("\n上课地点：").append(c.getClassPlaceName());
                 sb.append("\n周次：").append(c.getStartWeek()).append("-").append(c.getEndWeek());
-                sb.append("\n班次：").append(c.getClassName());
+                sb.append("\n班级：").append(c.getClassName());
                 timetable[i][j] = timetable[i][j] == null ? sb.toString() : timetable[i][j] + "\n\n" + sb.toString();
             }
         }
@@ -137,15 +133,13 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
 
     @Transactional
     @Override
-    public Map<String, String> scheduleClass(ClassAll classAll) {
+    public Map<String, String> scheduleClass(ClassAll c) {
         Map<String, String> res = new HashedMap<>();
         StringBuilder msgBuilder = new StringBuilder();
         StringBuilder conflictDescBuilder = new StringBuilder();
 
-        // 学年学期代码，用于wsdl调用
-        String xnxqdm = classAll.getAcademicYear() + "-" + (classAll.getClassSemester().contains("春") ? 2 : 1);
         // 上课时间
-        String[] classDates = classAll.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
+        String[] classDates = c.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
         int[] rows = new int[classDates.length];
         int[] cols = new int[classDates.length];
         boolean[][] timetableTFT = new boolean[CLASS_HOURS_PER_DAY][CLASS_DAYS_PER_WEEK];
@@ -157,59 +151,64 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             cols[i] = colIndex;
             timetableTFT[rowIndex][colIndex] = true;
         }
-        if (checkClassName(classAll, res, msgBuilder)) {
+
+        // 1. 校验班级名称冲突
+        if (checkClassName(c, res, msgBuilder)) {
             return res;
         }
 
         // 2. 校验老师时间冲突
-        String[] instructorIds = classAll.getInstructorId().split(ARRAY_SPLIT_CHAR);
-        String[] instructorNames = classAll.getInstructorName().split(ARRAY_SPLIT_CHAR);
+        String[] instructorIds = c.getInstructorId().split(ARRAY_SPLIT_CHAR);
+        String[] instructorNames = c.getInstructorName().split(ARRAY_SPLIT_CHAR);
 
         // 2.1 校验已排课程时间冲突
-        if (checkGraduateCourseTime(classAll, res, msgBuilder, conflictDescBuilder, timetableTFT, instructorIds)) {
+        if (checkGraduateCourseTime(c, res, msgBuilder, conflictDescBuilder, timetableTFT, instructorIds, instructorNames)) {
             return res;
         }
 
         // 2.2 校验本科时间冲突
-        if (checkUndergraduateCourseTime(classAll, res, msgBuilder, conflictDescBuilder, xnxqdm, timetableTFT, instructorIds, instructorNames)) {
+        if (checkUndergraduateCourseTime(c, res, msgBuilder, conflictDescBuilder, timetableTFT, instructorIds, instructorNames)) {
             return res;
         }
 
         // 3. 校验上课地点冲突
 
         // 3.1 校验已排课程地点的冲突
-        if (checkGraduateCoursePlace(classAll, res, msgBuilder, conflictDescBuilder, timetableTFT)) {
+        if (checkGraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, timetableTFT)) {
             return res;
         }
 
         // 3.2 校验本科课程地点的冲突
-        if (checkUndergraduateCoursePlace(classAll, res, msgBuilder, conflictDescBuilder, xnxqdm, classDates, rows, cols)) {
+        if (checkUndergraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, rows, cols)) {
             return res;
         }
 
-        classAll.setConflictDesc(conflictDescBuilder.toString());
-        classAll.setScheduled(1);
+        c.setConflictDesc(conflictDescBuilder.toString());
+        c.setScheduled(1);
 
         // 如果没有冲突，则保存对应的记录
-        if (classAll.getId() != null) {
+        if (c.getId() != null) {
+            ClassAll oldClass = classAllDao.selectClassAllById(c.getId());
             // 清空原有占用信息
-            boolean freeFlag = freeClassroomAndTeacher(classAllDao.selectClassAllById(classAll.getId()), res);
+            boolean freeFlag = freeClassroomAndTeacher(oldClass, res);
             // 修改记录
-            int count = classAllDao.updateClass(classAll);
+            int count = classAllDao.updateClass(c);
             // TODO CHECK
-            synchroTableService.updateRecord(classAll);
+//            synchroTableService.updateRecord(c);
 
-            logger.info("updateClass: " + classAll.toString());
+            logger.info("updateClass: " + c.toString());
             if (!freeFlag) {
+                // 恢复更新前的记录
+                classAllDao.updateClass(oldClass);
                 return res;
             }
             // 先占用本科教务系统的老师、地点的相应时间
             // 1. 地点占用
-            if (useClassroom(classAll, res, xnxqdm, classDates, rows, cols, false)) {
+            if (useClassroom(c, res, rows, cols, false)) {
                 return res;
             }
             // 2. 老师占用
-            if (useTeacherTime(classAll, res, xnxqdm, classDates, rows, cols, instructorIds, false)) {
+            if (useTeacherTime(c, res, rows, cols, instructorIds, false)) {
                 return res;
             }
 
@@ -222,19 +221,19 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             }
         } else {
             // 新增记录
-            int count = classAllDao.insertClass(classAll);
+            int count = classAllDao.insertClass(c);
             // TODO CHECK
-            synchroTableService.insertRecord(classAll);
+//            synchroTableService.insertRecord(c);
 
-            logger.info("insertClass: " + classAll.toString());
+            logger.info("insertClass: " + c.toString());
             if (count > 0) {
                 // 先占用本科教务系统的老师、地点的相应时间
                 // 1. 地点占用
-                if (useClassroom(classAll, res, xnxqdm, classDates, rows, cols, true)) {
+                if (useClassroom(c, res, rows, cols, true)) {
                     return res;
                 }
                 // 2. 老师占用
-                if (useTeacherTime(classAll, res, xnxqdm, classDates, rows, cols, instructorIds, true)) {
+                if (useTeacherTime(c, res, rows, cols, instructorIds, true)) {
                     return res;
                 }
 
@@ -248,15 +247,16 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         return res;
     }
 
-    private boolean useTeacherTime(ClassAll classAll, Map<String, String> res, String xnxqdm, String[] classDates, int[] rows, int[] cols, String[] instructorIds, boolean del) {
-        for (int i = 0; i < classDates.length; i++) {
+    private boolean useTeacherTime(ClassAll classAll, Map<String, String> res, int[] rows, int[] cols, String[] instructorIds, boolean del) {
+        for (int i = 0; i < rows.length; i++) {
             int rowIndex = rows[i];
             int colIndex = cols[i];
 
             for (int j = 0; j < instructorIds.length; j++) {
-                KzJskb kzJskb = teacherOccupyService.createKzJskb(xnxqdm, classAll.getSchoolDistrictId().toString(), classAll.getStartWeek(),
-                        classAll.getEndWeek(), "0", colIndex + 1, rowIndex + 1, rowIndex + 1,
-                        instructorIds[j], classAll.getId().toString(), classAll.getId().toString());
+                int classHour = getClassHour(rowIndex);
+                KzJskb kzJskb = teacherOccupyService.createKzJskb(classAll.getAcademicYear(), classAll.getClassSemester(),
+                        classAll.getSchoolDistrictId().toString(), classAll.getStartWeek(), classAll.getEndWeek(),
+                        colIndex + 1, classHour, classHour, instructorIds[j], classAll.getId().toString(), classAll.getId().toString());
                 int flag = teacherOccupyService.addTeacherOccupyTime(kzJskb, classAll.getOperatorId(), classAll.getOperatorName());
                 logger.info("=== addTeacherOccupyTime: " + kzJskb.toString() + "\n=== flag: " + flag);
 
@@ -265,11 +265,12 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                     // 回滚之前的老师占用记录
                     int iMax = i;
                     int jMax = j;
-                    for (i = 0; i < classDates.length; i++) {
+                    for (i = 0; i < rows.length; i++) {
                         for (j = 0; j < instructorIds.length; j++) {
                             rowIndex = rows[j];
                             colIndex = cols[j];
-                            kzJskb = teacherOccupyService.createKzJskb(xnxqdm, null, null, null, null, null, null, null,
+                            kzJskb = teacherOccupyService.createKzJskb(classAll.getAcademicYear(), classAll.getClassSemester(),
+                                    null, null, null, null, null, null,
                                     instructorIds[j], classAll.getId().toString(), classAll.getId().toString());
                             flag = teacherOccupyService.deleteTeacherOccupyTime(kzJskb, classAll.getOperatorId(), classAll.getOperatorName());
                             logger.info("=== deleteTeacherOccupyTime: " + kzJskb.toString() + "\n=== flag: " + flag);
@@ -278,12 +279,12 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                                 if (del) {
                                     classAllDao.delClassAllById(classAll.getId());
                                     // TODO CHECK
-                                    synchroTableService.removeRecord(classAll.getId());
+//                                    synchroTableService.removeRecord(classAll.getId());
                                 } else {
                                     classAllDao.clearClassAllById(classAll.getId(), classAll.getOperatorId(), classAll.getOperatorName());
                                     // TODO CHECK
                                     clearUnusedField(classAll);
-                                    synchroTableService.updateRecord(classAll);
+//                                    synchroTableService.updateRecord(classAll);
                                 }
                                 res.put("status", "error");
                                 res.put("msg", "本科教务系统异常！");
@@ -299,7 +300,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
 
     private void clearUnusedField(ClassAll classAll) {
         classAll.setScheduled(null);
-        classAll.setClassName(null);
+        classAll.setClassName("1班");
         classAll.setInstructorId(null);
         classAll.setInstructorName(null);
         classAll.setStartWeek(null);
@@ -311,14 +312,23 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         classAll.setScheduled(0);
     }
 
-    private boolean useClassroom(ClassAll classAll, Map<String, String> res, String xnxqdm, String[] classDates, int[] rows, int[] cols, boolean del) {
-        ClassRoomUsed[] classRoomUseds = new ClassRoomUsed[classDates.length];
+    /**
+     * @param classAll
+     * @param res
+     * @param rows
+     * @param cols
+     * @param del      占用失败时，是否删除刚才插入的班级记录
+     * @return
+     */
+    private boolean useClassroom(ClassAll classAll, Map<String, String> res, int[] rows, int[] cols, boolean del) {
+        ClassRoomUsed[] classRoomUseds = new ClassRoomUsed[rows.length];
         logger.info("=== useClassroom start ===");
-        for (int i = 0; i < classDates.length; i++) {
+        for (int i = 0; i < rows.length; i++) {
             int rowIndex = rows[i];
             int colIndex = cols[i];
-            ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(xnxqdm, classAll.getSchoolDistrictId().toString(),
-                    classAll.getStartWeek(), classAll.getEndWeek(), "0", colIndex + 1, rowIndex + 1, rowIndex + 1,
+            int classHour = getClassHour(rowIndex);
+            ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(classAll.getAcademicYear(), classAll.getClassSemester(),
+                    classAll.getSchoolDistrictId().toString(), classAll.getStartWeek(), classAll.getEndWeek(), colIndex + 1, classHour, classHour,
                     classAll.getClassPlaceId(), classAll.getId().toString(), classAll.getId().toString());
             classRoomUseds[i] = classRoomUsed;
             logger.info("=== addUsedClassroom: " + classRoomUsed.toString());
@@ -330,12 +340,12 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             if (del) {
                 classAllDao.delClassAllById(classAll.getId());
                 // TODO CHECK
-                synchroTableService.removeRecord(classAll.getId());
+//                synchroTableService.removeRecord(classAll.getId());
             } else {
                 classAllDao.clearClassAllById(classAll.getId(), classAll.getOperatorId(), classAll.getOperatorName());
                 // TODO CHECK
                 clearUnusedField(classAll);
-                synchroTableService.updateRecord(classAll);
+//                synchroTableService.updateRecord(classAll);
             }
             res.put("status", "error");
             res.put("msg", "本科教务系统异常！");
@@ -347,33 +357,33 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     /**
      * 校验已排课程地点冲突
      *
-     * @param classAll
+     * @param c
      * @param res
      * @param msgBuilder
      * @param conflictDescBuilder
      * @param timetableTFT
      * @return
      */
-    private boolean checkGraduateCoursePlace(ClassAll classAll, Map<String, String> res, StringBuilder msgBuilder, StringBuilder conflictDescBuilder, boolean[][] timetableTFT) {
-        List<ClassAll> classAllList = classAllDao.selectClassAllExcludeId(classAll.getAcademicYear(),
-                classAll.getClassSemester(), null, classAll.getClassPlaceId(), classAll.getId());
-        if (!classAllList.isEmpty()) {
-            for (ClassAll c : classAllList) {
+    private boolean checkGraduateCoursePlace(ClassAll c, Map<String, String> res, StringBuilder msgBuilder, StringBuilder conflictDescBuilder, boolean[][] timetableTFT) {
+        List<ClassAll> classAllList = classAllDao.selectClassAllExcludeId(c.getAcademicYear(),
+                c.getClassSemester(), null, c.getClassPlaceId(), 1, c.getId());
+        if (!CollectionUtils.isEmpty(classAllList)) {
+            for (ClassAll currentClass : classAllList) {
                 // Step1: 周次重叠判断
-                if (c.getEndWeek() < classAll.getStartWeek() || c.getStartWeek() > classAll.getEndWeek()) {
+                if (currentClass.getEndWeek() < c.getStartWeek() || currentClass.getStartWeek() > c.getEndWeek()) {
                     continue;
                 }
                 // Step2: 上课时间冲突判断
-                String[] currentClassDates = c.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
+                String[] currentClassDates = currentClass.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
                 for (int j = 0; j < currentClassDates.length; j++) {
                     String[] indexes = currentClassDates[j].split(INDEX_SPLIT_CHAR);
                     int rowIndex = Integer.parseInt(indexes[0]);
                     int colIndex = Integer.parseInt(indexes[1]);
                     if (timetableTFT[rowIndex][colIndex]) {
-                        msgBuilder.append("该上课时间与").append(c.getInstructorName()).append("老师的").
-                                append((c.getCourseNameCHS() != null ? c.getCourseNameCHS() : c.getCourseNameEN())).
-                                append(c.getClassName()).append("上课地点冲突！\n");
-                        conflictDescBuilder.append("p-").append("g").append("-").append(c.getId()).append(ARRAY_SPLIT_CHAR);
+                        msgBuilder.append("该上课时间与").append(currentClass.getInstructorName()).append("老师的").
+                                append((currentClass.getCourseNameCHS() != null ? currentClass.getCourseNameCHS() : currentClass.getCourseNameEN())).
+                                append(currentClass.getClassName()).append("上课地点冲突！\n");
+                        conflictDescBuilder.append("p-").append("g").append("-").append(currentClass.getId()).append(ARRAY_SPLIT_CHAR);
                         logger.info(msgBuilder.toString());
                         logger.info(conflictDescBuilder.toString());
                         break;
@@ -381,7 +391,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 }
             }
         }
-        if (checkMsg(classAll.getForce(), res, msgBuilder)) {
+        if (checkMsg(c.getForce(), res, msgBuilder)) {
             return true;
         }
         return false;
@@ -390,24 +400,16 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     /**
      * 校验本科上课地点的冲突
      */
-    private boolean checkUndergraduateCoursePlace(ClassAll classAll, Map<String, String> res, StringBuilder msgBuilder, StringBuilder conflictDescBuilder, String xnxqdm, String[] classDates, int[] rows, int[] cols) {
-        int[] scheduledWeeks = new int[WEEKS_PER_SEMESTER];
-        for (int i = classAll.getStartWeek() - 1; i < classAll.getEndWeek(); i++) {
-            scheduledWeeks[i] = 1;
-        }
-        StringBuilder scheduledWeeksSb = new StringBuilder();
-        for (int i = 0; i < WEEKS_PER_SEMESTER; i++) {
-            scheduledWeeksSb.append(scheduledWeeks[i]);
-        }
-        String scheduledWeeksStr = scheduledWeeksSb.toString();
+    private boolean checkUndergraduateCoursePlace(ClassAll c, Map<String, String> res, StringBuilder msgBuilder, StringBuilder conflictDescBuilder, int[] rows, int[] cols) {
 
-        SpareClassRoom[] rooms = new SpareClassRoom[classDates.length];
-        for (int i = 0; i < classDates.length; i++) {
-            SpareClassRoom room = undergradFreeClassroomInfoService.createSparseClassRoom(xnxqdm,
-                    scheduledWeeksStr, cols[i] + 1, rows[i] + 1, rows[i] + 1);
+        SpareClassRoom[] rooms = new SpareClassRoom[rows.length];
+        for (int i = 0; i < rows.length; i++) {
+            int classHour = getClassHour(rows[i]);
+            SpareClassRoom room = freeClassroomService.createSparseClassRoom(c.getAcademicYear(), c.getClassSemester(),
+                    c.getStartWeek(), c.getEndWeek(), cols[i] + 1, classHour, classHour);
             rooms[i] = room;
         }
-        String freeRoomIds = undergradFreeClassroomInfoService.getFreeClassrooms(rooms, classAll.getOperatorId(), classAll.getOperatorName());
+        String freeRoomIds = freeClassroomService.getFreeClassrooms(rooms, c.getOperatorId(), c.getOperatorName());
         if (freeRoomIds == null || freeRoomIds.isEmpty()) {
             logger.info("目前教室已全被本科课程占用，或数据存在异常，请联系管理员！");
             msgBuilder.append("目前教室已全被本科课程占用，或数据存在异常，请联系管理员！\n");
@@ -415,14 +417,14 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             logger.info(msgBuilder.toString());
             logger.info(conflictDescBuilder.toString());
 
-            if (checkMsg(classAll.getForce(), res, msgBuilder)) {
+            if (checkMsg(c.getForce(), res, msgBuilder)) {
                 return true;
             }
         } else {
             String[] freeRoomIdsArray = freeRoomIds.split(ARRAY_SPLIT_CHAR);
             boolean valid = false;
             for (int i = 0; i < freeRoomIdsArray.length; i++) {
-                if (freeRoomIdsArray[i].equals(classAll.getClassPlaceId())) {
+                if (freeRoomIdsArray[i].equals(c.getClassPlaceId())) {
                     valid = true;
                     break;
                 }
@@ -433,7 +435,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 logger.info(msgBuilder.toString());
                 logger.info(conflictDescBuilder.toString());
 
-                if (checkMsg(classAll.getForce(), res, msgBuilder)) {
+                if (checkMsg(c.getForce(), res, msgBuilder)) {
                     return true;
                 }
             }
@@ -444,7 +446,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     /**
      * 校验已排课程时间冲突
      *
-     * @param classAll
+     * @param c
      * @param res
      * @param msgBuilder
      * @param conflictDescBuilder
@@ -452,27 +454,27 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
      * @param instructorIds
      * @return
      */
-    private boolean checkGraduateCourseTime(ClassAll classAll, Map<String, String> res, StringBuilder msgBuilder, StringBuilder conflictDescBuilder, boolean[][] timetableTFT, String[] instructorIds) {
+    private boolean checkGraduateCourseTime(ClassAll c, Map<String, String> res, StringBuilder msgBuilder, StringBuilder conflictDescBuilder, boolean[][] timetableTFT, String[] instructorIds, String[] instructorNames) {
         for (int i = 0; i < instructorIds.length; i++) {
-            List<ClassAll> classAllList = classAllDao.selectClassAllExcludeId(classAll.getAcademicYear(), classAll.getClassSemester(), instructorIds[i], null, classAll.getId());
+            List<ClassAll> classAllList = classAllDao.selectClassAllExcludeId(c.getAcademicYear(), c.getClassSemester(), instructorIds[i], null, 1, c.getId());
             if (!classAllList.isEmpty()) {
-                for (ClassAll c : classAllList) {
+                for (ClassAll currentClass : classAllList) {
                     // Step1: 周次重叠判断
-                    if (c.getEndWeek() < classAll.getStartWeek() || c.getStartWeek() > classAll.getEndWeek()) {
+                    if (currentClass.getEndWeek() < c.getStartWeek() || currentClass.getStartWeek() > c.getEndWeek()) {
                         continue;
                     }
                     // Step2: 上课时间冲突判断
-                    String[] currentClassDates = c.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
+                    String[] currentClassDates = currentClass.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
                     for (int j = 0; j < currentClassDates.length; j++) {
                         String[] indexes = currentClassDates[j].split(INDEX_SPLIT_CHAR);
                         int rowIndex = Integer.parseInt(indexes[0]);
                         int colIndex = Integer.parseInt(indexes[1]);
                         if (timetableTFT[rowIndex][colIndex]) {
-                            msgBuilder.append("该上课时间与").append(c.getInstructorName()).append("老师的").
-                                    append((c.getCourseNameCHS() != null ? c.getCourseNameCHS() : c.getCourseNameEN())).
-                                    append(c.getClassName()).append("授课时间冲突！\n");
-                            conflictDescBuilder.append("t-").append("g").append("-").append(c.getInstructorId()).
-                                    append("-").append(c.getInstructorName()).append("-").append(c.getId()).append(ARRAY_SPLIT_CHAR);
+                            msgBuilder.append("该上课时间与").append(instructorNames[i]).append("老师的").
+                                    append((currentClass.getCourseNameCHS() != null ? currentClass.getCourseNameCHS() : currentClass.getCourseNameEN())).
+                                    append(currentClass.getClassName()).append("授课时间冲突！\n");
+                            conflictDescBuilder.append("t-").append("g").append("-").append(currentClass.getInstructorId()).
+                                    append("-").append(currentClass.getInstructorName()).append("-").append(currentClass.getId()).append(ARRAY_SPLIT_CHAR);
                             logger.info(msgBuilder.toString());
                             logger.info(conflictDescBuilder.toString());
                             break;
@@ -481,7 +483,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 }
             }
         }
-        if (checkMsg(classAll.getForce(), res, msgBuilder)) {
+        if (checkMsg(c.getForce(), res, msgBuilder)) {
             return true;
         }
         return false;
@@ -490,22 +492,21 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     /**
      * 校验本科课程时间冲突
      *
-     * @param classAll
+     * @param c
      * @param res
      * @param msgBuilder
      * @param conflictDescBuilder
-     * @param xnxqdm
      * @param timetableTFT
      * @param instructorIds
      * @param instructorNames
      * @return
      */
-    private boolean checkUndergraduateCourseTime(ClassAll classAll, Map<String, String> res, StringBuilder msgBuilder, StringBuilder conflictDescBuilder, String xnxqdm, boolean[][] timetableTFT, String[] instructorIds, String[] instructorNames) {
+    private boolean checkUndergraduateCourseTime(ClassAll c, Map<String, String> res, StringBuilder msgBuilder, StringBuilder conflictDescBuilder, boolean[][] timetableTFT, String[] instructorIds, String[] instructorNames) {
         instructors:
         for (int i = 0; i < instructorIds.length; i++) {
             List<TeacherOccupyTime> teacherOccupyTimes = teacherCurriculumInfoService.
-                    queryTeacherOccupyTime(classAll.getOperatorId(), classAll.getOperatorName(), instructorIds[i], xnxqdm);
-            if (!teacherOccupyTimes.isEmpty()) {
+                    queryTeacherOccupyTime(c.getOperatorId(), c.getOperatorName(), instructorIds[i], c.getAcademicYear(), c.getClassSemester());
+            if (!CollectionUtils.isEmpty(teacherOccupyTimes)) {
                 // Step1: 周次重叠判断
                 occupyTimes:
                 for (TeacherOccupyTime teacherOccupyTime : teacherOccupyTimes) {
@@ -514,13 +515,21 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                         continue;
                     }
                     weeks:
-                    for (int j = classAll.getStartWeek() - 1; j < classAll.getEndWeek() && j < teacherOccupyTime.getWeeks().length(); j++) {
+                    for (int j = c.getStartWeek() - 1; j < c.getEndWeek() && j < teacherOccupyTime.getWeeks().length(); j++) {
                         // 判断开课期间是否存在本科课程
                         if (teacherOccupyTime.getWeeks().charAt(j) == '1') {
                             // Step2: 存在课程，判断上课时间是否冲突
                             hours:
                             for (int k = teacherOccupyTime.getHourStartIndex(); k <= teacherOccupyTime.getHourEndIndex(); k++) {
-                                if (timetableTFT[k][teacherOccupyTime.getDayIndex()]) {
+                                // 下标转换
+                                int l = k;
+                                if (k >= 20) {
+                                    l = k - 16;
+                                } else if (k >= 4) {
+                                    l = k + 2;
+                                }
+
+                                if (timetableTFT[l][teacherOccupyTime.getDayIndex()]) {
                                     msgBuilder.append("该上课时间与").append(instructorNames[i]).append("老师的本科授课时间冲突！\n");
                                     conflictDescBuilder.append("t-").append("u").append("-").append(instructorIds[i]).append("-").append(instructorNames[i]).append(ARRAY_SPLIT_CHAR);
                                     logger.info(msgBuilder.toString());
@@ -533,7 +542,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 }
             }
         }
-        if (checkMsg(classAll.getForce(), res, msgBuilder)) {
+        if (checkMsg(c.getForce(), res, msgBuilder)) {
             return true;
         }
         return false;
@@ -548,20 +557,18 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
      * @return
      */
     private boolean checkClassName(ClassAll classAll, Map<String, String> res, StringBuilder msgBuilder) {
-        // 1. 校验班级是否已经存在，在新建班级时进行该校验
-        if (classAll.getId() == null) {
-            int count = classAllDao.countClassAllByClassName(classAll.getAcademicYear(), classAll.getClassSemester(),
-                    classAll.getCourseId(), classAll.getSchoolDistrictId(), classAll.getClassName());
-            if (count > 0) {
-                msgBuilder.append("在").append(classAll.getAcademicYear()).append(classAll.getClassSemester()).append(",");
-                msgBuilder.append(classAll.getClassName()).append("已存在，请修改所属校区或修改班级名称！");
+        int count = classAllDao.countClassAllByClassNameExcludeId(classAll.getAcademicYear(), classAll.getClassSemester(),
+                classAll.getCourseId(), classAll.getSchoolDistrictId(), classAll.getClassName(), classAll.getId());
+        if (count > 0) {
+            msgBuilder.append("在").append(classAll.getAcademicYear()).append(classAll.getClassSemester()).append(",");
+            msgBuilder.append(classAll.getClassName()).append("已存在，请修改所属校区或修改班级名称！");
 
-                // 该班级已存在，返回错误信息，提示修改
-                res.put("status", "error");
-                res.put("msg", msgBuilder.toString());
-                return true;
-            }
+            // 该班级已存在，返回错误信息，提示修改
+            res.put("status", "error");
+            res.put("msg", msgBuilder.toString());
+            return true;
         }
+
         return false;
     }
 
@@ -574,8 +581,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
      * @return
      */
     private boolean checkMsg(boolean force, Map<String, String> res, StringBuilder msgBuilder) {
-        String msg;
-        msg = msgBuilder.toString();
+        String msg = msgBuilder.toString();
         // 非强制情况下，直接返回冲突信息
         if (!msg.isEmpty()) {
             res.put("status", "error");
@@ -599,8 +605,8 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             return res;
         }
 
-        int count = classAllDao.countClassAllByClassName(classAll.getAcademicYear(),
-                classAll.getClassSemester(), classAll.getCourseId(), null, null);
+        int count = classAllDao.countClassAllByClassNameExcludeId(classAll.getAcademicYear(),
+                classAll.getClassSemester(), classAll.getCourseId(), null, null, null);
 
         int updateCount;
         if (count > 1) {
@@ -614,6 +620,8 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         if (updateCount > 0) {
             boolean freeFlag = freeClassroomAndTeacher(classAll, res);
             if (!freeFlag) {
+                // 恢复之前的记录
+                classAllDao.updateClass(classAll);
                 return res;
             }
             res.put("status", "success");
@@ -622,13 +630,13 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             res.put("msg", "数据删除异常，请重试！");
         }
 
-        if (count > 1) {
-            // TODO CHECK
+//        if (count > 1) {
+//            // TODO CHECK
 //            synchroTableService.removeRecord(id);
-        } else {
-            clearUnusedField(classAll);
+//        } else {
+//            clearUnusedField(classAll);
 //            synchroTableService.updateRecord(classAll);
-        }
+//        }
         return res;
     }
 
@@ -647,7 +655,6 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             rows[i] = rowIndex;
             cols[i] = colIndex;
         }
-        String xnxqdm = classAll.getAcademicYear() + "-" + (classAll.getClassSemester().contains("春") ? 2 : 1);
 
         // 释放地点
         ClassRoomUsed[] classRoomUseds = new ClassRoomUsed[classDates.length];
@@ -655,8 +662,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         for (int i = 0; i < classDates.length; i++) {
             int rowIndex = rows[i];
             int colIndex = cols[i];
-            ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(xnxqdm, classAll.getSchoolDistrictId().toString(),
-                    classAll.getStartWeek(), classAll.getEndWeek(), "0", colIndex + 1, rowIndex + 1, rowIndex + 1,
+            int classHour = getClassHour(rowIndex);
+            ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(classAll.getAcademicYear(), classAll.getClassSemester(), classAll.getSchoolDistrictId().toString(),
+                    classAll.getStartWeek(), classAll.getEndWeek(), colIndex + 1, classHour, classHour,
                     classAll.getClassPlaceId(), classAll.getId().toString(), classAll.getId().toString());
             classRoomUseds[i] = classRoomUsed;
             logger.info("=== delUsedClassroom: " + classRoomUsed.toString());
@@ -670,25 +678,28 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             return false;
         }
 
-        // 释放老师
+        // 释放老师时间资源
         String[] instructorIds = classAll.getInstructorId().split(ARRAY_SPLIT_CHAR);
         for (int i = 0; i < classDates.length; i++) {
             for (int j = 0; j < instructorIds.length; j++) {
-                KzJskb kzJskb = teacherOccupyService.createKzJskb(xnxqdm, null, null, null, null, null, null, null,
+                KzJskb kzJskb = teacherOccupyService.createKzJskb(classAll.getAcademicYear(), classAll.getClassSemester(),
+                        null, null, null, null, null, null,
                         instructorIds[j], classAll.getId().toString(), classAll.getId().toString());
                 flag = teacherOccupyService.deleteTeacherOccupyTime(kzJskb, classAll.getOperatorId(), classAll.getOperatorName());
                 logger.info("=== deleteTeacherOccupyTime: " + kzJskb.toString() + "\n=== flag: " + flag);
                 if (flag == 0) {
-                    // 占用失败
-                    // 回滚之前的老师释放记录
+                    // 释放失败
+                    // 回滚之前的老师释放记录，重新占用
                     int iMax = i;
                     int jMax = j;
                     for (i = 0; i < classDates.length; i++) {
                         for (j = 0; j < instructorIds.length; j++) {
                             int rowIndex = rows[j];
                             int colIndex = cols[j];
-                            kzJskb = teacherOccupyService.createKzJskb(xnxqdm, classAll.getSchoolDistrictId().toString(), classAll.getStartWeek(),
-                                    classAll.getEndWeek(), "0", colIndex + 1, rowIndex + 1, rowIndex + 1,
+                            int classHour = getClassHour(rowIndex);
+                            kzJskb = teacherOccupyService.createKzJskb(classAll.getAcademicYear(), classAll.getClassSemester(),
+                                    classAll.getSchoolDistrictId().toString(), classAll.getStartWeek(),
+                                    classAll.getEndWeek(), colIndex + 1, classHour, classHour,
                                     instructorIds[j], classAll.getId().toString(), classAll.getId().toString());
                             flag = teacherOccupyService.addTeacherOccupyTime(kzJskb, classAll.getOperatorId(), classAll.getOperatorName());
                             logger.info("=== addTeacherOccupyTime: " + kzJskb.toString() + "\n=== flag: " + flag);
@@ -707,8 +718,27 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
 
     @Override
     public String[][] getDepartTimeTable(int departId, String academicYear, String classSemester) {
-        List<ClassAll> classes = classAllDao.selectClassAll(departId, academicYear, classSemester, null,
+        List<ClassAll> classes = classAllDao.selectClassAll(departId, academicYear, classSemester, null, null,
                 null, null, null);
         return constructTimetable(classes);
+    }
+
+    /**
+     * 获取上课节次，和本科教务系统同步
+     *
+     * @param rowIndex
+     * @return
+     */
+    private int getClassHour(int rowIndex) {
+        // 上午
+        if (rowIndex < 4) {
+            return rowIndex + 1;
+        }
+        // 中午 N1: 21, N2: 22
+        if (rowIndex < 6) {
+            return rowIndex + 17;
+        }
+        // 下午及晚上
+        return rowIndex - 1;
     }
 }
