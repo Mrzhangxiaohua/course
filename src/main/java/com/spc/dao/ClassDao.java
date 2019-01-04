@@ -12,6 +12,11 @@ import java.util.Map;
 @Repository
 public interface ClassDao {
 
+
+    ClassDomain findCourseByIdForUpdate(@Param("classId") Integer courseId);
+
+    List<Map> kaiKe(Integer departId);
+
     int insert(ClassDomain record);
 
     void delete(@Param("classId") int classId);

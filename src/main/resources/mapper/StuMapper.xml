@@ -5,7 +5,7 @@
 
     <!--<cache/>-->
     <sql id="BASE_COLUMN">
-      stuId,className,classDateDescription,classPlace,teaName,classNum,startWeek,endWeek
+      stuId,className,classDateDescription,classPlace,teaName,classNum,startWeek,endWeek,departId.classTime
     </sql>
 
     <select id="findClasses" resultType="hashmap">

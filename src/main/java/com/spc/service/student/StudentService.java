@@ -12,7 +12,7 @@ public interface StudentService {
 
     public List<HashMap<String,Object>> findAllClassName(int student,String stuId);
 
-    public int addCourse(int classId,String stuId);
+    public int addCourse(int classId,String stuId,Integer departId);
 
     public int deleteCourse(int classId,String stuId);
 

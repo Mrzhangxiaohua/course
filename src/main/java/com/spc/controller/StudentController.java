@@ -267,7 +267,8 @@ public class StudentController extends Base{
         try {
             obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
-            return studentService.addCourse(classId, (String) request.getSession().getAttribute("userId"));
+            Integer departId = (Integer) request.getSession().getAttribute("departCode");
+            return studentService.addCourse(classId, (String) request.getSession().getAttribute("userId"),departId);
         } catch (JSONException e) {
             e.printStackTrace();
         }

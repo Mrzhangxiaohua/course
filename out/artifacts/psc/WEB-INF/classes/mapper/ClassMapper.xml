@@ -13,7 +13,7 @@
 
     <sql id="BASE_COLUMN">
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
-        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,departId,classSemester,classGradePoint,endWeek,startWeek,classTime,mainLecturer,classEncode,shenQingRenId
+        classPlace,classLength,classModuleNum,teacherInfo,courseInfo,departId,classSemester,classGradePoint,endWeek,startWeek,classTime,mainLecturer,classEncode,shenQingRenId,schoolDistrictId,classAllId
     </sql>
 
     <select id="findStudentClassTime" resultType="map">
@@ -33,7 +33,7 @@
         where classId = #{classId}
     </select>
 
-    <insert id="insert" parameterType="com.spc.model.ClassDomain" flushCache="true">
+    <insert id="insert" parameterType="com.spc.model.ClassDomain">
         insert into
         <include refid="BASE_TABLE"/>
         <trim prefix=" (" suffix=" )">
@@ -43,7 +43,7 @@
         <trim prefix="( " suffix=" )">
             #{classId},#{className},#{classNum},#{teaId},#{teaName},#{classChooseNum},#{classUpperLimit},#{classDateDescription},
             #{classPlace},#{classLength},#{classModuleNum},#{teacherInfo},#{courseInfo},#{departId},#{classSemester}
-            ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime},#{mainLecturer},#{classEncode},#{shenQingRenId}
+            ,#{classGradePoint},#{endWeek},#{startWeek},#{classTime},#{mainLecturer},#{classEncode},#{shenQingRenId},#{schoolDistrictId},#{classAllId}
         </trim>
     </insert>
 
@@ -95,6 +95,7 @@
             <if test="hasWaiGuoYu != 1">
                 and a.departId != 12
             </if>
+            and a.classSemester = '2018-2019春季'
         </where>
         <if test="classNum==1">
             order by classNum asc
@@ -199,6 +200,11 @@
         delete
         from course.Course
         where classId =#{classId}
+    </delete>
+    <delete id="deleteByClassAllId">
+        delete
+        from course.Course
+        where classAllId =#{classAllId}
     </delete>
 
 

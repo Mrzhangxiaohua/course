@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
@@ -41,9 +42,7 @@ public class StudentServiceImpl extends Base implements StudentService {
     public String[][] findClasses(String stuId) {
 //        int stuId = Integer.parseInt(authMess.userDetails().getUserid());
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
-        System.out.println("=======检测============");
         System.out.println(lis);
-        System.out.println("=======检测============");
         return MakeTimeTable.makeBigTable(lis, 1);
     }
 
@@ -57,44 +56,107 @@ public class StudentServiceImpl extends Base implements StudentService {
     }
 
     @Override
-    public int addCourse(int classId, String stuId) {
-        //首先得到学生id
-        boolean weixuan = gradeDao.selectGrade(classId, stuId).isEmpty();
-        if (weixuan) {
-////            boolean noShijianchongtu = studentDao.findTimeChongTu(stuId, classId).isEmpty();
+    public int addCourse(int classId, String stuId,Integer departId) {
+        // 该学生所选的所有课程
+        List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
 
-            boolean chongtu = timechongtu(stuId, classId);
-
-            if (!chongtu) {
-                ClassDomain course = classDao.findClassById(classId);
-                boolean noChaobiao = course.getClassChooseNum() < course.getClassUpperLimit();
-                if (noChaobiao) {
-                    return addyuanzi(classId, stuId);
+        // 计算该学生的所有课时
+        Integer allTime = 0;
+        for (HashMap recode : lis) {
+            allTime += (int) recode.get("classTime");
+        }
+        //查询要选择的课程是哪个学院的
+        ClassDomain course = classDao.findClassById(classId);
+        // 查询要选择的课程的课时数
+        int classTime = course.getClassTime();
+        // 查询要选择的课程的院系号
+        int courseDepartId = course.getDepartId();
+        if (courseDepartId != 12 && courseDepartId != departId) {
+            return 1;
+        }
+        // 判断这个课程和该学生有没有时间冲突
+        boolean chongtu = timechongtu(stuId, classId);
+        if (allTime == 32) {
+            // 已经选够32学时
+            return 1;
+        } else if(chongtu){
+            // 有课程冲突
+            return 1;
+        } else if (allTime == 24) {
+            if (courseDepartId == departId) {
+                // 要选择的是自己学院的课程
+                if (classTime == 8) {
+                    //课时是8课时
+                    addyuanzi(classId, stuId);
                 } else {
-                    return 0;
+                    // 课时多了，不能添加
+                    return 1;
                 }
-            } else {
-                return 0;
+            } else return 1; // 选择的是其他学院的课程
+        } else if (allTime == 16) {
+            // 得到已经选择的课程id
+            Integer haveSelectCourseDepartId = getSelectCourseDepartId(lis);
+            if (haveSelectCourseDepartId == 12) {
+                // 如果是外国语学院的课程
+                boolean kaiKe = classDao.kaiKe(departId).isEmpty();
+                if (kaiKe == true) {
+                    // 该学生的自己的学院已经开课了
+                    if (departId == courseDepartId) {
+                        //如果要选择的是自己学院的课，则添加课程
+                        addyuanzi(classId, stuId);
+                    } else {
+                        // 如果不是自己学院的课程，不成功
+                        return 3;
+                    }
+                } else {
+                    //自己学院没有开课
+                    if (courseDepartId == 12) {
+                        // 选择的课程是外国语学院的
+                        addyuanzi(classId, stuId);
+                    } else {
+                        return 2;
+                    }
+                }
+            } else if (haveSelectCourseDepartId != 12 && haveSelectCourseDepartId == departId) {
+                if (courseDepartId == 12) {
+                    addyuanzi(classId, stuId);
+                } else {
+                    return 1;
+                }
+            }
+        } else if (allTime == 8) {
+            if (courseDepartId == 12) {
+                addyuanzi(classId, stuId);
+            } else if (courseDepartId == departId) {
+                if (classTime == 8) {
+                    addyuanzi(classId, stuId);
+                } else {
+                    return 2;
+                }
             }
         } else {
-            return 0;
-        }
-    }
-
-    @Transactional
-    public int addyuanzi(int classId, String stuId) {
-
-        classDao.updateChooseNum(classId, 1);
-        studentDao.addChooseCourse(stuId, classId);
-
-        ClassDomain course = classDao.findClassById(classId);
-        if (course.getClassChooseNum() > course.getClassUpperLimit()) {
-            throw new RuntimeException();
+            addyuanzi(classId, stuId);
         }
         return 0;
     }
 
-    @Transactional
+    private Integer getSelectCourseDepartId(List<HashMap<String, Object>> lis) {
+        HashMap recode = lis.get(0);
+        return (int)(recode.get("departId"));
+    }
+
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public int addyuanzi(int classId, String stuId) {
+//        首先给该行数据加锁
+        ClassDomain course = classDao.findCourseByIdForUpdate(classId);
+        if (course.getClassChooseNum() < course.getClassUpperLimit()) {
+            studentDao.addChooseCourse(stuId, classId);
+            classDao.updateChooseNum(classId, 1);
+            return 6;
+        }
+        return 4;
+    }
+
     @Override
     public int deleteCourse(int classId, String stuId) {
         if (!gradeDao.selectGrade(classId, stuId).isEmpty()) {
@@ -114,7 +176,7 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Override
     public List<ClassDomain> selectClassed(Map<String, Object> map) {
 
-        //获得学生id
+        // 1.首先是得到学生的id,并且获得参数
         String stuId = (String) map.get("stuId");
         Integer currentPage = (Integer) map.get("currentPage");
         Integer pageSize = (Integer) map.get("pageSize");
@@ -129,18 +191,18 @@ public class StudentServiceImpl extends Base implements StudentService {
         Integer classNum = (Integer) map.get("classNum");
         Integer classChooseNum = (Integer) map.get("classChooseNum");
 
-        //这个是学生选择的课程
+        // 2.找到这个学生的所选课程
         List<GradeDomain> gradeDomains = gradeDao.selectGrade(88888888, stuId);
 
         System.out.println("\n");
         System.out.printf("startWeek = %d", startWeek);
         System.out.printf("endWeek = %d", endWeek);
 
-
+        // 3. 按照分页查询出当前页的数据
         PageHelper.startPage(currentPage, pageSize);
         List<ClassDomain> classes = classDao.selectClasses(departId, classname, teaname, teaId, startWeek, endWeek, hasWaiGuoYu, modelsId, classNum, classChooseNum);
 
-        System.out.println(classes);
+        // 4. 将这个学生的所选课程id加入到下面的set里
         Set<Integer> haveAddClass = new HashSet<>();
         if (!gradeDomains.isEmpty()) {
             for (int j = 0; j < gradeDomains.size(); j++) {
@@ -150,24 +212,26 @@ public class StudentServiceImpl extends Base implements StudentService {
                 haveAddClass.add(id);
             }
         }
+
+        // 5. 对于每一条数据添加所需的字段内容
         for (int i = 0; i < classes.size(); i++) {
             int classId = classes.get(i).getClassId();
             int limit = classes.get(i).getClassUpperLimit();
             int chooseNum = classes.get(i).getClassChooseNum();
+
             if (haveAddClass.contains(classId)) {
+                // 如果该学生已经选择了这门课 ，可以显示取消按钮，不显示添加按钮
                 classes.get(i).setShowDeleteButton(true);//显示取消按钮
                 classes.get(i).setNotShowAddButton(true);//不显示添加按钮
             } else if (!haveAddClass.contains(classId) & limit == chooseNum) {
+                // 如果该学生没有选择这门课，但是该课程已经达到了上线人数，那么就既不显示取消按钮，也不显示添加按钮
                 classes.get(i).setShowDeleteButton(false);//不显示取消按钮
                 classes.get(i).setNotShowAddButton(true);//不显示添加按钮
             } else if (!haveAddClass.contains(classId) & limit > chooseNum) {
+                // 如果该学生没有选择这门课，但是没有达到课程上线，那么就显示添加按钮，不现实取消按钮
                 classes.get(i).setShowDeleteButton(false);//不显示取消按钮
                 classes.get(i).setNotShowAddButton(false);//显示添加按钮
             }
-//            if (limit == chooseNum){
-//                Collections.swap(classes,);
-//            }
-
         }
         for (ClassDomain classDomain : classes) {
             System.out.println(classDomain.isNotShowAddButton() + ":" + classDomain.isShowDeleteButton());
@@ -177,6 +241,7 @@ public class StudentServiceImpl extends Base implements StudentService {
             Integer b = Integer.parseInt(d[1]);
             Integer c = Integer.parseInt(d[2]);
             classDomain.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b, c)));
+//            logger.info(classDomain.getButtonGroup());
         }
         return classes;
     }
