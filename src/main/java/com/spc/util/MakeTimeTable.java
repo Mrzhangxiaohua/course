@@ -4,7 +4,7 @@ import java.util.*;
 
 public class MakeTimeTable {
     public static String[][] makeBigTable(List<HashMap<String, Object>> lis, int student) {
-        String temp[][] = new String[12][7];
+        String temp[][] = new String[13][7];
         for (HashMap<String, Object> li : lis) {
             String date = (String) li.get("classDateDescription");
             String classPlace = (String) li.get("classPlace");

@@ -41,7 +41,7 @@ public interface ClassDao {
 
     List<HashMap<String, Object>> findCourseTable(@Param("teaId") String teaId,@Param("semester") String semester);
 
-    List<HashMap<String, Object>> findAllClasseSimpleMess(@Param("shenQingRenId") String shenQingRenId,@Param("shenQingRenName") String shenQingRenName,@Param("teaName")String teaName);
+    List<HashMap<String, Object>> findAllClasseSimpleMess(@Param("shenQingRenId") String shenQingRenId,@Param("shenQingRenName") String shenQingRenName,@Param("teaName")String teaName,@Param("departId")Integer departId);
 
     int updateChooseNum(@Param("classId") int classId, @Param("num") int num);
 

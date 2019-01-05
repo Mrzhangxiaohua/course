@@ -8,6 +8,7 @@ import com.spc.model.CourseTableExcelDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
+import com.spc.service.user.UserService;
 import com.spc.util.CalculateWeekth;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
@@ -42,7 +43,8 @@ public class StudentController extends Base{
 
     @Autowired
     private GradeService gradeService;
-
+    @Autowired
+    UserService userService;
 
     /**
      * 学生端：根据学号查询学生选择的课程,用做课表显示
@@ -267,7 +269,7 @@ public class StudentController extends Base{
         try {
             obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
-            Integer departId = (Integer) request.getSession().getAttribute("departCode");
+            Integer departId = (Integer) request.getSession().getAttribute("departId");
             return studentService.addCourse(classId, (String) request.getSession().getAttribute("userId"),departId);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -337,8 +339,8 @@ public class StudentController extends Base{
 
 
         String[][] tables = studentService.findClasses((String) session.getAttribute("userId"));
-        Map res = new HashMap();
 
+        Map res = new HashMap();
         res.put("data", tables);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);

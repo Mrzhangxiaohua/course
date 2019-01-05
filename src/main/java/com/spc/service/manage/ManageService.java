@@ -11,7 +11,7 @@ import java.util.Map;
 public interface ManageService {
     String[][] findClasses(String stuId);
 
-    String[][] bigTable(String shenQingRenId, String shenQingRenName,String teaName);
+    String[][] bigTable(String shenQingRenId, String shenQingRenName,String teaName,Integer departId);
 
     List<StudentApplicationDomain> checkedMessage(int key, String stuId);
 

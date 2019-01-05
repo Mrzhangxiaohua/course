@@ -1,22 +1,28 @@
 package com.spc.controller.manage;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.controller.Base;
-import com.spc.model.ClassAll;
-import com.spc.model.ClassroomInfo;
-import com.spc.model.IceSelectDataSource;
-import com.spc.model.TeacherInfo;
+import com.spc.model.*;
 import com.spc.service.manage.*;
 import com.spc.service.wsdl.GetUndergradFreeClassrooms.GetUndergradFreeClassroomInfo;
 import com.spc.service.wsdl.TeachersOccupyTimeWebservice.TeacherCurriculumInfo;
+import com.spc.util.ResponseWrap;
+import com.spc.view.StudentTablePdfView;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,6 +259,57 @@ public class ClassAllController extends Base {
     @ResponseBody
     public String[][] getDepartTimeTable(@RequestParam int departId, @RequestParam String academicYear, @RequestParam String classSemester) {
         return classAllService.getDepartTimeTable(departId, academicYear, classSemester);
+    }
+
+    /**
+     * 获取某个学院的上课课表 pdf格式
+     *
+     * @param classSemester 春、秋
+     * @return
+     */
+    @RequestMapping("/getDepartTimeTablePdf")
+    @ResponseBody
+    public ModelAndView getDepartTimeTablePdf(@RequestParam int departId, @RequestParam String academicYear, @RequestParam String classSemester) {
+        String[][] tableData = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
+        Map res = new HashMap();
+        res.put("data", tableData);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+        model.put("student",1);
+        return new ModelAndView(new StudentTablePdfView(), model);
+    }
+
+    /**
+     * 获取某个学院的上课课表 excel格式
+     *
+     * @param classSemester 春、秋
+     * @return
+     */
+    @RequestMapping("/getDepartTimeTableExcel")
+    @ResponseBody
+    public void getDepartTimeTableExcel(@RequestParam int departId, @RequestParam String academicYear, @RequestParam String classSemester,
+                                        HttpSession session, HttpServletResponse response) {
+        String[][] tables = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
+        List<CourseTableExcelDomain> liC = new ArrayList<>();
+        for (int i = 0; i < tables.length; i = i + 1) {
+            liC.add(new CourseTableExcelDomain(i , tables[i][0], tables[i][1], tables[i][2], tables[i][3]
+                    , tables[i][4], tables[i][5], tables[i][6]));
+        }
+
+        //设置课表的名称
+        response =  ResponseWrap.setName(response, (String) session.getAttribute("username")+"的课表","xls");
+
+        ExportParams params = new ExportParams();
+        params.setTitle("课表");
+
+        Workbook workbook = ExcelExportUtil.exportExcel(params, CourseTableExcelDomain.class, liC);
+
+        try {
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -143,6 +143,9 @@
             <if test="teaName !=''">
                 and c.teaName=#{teaName}
             </if>
+            <if test="departId != 88888888">
+                and c.departId = #{departId}
+            </if>
         </where>
         order by c.className,c.classNum asc
     </select>

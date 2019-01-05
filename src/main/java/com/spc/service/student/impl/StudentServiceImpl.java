@@ -74,13 +74,16 @@ public class StudentServiceImpl extends Base implements StudentService {
         if (courseDepartId != 12 && courseDepartId != departId) {
             return 1;
         }
+        logger.info(stuId+"学生已经选了"+ allTime+"课时");
         // 判断这个课程和该学生有没有时间冲突
         boolean chongtu = timechongtu(stuId, classId);
         if (allTime == 32) {
             // 已经选够32学时
+            logger.info("已经选够32学时，不能再选");
             return 1;
         } else if(chongtu){
             // 有课程冲突
+            logger.info("有课程冲突，不能选择");
             return 1;
         } else if (allTime == 24) {
             if (courseDepartId == departId) {
@@ -96,10 +99,12 @@ public class StudentServiceImpl extends Base implements StudentService {
         } else if (allTime == 16) {
             // 得到已经选择的课程id
             Integer haveSelectCourseDepartId = getSelectCourseDepartId(lis);
+            logger.info("选择的课程id是"+haveSelectCourseDepartId);
             if (haveSelectCourseDepartId == 12) {
                 // 如果是外国语学院的课程
-                boolean kaiKe = classDao.kaiKe(departId).isEmpty();
-                if (kaiKe == true) {
+                boolean notKaiKe = classDao.kaiKe(departId).isEmpty();
+                if (notKaiKe == false) {
+                    logger.info("该学生所在的学院开课了");
                     // 该学生的自己的学院已经开课了
                     if (departId == courseDepartId) {
                         //如果要选择的是自己学院的课，则添加课程
@@ -109,6 +114,7 @@ public class StudentServiceImpl extends Base implements StudentService {
                         return 3;
                     }
                 } else {
+                    logger.info("该学生所在的学院没有开课了");
                     //自己学院没有开课
                     if (courseDepartId == 12) {
                         // 选择的课程是外国语学院的

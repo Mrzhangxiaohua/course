@@ -54,7 +54,6 @@ public class ManageController extends Base {
      * 学生端：根据学生id查询课表
      *
      * @param stuId 学生id
-     * @return String[][]
      */
     @RequestMapping("/select/classes")
     @ResponseBody
@@ -468,7 +467,13 @@ public class ManageController extends Base {
             HttpServletResponse response,
             HttpSession session
     ) {
-        String[][] strs = manageService.bigTable(shenQingRenId, shenQingRenName, teaName);
+//        Integer departId = (Integer) session.getAttribute("departId");
+        Integer departId = 5;
+        String role = (String) session.getAttribute("userRole");
+        if (role.equals("超级管理员")){
+            departId = 88888888;
+        }
+        String[][] strs = manageService.bigTable(shenQingRenId, shenQingRenName, teaName, departId);
         Map<String, Object> res = new HashMap<String, Object>();
 
         res.put("data", strs);
@@ -495,7 +500,14 @@ public class ManageController extends Base {
             HttpServletResponse response,
             HttpSession session
     ){
-        String[][] tables = manageService.bigTable(shenQingRenId, shenQingRenName, teaName);
+
+        Integer departId = (Integer) session.getAttribute("departId");
+
+        String role = (String) session.getAttribute("userRole");
+        if (role.equals("超级管理员")){
+            departId = 88888888;
+        }
+        String[][] tables = manageService.bigTable(shenQingRenId, shenQingRenName, teaName, departId);
         List<CourseTableExcelDomain> liC = new ArrayList<>();
         for (int i = 0; i < tables.length; i = i + 2) {
             liC.add(new CourseTableExcelDomain(i / 2, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
@@ -566,8 +578,16 @@ public class ManageController extends Base {
     public String[][] getBigTable(
             @RequestParam(required = false, defaultValue = "") String shenQingRenId,
             @RequestParam(required = false, defaultValue = "") String shenQingRenName,
-            @RequestParam(required = false, defaultValue = "") String teaName) {
-        return manageService.bigTable(shenQingRenId, shenQingRenName, teaName);
+            @RequestParam(required = false, defaultValue = "") String teaName,
+            HttpSession session) {
+        Integer departId = (Integer) session.getAttribute("departId");
+
+        String role = (String) session.getAttribute("userRole");
+        if (role.equals("超级管理员")){
+            departId = 88888888;
+        }
+        String[][] strs = manageService.bigTable(shenQingRenId, shenQingRenName, teaName, departId);
+        return strs;
     }
 
     /**
