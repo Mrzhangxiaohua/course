@@ -394,11 +394,9 @@ public class StudentController extends Base{
     public ModelAndView downloadScore(@RequestParam(required = false, defaultValue = "88888888") Integer classId,
                                       HttpSession session) {
         String stuId = (String) session.getAttribute("userId");
-//        stuId = 2018000006;
         List<GradeDomain> scores = gradeService.selectGrade(classId, stuId);
         System.out.println("tun here");
         Map res = new HashMap();
-
         res.put("data", scores);
         res.put("stuId", stuId);
         res.put("stuName", session.getAttribute("authentication"));

@@ -30,58 +30,38 @@ public class SynchroTableImpl extends Base implements SynchroTable {
     public int insertRecord(ClassAll classAll) {
 
         CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId());
-
         logger.info(courseAll.toString());
-
         ClassDomain classDomain = new ClassDomain();
-
         classDomain.setClassAllId(classAll.getId());
         classDomain.setClassName(courseAll.getCourseNameCHS());
-
         if (classAll.getClassName() != null && !classAll.getClassName().isEmpty()) {
             classDomain.setClassNum(getNum(classAll.getClassName()));
         }
-
-        classDomain.setTeaId(courseAll.getTeacherId());
-        classDomain.setTeaName(courseAll.getTeacherName());
+        classDomain.setTeaId(classAll.getInstructorId());
+        classDomain.setTeaName(classAll.getInstructorName());
         classDomain.setClassGradePoint(0);
-
-        logger.info("run 1");
         classDomain.setClassChooseNum(classAll.getStuChooseNum());
-        logger.info("run 2");
         classDomain.setClassUpperLimit(courseAll.getStuNumUpperLimit());
-        logger.info("run 3");
-
         if (classAll.getClassDateDesc() != null && !classAll.getClassDateDesc().isEmpty()) {
             classDomain.setClassDateDescription((convertDateDesc(classAll.getClassDateDesc())).get(0));
         }
-        logger.info("run 4");
         classDomain.setClassPlace(classAll.getClassPlaceName());
         classDomain.setClassLength(0);
-        logger.info("run 5");
         classDomain.setClassModuleNum(getMI(courseAll.getModuleId()));
         classDomain.setDepartId(courseAll.getDepartId());
         classDomain.setStartWeek(classAll.getStartWeek());
         classDomain.setEndWeek(classAll.getEndWeek());
         classDomain.setClassSemester(courseAll.getAcademicYear() + courseAll.getClassSemester());
-
         classDomain.setCourseInfo(courseAll.getCourseInfo());
         classDomain.setTeacherInfo(courseAll.getTeacherInfo());
         classDomain.setClassTime(courseAll.getClassHour());
         classDomain.setMainLecturer(classAll.getTeacherName());
-
         classDomain.setClassEncode(courseAll.getCourseId());
         classDomain.setShenQingRenId(null);
         classDomain.setSchoolDistrictId(classAll.getSchoolDistrictId());
-
         logger.info(classDomain.toString());
-
         int count = classDao.insert(classDomain);
-
-        logger.info("count: " + count);
-
         return count;
-
     }
 
     @Override
@@ -107,8 +87,6 @@ public class SynchroTableImpl extends Base implements SynchroTable {
             String[] descStrs = desc.split("-");
             descInts.add(new Integer[]{Integer.parseInt(descStrs[1]), Integer.parseInt(descStrs[0])});
         }
-//        System.out.println(descInts.get(0)[0] + descInts.get(0)[1]);
-//        System.out.println(descInts.get(1)[0] + descInts.get(1)[1]);
         List<List<Integer>> res = new ArrayList<>();
         for (Integer[] ints : descInts) {
             if (res.isEmpty()) {
@@ -119,7 +97,6 @@ public class SynchroTableImpl extends Base implements SynchroTable {
             }
             for (List<Integer> ints2 : res) {
                 if (ints2.get(0) == ints[0] & (ints2.get(1) == (ints[1] - 1))) {
-//                    ints2.get(2) = ints2.get(2) + 1;
                     ints2.set(2, ints2.get(2) + 1);
                 } else if (ints2.get(0) == ints[0] & (ints2.get(1) == (ints[1] + 1))) {
                     ints2.set(1, ints2.get(1) - 1);
@@ -150,12 +127,10 @@ public class SynchroTableImpl extends Base implements SynchroTable {
         }
         return Integer.parseInt(res);
     }
-
     public static void main(String[] args) {
         SynchroTableImpl stl = new SynchroTableImpl();
         List res = stl.convertDateDesc("0-4,1-4,");
         System.out.println(res);
-
         String className = "班";
         System.out.println(stl.getNum(className));
     }
