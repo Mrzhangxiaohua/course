@@ -4,9 +4,8 @@
 <mapper namespace="com.spc.dao.CourseAllDao">
 
     <sql id="Base_Column_List">
-    id, departId, courseId, courseNameCHS, courseNameEN, moduleId, academicYear, classSemester,
-    classHour, stuNumUpperLimit, teacherId, teacherName, teachingTeamIds, teachingTeamNames,
-    operatorId, operatorName, operateDate
+    id,departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,
+    teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,operatorId,operatorName,operateDate
   </sql>
 
     <insert id="insertCourse"  useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true" >

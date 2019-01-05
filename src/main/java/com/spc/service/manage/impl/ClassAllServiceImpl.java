@@ -191,17 +191,17 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             ClassAll oldClass = classAllDao.selectClassAllById(c.getId());
             // 清空原有占用信息
             boolean freeFlag = freeClassroomAndTeacher(oldClass, res);
+            if (!freeFlag) {
+                return res;
+            }
+
             // 修改记录
             int count = classAllDao.updateClass(c);
             // TODO CHECK
-//            synchroTableService.updateRecord(c);
+            synchroTableService.updateRecord(c);
 
             logger.info("updateClass: " + c.toString());
-            if (!freeFlag) {
-                // 恢复更新前的记录
-                classAllDao.updateClass(oldClass);
-                return res;
-            }
+
             // 先占用本科教务系统的老师、地点的相应时间
             // 1. 地点占用
             if (useClassroom(c, res, rows, cols, false)) {
@@ -223,7 +223,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             // 新增记录
             int count = classAllDao.insertClass(c);
             // TODO CHECK
-//            synchroTableService.insertRecord(c);
+            synchroTableService.insertRecord(c);
 
             logger.info("insertClass: " + c.toString());
             if (count > 0) {
@@ -279,12 +279,12 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                                 if (del) {
                                     classAllDao.delClassAllById(classAll.getId());
                                     // TODO CHECK
-//                                    synchroTableService.removeRecord(classAll.getId());
+                                    synchroTableService.removeRecord(classAll.getId());
                                 } else {
                                     classAllDao.clearClassAllById(classAll.getId(), classAll.getOperatorId(), classAll.getOperatorName());
                                     // TODO CHECK
                                     clearUnusedField(classAll);
-//                                    synchroTableService.updateRecord(classAll);
+                                    synchroTableService.updateRecord(classAll);
                                 }
                                 res.put("status", "error");
                                 res.put("msg", "本科教务系统异常！");
@@ -340,12 +340,12 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             if (del) {
                 classAllDao.delClassAllById(classAll.getId());
                 // TODO CHECK
-//                synchroTableService.removeRecord(classAll.getId());
+                synchroTableService.removeRecord(classAll.getId());
             } else {
                 classAllDao.clearClassAllById(classAll.getId(), classAll.getOperatorId(), classAll.getOperatorName());
                 // TODO CHECK
                 clearUnusedField(classAll);
-//                synchroTableService.updateRecord(classAll);
+                synchroTableService.updateRecord(classAll);
             }
             res.put("status", "error");
             res.put("msg", "本科教务系统异常！");
@@ -521,15 +521,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                             // Step2: 存在课程，判断上课时间是否冲突
                             hours:
                             for (int k = teacherOccupyTime.getHourStartIndex(); k <= teacherOccupyTime.getHourEndIndex(); k++) {
-                                // 下标转换
-                                int l = k;
-                                if (k >= 20) {
-                                    l = k - 16;
-                                } else if (k >= 4) {
-                                    l = k + 2;
-                                }
-
-                                if (timetableTFT[l][teacherOccupyTime.getDayIndex()]) {
+                                if (timetableTFT[k][teacherOccupyTime.getDayIndex()]) {
                                     msgBuilder.append("该上课时间与").append(instructorNames[i]).append("老师的本科授课时间冲突！\n");
                                     conflictDescBuilder.append("t-").append("u").append("-").append(instructorIds[i]).append("-").append(instructorNames[i]).append(ARRAY_SPLIT_CHAR);
                                     logger.info(msgBuilder.toString());
@@ -605,6 +597,11 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             return res;
         }
 
+        boolean freeFlag = freeClassroomAndTeacher(classAll, res);
+        if (!freeFlag) {
+            return res;
+        }
+
         int count = classAllDao.countClassAllByClassNameExcludeId(classAll.getAcademicYear(),
                 classAll.getClassSemester(), classAll.getCourseId(), null, null, null);
 
@@ -618,25 +615,20 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         }
 
         if (updateCount > 0) {
-            boolean freeFlag = freeClassroomAndTeacher(classAll, res);
-            if (!freeFlag) {
-                // 恢复之前的记录
-                classAllDao.updateClass(classAll);
-                return res;
-            }
             res.put("status", "success");
         } else {
             res.put("status", "error");
             res.put("msg", "数据删除异常，请重试！");
+            return res;
         }
 
-//        if (count > 1) {
-//            // TODO CHECK
-//            synchroTableService.removeRecord(id);
-//        } else {
-//            clearUnusedField(classAll);
-//            synchroTableService.updateRecord(classAll);
-//        }
+        if (count > 1) {
+            // TODO CHECK
+            synchroTableService.removeRecord(id);
+        } else {
+            clearUnusedField(classAll);
+            synchroTableService.updateRecord(classAll);
+        }
         return res;
     }
 

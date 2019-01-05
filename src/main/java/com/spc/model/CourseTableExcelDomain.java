@@ -131,6 +131,11 @@ public class CourseTableExcelDomain {
             case 11:
                 res.append("十节");
                 break;
+            case 12:
+                res.append("十一节");
+                break;
+            default:
+                // do nothing
         }
         return res.toString();
     }

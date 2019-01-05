@@ -59,7 +59,9 @@ public class TeacherCurriculumInfo extends Base {
                 e.printStackTrace();
             }
             try {
-                kzJskbResult = stub.queryTeacherOccupyTime(kzJskb, null, null, userInfo);
+                QueryConfig config = new QueryConfig();
+                config.setPageSize(100);
+                kzJskbResult = stub.queryTeacherOccupyTime(kzJskb, config, null, userInfo);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

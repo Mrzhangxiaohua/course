@@ -14,7 +14,6 @@ import com.spc.view.StudentTablePdfView;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -257,7 +256,8 @@ public class ClassAllController extends Base {
      */
     @RequestMapping("/getDepartTimeTable")
     @ResponseBody
-    public String[][] getDepartTimeTable(@RequestParam int departId, @RequestParam String academicYear, @RequestParam String classSemester) {
+    public String[][] getDepartTimeTable(@RequestParam String academicYear, @RequestParam String classSemester, HttpSession session) {
+        Integer departId = Integer.parseInt(session.getAttribute("departId").toString());
         return classAllService.getDepartTimeTable(departId, academicYear, classSemester);
     }
 
@@ -269,14 +269,19 @@ public class ClassAllController extends Base {
      */
     @RequestMapping("/getDepartTimeTablePdf")
     @ResponseBody
-    public ModelAndView getDepartTimeTablePdf(@RequestParam int departId, @RequestParam String academicYear, @RequestParam String classSemester) {
+    public ModelAndView getDepartTimeTablePdf(@RequestParam String academicYear, @RequestParam String classSemester, HttpSession session, HttpServletResponse response) {
+        Integer departId = Integer.parseInt(session.getAttribute("departId").toString());
+
+        //根据学生的名称设置pdf的文件名
+        response = ResponseWrap.setName(response, session.getAttribute("dep") + "的课表", "pdf");
+
         String[][] tableData = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
         Map res = new HashMap();
         res.put("data", tableData);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "higher");
-        model.put("student",1);
+        model.put("student", 1);
         return new ModelAndView(new StudentTablePdfView(), model);
     }
 
@@ -288,17 +293,19 @@ public class ClassAllController extends Base {
      */
     @RequestMapping("/getDepartTimeTableExcel")
     @ResponseBody
-    public void getDepartTimeTableExcel(@RequestParam int departId, @RequestParam String academicYear, @RequestParam String classSemester,
+    public void getDepartTimeTableExcel(@RequestParam String academicYear, @RequestParam String classSemester,
                                         HttpSession session, HttpServletResponse response) {
+        Integer departId = Integer.parseInt(session.getAttribute("departId").toString());
+
         String[][] tables = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
         List<CourseTableExcelDomain> liC = new ArrayList<>();
         for (int i = 0; i < tables.length; i = i + 1) {
-            liC.add(new CourseTableExcelDomain(i , tables[i][0], tables[i][1], tables[i][2], tables[i][3]
+            liC.add(new CourseTableExcelDomain(i, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
                     , tables[i][4], tables[i][5], tables[i][6]));
         }
 
         //设置课表的名称
-        response =  ResponseWrap.setName(response, (String) session.getAttribute("username")+"的课表","xls");
+        response = ResponseWrap.setName(response, session.getAttribute("dep") + "的课表", "xls");
 
         ExportParams params = new ExportParams();
         params.setTitle("课表");

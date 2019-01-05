@@ -58,8 +58,8 @@ public class MainController extends Base {
         //为了缓存老师更新的数据而在内存中建立的hashMap
 
         // just for test
-        userRole = "超级管理员";
-        userId = "007";
+//        userRole = "学生";
+//        userId = "007";
 
         if (userRole.equals("学生")) {
             if (InXuanKeStu(userId, username)) {

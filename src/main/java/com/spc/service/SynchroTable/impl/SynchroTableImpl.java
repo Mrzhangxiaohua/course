@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class SynchroTableImpl extends Base implements SynchroTable {
+
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("[^0-9]");
 
     @Autowired
     private ClassDao classDao;
@@ -45,19 +46,19 @@ public class SynchroTableImpl extends Base implements SynchroTable {
         classDomain.setTeaName(courseAll.getTeacherName());
         classDomain.setClassGradePoint(0);
 
-//        logger.info("run 1");
+        logger.info("run 1");
         classDomain.setClassChooseNum(classAll.getStuChooseNum());
-//        logger.info("run 2");
+        logger.info("run 2");
         classDomain.setClassUpperLimit(courseAll.getStuNumUpperLimit());
-//        logger.info("run 3");
+        logger.info("run 3");
 
         if (classAll.getClassDateDesc() != null && !classAll.getClassDateDesc().isEmpty()) {
             classDomain.setClassDateDescription((convertDateDesc(classAll.getClassDateDesc())).get(0));
         }
-//        logger.info("run 4");
+        logger.info("run 4");
         classDomain.setClassPlace(classAll.getClassPlaceName());
         classDomain.setClassLength(0);
-//        logger.info("run 5");
+        logger.info("run 5");
         classDomain.setClassModuleNum(getMI(courseAll.getModuleId()));
         classDomain.setDepartId(courseAll.getDepartId());
         classDomain.setStartWeek(classAll.getStartWeek());
@@ -140,15 +141,22 @@ public class SynchroTableImpl extends Base implements SynchroTable {
     }
 
     private Integer getNum(String className) {
-        String pattern = "[0-9]*";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(className);
-        return Integer.parseInt(m.group(0));
+        if (null == className) {
+            return null;
+        }
+        String res = NUMBER_PATTERN.matcher(className).replaceAll("");
+        if (null == res || "".equals(res)) {
+            return null;
+        }
+        return Integer.parseInt(res);
     }
 
     public static void main(String[] args) {
         SynchroTableImpl stl = new SynchroTableImpl();
         List res = stl.convertDateDesc("0-4,1-4,");
         System.out.println(res);
+
+        String className = "班";
+        System.out.println(stl.getNum(className));
     }
 }
