@@ -467,8 +467,8 @@ public class ManageController extends Base {
             HttpServletResponse response,
             HttpSession session
     ) {
-//        Integer departId = (Integer) session.getAttribute("departId");
-        Integer departId = 5;
+        Integer departId = (Integer) session.getAttribute("departId");
+//        Integer departId = 5;
         String role = (String) session.getAttribute("userRole");
         if (role.equals("超级管理员")){
             departId = 88888888;
