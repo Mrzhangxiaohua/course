@@ -61,7 +61,7 @@
         classPlace,classLength,classModuleNum,m.modelsName as modelsName,teacherInfo,courseInfo,
         a.departId,classSemester,classGradePoint,endWeek,startWeek,
         classEncode,classTime,mainLecturer,b.departName as departName
---         course.User.department as dpt
+<!--        course.User.department as dpt -->
         from
         <include refid="BASE_TABLE"/>
         a
@@ -157,7 +157,6 @@
         from Course
         <where>
             teaId = #{teaId}
-
           and  classSemester = #{semester}
         </where>
     </select>

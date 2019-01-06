@@ -73,7 +73,9 @@ public class SynchroTableImpl extends Base implements SynchroTable {
     @Override
     public int updateRecord(ClassAll classAll) {
         removeRecord(classAll.getId());
-        insertRecord(classAll);
+        if (classAll.getClassDateDesc() != null) {
+            insertRecord(classAll);
+        }
         return 1;
     }
 

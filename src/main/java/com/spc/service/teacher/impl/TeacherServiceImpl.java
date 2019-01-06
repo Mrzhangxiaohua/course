@@ -45,27 +45,6 @@ public class TeacherServiceImpl implements TeacherService {
     public String[][] findCourseTable(String teaId) {
         String semester=(String)schoolCalendarDao.currentCalendar().get("semester");
         List<HashMap<String, Object>> lis = classDao.findCourseTable(teaId,semester);
-////        System.out.println("教师端的课表：",lis);
-//        String temp[][] = new String[10][7];
-//        for (HashMap<String, Object> li : lis) {
-//            String date = (String) li.get("classDateDescription");
-//            String classPlace = (String) li.get("classPlace");
-//            String teacherName = (String) li.get("teaName");
-//            String startWeek = Integer.toString((Integer) li.get("startWeek"));
-//            String endWeek = Integer.toString((Integer) li.get("endWeek"));
-//            String classNum = Integer.toString((Integer) li.get("classNum"));
-//            String className = (String) li.get("className");
-//
-//            String[] ints = date.split(":");
-//            Integer r = ints[0].toCharArray()[0] - '0';
-//            Integer l = ints[1].toCharArray()[0] - '0';
-//
-//            String context = "★课程：" + className + ',' + "教室：" + classPlace + ',' + "教师：" + teacherName + ',' + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
-//
-//            temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
-//            temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
-//
-//        }
         return MakeTimeTable.makeBigTable(lis,0);
     }
 
