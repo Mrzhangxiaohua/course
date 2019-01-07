@@ -34,8 +34,10 @@ public class CourseDateTrans {
             case 6:
                 strs = strs.append("周六");
                 break;
-            default:
+            case 7:
                 strs = strs.append("周日");
+                break;
+            default:
                 break;
         }
         ;
@@ -44,26 +46,56 @@ public class CourseDateTrans {
 
     public static StringBuilder bToString(Integer b, Integer c) {
         StringBuilder strs = new StringBuilder("");
-        switch (b) {
-            case 1:
-                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
-                break;
-            case 2:
-                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
-                break;
-            case 3:
-                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
-                break;
-            case 4:
-                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
-                break;
-            default:
-                strs = strs.append((2 * b - 1) + "-" + (2 * b - 2 + c)  + "节");
-                break;
+        if (c == 1) {
+            strs = strs.append("第" + b + "节");
+        } else {
+            switch (b) {
+                case 1:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 2:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 3:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 4:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 5:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 6:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 7:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 8:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 9:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 10:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 11:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 12:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                case 13:
+                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
+                    break;
+                default:
+                    break;
+            }
         }
-
         return strs;
     }
+
 
 
 }

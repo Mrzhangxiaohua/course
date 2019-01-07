@@ -49,6 +49,33 @@ public class KzJskb  extends com.spc.service.wsdl.TeachersOccupyTimeWebservice.B
     public KzJskb() {
     }
 
+    @Override
+    public String toString() {
+        return "KzJskb{" +
+                "PKXZH='" + PKXZH + '\'' +
+                ", JSJC=" + JSJC +
+                ", PKKZH='" + PKKZH + '\'' +
+                ", XXXQDM='" + XXXQDM + '\'' +
+                ", KSJC=" + KSJC +
+                ", SKZC='" + SKZC + '\'' +
+                ", JSH='" + JSH + '\'' +
+                ", SKXQ=" + SKXQ +
+                ", XNXQDM='" + XNXQDM + '\'' +
+                ", KBID='" + KBID + '\'' +
+                ", JXBID='" + JXBID + '\'' +
+                ", KXH='" + KXH + '\'' +
+                ", BJDM='" + BJDM + '\'' +
+                ", BJMC='" + BJMC + '\'' +
+                ", ZCMC='" + ZCMC + '\'' +
+                ", JSM='" + JSM + '\'' +
+                ", KCM='" + KCM + '\'' +
+                ", JASDM='" + JASDM + '\'' +
+                ", KCH='" + KCH + '\'' +
+                ", __equalsCalc=" + __equalsCalc +
+                ", __hashCodeCalc=" + __hashCodeCalc +
+                '}';
+    }
+
     public KzJskb(
            java.lang.String BY6,
            java.lang.String BY5,

@@ -72,6 +72,11 @@ public class TeacherCurriculumInfo extends Base {
                 return res;
             }
 
+            KzJskb[] temp = kzJskbResult.getResult();
+            for (int i = 0; i < temp.length; i++) {
+                System.out.println(temp[i].toString());
+            }
+
             KzJskb[] kzJskbs = kzJskbResult.getResult();
             if (kzJskbs == null || kzJskbs.length == 0) {
                 return res;
@@ -111,7 +116,6 @@ public class TeacherCurriculumInfo extends Base {
         List<TeacherOccupyTime> teacherOccupyTimes = this.queryTeacherOccupyTime(operatorId, operatorName, teacherId, academicYear,classSemester);
         boolean[][] res = new boolean[CLASS_HOURS_PER_DAY][CLASS_DAYS_PER_WEEK];
         for (TeacherOccupyTime teacherOccupyTime : teacherOccupyTimes) {
-            logger.info(teacherOccupyTime.toString());
             if (teacherOccupyTime.getWeeks().substring(startWeek - 1, endWeek).contains("1")) {
                 for (int i = teacherOccupyTime.getHourStartIndex(); i <= teacherOccupyTime.getHourEndIndex(); i++) {
                     res[i][teacherOccupyTime.getDayIndex()] = true;
@@ -133,8 +137,8 @@ public class TeacherCurriculumInfo extends Base {
 
     public static void main(String[] args) {
         TeacherCurriculumInfo aClass = new TeacherCurriculumInfo();
-        List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0002001021", "2018-2019", "春季");
-        boolean[][] occupyTimes = aClass.getTeacherOccupyTime("0002001021", "2018-2019", "春季", 1, 8, "3118105316", "张发");
+        List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0002002065", "2018-2019", "春季");
+        boolean[][] occupyTimes = aClass.getTeacherOccupyTime("0002002065", "2018-2019", "春季", 1, 8, "3118105316", "张发");
         for (TeacherOccupyTime teacherOccupyTime : res) {
             System.out.println(teacherOccupyTime);
         }

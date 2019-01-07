@@ -172,17 +172,16 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         }
 
         // 3. 校验上课地点冲突
-
-        // 3.1 校验已排课程地点的冲突
-        if (checkGraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, timetableTFT)) {
-            return res;
+        if (c.getClassPlaceId() != null && !c.getClassPlaceId().isEmpty()) {
+            // 3.1 校验已排课程地点的冲突
+            if (checkGraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, timetableTFT)) {
+                return res;
+            }
+            // 3.2 校验本科课程地点的冲突
+            if (checkUndergraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, rows, cols)) {
+                return res;
+            }
         }
-
-        // 3.2 校验本科课程地点的冲突
-        if (checkUndergraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, rows, cols)) {
-            return res;
-        }
-
         c.setConflictDesc(conflictDescBuilder.toString());
         c.setScheduled(1);
 

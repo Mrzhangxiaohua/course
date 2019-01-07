@@ -87,8 +87,8 @@ public class ClassroomOccupy {
                 1, 8, 7, 1,2,"3001465", "1484","1484");
 
         ClassRoomUsed[] classRoomUseds = {classRoomUsed};
-//        int flag = classroomOccupy.addUsedClassroom(classRoomUseds, "3118105316", "张发");
-        int flag = classroomOccupy.delUsedClassroom(classRoomUseds, "3118105316", "张发");
+        int flag = classroomOccupy.addUsedClassroom(classRoomUseds, "3118105316", "张发");
+//        int flag = classroomOccupy.delUsedClassroom(classRoomUseds, "3118105316", "张发");
 
         System.out.println(flag);
     }

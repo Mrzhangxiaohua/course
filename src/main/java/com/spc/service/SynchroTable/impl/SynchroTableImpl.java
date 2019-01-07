@@ -43,7 +43,7 @@ public class SynchroTableImpl extends Base implements SynchroTable {
         classDomain.setClassChooseNum(classAll.getStuChooseNum());
         classDomain.setClassUpperLimit(courseAll.getStuNumUpperLimit());
         if (classAll.getClassDateDesc() != null && !classAll.getClassDateDesc().isEmpty()) {
-            classDomain.setClassDateDescription((convertDateDesc(classAll.getClassDateDesc())).get(0));
+            classDomain.setClassDateDescription(wrapDateDesc(convertDateDesc(classAll.getClassDateDesc())));
         }
         classDomain.setClassPlace(classAll.getClassPlaceName());
         classDomain.setClassLength(0);
@@ -80,39 +80,83 @@ public class SynchroTableImpl extends Base implements SynchroTable {
     }
 
     private List<String> convertDateDesc(String classDateDesc) {
-        System.out.println(classDateDesc);
         // 首先划分得到每一个小时粒度的课程
         String[] descs = classDateDesc.split(",");
-        List<Integer[]> descInts = new ArrayList<>();
-        // 将所有的划分为一个数组
-        for (String desc : descs) {
-            String[] descStrs = desc.split("-");
-            descInts.add(new Integer[]{Integer.parseInt(descStrs[1]), Integer.parseInt(descStrs[0])});
-        }
-        List<List<Integer>> res = new ArrayList<>();
-        for (Integer[] ints : descInts) {
-            if (res.isEmpty()) {
-                List<Integer> temp = new ArrayList(Arrays.asList(ints));//**须定义时就进行转化**
-                temp.add(2, 1);
-//                ints[2] = 0;
-                res.add(temp);
-            }
-            for (List<Integer> ints2 : res) {
-                if (ints2.get(0) == ints[0] & (ints2.get(1) == (ints[1] - 1))) {
-                    ints2.set(2, ints2.get(2) + 1);
-                } else if (ints2.get(0) == ints[0] & (ints2.get(1) == (ints[1] + 1))) {
-                    ints2.set(1, ints2.get(1) - 1);
-                    ints2.set(2, ints2.get(2) + 1);
+        for (int i = 0; i < descs.length; i++) {//表示n次排序过程。
+            for (int j = 1; j < descs.length - i; j++) {
+                String[] ints = descs[j - 1].split("-");
+                String[] ints1 = descs[j].split("-");
+                if (Integer.parseInt(ints[0]) > Integer.parseInt(ints1[0])) {//前面的数字大于后面的数字就交换
+                    //交换a[j-1]和a[j]
+                    String temp;
+                    temp = descs[j - 1];
+                    descs[j - 1] = descs[j];
+                    descs[j] = temp;
                 }
             }
         }
-        System.out.println(res);
-        List<String> resStr = new ArrayList<>();
-        for (List<Integer> i : res) {
-            resStr.add(Integer.toString(i.get(0) + 1) + ":" + Integer.toString(i.get(1) + 1) + ":" + i.get(2));
+        for (int i = 0; i < descs.length; i++) {//表示n次排序过程。
+            for (int j = 1; j < descs.length - i; j++) {
+                String[] ints = descs[j - 1].split("-");
+                String[] ints1 = descs[j].split("-");
+                if (Integer.parseInt(ints[1]) > Integer.parseInt(ints1[1])) {//前面的数字大于后面的数字就交换
+                    String temp;
+                    temp = descs[j - 1];
+                    descs[j - 1] = descs[j];
+                    descs[j] = temp;
+                }
+            }
         }
-        return resStr;
+        List<List<Integer>> descInts = new ArrayList<>();
+        for (String desc : descs) {
+            String[] descStrs = desc.split("-");
+            List<Integer> temp = new ArrayList<>();
+            temp.add(Integer.parseInt(descStrs[1]) + 1);
+            temp.add(Integer.parseInt(descStrs[0]) + 1);
+            descInts.add(temp);
+        }
+        boolean flag = false;
+        List<List> res = new ArrayList<>();
+        int i = 0;
+        while (i < descInts.size()) {
+            if (i == descInts.size() - 1) {
+                List temp = descInts.get(i);
+                temp.add(2, 1);
+                res.add(temp);
+                break;
+            } else {
+                int j = i + 1;
+                while (true) {
+                    if (j == descInts.size()) break;
+                    List<Integer> after = descInts.get(j);
+                    List<Integer> pre = descInts.get(j - 1);
+                    if (after.get(0) == pre.get(0) && (after.get(1) - pre.get(1) == 1)) {
+                        j++;
+                    } else {
+                        break;
+                    }
+                }
+                List temp = descInts.get(i);
+                temp.add(2, j - i );
+                res.add(temp);
+                i = j;
+            }
+        }
+        List<String> result = new ArrayList<>();
+        for (int t = 0; t < res.size(); t++) {
+            String temp = res.get(t).get(0) + ":" + res.get(t).get(1) + ":" + res.get(t).get(2);
+            result.add(temp);
+        }
+        return result;
 
+    }
+
+    public String wrapDateDesc(List<String> temp){
+        String res = "";
+        for (int i=0;i<temp.size();i++){
+            res  = res + temp.get(i) + ",";
+        }
+        return  res;
     }
 
     private Integer getMI(String moduleId) {
@@ -129,11 +173,12 @@ public class SynchroTableImpl extends Base implements SynchroTable {
         }
         return Integer.parseInt(res);
     }
+
     public static void main(String[] args) {
         SynchroTableImpl stl = new SynchroTableImpl();
-        List res = stl.convertDateDesc("0-4,1-4,");
+//        String res = stl.wrapDateDesc(stl.convertDateDesc("2-1"));
+        String res = stl.wrapDateDesc(stl.convertDateDesc("2-1,3-1,8-3,9-3,10-3,5-2,6-2,5-3,6-3,10-5"));
         System.out.println(res);
-        String className = "班";
-        System.out.println(stl.getNum(className));
+
     }
 }

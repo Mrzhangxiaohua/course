@@ -47,9 +47,13 @@ public class StudentServiceImpl extends Base implements StudentService {
     }
 
     private boolean timechongtu(String stuId, int classId) {
+        // 找到该学生的所有上课时间
         List<Map> maps = classDao.findStudentClassTime(stuId);
+        // 转化成数组类型
         List<long[]> times = StudentTimeLoad.StudentTimeLoad(maps);
+        // 该课程的数组的类型
         Map map = classDao.findClassTimeById(classId);
+        // 将课程的上课时间转化成数组类型
         List<long[]> classTime = StudentTimeLoad.TimeLoad(map);
 
         return TimeConflict.confilct(times, classTime);
@@ -245,9 +249,8 @@ public class StudentServiceImpl extends Base implements StudentService {
             String[] d = classDomain.getClassDateDescription().split(":");
             Integer a = Integer.parseInt(d[0]);
             Integer b = Integer.parseInt(d[1]);
-            Integer c = Integer.parseInt(d[2]);
+            Integer c = Integer.parseInt(d[2].replace(",",""));
             classDomain.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b, c)));
-//            logger.info(classDomain.getButtonGroup());
         }
         return classes;
     }
