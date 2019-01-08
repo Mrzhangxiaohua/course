@@ -31,10 +31,10 @@ public class MakeTimeTable {
                 int r = t;
                 String context =encode1(className,  classPlace,  teacherName, mainLecturer, startWeek,  endWeek,  classNum, student);
                 for (int i = 0; i< z; i++){
-                    temp[(l-1) * 2 + i][r - 1] = temp[(l-1) * 2 + i][r - 1] != null ? temp[(l-1) * 2 + i][r - 1] + ','+ context : context;
+//                    temp[(l-1) * 2 + i][r - 1] = temp[(l-1) * 2 + i][r - 1] != null ? temp[(l-1) * 2 + i][r - 1] + ','+ context : context;
+                    temp[l - 1 + i][r - 1] = temp[l - 1 + i][r - 1] != null ? temp[l - 1 + i][r - 1] + ','+ context : context;
+
                 }
-//                temp[(l - 1) * 2][r - 1] = temp[(l - 1) * 2][r - 1] != null ? temp[(l - 1) * 2][r - 1] + "," + context : context;
-//                temp[(l - 1) * 2 + 1][r - 1] = temp[(l - 1) * 2 + 1][r - 1] != null ? temp[(l - 1) * 2 + 1][r - 1] + "," + context : context;
             }
         }
         System.out.println(temp);

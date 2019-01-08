@@ -246,11 +246,19 @@ public class StudentServiceImpl extends Base implements StudentService {
         for (ClassDomain classDomain : classes) {
             System.out.println(classDomain.isNotShowAddButton() + ":" + classDomain.isShowDeleteButton());
             classDomain.setButtonGroup(Boolean.toString(!classDomain.isNotShowAddButton()) + ":" + Boolean.toString(classDomain.isShowDeleteButton()));
-            String[] d = classDomain.getClassDateDescription().split(":");
-            Integer a = Integer.parseInt(d[0]);
-            Integer b = Integer.parseInt(d[1]);
-            Integer c = Integer.parseInt(d[2].replace(",",""));
-            classDomain.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b, c)));
+            String[] descs = classDomain.getClassDateDescription().split(",");
+            StringBuffer res = new StringBuffer();
+            for (String desc:descs){
+                String[] d = desc.split(":");
+                Integer a = Integer.parseInt(d[0]);
+                Integer b = Integer.parseInt(d[1]);
+                Integer c = Integer.parseInt(d[2].replace(",",""));
+                res.append(CourseDateTrans.dateToString(a, b, c));
+                res.append(",");
+            }
+
+            String s = res.toString().substring(0,res.length()-1);
+            classDomain.setClassDateDescription(s);
         }
         return classes;
     }

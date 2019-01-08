@@ -320,6 +320,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
      * @return
      */
     private boolean useClassroom(ClassAll classAll, Map<String, String> res, int[] rows, int[] cols, boolean del) {
+        if (classAll.getClassPlaceId() == null || classAll.getClassPlaceId().isEmpty()) {
+            return false;
+        }
         ClassRoomUsed[] classRoomUseds = new ClassRoomUsed[rows.length];
         logger.info("=== useClassroom start ===");
         for (int i = 0; i < rows.length; i++) {
@@ -631,12 +634,12 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         return res;
     }
 
-    private boolean freeClassroomAndTeacher(ClassAll classAll, Map<String, String> res) {
-        if (classAll.getScheduled() == 0) {
+    private boolean freeClassroomAndTeacher(ClassAll c, Map<String, String> res) {
+        if (c.getScheduled() == 0) {
             return true;
         }
         // 释放教室和老师的时间占用
-        String[] classDates = classAll.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
+        String[] classDates = c.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
         int[] rows = new int[classDates.length];
         int[] cols = new int[classDates.length];
         for (int i = 0; i < classDates.length; i++) {
@@ -648,35 +651,37 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         }
 
         // 释放地点
-        ClassRoomUsed[] classRoomUseds = new ClassRoomUsed[classDates.length];
-        logger.info("=== freeClassroom start ===");
-        for (int i = 0; i < classDates.length; i++) {
-            int rowIndex = rows[i];
-            int colIndex = cols[i];
-            int classHour = getClassHour(rowIndex);
-            ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(classAll.getAcademicYear(), classAll.getClassSemester(), classAll.getSchoolDistrictId().toString(),
-                    classAll.getStartWeek(), classAll.getEndWeek(), colIndex + 1, classHour, classHour,
-                    classAll.getClassPlaceId(), classAll.getId().toString(), classAll.getId().toString());
-            classRoomUseds[i] = classRoomUsed;
-            logger.info("=== delUsedClassroom: " + classRoomUsed.toString());
-        }
-        int flag = classroomOccupyService.delUsedClassroom(classRoomUseds, classAll.getOperatorId(), classAll.getOperatorName());
-        logger.info("=== freeClassroom end, flag: " + flag + "===");
+        if (c.getClassPlaceId() != null && !c.getClassPlaceId().isEmpty()) {
+            ClassRoomUsed[] classRoomUseds = new ClassRoomUsed[classDates.length];
+            logger.info("=== freeClassroom start ===");
+            for (int i = 0; i < classDates.length; i++) {
+                int rowIndex = rows[i];
+                int colIndex = cols[i];
+                int classHour = getClassHour(rowIndex);
+                ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(c.getAcademicYear(), c.getClassSemester(), c.getSchoolDistrictId().toString(),
+                        c.getStartWeek(), c.getEndWeek(), colIndex + 1, classHour, classHour,
+                        c.getClassPlaceId(), c.getId().toString(), c.getId().toString());
+                classRoomUseds[i] = classRoomUsed;
+                logger.info("=== delUsedClassroom: " + classRoomUsed.toString());
+            }
+            int flag = classroomOccupyService.delUsedClassroom(classRoomUseds, c.getOperatorId(), c.getOperatorName());
+            logger.info("=== freeClassroom end, flag: " + flag + "===");
 
-        if (flag == 0) {
-            res.put("status", "error");
-            res.put("msg", "本科教务系统异常！");
-            return false;
+            if (flag == 0) {
+                res.put("status", "error");
+                res.put("msg", "本科教务系统异常！");
+                return false;
+            }
         }
 
         // 释放老师时间资源
-        String[] instructorIds = classAll.getInstructorId().split(ARRAY_SPLIT_CHAR);
+        String[] instructorIds = c.getInstructorId().split(ARRAY_SPLIT_CHAR);
         for (int i = 0; i < classDates.length; i++) {
             for (int j = 0; j < instructorIds.length; j++) {
-                KzJskb kzJskb = teacherOccupyService.createKzJskb(classAll.getAcademicYear(), classAll.getClassSemester(),
+                KzJskb kzJskb = teacherOccupyService.createKzJskb(c.getAcademicYear(), c.getClassSemester(),
                         null, null, null, null, null, null,
-                        instructorIds[j], classAll.getId().toString(), classAll.getId().toString());
-                flag = teacherOccupyService.deleteTeacherOccupyTime(kzJskb, classAll.getOperatorId(), classAll.getOperatorName());
+                        instructorIds[j], c.getId().toString(), c.getId().toString());
+                int flag = teacherOccupyService.deleteTeacherOccupyTime(kzJskb, c.getOperatorId(), c.getOperatorName());
                 logger.info("=== deleteTeacherOccupyTime: " + kzJskb.toString() + "\n=== flag: " + flag);
                 if (flag == 0) {
                     // 释放失败
@@ -688,11 +693,11 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                             int rowIndex = rows[j];
                             int colIndex = cols[j];
                             int classHour = getClassHour(rowIndex);
-                            kzJskb = teacherOccupyService.createKzJskb(classAll.getAcademicYear(), classAll.getClassSemester(),
-                                    classAll.getSchoolDistrictId().toString(), classAll.getStartWeek(),
-                                    classAll.getEndWeek(), colIndex + 1, classHour, classHour,
-                                    instructorIds[j], classAll.getId().toString(), classAll.getId().toString());
-                            flag = teacherOccupyService.addTeacherOccupyTime(kzJskb, classAll.getOperatorId(), classAll.getOperatorName());
+                            kzJskb = teacherOccupyService.createKzJskb(c.getAcademicYear(), c.getClassSemester(),
+                                    c.getSchoolDistrictId().toString(), c.getStartWeek(),
+                                    c.getEndWeek(), colIndex + 1, classHour, classHour,
+                                    instructorIds[j], c.getId().toString(), c.getId().toString());
+                            flag = teacherOccupyService.addTeacherOccupyTime(kzJskb, c.getOperatorId(), c.getOperatorName());
                             logger.info("=== addTeacherOccupyTime: " + kzJskb.toString() + "\n=== flag: " + flag);
                             if (i == iMax && j == jMax) {
                                 res.put("status", "error");
