@@ -35,6 +35,9 @@
         where stuId =#{stuId}
     </update>
 
+    <insert id="addStudent"  flushCache="true">
+      insert into course.XuanKeStu (name, stuId) values(#{stuName}, #{stuId})
+    </insert>
     <insert id="insert" useGeneratedKeys="true" keyProperty="uid" parameterType="com.spc.model.UserDomain" flushCache="true"
             keyColumn="uid">
       insert  into  course.User (stuId, role) values(#{stuId}, #{role})
@@ -43,6 +46,11 @@
         select departId
         from Department
         where departCode=#{departCode}
+    </select>
+    <select id="findStudent" resultType="map">
+        select *
+        from course.XuanKeStu
+        where stuId=#{stuId}
     </select>
 
 </mapper>

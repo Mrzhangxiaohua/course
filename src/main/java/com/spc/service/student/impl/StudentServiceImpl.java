@@ -38,17 +38,21 @@ public class StudentServiceImpl extends Base implements StudentService {
     private TimeSwitchDao timeSwitchDao;
 
 
+
+
     @Override
     public String[][] findClasses(String stuId) {
 //        int stuId = Integer.parseInt(authMess.userDetails().getUserid());
-        List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
+        List<HashMap<String, Object>> lis = studentDao.findClasses(stuId, CURRENTSEMESTER);
         System.out.println(lis);
-        return MakeTimeTable.makeBigTable(lis, 1);
+        String[][] res = MakeTimeTable.makeBigTable(lis, 1);
+        logger.info("===================run here");
+        return res;
     }
 
     private boolean timechongtu(String stuId, int classId) {
         // 找到该学生的所有上课时间
-        List<Map> maps = classDao.findStudentClassTime(stuId);
+        List<Map> maps = classDao.findStudentClassTime(stuId,CURRENTSEMESTER);
         // 转化成数组类型
         List<long[]> times = StudentTimeLoad.StudentTimeLoad(maps);
         // 该课程的数组的类型
@@ -60,10 +64,13 @@ public class StudentServiceImpl extends Base implements StudentService {
     }
 
     @Override
-    public int addCourse(int classId, String stuId,Integer departId) {
+    public int addCourse(int classId, String stuId, Integer departId) {
         // 该学生所选的所有课程
-        List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
-
+        List<HashMap<String, Object>> lis = studentDao.findClasses(stuId, CURRENTSEMESTER);
+        if (PREVIOUSSEMESTER != null) {
+            List<HashMap<String, Object>> lis2 = studentDao.findClasses(stuId, PREVIOUSSEMESTER);
+            lis.addAll(lis2);
+        }
         // 计算该学生的所有课时
         Integer allTime = 0;
         for (HashMap recode : lis) {
@@ -78,22 +85,35 @@ public class StudentServiceImpl extends Base implements StudentService {
         if (courseDepartId != 12 && courseDepartId != departId) {
             return 1;
         }
-        logger.info(stuId+"学生已经选了"+ allTime+"课时");
+        logger.info(stuId + "学生已经选了" + allTime + "课时");
         // 判断这个课程和该学生有没有时间冲突
         boolean chongtu = timechongtu(stuId, classId);
         if (allTime == 32) {
             // 已经选够32学时
             logger.info("已经选够32学时，不能再选");
             return 1;
-        } else if(chongtu){
+        } else if (chongtu) {
             // 有课程冲突
             logger.info("有课程冲突，不能选择");
             return 1;
+        }  else if (allTime == 28) {
+            if (courseDepartId == departId) {
+                // 要选择的是自己学院的课程
+                if (classTime == 4) {
+                    //课时是8课时
+                    addyuanzi(classId, stuId);
+                }else {
+                    // 课时多了，不能添加
+                    return 1;
+                }
+            } else return 1; // 选择的是其他学院的课程
         } else if (allTime == 24) {
             if (courseDepartId == departId) {
                 // 要选择的是自己学院的课程
                 if (classTime == 8) {
                     //课时是8课时
+                    addyuanzi(classId, stuId);
+                }else if(classTime ==4){
                     addyuanzi(classId, stuId);
                 } else {
                     // 课时多了，不能添加
@@ -103,10 +123,10 @@ public class StudentServiceImpl extends Base implements StudentService {
         } else if (allTime == 16) {
             // 得到已经选择的课程id
             Integer haveSelectCourseDepartId = getSelectCourseDepartId(lis);
-            logger.info("选择的课程id是"+haveSelectCourseDepartId);
+            logger.info("选择的课程id是" + haveSelectCourseDepartId);
             if (haveSelectCourseDepartId == 12) {
                 // 如果是外国语学院的课程
-                boolean notKaiKe = classDao.kaiKe(departId).isEmpty();
+                boolean notKaiKe = classDao.kaiKe(departId,CURRENTSEMESTER).isEmpty();
                 if (notKaiKe == false) {
                     logger.info("该学生所在的学院开课了");
                     // 该学生的自己的学院已经开课了
@@ -134,17 +154,43 @@ public class StudentServiceImpl extends Base implements StudentService {
                     return 1;
                 }
             }
-        } else if (allTime == 8) {
+        } else if(allTime == 12){
+            if (courseDepartId == 12) {
+                addyuanzi(classId, stuId);
+            }else if (courseDepartId == departId) {
+                if (classTime == 4){
+                    addyuanzi(classId, stuId);
+                }else {
+                    return 2;
+                }
+            }
+        }else if (allTime == 8) {
             if (courseDepartId == 12) {
                 addyuanzi(classId, stuId);
             } else if (courseDepartId == departId) {
                 if (classTime == 8) {
                     addyuanzi(classId, stuId);
-                } else {
+                } else if (classTime == 4){
+                    addyuanzi(classId, stuId);
+                }else {
                     return 2;
                 }
             }
-        } else {
+        }
+        else if(allTime == 4){
+            if(courseDepartId == 12){
+                addyuanzi(classId,stuId);
+            }else if(courseDepartId == departId){
+                if(classTime == 4){
+                    addyuanzi(classId, stuId);
+                }else if (classTime == 8){
+                    addyuanzi(classId, stuId);
+                }else {
+                    return 2;
+                }
+            }
+        }
+        else {
             addyuanzi(classId, stuId);
         }
         return 0;
@@ -152,7 +198,7 @@ public class StudentServiceImpl extends Base implements StudentService {
 
     private Integer getSelectCourseDepartId(List<HashMap<String, Object>> lis) {
         HashMap recode = lis.get(0);
-        return (int)(recode.get("departId"));
+        return (int) (recode.get("departId"));
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -248,16 +294,16 @@ public class StudentServiceImpl extends Base implements StudentService {
             classDomain.setButtonGroup(Boolean.toString(!classDomain.isNotShowAddButton()) + ":" + Boolean.toString(classDomain.isShowDeleteButton()));
             String[] descs = classDomain.getClassDateDescription().split(",");
             StringBuffer res = new StringBuffer();
-            for (String desc:descs){
+            for (String desc : descs) {
                 String[] d = desc.split(":");
                 Integer a = Integer.parseInt(d[0]);
                 Integer b = Integer.parseInt(d[1]);
-                Integer c = Integer.parseInt(d[2].replace(",",""));
+                Integer c = Integer.parseInt(d[2].replace(",", ""));
                 res.append(CourseDateTrans.dateToString(a, b, c));
                 res.append(",");
             }
 
-            String s = res.toString().substring(0,res.length()-1);
+            String s = res.toString().substring(0, res.length() - 1);
             classDomain.setClassDateDescription(s);
         }
         return classes;
@@ -308,7 +354,7 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Override
     public List<HashMap<String, Object>> findAllClassName(int student, String stuId) {
         if (student == 1) {
-            List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
+            List<HashMap<String, Object>> lis = studentDao.findClasses(stuId, CURRENTSEMESTER);
             return lis;
 
         } else {
@@ -326,7 +372,7 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Override
     public int getTimeSwtich() {
         Map map = timeSwitchDao.get2();
-        System.out.println("时间西段是："+map);
+        System.out.println("时间西段是：" + map);
         java.sql.Timestamp start = (java.sql.Timestamp) map.get("start");
         java.sql.Timestamp end = (java.sql.Timestamp) map.get("end");
         System.out.println(start);
@@ -345,7 +391,7 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Override
     public int addComment(String stuId, String teaId, String[] score, String words) {
         int num = 0;
-        for (int i = 0; i < score.length; i++){
+        for (int i = 0; i < score.length; i++) {
             num = num + Integer.parseInt(score[i]);
         }
         String scores = String.valueOf(num);
@@ -356,14 +402,14 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Override
     public List<Map<String, Object>> selectList(String stuId) {
         System.out.println("==========" + stuId + "==========");
-        List<Map<String, Object>> list= studentDao.selectList(stuId);
+        List<Map<String, Object>> list = studentDao.selectList(stuId);
         System.out.println(list);
         //判断是否评教过
         List<Map<String, Object>> m = studentDao.findIsComment(stuId);
         System.out.println("================" + m + "=======libiao=========");
-        if(m.size() == 0){
+        if (m.size() == 0) {
             list.get(0).put("isComment", '0');//0表示未评教
-        }else {
+        } else {
             list.get(0).put("isComment", '1');
         }
         System.out.println(list);
@@ -372,8 +418,8 @@ public class StudentServiceImpl extends Base implements StudentService {
 
     @Override
     public List<Map<String, Object>> selectList1(String stuId) {
-        List<Map<String, Object>> list= studentDao.selectList(stuId);//找到学生所选课表
-        for (int i = 0; i < list.size(); i++){
+        List<Map<String, Object>> list = studentDao.selectList(stuId);//找到学生所选课表
+        for (int i = 0; i < list.size(); i++) {
             list.get(i).put("isComment", '0');
         }
 //        System.out.println(list);
@@ -396,9 +442,9 @@ public class StudentServiceImpl extends Base implements StudentService {
         String CHUSHISHIJIAN2 = "2018-09-01 23:59:59";//每一个学期的第一周的星期一
         int startWeek = 0;
         int endWeek = 0;
-        List<Map<String, Object>> li= studentDao.selectList(stuId);
-        for (Map map : li){
-            for (Object k : map.keySet()){
+        List<Map<String, Object>> li = studentDao.selectList(stuId);
+        for (Map map : li) {
+            for (Object k : map.keySet()) {
                 startWeek = (int) map.get("startWeek");
                 endWeek = (int) map.get("endWeek");
             }
@@ -419,14 +465,14 @@ public class StudentServiceImpl extends Base implements StudentService {
             //每周开始时间
             Calendar calStart = Calendar.getInstance();
             calStart.setTime(date);
-            Calendar calEnd= Calendar.getInstance();
+            Calendar calEnd = Calendar.getInstance();
             calEnd.setTime(data);
             calStart.add(Calendar.DATE, 7 * (startWeek - 1));//开始周加上初始上课周的时间
             calEnd.add(Calendar.DATE, 7 * (startWeek - 1));
-            for (int i = 1; i <= week; i++){
-                calStart.add(Calendar.DATE,7 * (i - 1));
+            for (int i = 1; i <= week; i++) {
+                calStart.add(Calendar.DATE, 7 * (i - 1));
                 calEnd.add(Calendar.DATE, 7 * i);
-                if(calNow.after(calStart) && calNow.before(calEnd)){
+                if (calNow.after(calStart) && calNow.before(calEnd)) {
                     System.out.println(i);
                     return i + startWeek;
                 }
@@ -458,8 +504,8 @@ public class StudentServiceImpl extends Base implements StudentService {
         int startWeek = 0;
         int endWeek = 0;
         List<Map<String, Object>> li = studentDao.selectList(stuId);
-        for (Map map : li){
-            for (Object k : map.keySet()){
+        for (Map map : li) {
+            for (Object k : map.keySet()) {
                 startWeek = (int) map.get("startWeek");
                 endWeek = (int) map.get("endWeek");
             }
@@ -468,9 +514,9 @@ public class StudentServiceImpl extends Base implements StudentService {
         int b = list.size(); //作为补充
         int k = week - list.size(); // 先生成一个完整的数组，大小为需要评价的周次数  8 - 1
 //        System.out.println(week);
-        if(list.size() != 0 ){
+        if (list.size() != 0) {
             //先生成相应的八个信息
-            for (int i = 0; i < k; i++){
+            for (int i = 0; i < k; i++) {
                 Map<String, Object> m = new HashMap<>();
                 m.put("commentFlag", "0");              //0表示未评价
                 list.add(m);
@@ -481,45 +527,45 @@ public class StudentServiceImpl extends Base implements StudentService {
             int start = startWeek;
             int index = 0;
 
-            for (int i = 1; i<= week; i++){
-                if(!(String.valueOf(list.get(index).get("classWeek"))).equals(String.valueOf(start))){
+            for (int i = 1; i <= week; i++) {
+                if (!(String.valueOf(list.get(index).get("classWeek"))).equals(String.valueOf(start))) {
 //                    System.out.println(list.get(index).get("classWeek") + "=========" + String.valueOf(start));
                     Map<String, Object> m = new HashMap<>();
-                    m.put("commentFlag","0");
+                    m.put("commentFlag", "0");
                     m.put("test", "2333");
                     list.add(index, m);
 //                    System.out.println("未走到else");
                     index = index + 1;
                     start = start + 1;
-                }else {
+                } else {
                     start = start + 1;
                     index = index + 1;//索引后移一位
                 }
             }
 //            System.out.println("插入后完整的list" + list);//生成l 16个
             int len = list.size() - 1;
-            for (int i = len; i > week - 1 ; i--){//清除冗余 b = list.size()
+            for (int i = len; i > week - 1; i--) {//清除冗余 b = list.size()
                 list.remove(i);
             }
             //数据格式的转换
             Map<String, Object> m1 = new HashMap<>();
             m1.put("data", list);
             Map<String, Object> m2 = new HashMap<>();
-            m2.put("startWeek",startWeek);
-            List <Map<String, Object>>l = new ArrayList<>();
+            m2.put("startWeek", startWeek);
+            List<Map<String, Object>> l = new ArrayList<>();
             l.add(m2);
             l.add(m1);
 //            System.out.println("最终的list" + l);
             return l;
-        }else {
-            List <Map<String, Object>>l = new ArrayList<>();
-            for (int i = 0; i < k; i++){
+        } else {
+            List<Map<String, Object>> l = new ArrayList<>();
+            for (int i = 0; i < k; i++) {
                 Map<String, Object> m = new HashMap<>();
                 m.put("commentFlag", "0");
                 list.add(i, m);
             }
             Map<String, Object> m2 = new HashMap<>();
-            m2.put("startWeek",startWeek);
+            m2.put("startWeek", startWeek);
             Map<String, Object> m1 = new HashMap<>();
             m1.put("data", list);
             l.add(m2);

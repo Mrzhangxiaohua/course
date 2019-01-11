@@ -10,7 +10,7 @@ import java.util.Map;
 @Repository
 public interface StudentDao {
 
-    public List<HashMap<String, Object>> findClasses(@Param("stuId") String stuId);
+    public List<HashMap<String, Object>> findClasses(@Param("stuId") String stuId,@Param("classSemester") String classSemester);
 
     public List<HashMap<String,Object>> findAllClassName();
 

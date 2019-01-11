@@ -15,7 +15,7 @@
         left join course.Course b
         on a.classId = b.classId
         <where>
-            stuId = #{stuId}
+            stuId = #{stuId} and b.classSemester=#{classSemester}
         </where>
     </select>
 

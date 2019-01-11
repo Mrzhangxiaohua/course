@@ -50,8 +50,8 @@ public class CourseController extends Base{
 
         PageHelper.startPage(currentPage, pageSize);
         List<ClassDomain> classes = classService.findAllClass(departId, classname, teaId, 88888888, 88888888);
-        System.out.println(classes);
-//        List<ClassDomain> temps = new ArrayList<>();
+
+       //        List<ClassDomain> temps = new ArrayList<>();
         if(classes !=null){
             for (ClassDomain l : classes) {
 //                if(l.getClassChooseNum()==l.getClassUpperLimit()){
@@ -59,14 +59,20 @@ public class CourseController extends Base{
 //                }
 //                classes.remove(l);
                 System.out.println(l.getClassDateDescription());
+                String[] descs = l.getClassDateDescription().split(",");
+                StringBuilder str=new StringBuilder();
+                for(String desc:descs) {
+                    String[] d = desc.split(":");
+                    int a = Integer.parseInt(d[0]);
+                    int b = Integer.parseInt(d[1]);
+                    int c = Integer.parseInt(d[2].replace(",", ""));
+                    str.append(CourseDateTrans.dateToString(a, b, c));
+                    str.append(",");
 
-                String[] d = l.getClassDateDescription().split(":");
-                int a = Integer.parseInt(d[0]);
-                int b = Integer.parseInt(d[1]);
-                int c = Integer.parseInt(d[2].replace(",",""));
-                l.setClassDateDescription(new String(CourseDateTrans.dateToString(a, b, c)));
-                l.setClassDateDescriptionA(Integer.toString(a));
-                l.setClassDateDescriptionB(Integer.toString(b));
+                }
+                String res=str.toString().substring(0, str.length() - 1);
+                l.setClassDateDescription(res);
+
             }
         }
         Map<String, Object> res = new HashMap<>();

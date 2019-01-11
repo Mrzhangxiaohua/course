@@ -26,7 +26,10 @@ public class XuanKeStu {
         return stuName;
     }
     public boolean inStuNames(Map map){
+        System.out.println("======inStuNames方法======" + map.get("name") + ":" + map.get("stuId"));
         getXuanKeNames();
+        boolean s = stuName.contains(map);
+        System.out.println("是否包含学生信息" + s);
         return stuName.contains(map);
     }
 }

@@ -40,60 +40,36 @@ public class CourseDateTrans {
             default:
                 break;
         }
-        ;
         return strs;
     }
 
     public static StringBuilder bToString(Integer b, Integer c) {
         StringBuilder strs = new StringBuilder("");
         if (c == 1) {
-            strs = strs.append("第" + b + "节");
-        } else {
-            switch (b) {
-                case 1:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 2:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 3:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 4:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 5:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 6:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 7:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 8:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 9:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 10:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 11:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 12:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                case 13:
-                    strs = strs.append((b + "-" + (b - 1 + c)) + "节");
-                    break;
-                default:
-                    break;
+            if (b <= 4) {
+                strs = strs.append("第" + b + "节");
+            } else if (b >= 5 && b <= 6) {
+                strs = strs.append("第N" + (b - 4) + "节");
+            } else {
+                strs = strs.append("第" + (b - 2) + "节");
             }
+        } else {
+            strs = strs.append((convertFormat(b) + "-" + convertFormat(b - 1 + c) + "节"));
         }
+
         return strs;
+}
+
+    private static String convertFormat(Integer index) {
+        String res = "";
+        if (index <= 4) {
+            res += index;
+        } else if (index >= 5 && index <= 6) {
+            res += ("N" + (index - 4));
+        } else {
+            res += (index - 2);
+        }
+        return res;
     }
 
 

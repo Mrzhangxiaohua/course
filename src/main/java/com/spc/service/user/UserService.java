@@ -12,6 +12,7 @@ public interface UserService {
 
 
     boolean addUser(UserDomain user);
+    int addStudent(String stuId, String stuName);
 
     UserDomain findUsersById(String id);
 

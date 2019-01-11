@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +44,15 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public int addStudent(String stuId, String stuName) {
+        List<Map> res = userDao.findStudent(stuId);
+        if(res.isEmpty()){
+            return userDao.addStudent(stuId,stuName);
+        }else{
+            return 0;
+        }
+    }
 
 
     @Override

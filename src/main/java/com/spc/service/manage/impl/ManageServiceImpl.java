@@ -2,6 +2,7 @@ package com.spc.service.manage.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.spc.controller.Base;
 import com.spc.dao.*;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-public class ManageServiceImpl implements ManageService {
+public class ManageServiceImpl extends Base implements ManageService {
 
     @Autowired
     private StudentDao studentDao;
@@ -52,27 +53,8 @@ public class ManageServiceImpl implements ManageService {
 
     @Override
     public String[][] findClasses(String stuId) {
-        List<HashMap<String, Object>> lis = studentDao.findClasses(stuId);
-//        String temp[][] = new String[10][7];
-//        for (HashMap<String, Object> li : lis) {
-//            String date = (String) li.get("classDateDescription");
-//            String classPlace = (String) li.get("classPlace");
-//            String teaName = (String) li.get("teaName");
-//            String className = (String) li.get("className");
-//            String startWeek = Integer.toString((Integer) li.get("startWeek"));
-//            String endWeek = Integer.toString((Integer) li.get("endWeek"));
-//            String classNum = Integer.toString((Integer) li.get("classNum"));
-//
-//            String[] ints = date.split(":");
-//            Integer r = ints[0].toCharArray()[0] - '0';
-//            Integer l = ints[1].toCharArray()[0] - '0';
-//
-//            String context = className + ',' + classPlace + ',' + teaName + ',' + startWeek + "-" + endWeek + ',' + classNum;
-//
-//            temp[(r - 1) * 2][l - 1] = context;
-//            temp[(r - 1) * 2 + 1][l - 1] = context;
-//        }
-//        return temp;
+        List<HashMap<String, Object>> lis = studentDao.findClasses(stuId,CURRENTSEMESTER);
+
         return MakeTimeTable.makeBigTable(lis, 0);
     }
 
@@ -244,8 +226,6 @@ public class ManageServiceImpl implements ManageService {
         PageHelper.startPage(currentPage, pageSize);
         return studentDao.findStudentByStudentId(stuId);
     }
-
-
     @Override
     public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className, int tabKey, String shenqingrenname) {
         return classApplicationDao.findallClass(shenQingRenId, className, tabKey, shenqingrenname);
@@ -272,8 +252,6 @@ public class ManageServiceImpl implements ManageService {
     public int updateTimeSwitch2(String startDate, String endDate) {
         return timeSwitchDao.updateTimeSwitch2(startDate, endDate);
     }
-
-
     @Override
     public List<Map> jilianSelect() {
         List<ClassDomain> classes = classDao.selectClasses(88888888, "", "", "", 88888888, 88888888, 1, 88888888, 1, 0);
@@ -379,9 +357,7 @@ public class ManageServiceImpl implements ManageService {
 
     public int addSchoolCalendar(String year, String firstWeek, String semester) {
         schoolCalendarDao.updateCalendarFlag();
-
         schoolCalendarDao.insertCalendar(year, semester, firstWeek);
-
         return 1;
     }
 
@@ -397,6 +373,4 @@ public class ManageServiceImpl implements ManageService {
         gradePercentDao.updateFlagZero();
         return gradePercentDao.insertGradePercent(knsk,xbsj,zzxx,userId,date);
     }
-
-
 }
