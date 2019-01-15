@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.GradeDao">
+
+    <sql id="BASE_TABLE">
+        Grade
+    </sql>
+
+
+    <select id="selectGrade" resultType="com.spc.model.GradeDomain" parameterType="int" >
+        select
+        g.classId,g.wlzzxxGrade,g.knskGrade,g.xbsjGrade,g.zzGrade,g.stuId,g.flag,c.className,c.classSemester,c.classGradePoint
+        from
+        Course_choose g
+        left join Course c
+        on g.classId = c.classId
+        <where>
+            <if test="classId!= 88888888">
+                and g.classId= #{classId}
+            </if>
+            <if test="stuId!= '' and stuId!=null ">
+                and g.stuId= #{stuId}
+            </if>
+        </where>
+    </select>
+</mapper>

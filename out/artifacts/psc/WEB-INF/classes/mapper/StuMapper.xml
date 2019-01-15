@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.StudentDao">
+
+    <!--<cache/>-->
+    <sql id="BASE_COLUMN">
+      stuId,className,classDateDescription,classPlace,teaName,classNum,startWeek,endWeek,departId,classTime
+    </sql>
+
+    <select id="findClasses" resultType="hashmap">
+        select
+        <include refid="BASE_COLUMN"/>
+        from course.Course_choose a
+        left join course.Course b
+        on a.classId = b.classId
+        <where>
+            stuId = #{stuId} and b.classSemester=#{classSemester}
+        </where>
+    </select>
+
+    <insert id="addChooseCourse" useGeneratedKeys="true" keyProperty="chooseId" flushCache="true">
+        insert into course.Course_choose(stuId, classId,wlzzxxGrade,knskGrade,xbsjGrade) values(#{stuId}, #{classId},0,0,0)
+    </insert>
+    <delete id="deleteChooseCourse"  flushCache="true">
+       delete from course.Course_choose where stuId=#{stuId} and classId =#{classId};
+   </delete>
+
+    <select id="findStudent" resultType="map" useCache="false">
+        select DISTINCT
+        a.stuId,b.username as stuName,a.xbsjGrade,c.className,b.tutoremployeeid,b.speciality,b.dep as departName,c.teaName,c.classNum,a.knskGrade,a.wlzzxxGrade
+        from course.Course_choose a
+        left join course.XjtuUserInfo b
+        on a.stuId = b.userno
+        left join course.Course c
+        on a.classId = c.classId
+        left join course.Department d
+        on c.departId = d.departId
+        <where>
+            <if test="classId!=88888888">
+                a.classId = #{classId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findStudentByStudentId" resultType="map">
+        select DISTINCT
+        a.stuId,b.username as stuName,a.xbsjGrade,c.className,b.tutoremployeeid,b.speciality,b.dep as departName,c.teaName,c.classNum,a.knskGrade,a.wlzzxxGrade
+        from course.Course_choose a
+        left join course.XjtuUserInfo b
+        on a.stuId = b.userno
+        left join course.Course c
+        on a.classId = c.classId
+        left join course.Department d
+        on c.departId = d.departId
+        where a.stuId = #{stuId}
+    </select>
+
+    <select id="findAllClassName" resultType="hashmap">
+        select distinct classId,className,classNum
+        from course.Course
+    </select>
+
+    <select id="getWaiStudyTime" resultType="map">
+        select c.classTime,c.className
+        from
+        (select classId
+        from course.Course_choose c2
+        where c2.stuId=#{stuId}
+        ) a
+        left join course.Course c
+        on a.classId = c.classId
+        where c.departId = 12
+    </select>
+
+    <select id="getNotWaiStudyTime" resultType="map">
+        select c.classTime,c.className
+        from
+        (select classId
+        from course.Course_choose c2
+        where c2.stuId=#{stuId}
+        ) a
+        left  join course.Course c
+        on a.classId = c.classId
+        where c.departId!=12
+    </select>
+    <select id="findTimeChongTu" resultType="map">
+        select a.classDateDescription
+        from
+        (
+            select classDateDescription
+            from course.Course
+            where classId =#{classId}
+        ) a
+        inner join
+        (
+            select classDateDescription
+            from
+            (
+                select classId
+                from course.Course_choose
+                where stuId = #{stuId}
+            )  c
+            left join  course.Course c2
+            on c.classId=c2.classId
+        )d
+        on d.classDateDescription = a.classDateDescription
+    </select>
+
+    <delete id="deleteCourse"  flushCache="true">
+        delete
+        from course.Course_choose cc
+        left join Course c
+        on cc.classId = c.classId
+        where c.className=#{className} and cc.stuId = #{stuId}
+    </delete>
+
+    <update id="addClassNum"  flushCache="true">
+      INSERT INTO course.Course_choose (stuId,classId,0) values (#{stuId},SELECT classId FROM course.Course where classNum = #{classNum} and className = #{className} )
+    </update>
+
+    <select id="findClassNewId">
+        select classId
+        from course.Course
+        where className=(
+        select className from course.Course
+        where classId=#{classId}) and classNum = #{classNum}
+    </select>
+    <select id="findClassesByNameAndNum" resultType="map">
+        select classId
+        from course.Course
+        where className=#{className} and classNum = #{classNum}
+    </select>
+
+    <!--Do not involve high concurrency without opening the cache.-->
+    <insert id="addComment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO course.StuWGYComment(stuId, teaId, stuEvaluate, stuSuggestion)
+        VALUES (#{stuId}, #{teaId}, #{scores}, #{words})
+    </insert>
+
+    <select id="selectList" resultType="map">
+        SELECT c.*, d.stuId, d.classId, e.departName
+        FROM course.Course c
+        LEFT JOIN course.Course_choose d
+        ON d.classId = c.classId
+        LEFT JOIN course.Department e
+        ON c.departId = e.departId
+        WHERE d.stuId = #{stuId}
+    </select>
+
+    <select id="selectList1" resultType="map">
+        SELECT c.*, d.stuId, d.classId, e.departName
+        FROM course.Course c
+        LEFT JOIN course.Course_choose d
+        ON d.classId = c.classId
+        LEFT JOIN course.Department e
+        ON c.departId = e.departId
+        WHERE d.stuId = #{stuId}
+    </select>
+
+    <select id="findIsComment" resultType="map">
+        SELECT s.stuId
+        FROM course.StuWGYComment s
+        WHERE s.stuId = #{stuId}
+    </select>
+
+    <select id="showTeacomment" resultType="map">
+        SELECT a.*, b.classId, c.className, c.teaName
+        FROM course.TeaComment a
+        LEFT JOIN course.Course_choose b
+        ON a.stuId = b.stuId
+        LEFT JOIN course.Course c
+        ON b.classId = c.classId
+        WHERE a.stuId = #{stuId} AND b.classId = a.classId
+    </select>
+
+    <select id="addCommentWeeklyTrue" resultType="map">
+        SELECT a.*
+        FROM course.StuWGYWeekComment a
+        WHERE stuId=#{stuId}
+    </select>
+
+    <insert id="addCommentWeeklyFinal" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO course.StuWGYWeekComment(stuId, classId, stuEvaluate, stuSuggestion, classWeek, teaId, score1, score2, score3, score4, commentFlag)
+        VALUES (#{stuId}, #{classId}, #{score} ,#{comment}, #{currWeek}, #{teaId}, #{score1}, #{score2}, #{score3}, #{score4}, '1')
+    </insert>
+
+    <select id="showCommentList" resultType="map">
+        SELECT c.*
+        FROM course.StuWGYWeekComment c
+        WHERE stuId = #{stuId} AND classId = #{classId}
+    </select>
+</mapper>
