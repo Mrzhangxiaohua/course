@@ -1,6 +1,5 @@
 package com.spc.dao;
 
-import com.spc.model.Department;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
