@@ -321,9 +321,6 @@ public class StudentServiceImpl extends Base implements StudentService {
         }
         return 1;
     }
-<<<<<<< Updated upstream
-=======
-
     @Override
     public int addComment(String stuId, String teaId, String[] score, String words) {
         int num = 0;
@@ -520,5 +517,4 @@ public class StudentServiceImpl extends Base implements StudentService {
     public List<Map<String, Object>> findWaiting(Integer classId) {
         return  waitingDao.selectWaitings(classId);
     }
->>>>>>> Stashed changes
 }
