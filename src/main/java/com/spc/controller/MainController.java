@@ -55,8 +55,8 @@ public class MainController extends Base {
         //为了缓存老师更新的数据而在内存中建立的hashMap
 
 //        // just for test
-        userRole = "教职工";
-        userId = "0002017115";
+//        userRole = "教职工";
+//        userId = "0002017115";
 
         if (userRole.equals("学生")) {
             logger.info("登陆的是学生====" + username);
@@ -107,7 +107,7 @@ public class MainController extends Base {
         if (!(departCode == null && departCode == "")) {
             departId = (int) userService.findDepId(departCode).get("departId");
         }
-        session.setAttribute("departId", 12);//改变
+        session.setAttribute("departId", departId);//改变
         //将这个用户信息存储与用户信息库里面
         UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
         dataService.storeUserInformation(userDetails);

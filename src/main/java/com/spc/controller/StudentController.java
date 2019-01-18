@@ -312,10 +312,8 @@ public class StudentController extends Base{
             @RequestParam(required = false, defaultValue = "1") Integer pageNum,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(required = false, defaultValue = "") String stuId,
-            @RequestParam(required = false, defaultValue = "88888888") Integer classId,
-    HttpSession session) {
+            @RequestParam(required = false, defaultValue = "88888888") Integer classId, HttpSession session) {
         stuId = (String) session.getAttribute("userId");
-
         return gradeService.selectGrade(classId, stuId);
     }
 

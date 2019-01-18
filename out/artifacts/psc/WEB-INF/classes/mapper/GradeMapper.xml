@@ -10,7 +10,7 @@
 
     <select id="selectGrade" resultType="com.spc.model.GradeDomain" parameterType="int" >
         select
-        g.classId,g.wlzzxxGrade,g.knskGrade,g.xbsjGrade,g.zzGrade,g.stuId,g.flag,c.className,c.classSemester,c.classGradePoint
+        g.classId,g.wlzzxxGrade,g.knskGrade,g.xbsjGrade,g.zzGrade,g.stuId,g.flag,g.gradeAll,c.className,c.classSemester,c.classGradePoint
         from
         Course_choose g
         left join Course c

@@ -7,43 +7,50 @@ public class GradeDomain  implements Serializable {
     private String stuId;
     private String className;
     private Integer classId;
-    private Integer wlzzxxGrade;
-    private Integer knskGrade;
-    private Integer xbsjGrade;
-    private Integer zzGrade;
+    private Float wlzzxxGrade;
+    private Float knskGrade;
+    private Float xbsjGrade;
+    // 预留两个model模块和百分比使用
+    private Float kthdGrade;
+    private Float qmcsGrade;
+    private String percent;
+    private String gradeAll;
+
+    private Float zzGrade;
     private String classSemester;
     private Integer classGradePoint;
     private Integer flag;
 
-    public Integer getWlzzxxGrade() {
+
+    public Float getWlzzxxGrade() {
         return wlzzxxGrade;
     }
 
-    public void setWlzzxxGrade(Integer wlzzxxGrade) {
+    public void setWlzzxxGrade(Float wlzzxxGrade) {
         this.wlzzxxGrade = wlzzxxGrade;
     }
 
-    public Integer getKnskGrade() {
+    public Float getKnskGrade() {
         return knskGrade;
     }
 
-    public void setKnskGrade(Integer knskGrade) {
+    public void setKnskGrade(Float knskGrade) {
         this.knskGrade = knskGrade;
     }
 
-    public Integer getXbsjGrade() {
+    public Float getXbsjGrade() {
         return xbsjGrade;
     }
 
-    public void setXbsjGrade(Integer xbsjGrade) {
+    public void setXbsjGrade(Float xbsjGrade) {
         this.xbsjGrade = xbsjGrade;
     }
 
-    public Integer getZzGrade() {
+    public Float getZzGrade() {
         return zzGrade;
     }
 
-    public void setZzGrade(Integer zzGrade) {
+    public void setZzGrade(Float zzGrade) {
         this.zzGrade = zzGrade;
     }
 
@@ -103,6 +110,38 @@ public class GradeDomain  implements Serializable {
 
     public void setFlag(Integer flag) {
         this.flag = flag;
+    }
+
+    public String getGradeAll() {
+        return gradeAll;
+    }
+
+    public void setGradeAll(String gradeAll) {
+        this.gradeAll = gradeAll;
+    }
+
+    public Float getKthdGrade() {
+        return kthdGrade;
+    }
+
+    public void setKthdGrade(Float kthdGrade) {
+        this.kthdGrade = kthdGrade;
+    }
+
+    public Float getQmcsGrade() {
+        return qmcsGrade;
+    }
+
+    public void setQmcsGrade(Float qmcsGrade) {
+        this.qmcsGrade = qmcsGrade;
+    }
+
+    public String getPercent() {
+        return percent;
+    }
+
+    public void setPercent(String percent) {
+        this.percent = percent;
     }
 }
 

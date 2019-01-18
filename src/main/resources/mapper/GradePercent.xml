@@ -11,4 +11,8 @@
     <update id="updateFlagZero">
        update course.gradePercent set flag=0
     </update>
+
+    <select id="getGradePercent" resultType="com.spc.model.GradePercent" >
+        SELECT * FROM course.gradePercent
+    </select>
 </mapper>
