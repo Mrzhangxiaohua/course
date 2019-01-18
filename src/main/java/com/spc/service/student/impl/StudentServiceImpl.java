@@ -36,6 +36,8 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Autowired
     private TimeSwitchDao timeSwitchDao;
 
+    @Autowired
+    private WaitingDao waitingDao;
 
     @Override
     public String[][] findClasses(String stuId) {
@@ -118,6 +120,44 @@ public class StudentServiceImpl extends Base implements StudentService {
     }
 
     @Transactional
+    @Override
+    public int updateWaitingFlag(int id) {
+        return waitingDao.updateFlag(id);
+
+    }
+
+    @Override
+    public int deleteWaiting(int id) {
+        return waitingDao.delete(id);
+    }
+
+    @Override
+    public Map<String, Object> findWaitStatus(int id) {
+        Map<String,Object>waiting=waitingDao.findById(id).get(0);
+        Map<String,Object> res=new HashMap<>();
+        int flag= (int) waiting.get("flag");
+        if(flag==0){
+            res.put("status","已成功补位！");
+        }else if(flag==1){
+            String time= (String) waiting.get("time");
+            int classId= (int) waiting.get("classId");
+            int order = (int) waitingDao.findOrder(time,classId).get(0).get("order");
+            res.put("status","目前排在第"+order+"位");
+        }
+        return null;
+    }
+
+
+
+     /*  @Override
+       public Map<String, Object> lookUpWaitingOrder(String stuId,int classId) {
+           Map<String,Object> waiting=waitingDao.findByStuAndClass(stuId,classId).get(0);
+           String time= (String) waiting.get("time");
+           int order = (int) waitingDao.findOrder(time,classId).get(0).get("order");
+            waiting.put("order",order);
+           return waiting;
+       }
+*/
     @Override
     public int deleteCourse(int classId, String stuId) {
         if (!gradeDao.selectGrade(classId, stuId).isEmpty()) {
@@ -281,4 +321,204 @@ public class StudentServiceImpl extends Base implements StudentService {
         }
         return 1;
     }
+<<<<<<< Updated upstream
+=======
+
+    @Override
+    public int addComment(String stuId, String teaId, String[] score, String words) {
+        int num = 0;
+        for (int i = 0; i < score.length; i++){
+            num = num + Integer.parseInt(score[i]);
+        }
+        String scores = String.valueOf(num);
+        System.out.println(stuId + "---------" + teaId + "---------" + scores + "------------" + words);
+        return studentDao.addComment(stuId, teaId, scores, words);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectList(String stuId) {
+        System.out.println("==========" + stuId + "==========");
+        List<Map<String, Object>> list= studentDao.selectList(stuId);
+        System.out.println(list);
+        //判断是否评教过
+        List<Map<String, Object>> m = studentDao.findIsComment(stuId);
+        System.out.println("================" + m + "=======libiao=========");
+        if(m.size() == 0){
+            list.get(0).put("isComment", '0');//0表示未评教
+        }else {
+            list.get(0).put("isComment", '1');
+        }
+        System.out.println(list);
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> selectList1(String stuId) {
+        List<Map<String, Object>> list= studentDao.selectList(stuId);//找到学生所选课表
+        for (int i = 0; i < list.size(); i++){
+            list.get(i).put("isComment", '0');
+        }
+//        System.out.println(list);
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> showTeacomment(String stuId) {
+        return studentDao.showTeacomment(stuId);
+    }
+
+    @Override
+    public int addCommentWeekly(String stuId) {
+        /**
+         * 获取上课开始时间，并计算第几周
+         * 获得学生本次是否评价，若评价则不可重复评价，若未评价，则允许评价
+         */
+//        CalculateWeekth week = new CalculateWeekth();
+        String CHUSHISHIJIAN = "2018-09-02 00:00:00";//每一个学期的第一周的星期一
+        String CHUSHISHIJIAN2 = "2018-09-01 23:59:59";//每一个学期的第一周的星期一
+        int startWeek = 0;
+        int endWeek = 0;
+        List<Map<String, Object>> li= studentDao.selectList(stuId);
+        for (Map map : li){
+            for (Object k : map.keySet()){
+                startWeek = (int) map.get("startWeek");
+                endWeek = (int) map.get("endWeek");
+            }
+        }
+//        System.out.println(startWeek);
+        int week = endWeek - startWeek + 1;//总的周数
+        //课程开始时间
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        startWeek = (startWeek - 1) * 7;
+//        endWeek = (endWeek - 1) * 7;
+        try {
+            Date date = df.parse(CHUSHISHIJIAN);
+            Date data = df.parse(CHUSHISHIJIAN2);
+            //获取当前系统时间
+            Date now = df.parse(df.format(new Date()));
+            Calendar calNow = Calendar.getInstance();
+            calNow.setTime(now);
+            //每周开始时间
+            Calendar calStart = Calendar.getInstance();
+            calStart.setTime(date);
+            Calendar calEnd= Calendar.getInstance();
+            calEnd.setTime(data);
+            calStart.add(Calendar.DATE, 7 * (startWeek - 1));//开始周加上初始上课周的时间
+            calEnd.add(Calendar.DATE, 7 * (startWeek - 1));
+            for (int i = 1; i <= week; i++){
+                calStart.add(Calendar.DATE,7 * (i - 1));
+                calEnd.add(Calendar.DATE, 7 * i);
+                if(calNow.after(calStart) && calNow.before(calEnd)){
+                    System.out.println(i);
+                    return i + startWeek;
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public List<Map<String, Object>> addCommentWeeklyTrue(String stuId) {
+        return studentDao.addCommentWeeklyTrue(stuId);
+    }
+
+    @Override
+    public int addCommentWeeklyFinal(String stuId, String classId, String comment, String currWeek,
+                                     String teaId, int score1, int score2, int score3, int score4) {
+        int scor = score1 + score2 + score3 + score4;
+        String score = String.valueOf(scor);
+        return studentDao.addCommentWeeklyFinal(stuId, classId, score, comment, currWeek, teaId, score1, score2, score3, score4);
+    }
+
+
+    @Override
+    public List<Map<String, Object>> showCommentList(String stuId, String classId) {
+        List<Map<String, Object>> list = studentDao.showCommentList(stuId, classId);//获取学生真正的评价信息
+//        System.out.println("======" + list + "========");
+        int startWeek = 0;
+        int endWeek = 0;
+        List<Map<String, Object>> li = studentDao.selectList(stuId);
+        for (Map map : li){
+            for (Object k : map.keySet()){
+                startWeek = (int) map.get("startWeek");
+                endWeek = (int) map.get("endWeek");
+            }
+        }
+        int week = endWeek - startWeek + 1;//总的周数   11-4 + 1 = 8
+        int b = list.size(); //作为补充
+        int k = week - list.size(); // 先生成一个完整的数组，大小为需要评价的周次数  8 - 1
+//        System.out.println(week);
+        if(list.size() != 0 ){
+            //先生成相应的八个信息
+            for (int i = 0; i < k; i++){
+                Map<String, Object> m = new HashMap<>();
+                m.put("commentFlag", "0");              //0表示未评价
+                list.add(m);
+            }
+//            System.out.println("添加后完全的list" + list);//生成八个信息
+//            System.out.println(list.get(0).get("classWeek")+ "-----------" + list.get(1).get("classWeek"));
+            //学生周次是4-11周
+            int start = startWeek;
+            int index = 0;
+
+            for (int i = 1; i<= week; i++){
+                if(!(String.valueOf(list.get(index).get("classWeek"))).equals(String.valueOf(start))){
+//                    System.out.println(list.get(index).get("classWeek") + "=========" + String.valueOf(start));
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("commentFlag","0");
+                    m.put("test", "2333");
+                    list.add(index, m);
+//                    System.out.println("未走到else");
+                    index = index + 1;
+                    start = start + 1;
+                }else {
+                    start = start + 1;
+                    index = index + 1;//索引后移一位
+                }
+            }
+//            System.out.println("插入后完整的list" + list);//生成l 16个
+            int len = list.size() - 1;
+            for (int i = len; i > week - 1 ; i--){//清除冗余 b = list.size()
+                list.remove(i);
+            }
+            //数据格式的转换
+            Map<String, Object> m1 = new HashMap<>();
+            m1.put("data", list);
+            Map<String, Object> m2 = new HashMap<>();
+            m2.put("startWeek",startWeek);
+            List <Map<String, Object>>l = new ArrayList<>();
+            l.add(m2);
+            l.add(m1);
+//            System.out.println("最终的list" + l);
+            return l;
+        }else {
+            List <Map<String, Object>>l = new ArrayList<>();
+            for (int i = 0; i < k; i++){
+                Map<String, Object> m = new HashMap<>();
+                m.put("commentFlag", "0");
+                list.add(i, m);
+            }
+            Map<String, Object> m2 = new HashMap<>();
+            m2.put("startWeek",startWeek);
+            Map<String, Object> m1 = new HashMap<>();
+            m1.put("data", list);
+            l.add(m2);
+            l.add(m1);
+            System.out.println("添加后完全的list" + l);
+            return l;
+        }
+    }
+
+    @Override
+    public int addWaiting(String stuId, int classId, int flag,String time) {
+       return  waitingDao.insert(stuId,classId,flag,time);
+    }
+
+    @Override
+    public List<Map<String, Object>> findWaiting(Integer classId) {
+        return  waitingDao.selectWaitings(classId);
+    }
+>>>>>>> Stashed changes
 }
