@@ -8,11 +8,14 @@ import com.spc.model.CourseTableExcelDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.grade.GradeService;
 import com.spc.service.student.StudentService;
+import com.spc.service.user.UserService;
+import com.spc.util.CalculateWeekth;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentScorePdfView;
 import com.spc.view.StudentTablePdfView;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +26,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.text.SimpleDateFormat;
+
+
 import java.util.*;
 
 /**
@@ -45,7 +51,8 @@ public class StudentController extends Base{
 
     @Autowired
     private GradeService gradeService;
-
+    @Autowired
+    UserService userService;
 
     /**
      * 学生端：根据学号查询学生选择的课程,用做课表显示
@@ -81,7 +88,7 @@ public class StudentController extends Base{
     @RequestMapping(value = "/add/application", method = RequestMethod.POST)
     public int addApplcation(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
-       logger.info("添加课程的json = %s", json);
+        logger.info("添加课程的json = %s", json);
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
@@ -101,6 +108,160 @@ public class StudentController extends Base{
         }
         return 0;
     }
+    /**
+     * 学生端：获取学生所选择的课程列表
+     *
+     */
+    @RequestMapping("/select/list")
+    public List<Map<String, Object>> selectList(HttpSession session){
+            String stuId = (String) session.getAttribute("userId");
+            return studentService.selectList(stuId);
+    }
+
+    /**
+     *此段代码暂时不用
+     * @param session
+     * @return
+     */
+    @RequestMapping("/select/list1")
+    public List<Map<String, Object>> selectList1(HttpSession session){
+        String stuId = (String) session.getAttribute("userId");
+        return studentService.selectList1(stuId);
+    }
+
+    @RequestMapping(value = "/chakanpingjiaqingkuang", method = RequestMethod.POST)
+    public List<Map<String, Object>> showCommentList(HttpServletRequest request){
+        String stuId = (String)request.getSession().getAttribute("userId");
+        String json = RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+        try {
+            JSONObject obj = new JSONObject(json);
+//            String classId = obj.getString("classId");
+
+            String classId = "4";
+            System.out.println(classId);
+
+            return studentService.showCommentList(stuId, classId);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    /**
+     * 学生端:进行教师评价总评
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/stutotea/addComment", method = RequestMethod.POST)
+    public int addComment(HttpServletRequest request){
+        String json = RequestPayload.getRequestPayload(request);
+        logger.info("增加=================================== %s", json);
+        try {
+            JSONObject obj = new JSONObject(json);
+            String classType = obj.getString("classType");
+            String className = obj.getString("className");
+            String words = obj.getString("comment");
+            String teaId = obj.getString("teaId");
+            JSONArray scoreJS = obj.getJSONArray("score");
+            String stuId = (String) request.getSession().getAttribute("userId");
+            List<String> li = new ArrayList<>();
+            for (int i=0; i<scoreJS.length(); i++) {
+                li.add( scoreJS.getString(i));
+            }
+            String[] score = li.toArray(new String[li.size()]);
+            return studentService.addComment(stuId, teaId, score, words);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        System.out.println(json);
+        return 0;
+    }
+    /**
+     * 学生端：显示老师的打分及其评语
+     */
+    @RequestMapping(value = "/show/teacomment")
+    public List<Map<String, Object>> showTeacomment(HttpSession session){
+        String stuId = (String) session.getAttribute("userId");
+        return studentService.showTeacomment(stuId);
+    }
+
+    /**
+     * 学生按照课时评论老师
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/evaluateTeacherWeekly", method = RequestMethod.POST)
+    @ResponseBody
+    public int  addCommentWeekly(HttpServletRequest request){
+        String json = RequestPayload.getRequestPayload(request);
+        String stuId = (String)request.getSession().getAttribute("userId");
+        System.out.println(json);
+        boolean flag = false;
+        try {
+            int theWeeks = CalculateWeekth.weekth("2018-10-03");//时间控件，最终需要调整
+            System.out.println("看看周次zzzzzzzzzzz" + theWeeks);//当前为第九周
+            if(theWeeks != 0){ //如果周次不为0说明可以对第n周进行评价
+                JSONObject obj = new JSONObject(json);
+                /**
+                 * 此处拿到学生评教老师的各种字段
+                 */
+                String classId = obj.getString("classId");
+                String comment = obj.getString("comment");
+                String currWeek = obj.getString("currWeek");
+                Integer score1 = obj.getInt("score1");
+                Integer score2 = obj.getInt("score2");
+                Integer score3 = obj.getInt("score3");
+                Integer score4 = obj.getInt("score4");
+                String teaId = obj.getString("teaId");
+                System.out.println(classId + "===" + comment + "===" + currWeek + "===" + teaId +  "===" + score1 + "===" + score2 + "===" + score3 + "===" + score4 + "===" + stuId);
+                List<Map<String, Object>> add = studentService.addCommentWeeklyTrue(stuId);//获取上面参数并进行数据库插入操作
+                int startWeek = 0;
+                int endWeek = 0;
+                List<Map<String, Object>> li= studentService.selectList(stuId);
+                for (Map map : li){
+                    for (Object k : map.keySet()){
+                        startWeek = (int) map.get("startWeek");
+                        endWeek = (int) map.get("endWeek");
+                    }
+                }
+                System.out.println("add------------" + add);
+
+                if(add.size() != 0) {//当有过评论
+                    for (Map<String, Object> m : add) {
+                        int week = (int) m.get("classWeek");
+                        System.out.println("week=========" + week);
+                        System.out.println(week+ "----------------");
+                        if (theWeeks == week) {
+                            flag = false;
+                            break;
+                        }else if (theWeeks!= week && theWeeks>=startWeek && theWeeks<=endWeek && theWeeks==Integer.parseInt(currWeek)){
+                            flag = true;
+                            continue;
+                        }
+                    }
+                    //调用插入
+                    if (flag == true){
+                        return studentService.addCommentWeeklyFinal(stuId, classId, comment, currWeek, teaId, score1, score2, score3, score4);
+                    }else {
+                        System.out.println("添加不成功，因为周次不对");
+                    }
+                }else {//当一次都没有添加过评论
+                    if (theWeeks>=startWeek && theWeeks<=endWeek && theWeeks==Integer.parseInt(currWeek)){
+                        System.out.println("添加成功");
+                        return studentService.addCommentWeeklyFinal(stuId, classId, comment, currWeek, teaId, score1, score2, score3, score4);
+                    }else {
+                        return 0;
+                    }
+                }
+            }
+            return 0;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     /**
      * 学生端：可以根据课程id 添加课程
@@ -116,12 +277,12 @@ public class StudentController extends Base{
         try {
             obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
-            return studentService.addCourse(classId, (String) request.getSession().getAttribute("userId"));
+            Integer departId = (Integer) request.getSession().getAttribute("departId");
+            return studentService.addCourse(classId, (String) request.getSession().getAttribute("userId"),departId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return 0;
-
     }
 
     /**
@@ -168,9 +329,7 @@ public class StudentController extends Base{
             @RequestParam(required = false, defaultValue = "1") Integer pageNum,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(required = false, defaultValue = "") String stuId,
-            @RequestParam(required = false, defaultValue = "88888888") Integer classId,
-    HttpSession session) {
-
+            @RequestParam(required = false, defaultValue = "88888888") Integer classId, HttpSession session) {
         stuId = (String) session.getAttribute("userId");
         return gradeService.selectGrade(classId, stuId);
     }
@@ -195,8 +354,8 @@ public class StudentController extends Base{
 
 
         String[][] tables = studentService.findClasses((String) session.getAttribute("userId"));
-        Map res = new HashMap();
 
+        Map res = new HashMap();
         res.put("data", tables);
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
@@ -221,8 +380,8 @@ public class StudentController extends Base{
         String[][] tables = studentService.findClasses((String) session.getAttribute("userId"));
 
         List<CourseTableExcelDomain> liC = new ArrayList<>();
-        for (int i = 0; i < tables.length; i = i + 2) {
-            liC.add(new CourseTableExcelDomain(i / 2, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
+        for (int i = 0; i < tables.length; i = i + 1) {
+            liC.add(new CourseTableExcelDomain(i , tables[i][0], tables[i][1], tables[i][2], tables[i][3]
                     , tables[i][4], tables[i][5], tables[i][6]));
         }
 
@@ -250,12 +409,9 @@ public class StudentController extends Base{
     public ModelAndView downloadScore(@RequestParam(required = false, defaultValue = "88888888") Integer classId,
                                       HttpSession session) {
         String stuId = (String) session.getAttribute("userId");
-//        stuId = 2018000006;
-
         List<GradeDomain> scores = gradeService.selectGrade(classId, stuId);
         System.out.println("tun here");
         Map res = new HashMap();
-
         res.put("data", scores);
         res.put("stuId", stuId);
         res.put("stuName", session.getAttribute("authentication"));

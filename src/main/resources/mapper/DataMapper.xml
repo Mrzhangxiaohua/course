@@ -3,7 +3,7 @@
 
 
 <mapper namespace="com.spc.dao.DataDao">
-    <cache></cache>
+    <!--<cache></cache>-->
 
     <sql id="BASE_COLUMN_DEPART">
     departId,departName

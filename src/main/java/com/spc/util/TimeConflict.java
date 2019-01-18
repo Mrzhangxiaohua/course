@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TimeConflict {
-    public static boolean confilct(List<long[]> times, List<long[]> classTime) {
-        for (int i = 0; i < times.size(); i++) {
+    public static boolean confilct(List<long[]> times, List<long[]> classTime) {//times是课程时间区间，classTime学生课表时间
+        for (int i = 0; i < times.size(); i++) {    //
             long[] a = times.get(i);
             for (int j = 0; j < classTime.size(); j++) {
                 long[] b = classTime.get(j);
@@ -31,7 +31,6 @@ public class TimeConflict {
             }
         }
         return false;
-
     }
 
     public static void main(String[] args) {

@@ -14,10 +14,13 @@ public interface UserDao {
 
     int insert(UserDomain user);
     int udpate(UserDomain user);
+    int addStudent(@Param("stuId") String stuId,@Param("stuName") String stuName);
+    List<Map> findStudent(@Param("stuId") String stuId);
 //
 //    @Insert("insert into Role_user(roleId, uId) values(#{roleId}, #{uId})")
 //    int insertRole(@Param("roleId") Integer roleId, @Param("uId") Integer uId);
 
     UserDomain findUsersById(@Param("stuId") String stuId);
 
+    List<Map<String,Object>> findDepId( @Param("departCode") String departCode);
 }

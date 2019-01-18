@@ -1,10 +1,7 @@
 package com.spc.service.user;
 
 import com.spc.model.UserDomain;
-import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,7 +12,9 @@ public interface UserService {
 
 
     boolean addUser(UserDomain user);
+    int addStudent(String stuId, String stuName);
 
     UserDomain findUsersById(String id);
 
+    Map<String, Object> findDepId(String departCode);
 }

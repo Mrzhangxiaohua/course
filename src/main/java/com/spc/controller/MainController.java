@@ -7,7 +7,6 @@ import com.spc.service.user.UserService;
 import com.spc.service.webservice.GetInfo;
 import com.spc.service.xjtu.webservice.info.xsd.UserInfoDto;
 import com.spc.util.AuthMess;
-import com.spc.util.StudentTimeLoad;
 import com.spc.util.XuanKeStu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -45,7 +43,6 @@ public class MainController extends Base {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(HttpServletRequest request) {
 
-
         HttpSession httpSession = request.getSession();
 
         httpSession = putInfo(httpSession);
@@ -54,9 +51,16 @@ public class MainController extends Base {
         String userRole = (String) httpSession.getAttribute("userRole");
         String userId = (String) httpSession.getAttribute("userId");
         String username = (String) httpSession.getAttribute("username");
+        System.out.println("登录：" + httpSession.getAttribute("depid"));
         //为了缓存老师更新的数据而在内存中建立的hashMap
 
+//        // just for test
+//        userRole = "教职工";
+//        userId = "0002017115";
+
         if (userRole.equals("学生")) {
+            logger.info("登陆的是学生====" + username);
+            logger.info("在选课名单内" + InXuanKeStu(userId, username));
             if (InXuanKeStu(userId, username)) {
                 logger.info("登录的是学生端");
                 res = "student/index";
@@ -96,22 +100,28 @@ public class MainController extends Base {
         session.setAttribute("username", baseInfo.getUsername());
         session.setAttribute("userId", baseInfo.getUserId());
         session.setAttribute("userRole", baseInfo.getUserRole());
-
+        session.setAttribute("dep", baseInfo.getDep());
+        session.setAttribute("departCode", baseInfo.getDepid());
+        String departCode = baseInfo.getDepid();
+        int departId = 0;
+        if (!(departCode == null && departCode == "")) {
+            departId = (int) userService.findDepId(departCode).get("departId");
+        }
+        session.setAttribute("departId", departId);//改变
         //将这个用户信息存储与用户信息库里面
         UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
         dataService.storeUserInformation(userDetails);
-        logger.info("登录的用户是{}，角色是{}", baseInfo.getUsername(), baseInfo.getUserRole());
+        logger.info("登录的用户是{}，角色是{},学院id是{}", baseInfo.getUsername(), baseInfo.getUserRole(), departId);
 
         //存储一个更新分数的map
         Map updateScore = new HashMap<>();
         updateScore.put("operator", baseInfo.getUsername());
         session.setAttribute("updatescore", updateScore);
-
         return session;
-
     }
 
     private boolean InXuanKeStu(String stuId, String name) {
+        logger.info("InXuanKeStu" + "======" + stuId + "=======" + name);
         Map map = new HashMap();
         map.put("name", name);
         map.put("stuId", stuId);

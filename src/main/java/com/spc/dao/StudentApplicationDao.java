@@ -2,10 +2,12 @@ package com.spc.dao;
 
 import com.spc.model.StudentApplicationDomain;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
+@Repository
 public interface StudentApplicationDao {
 
     int add(@Param("stuId") String stuId, @Param("classId") Integer classId, @Param("states") Integer states, @Param("reason") String reason, @Param("checked") int checked

@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * 登录学生的基础信息类
+ *
  */
 
 public class BaseInfo {
@@ -13,12 +14,17 @@ public class BaseInfo {
     private String username;
     private String userId;
     private String userRole;
+    private String dep;
+    private String depid;
+
 
     BaseInfo() {
         this.authentication = SecurityContextHolder.getContext().getAuthentication();
         this.username = AuthMess.userName(authentication);
         this.userId = AuthMess.userId(authentication);
         this.userRole = AuthMess.userRole(authentication);
+        this.dep=AuthMess.userDepart(authentication);
+        this.depid=AuthMess.userDepid(authentication);
     }
 
     public Authentication getAuthentication() {
@@ -41,4 +47,19 @@ public class BaseInfo {
         return userRole;
     }
 
+    public String getDep() {
+        return dep;
+    }
+
+    public void setDep(String department) {
+        this.dep = department;
+    }
+
+    public String getDepid() {
+        return depid;
+    }
+
+    public void setDepid(String depid) {
+        this.depid = depid;
+    }
 }

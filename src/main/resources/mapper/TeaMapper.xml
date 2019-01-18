@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.TeacherDao">
+
+
+    <insert id="addComment" useGeneratedKeys="true" keyProperty="teaCommentId" flushCache="true">
+        insert into TeaComment(stuId, classId,teaId,teaEvaluate,teaSuggestion)
+        values(#{stuId}, #{classId},#{teaId},#{totalScore},#{suggestion})
+    </insert>
+    <select id="courseList" resultType="map">
+        select classId,classNum,className,classChooseNum,classSemester,startWeek,endWeek
+        from course.Course
+        where teaId=#{teaId}
+    </select>
+
+    <select id="courseStudentList" resultType="map">
+        select s.username,s.stuId
+        from course.Course_choose c
+        left join course.stuInfo s
+        on c.stuId=s.stuId
+        where c.classId=#{classId}
+    </select>
+
+    <select id="findCommentStatus" resultType="int">
+        select COUNT(*)
+        from course.TeaComment
+        where stuId=#{stuId}
+        and teaId=#{teaId}
+        and classId=#{classId}
+        order by stuId
+    </select>
+    <select id="findCommentByClassIdAndStuId" resultType="map">
+        select stuId,classId,teaEvaluate,teaSuggestion
+        from course.TeaComment
+        where stuId=#{stuId}
+        and classId=#{classId}
+    </select>
+
+    <insert id="insertWeekComment" useGeneratedKeys="true" keyProperty="teaWeekCommentId" flushCache="true">
+        insert into teaWeekComment(stuId,teaId,classId,score1,score2,score3,score4,suggestion,weekth,dateTime)
+        values(#{stuId},#{teaId},#{classId},#{score1},#{score2},#{score3},#{score4},#{suggestion},#{weekth},#{date})
+    </insert>
+    <update id="updateWeekComment">
+       update course.teaWeekComment set score1=#{score1},score2=#{score2},score3=#{score3},score4=#{score4},suggestion=#{suggestion},dateTime=#{date}
+       where stuId=#{stuId}
+       and teaId=#{teaId}
+       and classId=#{classId}
+       and weekth=#{weekth}
+
+
+    </update>
+
+    <select id="findDepartment" resultType="map">
+        select stuId,classId,teaEvaluate,teaSuggestion
+        from teaInfo
+        where teaId=#{teaId}
+    </select>
+
+    <select id="findGradePercent" resultType="map">
+        select a.*
+        from course.gradePercent a
+        where a.flag = 1
+    </select>
+
+    <select id="findCourseClassTime" resultType="Map">
+        SELECT a.classTime, a.classId
+        FROM course.Course a
+        LEFT JOIN course.Course_choose b
+        ON a.classId = b.classId
+        WHERE b.stuId = #{stuId} AND a.classNum = #{classNum}
+    </select>
+</mapper>

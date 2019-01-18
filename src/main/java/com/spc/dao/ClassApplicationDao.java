@@ -22,4 +22,7 @@ public interface ClassApplicationDao {
 
     int deleteClassApp(@Param("id") int  id);
 
+    List<ClassApplicationDomain> findById(@Param("id") int id);
+
+    int addFirstClass(ClassApplicationDomain cad);
 }

@@ -20,11 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -52,7 +54,6 @@ public class ManageController extends Base {
      * 学生端：根据学生id查询课表
      *
      * @param stuId 学生id
-     * @return String[][]
      */
     @RequestMapping("/select/classes")
     @ResponseBody
@@ -225,11 +226,17 @@ public class ManageController extends Base {
     @ResponseBody
     public int convertClassStatus(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+        System.out.println(request.getSession().getAttribute("departId"));
+        int departId= (int) request.getSession().getAttribute("departId");
+        System.out.println(departId);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
             Integer id = obj.getInt("id");
-            return manageService.makeSureClassApplication(id);
+            String courseId=obj.getString("classId");
+            manageService.makeSureClassApplication(id,courseId,departId);
+            return 1;
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -255,10 +262,12 @@ public class ManageController extends Base {
         return 0;
     }
 
+    /*一键审核*/
     @RequestMapping(value = "/makeSure/classApplications", method = RequestMethod.POST)
     @ResponseBody
     public int convertClassApplications(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
+        int departId= Integer.parseInt((String) request.getSession().getAttribute("departId"));
         JSONObject obj = null;
         try {
             JSONArray Jarray = new JSONArray(json);
@@ -266,7 +275,8 @@ public class ManageController extends Base {
                 obj = Jarray.getJSONObject(i);
                 System.out.println("提交的实体是" + obj);
                 Integer id = obj.getInt("id");
-                manageService.makeSureClassApplication(id);
+                String courseId=obj.getString("courseId");
+                manageService.makeSureClassApplication(id,courseId,departId);
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -457,7 +467,13 @@ public class ManageController extends Base {
             HttpServletResponse response,
             HttpSession session
     ) {
-        String[][] strs = manageService.bigTable(shenQingRenId, shenQingRenName, teaName);
+        Integer departId = (Integer) session.getAttribute("departId");
+//        Integer departId = 5;
+        String role = (String) session.getAttribute("userRole");
+        if (role.equals("超级管理员")){
+            departId = 88888888;
+        }
+        String[][] strs = manageService.bigTable(shenQingRenId, shenQingRenName, teaName, departId);
         Map<String, Object> res = new HashMap<String, Object>();
 
         res.put("data", strs);
@@ -484,7 +500,14 @@ public class ManageController extends Base {
             HttpServletResponse response,
             HttpSession session
     ){
-        String[][] tables = manageService.bigTable(shenQingRenId, shenQingRenName, teaName);
+
+        Integer departId = (Integer) session.getAttribute("departId");
+
+        String role = (String) session.getAttribute("userRole");
+        if (role.equals("超级管理员")){
+            departId = 88888888;
+        }
+        String[][] tables = manageService.bigTable(shenQingRenId, shenQingRenName, teaName, departId);
         List<CourseTableExcelDomain> liC = new ArrayList<>();
         for (int i = 0; i < tables.length; i = i + 2) {
             liC.add(new CourseTableExcelDomain(i / 2, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
@@ -555,8 +578,16 @@ public class ManageController extends Base {
     public String[][] getBigTable(
             @RequestParam(required = false, defaultValue = "") String shenQingRenId,
             @RequestParam(required = false, defaultValue = "") String shenQingRenName,
-            @RequestParam(required = false, defaultValue = "") String teaName) {
-        return manageService.bigTable(shenQingRenId, shenQingRenName, teaName);
+            @RequestParam(required = false, defaultValue = "") String teaName,
+            HttpSession session) {
+        Integer departId = (Integer) session.getAttribute("departId");
+
+        String role = (String) session.getAttribute("userRole");
+        if (role.equals("超级管理员")){
+            departId = 88888888;
+        }
+        String[][] strs = manageService.bigTable(shenQingRenId, shenQingRenName, teaName, departId);
+        return strs;
     }
 
     /**
@@ -616,33 +647,52 @@ public class ManageController extends Base {
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String classStr,
+            @RequestParam(required = false, defaultValue = "") String stuId,
             HttpSession session
     ) {
         List students = new ArrayList();
-        if (!classStr.equals("") && !classStr.isEmpty()) {
-            String newStr = classStr.replace("(", ",").replace(")", "");
-            String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+        if (stuId.equals("")){
+            if (!classStr.equals("") && !classStr.isEmpty()) {
+                String newStr = classStr.replace("(", ",").replace(")", "");
+                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
-            String className = strs[0];
-            Integer classNum = Integer.parseInt(strs[1]);
+                String className = strs[0];
+                Integer classNum = Integer.parseInt(strs[1]);
 
-            students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
+                students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
 
-            List newStus = zhuanhuan(students);
+                List newStus = zhuanhuan(students);
 
-            putSession(session,students);
+                putSession(session,students);
 
-            logger.info("find student result:%s", newStus);
-            Map<String, Object> res = new HashMap<>();
-            res.put("status", "SUCCESS");
+                logger.info("find student result:%s", newStus);
+                Map<String, Object> res = new HashMap<>();
+                res.put("status", "SUCCESS");
 
-            Map<String, Object> data = new HashMap<>();
-            data.put("total", ((Page) students).getTotal());
-            data.put("pageSize", pageSize);
-            data.put("currentPage", currentPage);
-            data.put("list", newStus);
-            res.put("data", data);
-            return res;
+                Map<String, Object> data = new HashMap<>();
+                data.put("total", ((Page) students).getTotal());
+                data.put("pageSize", pageSize);
+                data.put("currentPage", currentPage);
+                data.put("list", newStus);
+                res.put("data", data);
+                return res;
+            }
+        }else if (!stuId.equals("")){
+                String studentId = stuId;
+                students = manageService.findStudentByStudentId(pageSize, currentPage, stuId);
+                List newStus = zhuanhuan(students);/////
+                putSession(session,students);
+
+                Map<String, Object> res = new HashMap<>();
+                res.put("status", "SUCCESS");
+
+                Map<String, Object> data = new HashMap<>();
+                data.put("total", ((Page) students).getTotal());
+                data.put("pageSize", pageSize);
+                data.put("currentPage", currentPage);
+                data.put("list", newStus);
+                res.put("data", data);
+                return res;
         } else {
             Map<String, Object> res = new HashMap<>();
             res.put("status", "SUCCESS");
@@ -654,6 +704,7 @@ public class ManageController extends Base {
             res.put("data", data);
             return res;
         }
+        return null;
     }
 
     private int putSession(HttpSession session,List<HashMap> students){
@@ -727,7 +778,28 @@ public class ManageController extends Base {
         }
         return 0;
     }
-
+    @RequestMapping(value="/time/switch3",method=RequestMethod.POST)
+    @ResponseBody
+    public int timeSwithch3(HttpServletRequest request){
+        String json= RequestPayload.getRequestPayload(request);
+        System.out.println(json);
+        try {
+            JSONObject jsonObject=new JSONObject(json);
+            String firstWeek=jsonObject.getString("time");
+            String year=firstWeek.split("-")[0];
+            Map<String,String> semesterMap=new HashMap<>();
+            semesterMap.put("spring","春");
+            semesterMap.put("autumn","秋");
+            String semester=year+semesterMap.get(jsonObject.getString("semester"));
+            System.out.println(year);
+            System.out.println(firstWeek);
+            System.out.println(semester);
+            manageService.addSchoolCalendar(year,firstWeek,semester);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     @RequestMapping("/jilian/select")
     @ResponseBody
@@ -735,4 +807,66 @@ public class ManageController extends Base {
         return manageService.jilianSelect();
     }
 
+    @RequestMapping(value="/uploadTemplate")
+    @ResponseBody
+    public String uploadTemplate(HttpServletRequest request, @RequestParam("file") MultipartFile file){
+        String teaId=(String)request.getSession().getAttribute("userId");
+        String dep=(String)request.getSession().getAttribute("dep");
+        System.out.println(file);
+
+        try {
+            if (file.isEmpty()) {
+                return "文件为空";
+            }
+            // 获取文件名
+            String fileName = file.getOriginalFilename();
+            logger.info("上传的文件名为：" + fileName);
+            // 获取文件的后缀名
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            logger.info("文件的后缀名为：" + suffixName);
+            // 设置文件存储路径
+            String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
+            String path = filePath+fileName;
+            File dest = new File(path);
+            // 检测是否存在目录
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();// 新建文件夹
+            }
+            file.transferTo(dest);// 文件写入
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date=sdf.format(new Date());
+            manageService.addTemplateFileInfo(teaId,fileName,filePath,1,dep,date,1);
+            return "上传成功";
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "上传失败";
+    }
+
+    /*
+    * 超级管理员设置成绩比例
+    * */
+    @RequestMapping("/setGradePercent")
+    @ResponseBody
+    public String setGradePercent(HttpServletRequest request){
+        String userId= (String) request.getSession().getAttribute("userId");
+        String jsonString = RequestPayload.getRequestPayload(request);
+        try {
+            JSONObject json=new JSONObject(jsonString);
+            System.out.println("json"+json);
+            JSONObject valuejson = json.getJSONObject("value");
+            int XBSJ= (int) valuejson.get("XBSJ");
+            int ZZXX= (int) valuejson.get("ZZXX");
+            int KNSK= (int) valuejson.get("KNSK");
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date=sdf.format(new Date());
+            manageService.addGradePercent(KNSK,XBSJ,ZZXX,userId,date);
+        return "设置成功";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "设置失败";
+    }
 }

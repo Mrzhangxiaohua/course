@@ -12,20 +12,18 @@ public interface StudentService {
 
     public List<HashMap<String,Object>> findAllClassName(int student,String stuId);
 
-    public int addCourse(int classId,String stuId);
+    public int addCourse(int classId,String stuId,Integer departId);
 
     public int deleteCourse(int classId,String stuId);
 
-
-    public int addApplication(int classId, int states, String reason , int classNum,String stuId);
+    public int addApplication(int classId, int states, String reason , int classNum, String stuId);
 
     public List<ClassDomain> selectClassed(Map<String, Object> map);
 
     public int getTimeSwtich();
 
     public Map getClassTime(String stuId);
-<<<<<<< Updated upstream
-=======
+
 
     public int addComment(String stuId, String teaId, String[] score, String words);
 
@@ -57,5 +55,5 @@ public interface StudentService {
  /*   Map<String,Object> lookUpWaitingOrder(String stuId, int classId);*/
 
     Map<String, Object> findWaitStatus(int id);
->>>>>>> Stashed changes
+
 }
