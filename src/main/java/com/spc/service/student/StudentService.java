@@ -24,6 +24,7 @@ public interface StudentService {
 
     public Map getClassTime(String stuId);
 
+
     public int addComment(String stuId, String teaId, String[] score, String words);
 
     public List<Map<String, Object>> selectList(String stuId);
@@ -40,4 +41,19 @@ public interface StudentService {
     public List<Map<String, Object>> selectList1(String stuId);
 
     public List<Map<String, Object>> showCommentList(String stuId, String classId);
+
+    int addWaiting(String stuId, int classId, int flag,String time);
+
+    List<Map<String,Object>> findWaiting(Integer classId);
+
+    int addyuanzi(int classId, String stuId);
+
+    int updateWaitingFlag(int id);
+
+    int deleteWaiting(int id);
+
+ /*   Map<String,Object> lookUpWaitingOrder(String stuId, int classId);*/
+
+    Map<String, Object> findWaitStatus(int id);
+
 }

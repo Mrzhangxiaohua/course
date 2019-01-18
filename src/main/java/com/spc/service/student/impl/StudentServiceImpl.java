@@ -37,6 +37,8 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Autowired
     private TimeSwitchDao timeSwitchDao;
 
+    @Autowired
+    private WaitingDao waitingDao;
 
 
 
@@ -213,6 +215,44 @@ public class StudentServiceImpl extends Base implements StudentService {
         return 4;
     }
 
+    @Override
+    public int updateWaitingFlag(int id) {
+        return waitingDao.updateFlag(id);
+
+    }
+
+    @Override
+    public int deleteWaiting(int id) {
+        return waitingDao.delete(id);
+    }
+
+    @Override
+    public Map<String, Object> findWaitStatus(int id) {
+        Map<String,Object>waiting=waitingDao.findById(id).get(0);
+        Map<String,Object> res=new HashMap<>();
+        int flag= (int) waiting.get("flag");
+        if(flag==0){
+            res.put("status","已成功补位！");
+        }else if(flag==1){
+            String time= (String) waiting.get("time");
+            int classId= (int) waiting.get("classId");
+            int order = (int) waitingDao.findOrder(time,classId).get(0).get("order");
+            res.put("status","目前排在第"+order+"位");
+        }
+        return null;
+    }
+
+
+
+     /*  @Override
+       public Map<String, Object> lookUpWaitingOrder(String stuId,int classId) {
+           Map<String,Object> waiting=waitingDao.findByStuAndClass(stuId,classId).get(0);
+           String time= (String) waiting.get("time");
+           int order = (int) waitingDao.findOrder(time,classId).get(0).get("order");
+            waiting.put("order",order);
+           return waiting;
+       }
+*/
     @Override
     public int deleteCourse(int classId, String stuId) {
         if (!gradeDao.selectGrade(classId, stuId).isEmpty()) {
@@ -391,7 +431,13 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Override
     public int addComment(String stuId, String teaId, String[] score, String words) {
         int num = 0;
+        for (int i = 0; i < score.length; i++){
+
+    @Override
+    public int addComment(String stuId, String teaId, String[] score, String words) {
+        int num = 0;
         for (int i = 0; i < score.length; i++) {
+
             num = num + Integer.parseInt(score[i]);
         }
         String scores = String.valueOf(num);
@@ -402,11 +448,20 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Override
     public List<Map<String, Object>> selectList(String stuId) {
         System.out.println("==========" + stuId + "==========");
+
+        List<Map<String, Object>> list= studentDao.selectList(stuId);
+
         List<Map<String, Object>> list = studentDao.selectList(stuId);
+
         System.out.println(list);
         //判断是否评教过
         List<Map<String, Object>> m = studentDao.findIsComment(stuId);
         System.out.println("================" + m + "=======libiao=========");
+
+        if(m.size() == 0){
+            list.get(0).put("isComment", '0');//0表示未评教
+        }else {
+
         if (m.size() == 0) {
             list.get(0).put("isComment", '0');//0表示未评教
         } else {
@@ -418,8 +473,13 @@ public class StudentServiceImpl extends Base implements StudentService {
 
     @Override
     public List<Map<String, Object>> selectList1(String stuId) {
+
+        List<Map<String, Object>> list= studentDao.selectList(stuId);//找到学生所选课表
+        for (int i = 0; i < list.size(); i++){
+
         List<Map<String, Object>> list = studentDao.selectList(stuId);//找到学生所选课表
         for (int i = 0; i < list.size(); i++) {
+
             list.get(i).put("isComment", '0');
         }
 //        System.out.println(list);
@@ -442,9 +502,15 @@ public class StudentServiceImpl extends Base implements StudentService {
         String CHUSHISHIJIAN2 = "2018-09-01 23:59:59";//每一个学期的第一周的星期一
         int startWeek = 0;
         int endWeek = 0;
+
+        List<Map<String, Object>> li= studentDao.selectList(stuId);
+        for (Map map : li){
+            for (Object k : map.keySet()){
+
         List<Map<String, Object>> li = studentDao.selectList(stuId);
         for (Map map : li) {
             for (Object k : map.keySet()) {
+
                 startWeek = (int) map.get("startWeek");
                 endWeek = (int) map.get("endWeek");
             }
@@ -465,6 +531,15 @@ public class StudentServiceImpl extends Base implements StudentService {
             //每周开始时间
             Calendar calStart = Calendar.getInstance();
             calStart.setTime(date);
+            Calendar calEnd= Calendar.getInstance();
+            calEnd.setTime(data);
+            calStart.add(Calendar.DATE, 7 * (startWeek - 1));//开始周加上初始上课周的时间
+            calEnd.add(Calendar.DATE, 7 * (startWeek - 1));
+            for (int i = 1; i <= week; i++){
+                calStart.add(Calendar.DATE,7 * (i - 1));
+                calEnd.add(Calendar.DATE, 7 * i);
+                if(calNow.after(calStart) && calNow.before(calEnd)){
+
             Calendar calEnd = Calendar.getInstance();
             calEnd.setTime(data);
             calStart.add(Calendar.DATE, 7 * (startWeek - 1));//开始周加上初始上课周的时间
@@ -473,6 +548,7 @@ public class StudentServiceImpl extends Base implements StudentService {
                 calStart.add(Calendar.DATE, 7 * (i - 1));
                 calEnd.add(Calendar.DATE, 7 * i);
                 if (calNow.after(calStart) && calNow.before(calEnd)) {
+
                     System.out.println(i);
                     return i + startWeek;
                 }
@@ -504,6 +580,8 @@ public class StudentServiceImpl extends Base implements StudentService {
         int startWeek = 0;
         int endWeek = 0;
         List<Map<String, Object>> li = studentDao.selectList(stuId);
+        for (Map map : li){
+            for (Object k : map.keySet()){
         for (Map map : li) {
             for (Object k : map.keySet()) {
                 startWeek = (int) map.get("startWeek");
@@ -514,6 +592,9 @@ public class StudentServiceImpl extends Base implements StudentService {
         int b = list.size(); //作为补充
         int k = week - list.size(); // 先生成一个完整的数组，大小为需要评价的周次数  8 - 1
 //        System.out.println(week);
+        if(list.size() != 0 ){
+            //先生成相应的八个信息
+            for (int i = 0; i < k; i++){
         if (list.size() != 0) {
             //先生成相应的八个信息
             for (int i = 0; i < k; i++) {
@@ -527,6 +608,11 @@ public class StudentServiceImpl extends Base implements StudentService {
             int start = startWeek;
             int index = 0;
 
+            for (int i = 1; i<= week; i++){
+                if(!(String.valueOf(list.get(index).get("classWeek"))).equals(String.valueOf(start))){
+//                    System.out.println(list.get(index).get("classWeek") + "=========" + String.valueOf(start));
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("commentFlag","0");
             for (int i = 1; i <= week; i++) {
                 if (!(String.valueOf(list.get(index).get("classWeek"))).equals(String.valueOf(start))) {
 //                    System.out.println(list.get(index).get("classWeek") + "=========" + String.valueOf(start));
@@ -537,6 +623,7 @@ public class StudentServiceImpl extends Base implements StudentService {
 //                    System.out.println("未走到else");
                     index = index + 1;
                     start = start + 1;
+                }else {
                 } else {
                     start = start + 1;
                     index = index + 1;//索引后移一位
@@ -544,6 +631,7 @@ public class StudentServiceImpl extends Base implements StudentService {
             }
 //            System.out.println("插入后完整的list" + list);//生成l 16个
             int len = list.size() - 1;
+            for (int i = len; i > week - 1 ; i--){//清除冗余 b = list.size()
             for (int i = len; i > week - 1; i--) {//清除冗余 b = list.size()
                 list.remove(i);
             }
@@ -551,12 +639,17 @@ public class StudentServiceImpl extends Base implements StudentService {
             Map<String, Object> m1 = new HashMap<>();
             m1.put("data", list);
             Map<String, Object> m2 = new HashMap<>();
+            m2.put("startWeek",startWeek);
+            List <Map<String, Object>>l = new ArrayList<>();
             m2.put("startWeek", startWeek);
             List<Map<String, Object>> l = new ArrayList<>();
             l.add(m2);
             l.add(m1);
 //            System.out.println("最终的list" + l);
             return l;
+        }else {
+            List <Map<String, Object>>l = new ArrayList<>();
+            for (int i = 0; i < k; i++){
         } else {
             List<Map<String, Object>> l = new ArrayList<>();
             for (int i = 0; i < k; i++) {
@@ -573,5 +666,15 @@ public class StudentServiceImpl extends Base implements StudentService {
             System.out.println("添加后完全的list" + l);
             return l;
         }
+    }
+
+    @Override
+    public int addWaiting(String stuId, int classId, int flag,String time) {
+       return  waitingDao.insert(stuId,classId,flag,time);
+    }
+
+    @Override
+    public List<Map<String, Object>> findWaiting(Integer classId) {
+        return  waitingDao.selectWaitings(classId);
     }
 }
