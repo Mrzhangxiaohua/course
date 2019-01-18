@@ -1,0 +1,18 @@
+DROP TABLE IF EXISTS AllTeacherInfo;
+
+CREATE TABLE  AllTeacherInfo(
+ `JSBH`   VARCHAR (100)  NOT NULL COMMENT '教师编号',
+ `JSXM`   VARCHAR (100)  COMMENT '教师姓名',
+ `XBM`    INT (2) COMMENT '教师性别',
+ `CSRQ`   DATE COMMENT '出生日期',
+ `YXSH`   VARCHAR (20)  COMMENT '院系所属',
+ `XSMC`   VARCHAR (30)  COMMENT '系所名称',
+ `EMAIL`  VARCHAR (30)  COMMENT '邮箱',
+ `SFZH`   VARCHAR (2)   COMMENT '身份证号',
+ `STATU` INT (4) COMMENT '在职状态',
+ `JSGRZYCLJ`  VARCHAR (50)  COMMENT '教师个人主页链接',
+  PRIMARY KEY (`JSBH`)
+)
+ ENGINE = InnoDB
+ DEFAULT CHARSET = utf8;
+ COMMENT'存储教师的基本信息'

@@ -96,20 +96,46 @@ public class CourseTableExcelDomain {
         StringBuilder res = new StringBuilder();
         switch (jieci) {
             case 0:
-                res.append("一二节");
+                res.append("一节");
                 break;
             case 1:
-                res.append("三四节");
+                res.append("二节");
                 break;
             case 2:
-                res.append("五六节");
+                res.append("三节");
                 break;
             case 3:
-                res.append("七八节");
+                res.append("四节");
                 break;
             case 4:
-                res.append("九十节");
+                res.append("N1节");
                 break;
+            case 5:
+                res.append("N2节");
+                break;
+            case 6:
+                res.append("五节");
+                break;
+            case 7:
+                res.append("六节");
+                break;
+            case 8:
+                res.append("七节");
+                break;
+            case 9:
+                res.append("八节");
+                break;
+            case 10:
+                res.append("九节");
+                break;
+            case 11:
+                res.append("十节");
+                break;
+            case 12:
+                res.append("十一节");
+                break;
+            default:
+                // do nothing
         }
         return res.toString();
     }

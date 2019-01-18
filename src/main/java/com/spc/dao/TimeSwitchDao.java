@@ -1,9 +1,11 @@
 package com.spc.dao;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 
+@Repository
 public interface TimeSwitchDao {
     int add(@Param("timeSwitch") int timeSwitch);
 

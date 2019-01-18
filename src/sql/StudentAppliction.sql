@@ -1,7 +1,6 @@
 create table StudentApplication
 (
-  id      int auto_increment
-    primary key,
+  id      int auto_increment primary key,
   stuId   int                                 not null,
   classId int                                 not null,
   states  int                                 not null,

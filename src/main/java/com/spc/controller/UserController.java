@@ -27,6 +27,24 @@ public class UserController extends Base {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(value = "/addStudent", method = RequestMethod.POST)
+    @ResponseBody
+    public int addStudent(HttpServletRequest request) {
+        String json = RequestPayload.getRequestPayload(request);
+        JSONObject obj = null;
+        int res = 0;
+        try {
+            obj = new JSONObject(json);
+            String stuId = obj.getString("stuId");
+            String stuName = obj.getString("stuName");
+//            String stuName = obj.getString("stuName");
+            res = userService.addStudent(stuId, stuName);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return res;
+    }
+
     @ResponseBody
     @PostMapping(value = "/add")
     public boolean addUser(HttpServletRequest request) {
