@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.manageDao.StuAdjustmentDao.StuAdjustDao">
+
+    <select id="getAllCourse" resultType="map">
+        SELECT classId, className, classNum,classTime,classPlace,classModuleNum,departId,startWeek,endWeek,classUpperLimit,classChooseNum
+        FROM course.Course
+        <where>
+            <if test="departId!=''">
+                AND departId = #{departId}
+            </if>
+            AND classSemester = #{CURRENTSEMESTER} AND classChooseNum &lt; classUpperLimit
+        </where>
+    </select>
+
+    <select id="findCapacity" resultType="map">
+        SELECT a.classId, a.classNum, a.classChooseNum, a.classUpperLimit
+        FROM course.Course a
+        where a.classId = #{newClassId}
+    </select>
+
+    <update id="moveStudent">
+        UPDATE course.Course_choose a
+        <set>
+            a.classId = #{newClassId} where a.stuId = #{stuId} and a.classId = #{oldClassId};
+        </set>
+        UPDATE course.Course b
+        <set>
+            b.classChooseNum = b.classChooseNum + 1 where b.classId = #{newClassId};
+        </set>
+    </update>
+</mapper>
