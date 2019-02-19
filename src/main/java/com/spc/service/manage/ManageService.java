@@ -38,7 +38,7 @@ public interface ManageService {
 
     int deleteApplication(int id);
 
-    List findStudentByClassnameAndNum(String className,int classNum,int pageSize,int currentPage);
+    List findStudentByClassnameAndNum(String classId,int pageSize,int currentPage);
 
     List findStudentByStudentId(int pageSize, int currentPage, String stuId);
 

@@ -646,20 +646,21 @@ public class ManageController extends Base {
     public Map<String, Object> findStudentByClassnameAndNum(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false, defaultValue = "") String classStr,
+            @RequestParam(required = false, defaultValue = "") String classId,
             @RequestParam(required = false, defaultValue = "") String stuId,
             HttpSession session
     ) {
         List students = new ArrayList();
         if (stuId.equals("")){
-            if (!classStr.equals("") && !classStr.isEmpty()) {
-                String newStr = classStr.replace("(", ",").replace(")", "");
-                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+            if (!classId.equals("") && !classId.isEmpty()) {
+//                String newStr = classStr.replace("(", ",").replace(")", "");
+//                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//
+//                String className = strs[0];
+//                Integer classNum = Integer.parseInt(strs[1]);
 
-                String className = strs[0];
-                Integer classNum = Integer.parseInt(strs[1]);
-
-                students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
+//                students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
+                students = manageService.findStudentByClassnameAndNum(classId, pageSize, currentPage);
 
                 List newStus = zhuanhuan(students);
 
