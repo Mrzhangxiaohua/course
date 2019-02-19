@@ -7,6 +7,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.model.*;
 import com.spc.service.classes.ClassService;
+import com.spc.service.manage.ClassAllService;
 import com.spc.service.manage.ManageService;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
@@ -49,6 +50,8 @@ public class ManageController extends Base {
     @Autowired
     private ManageService manageService;
 
+    @Autowired
+    ClassAllService classAllService;
 
     /**
      * 学生端：根据学生id查询课表
@@ -869,4 +872,9 @@ public class ManageController extends Base {
         }
         return "设置失败";
     }
+
+
+
 }
+
+
