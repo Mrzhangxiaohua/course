@@ -18,9 +18,9 @@ import com.spc.util.CalculateWeekth;
 import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
 import org.apache.ibatis.annotations.Param;
+import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1048,6 +1048,101 @@ public class TeacherController extends Base {
         return res;
 
     }
+    /**
+     * 教师端：根据教师Id查询教师课程
+     * @param session
+     * @param
+     * @return
+     */
+    @RequestMapping("teach/findCourse")
+    @ResponseBody
+    public Map findTeachCourse(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            HttpSession session
+    ) {
+        String teacherId = (String) session.getAttribute("userId");
+//        String teacherId = "0002017115";
+        Map<String,Object> res=new HashMap<>();
+//        PageHelper.startPage(currentPage, pageSize);
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List classes = classService.findTeachCourse(teacherId);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
+        res.put("total",page.getTotal());
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("classes",pageList);
+        res.put("currentPage",currentPage);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
 
+    /**
+     * 教师端：根据班级Id导出选课学生名单
+     * @param
+     * @param
+     * @return
+     */
+
+    @RequestMapping("/downloadStudentsExcel")
+    @ResponseBody
+    public void downloadStudentsExcel(HttpServletResponse response,@RequestParam("classId") int classId ,@RequestParam("className") String className,@RequestParam("classNum") String classNum) throws IOException {
+
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet(className+classNum+"选课学生名单");
+        List<Map<String,Object>> students = classService.findStudents(classId);
+        String fileName = "选课学生名单"  + ".xls";//设置要导出的文件的名字
+        String[] headers={"姓名","学号"};
+        HSSFRow headerRow=sheet.createRow(0);
+        //添加表头
+        for(int i=0;i<headers.length;i++){
+            HSSFCell cell=headerRow.createCell(i);
+            HSSFRichTextString text=new HSSFRichTextString(headers[i]);
+            cell.setCellValue(text);
+        }
+        int rowNum=1;
+        System.out.print(students);
+        for(Map<String,Object> stu:students){
+            HSSFRow row=sheet.createRow(rowNum);
+            row.createCell(0).setCellValue((String) stu.get("name"));
+            row.createCell(1).setCellValue((String) stu.get("stuId"));
+//            row.createCell(2).setCellValue((String) stu.get("className")+stu.get("classNum")+"班");
+            rowNum++;
+        }
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName,"utf-8"));
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+
+    }
+
+    /**
+     * 教师端：根据班级Id查看学生名单
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("teach/findStudents")
+    @ResponseBody
+    public Map findStudents(
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam("classId") int classId
+    ) {
+
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> students = classService.findStudents(classId);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        res.put("total",page.getTotal());
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("students",pageList);
+        res.put("currentPage",currentPage);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
 
 }

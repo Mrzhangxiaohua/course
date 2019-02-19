@@ -72,4 +72,6 @@ public interface ClassDao {
     int zzGrade(@Param("className") String className, @Param("classNum") int classNum, @Param("stuId") String stuId,
                 @Param("zzGrade") int zzGrade, @Param("flag") int flag);
 
+    List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId);
+
 }

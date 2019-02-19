@@ -113,6 +113,16 @@ public class ClassServiceImpl implements ClassService {
         return classDao.zzGrade(className, classNum, stuId, zzGrade, flag);
     }
 
+    @Override
+    public List<Map<String, Object>> findTeachCourse(String teacherId) {
+        return classDao.findTeachCourse(teacherId);
+    }
+
+    @Override
+    public List findStudents(int classId) {
+        return studentDao.findStudents(classId);
+    }
+
 }
 
 

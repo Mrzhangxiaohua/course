@@ -314,4 +314,10 @@
         and classId=#{classId}
         order by dateTime desc
     </select>
+
+    <select id="findTeachCourse" resultType="Map">
+        select *
+        from course.Course
+        where  teaId=#{teacherId}
+    </select>
 </mapper>
