@@ -278,18 +278,18 @@ public class ClassAllController extends Base {
     @RequestMapping("/getDepartTimeTablePdf")
     @ResponseBody
     public ModelAndView getDepartTimeTablePdf(@RequestParam String academicYear, @RequestParam String classSemester,
-                                              @RequestParam String depId, @RequestParam("depName") String departName,
+                                              @RequestParam(required = false, defaultValue = "8888") int depId,
+                                              @RequestParam(required = false, defaultValue = "88888888") String depName,
                                               HttpSession session, HttpServletResponse response) {
-        if (depId==null|| depId.equals("")){
-            depId = session.getAttribute("departId").toString();
+        if(depId==8888){
+            depId= (int) session.getAttribute("departId");
+            depName= (String) session.getAttribute("dep");
         }
-        int departId = Integer.parseInt(depId);
-
 
         //根据学生的名称设置pdf的文件名
-        response = ResponseWrap.setName(response, departName + "课表", "pdf");
+        response = ResponseWrap.setName(response, depName + "课表", "pdf");
 
-        String[][] tableData = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
+        String[][] tableData = classAllService.getDepartTimeTable(depId, academicYear, classSemester);
         Map res = new HashMap();
         res.put("data", tableData);
         Map<String, Object> model = new HashMap<>();
@@ -308,16 +308,15 @@ public class ClassAllController extends Base {
     @RequestMapping("/getDepartTimeTableExcel")
     @ResponseBody
     public void getDepartTimeTableExcel(@RequestParam String academicYear, @RequestParam String classSemester,
-                                        @RequestParam String depId, HttpSession session, @RequestParam("depName") String departName,
-                                        HttpServletResponse response) {
+                                        @RequestParam(required = false, defaultValue = "8888") int depId,
+                                        @RequestParam(required = false, defaultValue = "88888888") String depName,
+                                        HttpSession session, HttpServletResponse response) {
 
-        if (depId==null|| depId.equals("")){
-            depId = session.getAttribute("departId").toString();
+        if(depId==8888){
+            depId= (int) session.getAttribute("departId");
+            depName= (String) session.getAttribute("dep");
         }
-        int departId = Integer.parseInt(depId);
-        System.out.println(departId);
-        String[][] tables = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
-        System.out.println(tables);
+        String[][] tables = classAllService.getDepartTimeTable(depId, academicYear, classSemester);
         List<CourseTableExcelDomain> liC = new ArrayList<>();
         for (int i = 0; i < tables.length; i = i + 1) {
             liC.add(new CourseTableExcelDomain(i, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
@@ -325,7 +324,7 @@ public class ClassAllController extends Base {
         }
 
         //设置课表的名称
-        response = ResponseWrap.setName(response, departName + "课表", "xls");
+        response = ResponseWrap.setName(response, depName + "课表", "xls");
 
         ExportParams params = new ExportParams();
         params.setTitle("课表");
