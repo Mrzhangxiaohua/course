@@ -602,15 +602,20 @@ public class ManageController extends Base {
     @RequestMapping(value = "/add/courseStudent", method = RequestMethod.POST)
     @ResponseBody
     public int addCourseStudent(HttpServletRequest request) {
-//        System.out.println("run addCourseStudent");
+        logger.info("==============runinhere=============");
         String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
             String stuId = obj.getString("stuId");
-            System.out.println("===============" + stuId);
-            String classStr = obj.getString("classStr");
-            manageService.addCourseStudent(stuId, classStr);
+            logger.info("==============runinhere=============" + stuId);
+            logger.info(json);
+            String classId = obj.getString("classId");
+            logger.info("==============runinhere=============" + classId);
+
+//            System.out.println("===============" + stuId + "===============" + classId);
+//            String classStr = obj.getString("classStr");
+            manageService.addCourseStudent(stuId, classId);
         } catch (Exception e) {
             System.out.println(e);
         }
