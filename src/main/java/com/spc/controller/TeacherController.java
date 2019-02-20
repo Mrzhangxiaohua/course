@@ -1128,11 +1128,12 @@ public class TeacherController extends Base {
      */
     @RequestMapping("/downloadStudentsPdf")
     @ResponseBody
-    public ModelAndView downloadStudentsPdf(
+    public ModelAndView downloadStudentsPdf(@RequestParam("classId") int classId ,
+            @RequestParam("className") int className ,@RequestParam("classNum") int classNum ,
                                             HttpSession session, HttpServletResponse response) {
-        int classId=501;
-        String className="英语";
-        int classNum=1;
+//        int classId=501;
+//        String className="英语";
+//        int classNum=1;
 
         response = ResponseWrap.setName(response, className+classNum + "班选课名单", "pdf");
         List<Map<String,Object>> students = classService.findStudents(classId);

@@ -48,7 +48,7 @@ public class StudentsListPdfView extends AbstractPdfView {
         hcell1.setColspan(2);
         hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(hcell1);
- 
+
         PdfPCell hcell;
         hcell = new PdfPCell(new Phrase("姓名", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
