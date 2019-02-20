@@ -18,6 +18,7 @@ import com.spc.util.CalculateWeekth;
 import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
+import com.spc.view.StudentsListPdfView;
 import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.hssf.usermodel.*;
@@ -1079,7 +1080,7 @@ public class TeacherController extends Base {
     }
 
     /**
-     * 教师端：根据班级Id导出选课学生名单
+     * 教师端：根据班级Id导出选课学生名单Excel
      * @param
      * @param
      * @return
@@ -1087,7 +1088,9 @@ public class TeacherController extends Base {
 
     @RequestMapping("/downloadStudentsExcel")
     @ResponseBody
-    public void downloadStudentsExcel(HttpServletResponse response,@RequestParam("classId") int classId ,@RequestParam("className") String className,@RequestParam("classNum") String classNum) throws IOException {
+    public void downloadStudentsExcel(HttpServletResponse response,@RequestParam("classId") int classId ,
+                                      @RequestParam("className") String className,
+                                      @RequestParam("classNum") String classNum) throws IOException {
 
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet(className+classNum+"选课学生名单");
@@ -1118,6 +1121,34 @@ public class TeacherController extends Base {
     }
 
     /**
+     * 教师端：根据班级Id导出选课学生名单PDF
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/downloadStudentsPdf")
+    @ResponseBody
+    public ModelAndView downloadStudentsPdf(
+                                            HttpSession session, HttpServletResponse response) {
+        int classId=501;
+        String className="英语";
+        int classNum=1;
+
+        response = ResponseWrap.setName(response, className+classNum + "班选课名单", "pdf");
+        List<Map<String,Object>> students = classService.findStudents(classId);
+        Map res = new HashMap();
+        res.put("data", students);
+        res.put("className",className);
+        res.put("classNum",classNum);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+
+        return new ModelAndView(new StudentsListPdfView(), model);
+    }
+
+
+    /**
      * 教师端：根据班级Id查看学生名单
      * @param
      * @param
@@ -1144,5 +1175,7 @@ public class TeacherController extends Base {
         res.put("status", "SUCCESS");
         return res;
     }
+
+
 
 }
