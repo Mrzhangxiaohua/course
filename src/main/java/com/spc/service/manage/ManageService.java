@@ -32,7 +32,7 @@ public interface ManageService {
 
     int addCourseStudent(String stuId ,String classStr);
 
-    int deleteCourseStudent(String stuId,String classStr);
+    int deleteCourseStudent(String stuId, String classId);
 
     int getClassId(String className,int classNum);
 

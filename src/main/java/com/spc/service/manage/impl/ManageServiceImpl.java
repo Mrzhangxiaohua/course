@@ -190,15 +190,15 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public int deleteCourseStudent(String stuId, String classStr) {
-        String newStr = classStr.replace("(", ",").replace(")", "");
-        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+    public int deleteCourseStudent(String stuId, String classId) {
+//        String newStr = classStr.replace("(", ",").replace(")", "");
+//        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
-        System.out.println(newStr);
-        String className = strs[0];
-        Integer classNum = Integer.parseInt(strs[1]);
-        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
-        deleteCourse(classId, stuId);
+//        System.out.println(newStr);
+//        String className = strs[0];
+//        Integer classNum = Integer.parseInt(strs[1]);
+//        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
+        deleteCourse(Integer.parseInt(classId), stuId);
         return 0;
     }
 

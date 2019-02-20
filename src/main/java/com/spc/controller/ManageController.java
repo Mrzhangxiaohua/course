@@ -609,7 +609,6 @@ public class ManageController extends Base {
             obj = new JSONObject(json);
             String stuId = obj.getString("stuId");
             System.out.println("===============" + stuId);
-//            String stuName = obj.getString("stuName");
             String classStr = obj.getString("classStr");
             manageService.addCourseStudent(stuId, classStr);
         } catch (Exception e) {
@@ -627,8 +626,9 @@ public class ManageController extends Base {
             obj = new JSONObject(json);
             String stuId = obj.getString("stuId");
             String classStr = obj.getString("classStr");
-            System.out.println(stuId + classStr);
-            manageService.deleteCourseStudent(stuId, classStr);
+            String classId = obj.getString("classId");
+            System.out.println(stuId + classStr + classId);
+            manageService.deleteCourseStudent(stuId, classId);
         } catch (Exception e) {
             System.out.println(e);
         }
