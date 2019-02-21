@@ -176,29 +176,29 @@ public class ManageServiceImpl extends Base implements ManageService {
 
 
     @Override
-    public int addCourseStudent(String stuId, String classStr) {
-        String newStr = classStr.replace("(", ",").replace(")", "");
-        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
-
-        System.out.println(strs);
-        String className = strs[0];
-        Integer classNum = Integer.parseInt(strs[1]);
-        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
-        System.out.println("run here =" + classId);
-        chooseCourse(classId, stuId);
+    public int addCourseStudent(String stuId, String classId) {
+//        String newStr = classStr.replace("(", ",").replace(")", "");
+//        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//
+//        System.out.println(strs);
+//        String className = strs[0];
+//        Integer classNum = Integer.parseInt(strs[1]);
+//        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
+//        System.out.println("run here =" + classId);
+        chooseCourse(Integer.parseInt(classId), stuId);
         return 0;
     }
 
     @Override
-    public int deleteCourseStudent(String stuId, String classStr) {
-        String newStr = classStr.replace("(", ",").replace(")", "");
-        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+    public int deleteCourseStudent(String stuId, String classId) {
+//        String newStr = classStr.replace("(", ",").replace(")", "");
+//        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
-        System.out.println(newStr);
-        String className = strs[0];
-        Integer classNum = Integer.parseInt(strs[1]);
-        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
-        deleteCourse(classId, stuId);
+//        System.out.println(newStr);
+//        String className = strs[0];
+//        Integer classNum = Integer.parseInt(strs[1]);
+//        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
+        deleteCourse(Integer.parseInt(classId), stuId);
         return 0;
     }
 
@@ -214,11 +214,11 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public List findStudentByClassnameAndNum(String className, int classNum, int pageSize, int currentPage) {
-        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
+    public List findStudentByClassnameAndNum(String classId, int pageSize, int currentPage) {
+//        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
 
         PageHelper.startPage(currentPage, pageSize);
-        return studentDao.findStudent(classId);
+        return studentDao.findStudent(Integer.parseInt(classId));
     }
 
     @Override

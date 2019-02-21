@@ -31,4 +31,6 @@ public interface ClassAllService {
     Map<String, String> delClass(int id, String operatorId, String operatorName);
 
     String[][] getDepartTimeTable(int departId, String academicYear, String classSemester);
+
+    List<Map<String, Object>> findDepartList(String academicYear, String classSemester);
 }

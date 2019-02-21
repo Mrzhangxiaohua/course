@@ -159,4 +159,24 @@
         </set>
         where id = #{id}
     </update>
+
+
+    <select id="selectAllDepart" resultType="map" useCache="false">
+        select distinct (ClassAll.departId),Department.departName
+        from ClassAll
+        join Department
+        on ClassAll.departId=Department.departId
+        <where>
+            <if test="academicYear != null and academicYear !=''">
+                and academicYear = #{academicYear}
+            </if>
+            <if test="classSemester != null and classSemester !=''">
+                <bind name="classSemesterLike" value="'%'+ classSemester +'%'"/>
+                and classSemester like #{classSemesterLike}
+            </if>
+
+        </where>
+    </select>
+
+
 </mapper>

@@ -1,7 +1,9 @@
 package com.spc.controller.manage;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.controller.Base;
@@ -10,7 +12,9 @@ import com.spc.service.manage.*;
 import com.spc.service.wsdl.GetUndergradFreeClassrooms.GetUndergradFreeClassroomInfo;
 import com.spc.service.wsdl.TeachersOccupyTimeWebservice.TeacherCurriculumInfo;
 import com.spc.util.ResponseWrap;
+import com.spc.view.ManageTablePdfView;
 import com.spc.view.StudentTablePdfView;
+import com.sun.xml.rpc.processor.model.soap.SOAPUnorderedStructureType;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -251,31 +255,41 @@ public class ClassAllController extends Base {
     /**
      * 获取某个学院的上课课表
      *
-     * @param classSemester 春、秋
+     * @param classSemester 春、秋、departId
+     *
      * @return
      */
     @RequestMapping("/getDepartTimeTable")
     @ResponseBody
-    public String[][] getDepartTimeTable(@RequestParam String academicYear, @RequestParam String classSemester, HttpSession session) {
-        Integer departId = Integer.parseInt(session.getAttribute("departId").toString());
+    public String[][] getDepartTimeTable(@RequestParam String academicYear, @RequestParam String classSemester,@RequestParam("departmentId") String depId,HttpSession session) {
+       if (depId==null|| depId.equals("")){
+           depId = session.getAttribute("departId").toString();
+       }
+        int departId = Integer.parseInt(depId);
         return classAllService.getDepartTimeTable(departId, academicYear, classSemester);
     }
 
     /**
      * 获取某个学院的上课课表 pdf格式
      *
-     * @param classSemester 春、秋
+     * @param classSemester 春、秋、departId
      * @return
      */
     @RequestMapping("/getDepartTimeTablePdf")
     @ResponseBody
-    public ModelAndView getDepartTimeTablePdf(@RequestParam String academicYear, @RequestParam String classSemester, HttpSession session, HttpServletResponse response) {
-        Integer departId = Integer.parseInt(session.getAttribute("departId").toString());
+    public ModelAndView getDepartTimeTablePdf(@RequestParam String academicYear, @RequestParam String classSemester,
+                                              @RequestParam(required = false, defaultValue = "8888") int depId,
+                                              @RequestParam(required = false, defaultValue = "88888888") String depName,
+                                              HttpSession session, HttpServletResponse response) {
+        if(depId==8888){
+            depId= (int) session.getAttribute("departId");
+            depName= (String) session.getAttribute("dep");
+        }
 
         //根据学生的名称设置pdf的文件名
-        response = ResponseWrap.setName(response, session.getAttribute("dep") + "的课表", "pdf");
+        response = ResponseWrap.setName(response, depName + "课表", "pdf");
 
-        String[][] tableData = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
+        String[][] tableData = classAllService.getDepartTimeTable(depId, academicYear, classSemester);
         Map res = new HashMap();
         res.put("data", tableData);
         Map<String, Object> model = new HashMap<>();
@@ -288,16 +302,21 @@ public class ClassAllController extends Base {
     /**
      * 获取某个学院的上课课表 excel格式
      *
-     * @param classSemester 春、秋
+     * @param classSemester 春、秋、departId
      * @return
      */
     @RequestMapping("/getDepartTimeTableExcel")
     @ResponseBody
     public void getDepartTimeTableExcel(@RequestParam String academicYear, @RequestParam String classSemester,
+                                        @RequestParam(required = false, defaultValue = "8888") int depId,
+                                        @RequestParam(required = false, defaultValue = "88888888") String depName,
                                         HttpSession session, HttpServletResponse response) {
-        Integer departId = Integer.parseInt(session.getAttribute("departId").toString());
 
-        String[][] tables = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
+        if(depId==8888){
+            depId= (int) session.getAttribute("departId");
+            depName= (String) session.getAttribute("dep");
+        }
+        String[][] tables = classAllService.getDepartTimeTable(depId, academicYear, classSemester);
         List<CourseTableExcelDomain> liC = new ArrayList<>();
         for (int i = 0; i < tables.length; i = i + 1) {
             liC.add(new CourseTableExcelDomain(i, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
@@ -305,18 +324,100 @@ public class ClassAllController extends Base {
         }
 
         //设置课表的名称
-        response = ResponseWrap.setName(response, session.getAttribute("dep") + "的课表", "xls");
+        response = ResponseWrap.setName(response, depName + "课表", "xls");
 
         ExportParams params = new ExportParams();
         params.setTitle("课表");
-
+        System.out.println("before");
         Workbook workbook = ExcelExportUtil.exportExcel(params, CourseTableExcelDomain.class, liC);
-
+        System.out.println("after");
         try {
             workbook.write(response.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 一键获取所有学院的上课课表 excel格式
+     *
+     * @param classSemester 春、秋、departId
+     * @return
+     */
+    @RequestMapping("/getAllDepartTimeTableExcel")
+    @ResponseBody
+    public void getAllDepartTimeTableExcel(@RequestParam String academicYear,
+                                        @RequestParam String classSemester,HttpServletResponse response){
+        List<Map<String,Object>> departList=classAllService.findDepartList(academicYear,classSemester);
+        List<Map<String,Object>> list=new ArrayList<>();
+        System.out.println(departList);
+        for(Map<String,Object> depart:departList){
+            int departId= (int) depart.get("departId");
+            String departName= (String) depart.get("departName");
+            String[][] tables = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
+            List<CourseTableExcelDomain> liC = new ArrayList<>();
+            for (int i = 0; i < tables.length; i = i + 1) {
+                liC.add(new CourseTableExcelDomain(i, tables[i][0], tables[i][1], tables[i][2], tables[i][3]
+                        , tables[i][4], tables[i][5], tables[i][6]));
+            }
+            Map<String,Object> map=new HashMap<>();
+            ExportParams params = new ExportParams();
+            params.setTitle(departName+"总课表");
+            params.setSheetName(departName);
+            map.put("title",params);
+            map.put("data",liC);
+            map.put("entity",CourseTableExcelDomain.class);
+            list.add(map);
+        }
+
+
+        //设置课表的名称
+        response = ResponseWrap.setName(response,  "全学院总课表", "xls");
+
+//        ExportParams params = new ExportParams();
+//        params.setTitle("课表");
+        Workbook workbook = ExcelExportUtil.exportExcel(list, ExcelType.HSSF);
+        try {
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(classSemester);
+    }
+
+    /**
+     * 一键获取某个学院的上课课表 pdf格式
+     *
+     * @param classSemester 春、秋、departId
+     * @return
+     */
+    @RequestMapping("/getAllDepartTimeTablePdf")
+    @ResponseBody
+    public ModelAndView getAllDepartTimeTablePdf(@RequestParam String academicYear, @RequestParam String classSemester,
+                                                  HttpSession session, HttpServletResponse response) {
+
+
+        response = ResponseWrap.setName(response, "全学院总课表", "pdf");
+        List<Map<String,Object>> departList=classAllService.findDepartList(academicYear,classSemester);
+        List<Map<String,Object>> tableList=new ArrayList<>();
+        for(Map<String,Object> depart:departList){
+            int departId= (int) depart.get("departId");
+            String departName= (String) depart.get("departName");
+            String[][] tableData = classAllService.getDepartTimeTable(departId, academicYear, classSemester);
+            Map<String,Object> map = new HashMap<>();
+            map.put("departName",departName);
+            map.put("table",tableData);
+            tableList.add(map);
+        }
+
+
+        Map res = new HashMap();
+        res.put("data", tableList);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+        System.out.println("after");
+        return new ModelAndView(new ManageTablePdfView(), model);
     }
 
     /**

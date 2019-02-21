@@ -821,6 +821,13 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         return constructTimetable(classes);
     }
 
+    @Override
+    public List<Map<String, Object>> findDepartList(String academicYear, String classSemester) {
+        List<Map<String,Object>> departList=classAllDao.selectAllDepart(academicYear,classSemester);
+
+        return departList;
+    }
+
     /**
      * 获取上课节次，和本科教务系统同步
      *

@@ -30,15 +30,15 @@ public interface ManageService {
     void deleteCourseRecord(int classId);
 
 
-    int addCourseStudent(String stuId ,String classStr);
+    int addCourseStudent(String stuId ,String classId);
 
-    int deleteCourseStudent(String stuId,String classStr);
+    int deleteCourseStudent(String stuId, String classId);
 
     int getClassId(String className,int classNum);
 
     int deleteApplication(int id);
 
-    List findStudentByClassnameAndNum(String className,int classNum,int pageSize,int currentPage);
+    List findStudentByClassnameAndNum(String classId,int pageSize,int currentPage);
 
     List findStudentByStudentId(int pageSize, int currentPage, String stuId);
 

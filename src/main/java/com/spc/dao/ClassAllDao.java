@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yzk
@@ -52,4 +53,6 @@ public interface ClassAllDao {
     int delClassAllById(@Param("id") int id);
 
     int clearClassAllById(@Param("id") int id, @Param("operatorId") String operatorId, @Param("operatorName") String operatorName);
+
+    List<Map<String, Object>> selectAllDepart(@Param("academicYear")String academicYear,@Param("classSemester") String classSemester);
 }
