@@ -1062,8 +1062,8 @@ public class TeacherController extends Base {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             HttpSession session
     ) {
-//        String teacherId = (String) session.getAttribute("userId");、
-        String teacherId = "0002017115";
+        String teacherId = (String) session.getAttribute("userId");
+//        String teacherId = "0002017115";
         Map<String,Object> res=new HashMap<>();
 //        PageHelper.startPage(currentPage, pageSize);
         Page page=PageHelper.startPage(currentPage, pageSize);
