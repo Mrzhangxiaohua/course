@@ -1062,18 +1062,20 @@ public class TeacherController extends Base {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             HttpSession session
     ) {
-        String teacherId = (String) session.getAttribute("userId");
-//        String teacherId = "0002017115";
+//        String teacherId = (String) session.getAttribute("userId");、
+        String teacherId = "0002017115";
         Map<String,Object> res=new HashMap<>();
 //        PageHelper.startPage(currentPage, pageSize);
         Page page=PageHelper.startPage(currentPage, pageSize);
         List classes = classService.findTeachCourse(teacherId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
-        res.put("total",page.getTotal());
+//        res.put("total",page.getTotal());
         List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
-        data.put("classes",pageList);
-        res.put("currentPage",currentPage);
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
         res.put("data", data);
         res.put("status", "SUCCESS");
         return res;
@@ -1095,7 +1097,7 @@ public class TeacherController extends Base {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet(className+classNum+"选课学生名单");
         List<Map<String,Object>> students = classService.findStudents(classId);
-        String fileName = "选课学生名单"  + ".xls";//设置要导出的文件的名字
+        String fileName =className+classNum+ "选课学生名单"  + ".xls";//设置要导出的文件的名字
         String[] headers={"姓名","学号"};
         HSSFRow headerRow=sheet.createRow(0);
         //添加表头
@@ -1129,11 +1131,14 @@ public class TeacherController extends Base {
     @RequestMapping("/downloadStudentsPdf")
     @ResponseBody
     public ModelAndView downloadStudentsPdf(@RequestParam("classId") int classId ,
-            @RequestParam("className") int className ,@RequestParam("classNum") int classNum ,
+            @RequestParam("className") String className ,@RequestParam("classNum") int classNum ,
                                             HttpSession session, HttpServletResponse response) {
 //        int classId=501;
 //        String className="英语";
 //        int classNum=1;
+        System.out.print(classId);
+        System.out.print(className);
+        System.out.print(classNum);
 
         response = ResponseWrap.setName(response, className+classNum + "班选课名单", "pdf");
         List<Map<String,Object>> students = classService.findStudents(classId);
