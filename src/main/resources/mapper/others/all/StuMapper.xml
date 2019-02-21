@@ -191,4 +191,12 @@
         WHERE stuId = #{stuId} AND classId = #{classId}
     </select>
 
+    <select id="findStudents" resultType="map">
+        select c.*,x.name
+        from course.Course_choose c
+        JOIN course.XuanKeStu x
+        ON c.stuId = x.stuId
+        where c.classId=#{classId}
+    </select>
+
 </mapper>
