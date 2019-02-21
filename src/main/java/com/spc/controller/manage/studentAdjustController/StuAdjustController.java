@@ -30,12 +30,12 @@ public class StuAdjustController extends Base {
     @Autowired StuAdjustService stuAdjustService;
 
     // 获取所有开课季节的课程
+
     @RequestMapping("/getAllCourse")
     @ResponseBody
     public List<Map<String, Object>> getAllCourse(@RequestParam(required = false, defaultValue = "") String departId){
         return stuAdjustService.getAllCourse(Base.CURRENTSEMESTER, departId);
     }
-
 
     // 根据学生Id替换班级
     @RequestMapping(value = "/moveStudent", method = RequestMethod.POST)
