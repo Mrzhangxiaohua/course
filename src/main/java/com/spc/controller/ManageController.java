@@ -381,17 +381,20 @@ public class ManageController extends Base {
     ) {
         Map<String, Object> model = new HashMap<>();
 
-        String newStr = classStr.replace("(", ",").replace(")", "");
-        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//        String newStr = classStr.replace("(", ",").replace(")", "");
+//        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
         if(classStr!=""){
-            String className = strs[0];
-            Integer classNum = Integer.parseInt(strs[1]);
+//            String className = strs[0];
+//            Integer classNum = Integer.parseInt(strs[1]);
 
-            int classId = manageService.getClassId(className, classNum);
+//            int classId = manageService.getClassId(className, classNum);
 
-            List students = classService.findStudent(classId);
-
+//            List students = classService.findStudent(classId);
+            List students = classService.findStudent(Integer.parseInt(classStr));
+            Map m = classService.findClassInfo(classStr);
+            String className = (String) m.get("className");
+            Integer classNum = (Integer) m.get("classNum");
 
             List<StudentExcelDomain> liC = new ArrayList<>();
 
@@ -399,6 +402,7 @@ public class ManageController extends Base {
                 Map<String, String> t = (Map<String, String>) students.get(i);
                 liC.add(new StudentExcelDomain(t.get("stuName"), t.get("stuId"), t.get("departName"), t.get("speciality"), t.get("tutoremployeeid"),t.get("wlzzxxGrade")==null?"":String.valueOf(t.get("wlzzxxGrade")), t.get("knskGrade")==null?"":String.valueOf(t.get("knskGrade")), t.get("xbsjGrade")==null?"":String.valueOf(t.get("xbsjGrade")) ));
             }
+
 
             response = ResponseWrap.setName(response, className + String.valueOf(classNum) + "班人名单", "xls");
 
@@ -430,16 +434,19 @@ public class ManageController extends Base {
     ) {
         Map<String, Object> model = new HashMap<>();
         try {
-                String newStr = classStr.replace("(", ",").replace(")", "");
-                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//                String newStr = classStr.replace("(", ",").replace(")", "");
+//                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//
+//                String className = strs[0];
+//                Integer classNum = Integer.parseInt(strs[1]);
+//
+//                int classId = manageService.getClassId(className, classNum);
 
-                String className = strs[0];
-                Integer classNum = Integer.parseInt(strs[1]);
-
-                int classId = manageService.getClassId(className, classNum);
-
-//            System.out.printf("classId %d", classId);
-                List students = classService.findStudent(classId);
+//                List students = classService.findStudent(classId);
+            List students = classService.findStudent(Integer.parseInt(classStr));
+            Map m = classService.findClassInfo(classStr);
+            String className = (String) m.get("className");
+            Integer classNum = (Integer) m.get("classNum");
 
             Map<String, Object> res = new HashMap<String, Object>();
 
@@ -448,7 +455,6 @@ public class ManageController extends Base {
             model.put("style", "wider");
             model.put("name", classStr);
             response = ResponseWrap.setName(response, className + String.valueOf(classNum) + "班人名单", "pdf");
-
 
         } catch (Exception e) {
             System.out.println(e);

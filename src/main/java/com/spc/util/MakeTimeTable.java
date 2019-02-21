@@ -34,12 +34,6 @@ public class MakeTimeTable extends Base {
                 }
             }
         }
-        for (int i = 0; i < temp.length; i++) {
-            for (int j = 0; j < temp[i].length; j++) {
-                System.out.println(temp[i][j] + " ");
-            }
-            System.out.println();
-        }
         return temp;
     }
 

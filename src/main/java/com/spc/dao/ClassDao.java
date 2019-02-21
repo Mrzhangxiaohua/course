@@ -74,4 +74,5 @@ public interface ClassDao {
 
     List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId);
 
+    Map findClassInfo(@Param("classStr") String classStr);
 }

@@ -320,4 +320,10 @@
         from course.Course
         where  teaId=#{teacherId}
     </select>
+
+    <select id="findClassInfo" resultType="Map">
+        select *
+        from course.Course
+        where classId = #{classStr}
+    </select>
 </mapper>
