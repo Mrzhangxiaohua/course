@@ -36,5 +36,4 @@ public interface ClassService {
 
     List<Map<String,Object>>  findTeachCourse(String teacherId);
 
-    List findStudents(int classId);
 }
