@@ -23,6 +23,8 @@ public interface ClassDao {
 
     void deleteByClassAllId(@Param("classAllId") int id);
 
+    Map getClassId(@Param("classAllId") int id);
+
     List<Map> findStudentClassTime(@Param("stuId") String stuId, @Param("classSemester") String classSemester);
 
     Map findClassTimeById(@Param("classId") int classId);
