@@ -22,7 +22,8 @@ public interface ClassAllDao {
                                   @Param("courseName") String courseName,
                                   @Param("teacherId") String teacherId,
                                   @Param("teacherName") String teacherName,
-                                  @Param("classPlaceId") String classPlaceId);
+                                  @Param("classPlaceId") String classPlaceId,
+                                  @Param("selectDepartId") String selectDepartId);
 
     List<ClassAll> selectClassAllExcludeId(@Param("academicYear") String academicYear,
                                            @Param("classSemester") String classSemester,
