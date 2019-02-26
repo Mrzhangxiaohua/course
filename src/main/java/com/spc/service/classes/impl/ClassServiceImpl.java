@@ -83,7 +83,10 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List findStudent(int classId) { return studentDao.findStudent(classId); }
+    public List findStudent(int classId) {
+        List s = studentDao.findStudent(classId);
+        return studentDao.findStudent(classId);
+    }
   /*  @Override
     public List findWeekStudent(int classId,int weekth) {
         List<Map<String,Object>> students=studentDao.findStudent(classId);
@@ -117,6 +120,17 @@ public class ClassServiceImpl implements ClassService {
     public List<Map<String, Object>> findTeachCourse(String teacherId) {
         return classDao.findTeachCourse(teacherId);
     }
+
+    @Override
+    public List findStudents(int classId) {
+        return studentDao.findStudents(classId);
+    }
+
+    @Override
+    public Map findClassInfo(String classStr) {
+        return classDao.findClassInfo(classStr);
+    }
+
 
 }
 

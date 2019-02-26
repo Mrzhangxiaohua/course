@@ -22,7 +22,8 @@ public interface ClassAllService {
                                String courseName,
                                String teacherId,
                                String teacherName,
-                               String classPlaceId);
+                               String classPlaceId,
+                               String selectDepartId);
 
     String[][] getTeacherTimetable(String teacherId, String academicYear, String classSemester);
 

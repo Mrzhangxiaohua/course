@@ -6,8 +6,11 @@
     <select id="selectClassAll" resultType="com.spc.model.ClassAll" useCache="false">
         select * from course.ClassAll
         <where>
-            <if test="departId != null">
+            <if test="departId != null and departId !=99">
                 and departId = #{departId}
+            </if>
+            <if test="departId != null and departId ==99">
+
             </if>
             <if test="academicYear != null and academicYear !=''">
                 and academicYear = #{academicYear}
@@ -32,6 +35,9 @@
             <if test="teacherName != null and teacherName !=''">
                 <bind name="teacherNameLike" value="'%'+ teacherName +'%'"/>
                 and teacherName like #{teacherNameLike}
+            </if>
+            <if test="selectDepartId != null and selectDepartId !=''">
+                and departId = #{selectDepartId}
             </if>
         </where>
         order by id asc

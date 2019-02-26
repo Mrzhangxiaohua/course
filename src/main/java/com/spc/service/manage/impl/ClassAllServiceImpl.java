@@ -72,15 +72,15 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
 
     @Override
     public List<ClassAll> getClassAll(Integer departId, String academicYear, String classSemester, String courseId,
-                                      String courseName, String teacherId, String teacherName, String classPlaceId) {
-        return classAllDao.selectClassAll(departId, academicYear, classSemester, courseId, courseName, teacherId, teacherName, classPlaceId);
+                                      String courseName, String teacherId, String teacherName, String classPlaceId, String selectDepartId) {
+        return classAllDao.selectClassAll(departId, academicYear, classSemester, courseId, courseName, teacherId, teacherName, classPlaceId, selectDepartId);
     }
 
 
     @Override
     public String[][] getTeacherTimetable(String teacherId, String academicYear, String classSemester) {
         List<ClassAll> classes = classAllDao.selectClassAll(null, academicYear, classSemester, null,
-                null, teacherId, null, null);
+                null, teacherId, null, null, null);
         return constructTimetable(classes);
     }
 
@@ -817,7 +817,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     @Override
     public String[][] getDepartTimeTable(int departId, String academicYear, String classSemester) {
         List<ClassAll> classes = classAllDao.selectClassAll(departId, academicYear, classSemester, null, null,
-                null, null, null);
+                null, null, null, null);
         return constructTimetable(classes);
     }
 

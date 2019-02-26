@@ -8,4 +8,6 @@ public interface SynchroTable {
     int removeRecord(int id);
 
     int updateRecord(ClassAll classAll);
+
+    int insertRecord1(ClassAll classAll, Integer classID);
 }

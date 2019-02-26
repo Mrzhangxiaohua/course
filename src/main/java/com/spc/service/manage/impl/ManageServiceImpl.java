@@ -265,7 +265,7 @@ public class ManageServiceImpl extends Base implements ManageService {
             String departName = cd.getDepartName();
             int classId = cd.getClassId();
             String className = cd.getClassName();
-            int classNum = cd.getClassNum();
+            String classNum = String.valueOf(cd.getClassNum());
             int departId = cd.getDepartId();
             String allClassName = cd.getDepartName() + cd.getClassName();
 
@@ -282,7 +282,9 @@ public class ManageServiceImpl extends Base implements ManageService {
                 //创造学院
                 Map departM = creatClassOrDepartMap(departName, departId);
                 Map classM = creatClassOrDepartMap(className, classId);
-                Map classStrM = creatClassStrMap(className, classNum);
+
+                Map classStrM = creatClassStrMap(classNum, classId);
+
                 addClassOrDepart(classM, classStrM);
                 addClassOrDepart(departM, classM);
 
@@ -304,7 +306,7 @@ public class ManageServiceImpl extends Base implements ManageService {
                 if (!in2) {
 
                     Map classM = creatClassOrDepartMap(className, classId);
-                    Map classStrM = creatClassStrMap(className, classNum);
+                    Map classStrM = creatClassStrMap(classNum, classId);
                     addClassOrDepart(classM, classStrM);
                     for (Map everyDe : res) {
                         if (everyDe.get("label").equals(departName)) {
@@ -312,7 +314,7 @@ public class ManageServiceImpl extends Base implements ManageService {
                         }
                     }
                 } else {//有这个课程
-                    Map classStrM = creatClassStrMap(className, classNum);
+                    Map classStrM = creatClassStrMap(classNum, classId);
                     for (Map everyDe : res) {
                         if (everyDe.get("label").equals(departName)) {
                             List<Map> list = (List<Map>) everyDe.get("children");
@@ -326,16 +328,14 @@ public class ManageServiceImpl extends Base implements ManageService {
                     }
                 }
             }
-
-
         }
         return res;
     }
 
 
-    public Map creatClassStrMap(String className, int classNum) {
+    public Map creatClassStrMap(String classNum, int classId) {
         Map tempChild2 = new HashMap();
-        tempChild2.put("value", className + "(" + classNum + "班)");
+        tempChild2.put("value", classId);
         tempChild2.put("label", classNum + "班");
         return tempChild2;
     }
