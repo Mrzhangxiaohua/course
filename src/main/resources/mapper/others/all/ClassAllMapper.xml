@@ -6,12 +6,14 @@
     <select id="selectClassAll" resultType="com.spc.model.ClassAll" useCache="false">
         select * from course.ClassAll
         <where>
-            <if test="departId != null and departId !=99">
-                and departId = #{departId}
-            </if>
-            <if test="departId != null and departId ==99">
+
+            <if test="departId == null or departId=='' or departId == '0'.toString() or departId == '99'.toString()">
 
             </if>
+
+            <!--<if test="departId != null and departId !=0 and departId !=99">-->
+                <!--and departId = #{departId}-->
+            <!--</if>-->
             <if test="academicYear != null and academicYear !=''">
                 and academicYear = #{academicYear}
             </if>
