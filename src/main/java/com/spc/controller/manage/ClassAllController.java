@@ -328,9 +328,7 @@ public class ClassAllController extends Base {
 
         ExportParams params = new ExportParams();
         params.setTitle("课表");
-        System.out.println("before");
         Workbook workbook = ExcelExportUtil.exportExcel(params, CourseTableExcelDomain.class, liC);
-        System.out.println("after");
         try {
             workbook.write(response.getOutputStream());
         } catch (IOException e) {
@@ -338,7 +336,7 @@ public class ClassAllController extends Base {
         }
     }
 
-    /**
+    /**a'ge
      * 一键获取所有学院的上课课表 excel格式
      *
      * @param classSemester 春、秋、departId

@@ -47,9 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         http.authorizeRequests()//配置安全策略
-//        http.antMatcher("/nothing").authorizeRequests()
                 .anyRequest().authenticated()//其余的所有请求都需要验
-//                .regexMatchers("/none").authenticated()//其余的所有请求都需要验
                 .and()
                 .logout()
                 .logoutUrl("/logout")
