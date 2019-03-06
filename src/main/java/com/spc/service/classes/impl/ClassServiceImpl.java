@@ -121,10 +121,6 @@ public class ClassServiceImpl implements ClassService {
         return classDao.findTeachCourse(teacherId);
     }
 
-    @Override
-    public List findStudents(int classId) {
-        return studentDao.findStudents(classId);
-    }
 
     @Override
     public Map findClassInfo(String classStr) {

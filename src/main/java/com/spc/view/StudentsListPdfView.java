@@ -29,10 +29,10 @@ public class StudentsListPdfView extends AbstractPdfView {
         System.out.println(students);
 //        String value=(String)map.get("className")+(String)map.get("classNum")+"选课名单";
 //        document.add(new Paragraph(value));
-        PdfPTable table = new PdfPTable(2);
+        PdfPTable table = new PdfPTable(5);
 
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{2, 2});
+        table.setWidths(new int[]{2, 2, 2, 2, 2});
 
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -43,9 +43,9 @@ public class StudentsListPdfView extends AbstractPdfView {
 
 
         PdfPCell hcell1;
-        hcell1 = new PdfPCell(new Phrase(map.get("className")+Integer.toString((Integer) map.get("classNum"))+"选课名单", headFont));
+        hcell1 = new PdfPCell(new Phrase(map.get("className")+Integer.toString((Integer) map.get("classNum"))+"选课学生名单", headFont));
         hcell1.setFixedHeight(20f);
-        hcell1.setColspan(2);
+        hcell1.setColspan(5);
         hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(hcell1);
 
@@ -58,18 +58,45 @@ public class StudentsListPdfView extends AbstractPdfView {
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
+        hcell = new PdfPCell(new Phrase("所属学院", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
+        table.addCell(hcell);
+        hcell = new PdfPCell(new Phrase("所属专业", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
+        table.addCell(hcell);
+        hcell = new PdfPCell(new Phrase("导师", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
+        table.addCell(hcell);
 
         System.out.println(students);
         for (int i = 0; i < students.size(); i = i + 1) {
 
             Map<String, Object> t = students.get(i);
             PdfPCell cell;
-            cell = new PdfPCell(new Phrase((String) t.get("name"), textFont));
+            cell = new PdfPCell(new Phrase((String) t.get("stuName"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
             cell = new PdfPCell(new Phrase((String) t.get("stuId"), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase((String) t.get("departName"), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase((String) t.get("speciality"), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase((String) t.get("tutoremployeeid"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);

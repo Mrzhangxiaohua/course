@@ -84,16 +84,16 @@ cas:
     host:
       url: https://cas.xjtu.edu.cn/
       login_url: https://cas.xjtu.edu.cn/login
-      logout_url: https://cas.xjtu.edu.cn/logout?service=http://58.206.125.53:8080/psc
+#      logout_url: https://cas.xjtu.edu.cn/logout?service=http://58.206.125.53:8080/psc
 #      logout_url: https://cas.xjtu.edu.cn/logout?service=http://192.168.16.2:30004/psc
-#      logout_url: https://cas.xjtu.edu.cn/logout?service=http://localhost:8080/psc
+      logout_url: https://cas.xjtu.edu.cn/logout?service=http://localhost:8080/psc
 #      logout_url: https://cas.xjtu.edu.cn/logout?service=http://202.117.16.167:8080/psc
 app:
   server:
     host:
-      url: http://58.206.125.53:8080/psc
+#      url: http://58.206.125.53:8080/psc
 #      url: http://192.168.16.2:30004/psc
-#      url: http://localhost:8080/psc
+      url: http://localhost:8080/psc
 #      url: http://202.117.16.167:8080/psc
 
   login:
