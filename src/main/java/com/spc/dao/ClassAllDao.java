@@ -22,7 +22,8 @@ public interface ClassAllDao {
                                   @Param("courseName") String courseName,
                                   @Param("teacherId") String teacherId,
                                   @Param("teacherName") String teacherName,
-                                  @Param("classPlaceId") String classPlaceId);
+                                  @Param("classPlaceId") String classPlaceId,
+                                  @Param("selectDepartId") String selectDepartId);
 
     List<ClassAll> selectClassAllExcludeId(@Param("academicYear") String academicYear,
                                            @Param("classSemester") String classSemester,
@@ -55,4 +56,20 @@ public interface ClassAllDao {
     int clearClassAllById(@Param("id") int id, @Param("operatorId") String operatorId, @Param("operatorName") String operatorName);
 
     List<Map<String, Object>> selectAllDepart(@Param("academicYear")String academicYear,@Param("classSemester") String classSemester);
+
+    List<Map<String,Object>> selectOneDimClassAll(@Param("departId") int departId,@Param("academicYear")String academicYear,@Param("classSemester") String classSemester);
+
+    List<Map<String,Object>> selectOneDimRoomClassAll(@Param("roomName") String roomName,@Param("academicYear")String academicYear,@Param("classSemester") String classSemester);
+
+    List<Map<String, Object>> selectAllRoom(@Param("academicYear")String academicYear,@Param("classSemester") String classSemester);
+
+    List<ClassAll> selectRoomClassAll(@Param("roomName") String roomName,
+                                  @Param("academicYear") String academicYear,
+                                  @Param("classSemester") String classSemester,
+                                  @Param("courseId") String courseId,
+                                  @Param("courseName") String courseName,
+                                  @Param("teacherId") String teacherId,
+                                  @Param("teacherName") String teacherName,
+                                  @Param("classPlaceId") String classPlaceId,
+                                  @Param("selectDepartId") String selectDepartId);
 }

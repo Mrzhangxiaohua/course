@@ -23,6 +23,8 @@ public interface ClassDao {
 
     void deleteByClassAllId(@Param("classAllId") int id);
 
+    Map getClassId(@Param("classAllId") int id);
+
     List<Map> findStudentClassTime(@Param("stuId") String stuId, @Param("classSemester") String classSemester);
 
     Map findClassTimeById(@Param("classId") int classId);
@@ -72,4 +74,7 @@ public interface ClassDao {
     int zzGrade(@Param("className") String className, @Param("classNum") int classNum, @Param("stuId") String stuId,
                 @Param("zzGrade") int zzGrade, @Param("flag") int flag);
 
+    List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId);
+
+    Map findClassInfo(@Param("classStr") String classStr);
 }

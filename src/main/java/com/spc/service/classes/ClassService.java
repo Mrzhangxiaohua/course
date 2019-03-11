@@ -33,4 +33,9 @@ public interface ClassService {
     List<Map<String,Object>> findWeekComment(@RequestParam("stuId") String stuId, @RequestParam("weekth") int weekth, @RequestParam("classId") String classId);
 
     int zzGrade(String className,int classNum, String stuId, int zzGrade, int flag);
+
+    List<Map<String,Object>>  findTeachCourse(String teacherId);
+
+
+    Map findClassInfo(String classStr);
 }

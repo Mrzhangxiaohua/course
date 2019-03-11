@@ -72,15 +72,15 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
 
     @Override
     public List<ClassAll> getClassAll(Integer departId, String academicYear, String classSemester, String courseId,
-                                      String courseName, String teacherId, String teacherName, String classPlaceId) {
-        return classAllDao.selectClassAll(departId, academicYear, classSemester, courseId, courseName, teacherId, teacherName, classPlaceId);
+                                      String courseName, String teacherId, String teacherName, String classPlaceId, String selectDepartId) {
+        return classAllDao.selectClassAll(departId, academicYear, classSemester, courseId, courseName, teacherId, teacherName, classPlaceId, selectDepartId);
     }
 
 
     @Override
     public String[][] getTeacherTimetable(String teacherId, String academicYear, String classSemester) {
         List<ClassAll> classes = classAllDao.selectClassAll(null, academicYear, classSemester, null,
-                null, teacherId, null, null);
+                null, teacherId, null, null, null);
         return constructTimetable(classes);
     }
 
@@ -817,7 +817,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     @Override
     public String[][] getDepartTimeTable(int departId, String academicYear, String classSemester) {
         List<ClassAll> classes = classAllDao.selectClassAll(departId, academicYear, classSemester, null, null,
-                null, null, null);
+                null, null, null, null);
         return constructTimetable(classes);
     }
 
@@ -826,6 +826,30 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         List<Map<String,Object>> departList=classAllDao.selectAllDepart(academicYear,classSemester);
 
         return departList;
+    }
+
+    @Override
+    public List<Map<String, Object>> getOneDimDepartTimeTable(int departId, String academicYear, String classSemester) {
+        return classAllDao.selectOneDimClassAll(departId, academicYear, classSemester);
+    }
+
+    @Override
+    public List<Map<String, Object>> getOneDimRoomTimeTable(String roomName, String academicYear, String classSemester) {
+        return classAllDao.selectOneDimRoomClassAll(roomName, academicYear, classSemester);
+    }
+
+    @Override
+    public List<Map<String, Object>> findRoomList(String academicYear, String classSemester) {
+        List<Map<String,Object>> roomList=classAllDao.selectAllRoom(academicYear,classSemester);
+
+        return roomList;
+    }
+
+    @Override
+    public String[][] getRoomTimeTable(String roomName, String academicYear, String classSemester) {
+        List<ClassAll> classes = classAllDao.selectRoomClassAll(roomName, academicYear, classSemester, null, null,
+                null, null, null, null);
+        return constructTimetable(classes);
     }
 
     /**

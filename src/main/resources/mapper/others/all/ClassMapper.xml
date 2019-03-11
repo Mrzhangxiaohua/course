@@ -225,6 +225,11 @@
         where classAllId =#{classAllId}
     </delete>
 
+    <select id="getClassId" resultType="map">
+        select classId
+        from course.Course
+        where classAllId = #{classAllId}
+    </select>
 
     <select id="haveStuInClass" resultType="map">
         select stuId,classId
@@ -313,5 +318,17 @@
         and weekth=#{weekth}
         and classId=#{classId}
         order by dateTime desc
+    </select>
+
+    <select id="findTeachCourse" resultType="Map">
+        select *
+        from course.Course
+        where  teaId=#{teacherId}
+    </select>
+
+    <select id="findClassInfo" resultType="Map">
+        select *
+        from course.Course
+        where classId = #{classStr}
     </select>
 </mapper>

@@ -6,8 +6,11 @@
     <select id="selectClassAll" resultType="com.spc.model.ClassAll" useCache="false">
         select * from course.ClassAll
         <where>
-            <if test="departId != null">
+            <if test="departId != null and departId !=99">
                 and departId = #{departId}
+            </if>
+            <if test="departId != null and departId ==99">
+
             </if>
             <if test="academicYear != null and academicYear !=''">
                 and academicYear = #{academicYear}
@@ -32,6 +35,9 @@
             <if test="teacherName != null and teacherName !=''">
                 <bind name="teacherNameLike" value="'%'+ teacherName +'%'"/>
                 and teacherName like #{teacherNameLike}
+            </if>
+            <if test="selectDepartId != null and selectDepartId !=''">
+                and departId = #{selectDepartId}
             </if>
         </where>
         order by id asc
@@ -177,6 +183,82 @@
 
         </where>
     </select>
+
+
+    <select id="selectOneDimClassAll" resultType="map">
+        select  a.departId,a.courseId,a.courseNameCHS,a.classHour,a.className,b.teaName,b.classChooseNum,b.classPlace,b.startWeek,b.endWeek,b.classDateDescription,c.name
+        from course.ClassAll  a
+        join course.Course b
+        on a.id=b.classAllId
+        join course.SchoolDistrict c
+        on a.schoolDistrictId=c.id
+        where a.departId = #{departId} and  a.academicYear = #{academicYear}
+        and  a.classSemester like #{classSemester}
+    </select>
+
+    <select id="selectAllRoom" resultType="map" useCache="false">
+        select distinct (ClassAll.classPlaceName)
+        from ClassAll
+        <where>
+            <if test="academicYear != null and academicYear !=''">
+                and academicYear = #{academicYear}
+            </if>
+            <if test="classSemester != null and classSemester !=''">
+                <bind name="classSemesterLike" value="'%'+ classSemester +'%'"/>
+                and classSemester like #{classSemesterLike}
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectRoomClassAll" resultType="com.spc.model.ClassAll" useCache="false">
+        select * from course.ClassAll
+        <where>
+            <if test="roomName != null and roomName !=''">
+                and classPlaceName = #{roomName}
+            </if>
+            <if test="academicYear != null and academicYear !=''">
+                and academicYear = #{academicYear}
+            </if>
+            <if test="classSemester != null and classSemester !=''">
+                <bind name="classSemesterLike" value="'%'+ classSemester +'%'"/>
+                and classSemester like #{classSemesterLike}
+            </if>
+            <if test="teacherId != null and teacherId !=''">
+                and teacherId = #{teacherId}
+            </if>
+            <if test="classPlaceId != null and classPlaceId !=''">
+                and classPlaceId = #{classPlaceId}
+            </if>
+            <if test="courseId != null and courseId !=''">
+                and courseId = #{courseId}
+            </if>
+            <if test="courseName != null and courseName !=''">
+                <bind name="pattern" value="'%'+ courseName +'%'"/>
+                and (courseNameCHS like #{pattern} or courseNameEN like #{pattern})
+            </if>
+            <if test="teacherName != null and teacherName !=''">
+                <bind name="teacherNameLike" value="'%'+ teacherName +'%'"/>
+                and teacherName like #{teacherNameLike}
+            </if>
+            <if test="selectDepartId != null and selectDepartId !=''">
+                and departId = #{selectDepartId}
+            </if>
+        </where>
+        order by id asc
+    </select>
+
+    <select id="selectOneDimRoomClassAll" resultType="map">
+        select  a.departId,a.courseId,a.courseNameCHS,a.classHour,a.className,b.teaName,b.classChooseNum,b.classPlace,b.startWeek,b.endWeek,b.classDateDescription,c.name
+        from course.ClassAll  a
+        join course.Course b
+        on a.id=b.classAllId
+        join course.SchoolDistrict c
+        on a.schoolDistrictId=c.id
+        where a.classPlaceName = #{roomName} and  a.academicYear = #{academicYear}
+        and  a.classSemester like #{classSemester}
+    </select>
+
 
 
 </mapper>

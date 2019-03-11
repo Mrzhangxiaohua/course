@@ -45,7 +45,7 @@
 
     <select id="findStudentByStudentId" resultType="map">
         select DISTINCT
-        a.stuId,b.username as stuName,a.xbsjGrade,c.className,b.tutoremployeeid,b.speciality,b.dep as departName,c.teaName,c.classNum,a.knskGrade,a.wlzzxxGrade
+        a.stuId,b.username as stuName,a.xbsjGrade,c.className,b.tutoremployeeid,b.speciality,b.dep as departName,c.teaName,c.classNum,a.knskGrade,a.wlzzxxGrade,a.classId
         from course.Course_choose a
         left join course.XjtuUserInfo b
         on a.stuId = b.userno
@@ -190,5 +190,6 @@
         FROM course.StuWGYWeekComment c
         WHERE stuId = #{stuId} AND classId = #{classId}
     </select>
+
 
 </mapper>

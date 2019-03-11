@@ -176,29 +176,29 @@ public class ManageServiceImpl extends Base implements ManageService {
 
 
     @Override
-    public int addCourseStudent(String stuId, String classStr) {
-        String newStr = classStr.replace("(", ",").replace(")", "");
-        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
-
-        System.out.println(strs);
-        String className = strs[0];
-        Integer classNum = Integer.parseInt(strs[1]);
-        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
-        System.out.println("run here =" + classId);
-        chooseCourse(classId, stuId);
+    public int addCourseStudent(String stuId, String classId) {
+//        String newStr = classStr.replace("(", ",").replace(")", "");
+//        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//
+//        System.out.println(strs);
+//        String className = strs[0];
+//        Integer classNum = Integer.parseInt(strs[1]);
+//        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
+//        System.out.println("run here =" + classId);
+        chooseCourse(Integer.parseInt(classId), stuId);
         return 0;
     }
 
     @Override
-    public int deleteCourseStudent(String stuId, String classStr) {
-        String newStr = classStr.replace("(", ",").replace(")", "");
-        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+    public int deleteCourseStudent(String stuId, String classId) {
+//        String newStr = classStr.replace("(", ",").replace(")", "");
+//        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
-        System.out.println(newStr);
-        String className = strs[0];
-        Integer classNum = Integer.parseInt(strs[1]);
-        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
-        deleteCourse(classId, stuId);
+//        System.out.println(newStr);
+//        String className = strs[0];
+//        Integer classNum = Integer.parseInt(strs[1]);
+//        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
+        deleteCourse(Integer.parseInt(classId), stuId);
         return 0;
     }
 
@@ -265,7 +265,7 @@ public class ManageServiceImpl extends Base implements ManageService {
             String departName = cd.getDepartName();
             int classId = cd.getClassId();
             String className = cd.getClassName();
-            int classNum = cd.getClassNum();
+            String classNum = String.valueOf(cd.getClassNum());
             int departId = cd.getDepartId();
             String allClassName = cd.getDepartName() + cd.getClassName();
 
@@ -282,7 +282,9 @@ public class ManageServiceImpl extends Base implements ManageService {
                 //创造学院
                 Map departM = creatClassOrDepartMap(departName, departId);
                 Map classM = creatClassOrDepartMap(className, classId);
-                Map classStrM = creatClassStrMap(className, classNum);
+
+                Map classStrM = creatClassStrMap(classNum, classId);
+
                 addClassOrDepart(classM, classStrM);
                 addClassOrDepart(departM, classM);
 
@@ -304,7 +306,7 @@ public class ManageServiceImpl extends Base implements ManageService {
                 if (!in2) {
 
                     Map classM = creatClassOrDepartMap(className, classId);
-                    Map classStrM = creatClassStrMap(className, classNum);
+                    Map classStrM = creatClassStrMap(classNum, classId);
                     addClassOrDepart(classM, classStrM);
                     for (Map everyDe : res) {
                         if (everyDe.get("label").equals(departName)) {
@@ -312,7 +314,7 @@ public class ManageServiceImpl extends Base implements ManageService {
                         }
                     }
                 } else {//有这个课程
-                    Map classStrM = creatClassStrMap(className, classNum);
+                    Map classStrM = creatClassStrMap(classNum, classId);
                     for (Map everyDe : res) {
                         if (everyDe.get("label").equals(departName)) {
                             List<Map> list = (List<Map>) everyDe.get("children");
@@ -326,16 +328,14 @@ public class ManageServiceImpl extends Base implements ManageService {
                     }
                 }
             }
-
-
         }
         return res;
     }
 
 
-    public Map creatClassStrMap(String className, int classNum) {
+    public Map creatClassStrMap(String classNum, int classId) {
         Map tempChild2 = new HashMap();
-        tempChild2.put("value", className + "(" + classNum + "班)");
+        tempChild2.put("value", classId);
         tempChild2.put("label", classNum + "班");
         return tempChild2;
     }

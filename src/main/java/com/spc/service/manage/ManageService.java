@@ -30,9 +30,9 @@ public interface ManageService {
     void deleteCourseRecord(int classId);
 
 
-    int addCourseStudent(String stuId ,String classStr);
+    int addCourseStudent(String stuId ,String classId);
 
-    int deleteCourseStudent(String stuId,String classStr);
+    int deleteCourseStudent(String stuId, String classId);
 
     int getClassId(String className,int classNum);
 
