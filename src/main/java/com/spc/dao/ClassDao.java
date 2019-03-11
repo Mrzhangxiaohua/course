@@ -1,5 +1,6 @@
 package com.spc.dao;
 
+import com.spc.model.ClassAll;
 import com.spc.model.ClassDomain;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
@@ -22,6 +23,8 @@ public interface ClassDao {
     void delete(@Param("classId") int classId);
 
     void deleteByClassAllId(@Param("classAllId") int id);
+
+    Map getClassId(@Param("classAllId") int id);
 
     List<Map> findStudentClassTime(@Param("stuId") String stuId, @Param("classSemester") String classSemester);
 
@@ -72,4 +75,10 @@ public interface ClassDao {
     int zzGrade(@Param("className") String className, @Param("classNum") int classNum, @Param("stuId") String stuId,
                 @Param("zzGrade") int zzGrade, @Param("flag") int flag);
 
+    List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId);
+
+    Map findClassInfo(@Param("classStr") String classStr);
+    Map getClassInfo(Integer id);
+
+    int updateClass( ClassAll classAll);
 }

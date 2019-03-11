@@ -22,7 +22,8 @@ public interface ClassAllService {
                                String courseName,
                                String teacherId,
                                String teacherName,
-                               String classPlaceId);
+                               String classPlaceId,
+                               String selectDepartId);
 
     String[][] getTeacherTimetable(String teacherId, String academicYear, String classSemester);
 
@@ -31,4 +32,14 @@ public interface ClassAllService {
     Map<String, String> delClass(int id, String operatorId, String operatorName);
 
     String[][] getDepartTimeTable(int departId, String academicYear, String classSemester);
+
+    List<Map<String, Object>> findDepartList(String academicYear, String classSemester);
+
+    List<Map<String, Object>> getOneDimDepartTimeTable(int departId, String academicYear, String classSemester);
+
+    List<Map<String, Object>> findRoomList(String academicYear, String classSemester);
+
+    String[][] getRoomTimeTable(String roomName, String academicYear, String classSemester);
+
+    List<Map<String, Object>> getOneDimRoomTimeTable(String roomName, String academicYear, String classSemester);
 }

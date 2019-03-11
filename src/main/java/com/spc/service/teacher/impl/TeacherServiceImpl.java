@@ -43,6 +43,7 @@ public class TeacherServiceImpl extends Base implements TeacherService {
     @Override
     public String[][] findCourseTable(String teaId) {
         List<HashMap<String, Object>> lis = classDao.findCourseTable(teaId, CURRENTSEMESTER);
+        logger.info(lis.toString());
         return MakeTimeTable.makeBigTable(lis, 0);
     }
 

@@ -4,15 +4,14 @@ package com.spc.view;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.Timer;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
-public class StudentTablePdfView extends AbstractPdfView {
+public class ManageTablePdfView extends AbstractPdfView {
 
     @Override
     protected void buildPdfDocument(Map<String, Object> model,
@@ -20,15 +19,29 @@ public class StudentTablePdfView extends AbstractPdfView {
                                     HttpServletResponse response) throws Exception {
 
 
-        Map<String, Object> map = (Map<String, Object>) model.get("res");
-        int studentSwitch = (int) model.get("student");
+        Map<String, Object> res = (Map<String, Object>) model.get("res");
+       List<Map<String, Object>> tableList= (List<Map<String, Object>>) res.get("data");
+      //  int studentSwitch = (int) model.get("student");
         // 拿到传过来的课程结构数据，12行7列，用于下面pdf的生成
-        String[][] tables = (String[][]) map.get("data");
 
-        System.out.println(tables);
+        for(Map tableInfo:tableList){
+            PdfPTable pdftable = buildOneDepartTable(tableInfo);
+            document.add(pdftable);
+            document.newPage();
+
+        }
+
+
+        Rectangle rect = new Rectangle(600, 10, 1000, 120);
+        PdfContentByte cb = writer.getDirectContent();
+        cb.rectangle(rect);
+
+    }
+    protected PdfPTable buildOneDepartTable(Map<String,Object> tableInfo) throws Exception {
+       String[][] tables= (String[][]) tableInfo.get("table");
+       String departName= (String) tableInfo.get("departName");
+
         PdfPTable table = new PdfPTable(8);
-
-
         boolean[] widthCellB = new boolean[]{false,false,false,false,false,false,false};
         int[] widthCell = new int[]{1,1,1,1,1,1,1,1};
 
@@ -41,14 +54,13 @@ public class StudentTablePdfView extends AbstractPdfView {
                 }
             }
         }
+
         for (int j = 0;j<widthCellB.length;j++) {
             widthCell[j+1]=widthCellB[j]==true?3:1;    //
         }
 
-
         table.setWidthPercentage(80);
         table.setWidths(widthCell);
-
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         Font headFont = new Font(baseFont1);
@@ -57,7 +69,7 @@ public class StudentTablePdfView extends AbstractPdfView {
         Font textFont = new Font(baseFont2);
 
         PdfPCell hcell;
-        hcell = new PdfPCell(new Phrase("课表", headFont));
+        hcell = new PdfPCell(new Phrase(departName+"总课表", headFont));
         hcell.setFixedHeight(20f);
         hcell.setColspan(8);
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -137,18 +149,9 @@ public class StudentTablePdfView extends AbstractPdfView {
                 table.addCell(cell);
             }
         }
-        document.add(table);
-        Rectangle rect = new Rectangle(600, 10, 1000, 120);
-        PdfContentByte cb = writer.getDirectContent();
-        cb.rectangle(rect);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Phrase p = new Phrase("主讲老师签名:   _________\n授课老师签名:   _________\n时间:   " + df.format(new Date()), textFont);
-        ColumnText ct = new ColumnText(cb);
-
-        if(studentSwitch != 1) {
-            ct.setSimpleColumn(rect);
-            ct.addText(p);
-            ct.go();
-        }
+        return table;
     }
-}
+
+
+
+    }

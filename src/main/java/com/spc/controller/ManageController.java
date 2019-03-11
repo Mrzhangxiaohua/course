@@ -7,6 +7,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.model.*;
 import com.spc.service.classes.ClassService;
+import com.spc.service.manage.ClassAllService;
 import com.spc.service.manage.ManageService;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
@@ -49,6 +50,8 @@ public class ManageController extends Base {
     @Autowired
     private ManageService manageService;
 
+    @Autowired
+    ClassAllService classAllService;
 
     /**
      * 学生端：根据学生id查询课表
@@ -378,17 +381,20 @@ public class ManageController extends Base {
     ) {
         Map<String, Object> model = new HashMap<>();
 
-        String newStr = classStr.replace("(", ",").replace(")", "");
-        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//        String newStr = classStr.replace("(", ",").replace(")", "");
+//        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
 
         if(classStr!=""){
-            String className = strs[0];
-            Integer classNum = Integer.parseInt(strs[1]);
+//            String className = strs[0];
+//            Integer classNum = Integer.parseInt(strs[1]);
 
-            int classId = manageService.getClassId(className, classNum);
+//            int classId = manageService.getClassId(className, classNum);
 
-            List students = classService.findStudent(classId);
-
+//            List students = classService.findStudent(classId);
+            List students = classService.findStudent(Integer.parseInt(classStr));
+            Map m = classService.findClassInfo(classStr);
+            String className = (String) m.get("className");
+            Integer classNum = (Integer) m.get("classNum");
 
             List<StudentExcelDomain> liC = new ArrayList<>();
 
@@ -396,6 +402,7 @@ public class ManageController extends Base {
                 Map<String, String> t = (Map<String, String>) students.get(i);
                 liC.add(new StudentExcelDomain(t.get("stuName"), t.get("stuId"), t.get("departName"), t.get("speciality"), t.get("tutoremployeeid"),t.get("wlzzxxGrade")==null?"":String.valueOf(t.get("wlzzxxGrade")), t.get("knskGrade")==null?"":String.valueOf(t.get("knskGrade")), t.get("xbsjGrade")==null?"":String.valueOf(t.get("xbsjGrade")) ));
             }
+
 
             response = ResponseWrap.setName(response, className + String.valueOf(classNum) + "班人名单", "xls");
 
@@ -427,16 +434,19 @@ public class ManageController extends Base {
     ) {
         Map<String, Object> model = new HashMap<>();
         try {
-                String newStr = classStr.replace("(", ",").replace(")", "");
-                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//                String newStr = classStr.replace("(", ",").replace(")", "");
+//                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//
+//                String className = strs[0];
+//                Integer classNum = Integer.parseInt(strs[1]);
+//
+//                int classId = manageService.getClassId(className, classNum);
 
-                String className = strs[0];
-                Integer classNum = Integer.parseInt(strs[1]);
-
-                int classId = manageService.getClassId(className, classNum);
-
-//            System.out.printf("classId %d", classId);
-                List students = classService.findStudent(classId);
+//                List students = classService.findStudent(classId);
+            List students = classService.findStudent(Integer.parseInt(classStr));
+            Map m = classService.findClassInfo(classStr);
+            String className = (String) m.get("className");
+            Integer classNum = (Integer) m.get("classNum");
 
             Map<String, Object> res = new HashMap<String, Object>();
 
@@ -445,7 +455,6 @@ public class ManageController extends Base {
             model.put("style", "wider");
             model.put("name", classStr);
             response = ResponseWrap.setName(response, className + String.valueOf(classNum) + "班人名单", "pdf");
-
 
         } catch (Exception e) {
             System.out.println(e);
@@ -599,16 +608,20 @@ public class ManageController extends Base {
     @RequestMapping(value = "/add/courseStudent", method = RequestMethod.POST)
     @ResponseBody
     public int addCourseStudent(HttpServletRequest request) {
-//        System.out.println("run addCourseStudent");
+        logger.info("==============runinhere=============");
         String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = null;
         try {
             obj = new JSONObject(json);
             String stuId = obj.getString("stuId");
-            System.out.println("===============" + stuId);
-//            String stuName = obj.getString("stuName");
-            String classStr = obj.getString("classStr");
-            manageService.addCourseStudent(stuId, classStr);
+            logger.info("==============runinhere=============" + stuId);
+            logger.info(json);
+            String classId = obj.getString("classId");
+            logger.info("==============runinhere=============" + classId);
+
+//            System.out.println("===============" + stuId + "===============" + classId);
+//            String classStr = obj.getString("classStr");
+            manageService.addCourseStudent(stuId, classId);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -624,8 +637,9 @@ public class ManageController extends Base {
             obj = new JSONObject(json);
             String stuId = obj.getString("stuId");
             String classStr = obj.getString("classStr");
-            System.out.println(stuId + classStr);
-            manageService.deleteCourseStudent(stuId, classStr);
+            String classId = obj.getString("classId");
+            System.out.println(stuId + classStr + classId);
+            manageService.deleteCourseStudent(stuId, classId);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -646,20 +660,21 @@ public class ManageController extends Base {
     public Map<String, Object> findStudentByClassnameAndNum(
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false, defaultValue = "") String classStr,
+            @RequestParam(required = false, defaultValue = "") String classId,
             @RequestParam(required = false, defaultValue = "") String stuId,
             HttpSession session
     ) {
         List students = new ArrayList();
         if (stuId.equals("")){
-            if (!classStr.equals("") && !classStr.isEmpty()) {
-                String newStr = classStr.replace("(", ",").replace(")", "");
-                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+            if (!classId.equals("") && !classId.isEmpty()) {
+//                String newStr = classStr.replace("(", ",").replace(")", "");
+//                String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
+//
+//                String className = strs[0];
+//                Integer classNum = Integer.parseInt(strs[1]);
 
-                String className = strs[0];
-                Integer classNum = Integer.parseInt(strs[1]);
-
-                students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
+//                students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
+                students = manageService.findStudentByClassnameAndNum(classId, pageSize, currentPage);
 
                 List newStus = zhuanhuan(students);
 
@@ -869,4 +884,9 @@ public class ManageController extends Base {
         }
         return "设置失败";
     }
+
+
+
 }
+
+

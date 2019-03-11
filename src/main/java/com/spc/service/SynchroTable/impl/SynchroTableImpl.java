@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Service
@@ -65,6 +66,45 @@ public class SynchroTableImpl extends Base implements SynchroTable {
     }
 
     @Override
+    public int insertRecord1(ClassAll classAll,Integer classID) {
+        CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId());
+        logger.info(courseAll.toString());
+        ClassDomain classDomain = new ClassDomain();
+        classDomain.setClassAllId(classAll.getId());
+        classDomain.setClassName(courseAll.getCourseNameCHS());
+        if (classAll.getClassName() != null && !classAll.getClassName().isEmpty()) {
+            classDomain.setClassNum(getNum(classAll.getClassName()));
+        }
+        classDomain.setTeaId(classAll.getInstructorId());
+        classDomain.setTeaName(classAll.getInstructorName());
+        classDomain.setClassGradePoint(0);
+        classDomain.setClassChooseNum(0);
+        classDomain.setClassUpperLimit(courseAll.getStuNumUpperLimit());
+        if (classAll.getClassDateDesc() != null && !classAll.getClassDateDesc().isEmpty()) {
+            classDomain.setClassDateDescription(wrapDateDesc(convertDateDesc(classAll.getClassDateDesc())));
+        }
+        classDomain.setClassId(classID);
+
+        classDomain.setClassPlace(classAll.getClassPlaceName());
+        classDomain.setClassLength(0);
+        classDomain.setClassModuleNum(getMI(courseAll.getModuleId()));
+        classDomain.setDepartId(courseAll.getDepartId());
+        classDomain.setStartWeek(classAll.getStartWeek());
+        classDomain.setEndWeek(classAll.getEndWeek());
+        classDomain.setClassSemester(courseAll.getAcademicYear() + courseAll.getClassSemester());
+        classDomain.setCourseInfo(courseAll.getCourseInfo());
+        classDomain.setTeacherInfo(courseAll.getTeacherInfo());
+        classDomain.setClassTime(courseAll.getClassHour());
+        classDomain.setMainLecturer(classAll.getTeacherName());
+        classDomain.setClassEncode(courseAll.getCourseId());
+        classDomain.setShenQingRenId(null);
+        classDomain.setSchoolDistrictId(classAll.getSchoolDistrictId());
+        logger.info(classDomain.toString());
+        int count = classDao.insert(classDomain);
+        return count;
+    }
+
+    @Override
     public int removeRecord(int id) {
         classDao.deleteByClassAllId(id);
         return 1;
@@ -72,12 +112,52 @@ public class SynchroTableImpl extends Base implements SynchroTable {
 
     @Override
     public int updateRecord(ClassAll classAll) {
-        removeRecord(classAll.getId());
+        // 不要偷懒，做真正的update(by zhangfa)
+        //说的对(by xiaomi)
+        Map map = classDao.getClassId(classAll.getId());
+        Integer classID = (Integer) map.get("classId");
+        //logger.info("准备要删除的在course中的classId为：" + classID + "====================");
+        ClassDomain classDomain = new ClassDomain();
+          removeRecord(classAll.getId());
         if (classAll.getClassDateDesc() != null) {
-            insertRecord(classAll);
+            CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId());
+            logger.info(courseAll.toString());
+
+            classDomain.setClassAllId(classAll.getId());
+            classDomain.setClassName(courseAll.getCourseNameCHS());
+            if (classAll.getClassName() != null && !classAll.getClassName().isEmpty()) {
+                classDomain.setClassNum(getNum(classAll.getClassName()));
+            }
+            classDomain.setClassChooseNum((Integer) map.get("classChooseNum"));
+            classDomain.setTeaId(classAll.getInstructorId());
+            classDomain.setTeaName(classAll.getInstructorName());
+            classDomain.setClassGradePoint(0);
+            classDomain.setClassUpperLimit(courseAll.getStuNumUpperLimit());
+            if (classAll.getClassDateDesc() != null && !classAll.getClassDateDesc().isEmpty()) {
+                classDomain.setClassDateDescription(wrapDateDesc(convertDateDesc(classAll.getClassDateDesc())));
+            }
+            classDomain.setClassId(classID);
+
+            classDomain.setClassPlace(classAll.getClassPlaceName());
+            classDomain.setClassLength(0);
+            classDomain.setClassModuleNum(getMI(courseAll.getModuleId()));
+            classDomain.setDepartId(courseAll.getDepartId());
+            classDomain.setStartWeek(classAll.getStartWeek());
+            classDomain.setEndWeek(classAll.getEndWeek());
+            classDomain.setClassSemester(courseAll.getAcademicYear() + courseAll.getClassSemester());
+            classDomain.setCourseInfo(courseAll.getCourseInfo());
+            classDomain.setTeacherInfo(courseAll.getTeacherInfo());
+            classDomain.setClassTime(courseAll.getClassHour());
+            classDomain.setMainLecturer(classAll.getTeacherName());
+            classDomain.setClassEncode(courseAll.getCourseId());
+            classDomain.setShenQingRenId(null);
+            classDomain.setSchoolDistrictId(classAll.getSchoolDistrictId());
         }
-        return 1;
+        int count = classDao.insert(classDomain);
+        return count;
     }
+
+
 
     private List<String> convertDateDesc(String classDateDesc) {
         // 首先划分得到每一个小时粒度的课程

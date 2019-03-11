@@ -32,11 +32,11 @@ public class MakeTimeTable extends Base {
                 for (int i = 0; i< z; i++){
                     temp[l - 1 + i][r - 1] = temp[l - 1 + i][r - 1] != null ? temp[l - 1 + i][r - 1] + ','+ context : context;
                 }
-                }
             }
-
+        }
         return temp;
     }
+
 
 
     public static  String encode1(String className, String classPlace, String teacherName,String mainLecturer, String startWeek, String endWeek, String classNum,int student) {
