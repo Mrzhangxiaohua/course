@@ -3,6 +3,7 @@ package com.spc.model;
 import java.util.Date;
 
 /**
+ *
  * @author Milingyun
  * @date 2019-01-21 17:21
  */

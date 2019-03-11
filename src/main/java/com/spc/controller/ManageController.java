@@ -8,6 +8,7 @@ import com.github.pagehelper.PageHelper;
 import com.spc.model.*;
 import com.spc.service.classes.ClassService;
 import com.spc.service.manage.ClassAllService;
+import com.spc.service.manage.CourseAllService;
 import com.spc.service.manage.ManageService;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
@@ -53,6 +54,8 @@ public class ManageController extends Base {
     @Autowired
     ClassAllService classAllService;
 
+    @Autowired
+    CourseAllService courseAllService;
     /**
      * 学生端：根据学生id查询课表
      *
@@ -885,6 +888,70 @@ public class ManageController extends Base {
         return "设置失败";
     }
 
+    /*
+     *超级管理员查看往年课程目录
+     *
+     */
+    @RequestMapping("/findCourseAll")
+    @ResponseBody
+    public Map<String,Object> findCourseAll(@RequestParam("year")String year,@RequestParam("depId")int depId){
+        Map<String,Object> res=new HashMap<>();
+        List<CourseAll> courseAllList=courseAllService.getCourseAllByYearAndDep(year,depId);
+        res.put("year",year);
+        res.put("depId",depId);
+        res.put("courseAllList",courseAllList);
+        return res;
+    }
+
+
+    /*
+     *超级管理员修改往年课程目录
+     */
+    @RequestMapping("/modifyCourseAll")
+    @ResponseBody
+    public  String modifyCourseAll(@RequestBody CourseAll courseAll,HttpServletRequest request){
+        String userId= (String) request.getSession().getAttribute("userId");
+        String username= (String) request.getSession().getAttribute("username");
+        int flag=courseAllService.ModifyCourseAll(courseAll,userId,username);
+        if(flag!=0){
+            return "修改成功!";
+        }
+        return "修改失败！";
+    }
+    /*
+     *超级管理员新增学年课程目录
+     */
+    @RequestMapping("/addYearCourseAll")
+    @ResponseBody
+    public String addYearCourseAll(HttpServletRequest request){
+        String userId= (String) request.getSession().getAttribute("userId");
+        String username= (String) request.getSession().getAttribute("username");
+        String jsonString = RequestPayload.getRequestPayload(request);
+        JSONObject json= null;
+        try {
+            json = new JSONObject(jsonString);
+            System.out.println("json"+json);
+            List<CourseAll> courseList= (List<CourseAll>) json.get("courseList");
+            String year= (String) json.get("year");
+            int flag=courseAllService.addYearCourseAll(courseList,userId,username,year);
+            if(flag!=0){
+                return "新增成功！";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "新增失败！";
+    }
+    /*
+     *超级管理员新增学年课程目录时，从courseApplication表中导入申请开课和直接新增的课程
+     */
+    @RequestMapping("/findCourseApplication")
+    @ResponseBody
+    public List<CourseApplication> findCourseApp(HttpServletRequest request){
+
+        List<CourseApplication> courseAppList=courseAllService.findAllCourseApp();
+        return courseAppList;
+    }
 
 
 }
