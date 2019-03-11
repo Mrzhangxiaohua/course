@@ -37,7 +37,8 @@ public class StudentServiceImpl extends Base implements StudentService {
     @Autowired
     private TimeSwitchDao timeSwitchDao;
 
-
+    @Autowired
+    private WaitingDao waitingDao;
 
 
     @Override
@@ -574,5 +575,41 @@ public class StudentServiceImpl extends Base implements StudentService {
             return l;
         }
     }
+    @Override
+    public int addWaiting(String stuId, int classId, int flag,String time) {
+        return  waitingDao.insert(stuId,classId,flag,time);
+    }
+
+    @Override
+    public List<Map<String, Object>> findWaiting(Integer classId) {
+        return  waitingDao.selectWaitings(classId);
+    }
+    @Override
+    public int updateWaitingFlag(int id) {
+        return waitingDao.updateFlag(id);
+
+    }
+
+    @Override
+    public int deleteWaiting(int id) {
+        return waitingDao.delete(id);
+    }
+
+    @Override
+    public Map<String, Object> findWaitStatus(int id) {
+        Map<String,Object>waiting=waitingDao.findById(id).get(0);
+        Map<String,Object> res=new HashMap<>();
+        int flag= (int) waiting.get("flag");
+        if(flag==0){
+            res.put("status","已成功补位！");
+        }else if(flag==1){
+            String time= (String) waiting.get("time");
+            int classId= (int) waiting.get("classId");
+            int order = (int) waitingDao.findOrder(time,classId).get(0).get("order");
+            res.put("status","目前排在第"+order+"位");
+        }
+        return null;
+    }
+
 
 }
