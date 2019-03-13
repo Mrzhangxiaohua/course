@@ -919,7 +919,7 @@ public class ManageController extends Base {
         return "修改失败！";
     }
     /*
-     *超级管理员新增学年课程目录
+     *超级管理员修订学年课程目录
      */
     @RequestMapping("/addYearCourseAll")
     @ResponseBody
@@ -952,7 +952,6 @@ public class ManageController extends Base {
         List<CourseApplication> courseAppList=courseAllService.findAllCourseApp();
         return courseAppList;
     }
-
 
 }
 
