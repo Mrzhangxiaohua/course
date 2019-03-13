@@ -33,7 +33,7 @@ public class CourseController extends Base{
      * @param currentPage 当前页
      * @param pageSize 页面大小
      * @param departId 院系id
-     * @param classname 课程名称
+     * @param className 课程名称
      * @param teaId 教师id
      * @param model 课程所属模块
      * @return Map<String, Object>
@@ -44,12 +44,12 @@ public class CourseController extends Base{
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "88888888") int departId,
-            @RequestParam(required = false, defaultValue = "") String classname,
+            @RequestParam(required = false, defaultValue = "") String className,
             @RequestParam(required = false, defaultValue = "") String teaId,
             Model model) {
 
         PageHelper.startPage(currentPage, pageSize);
-        List<ClassDomain> classes = classService.findAllClass(departId, classname, teaId, 88888888, 88888888);
+        List<ClassDomain> classes = classService.findAllClass(departId, className, teaId, 88888888, 88888888);
 
        //        List<ClassDomain> temps = new ArrayList<>();
         if(classes !=null){

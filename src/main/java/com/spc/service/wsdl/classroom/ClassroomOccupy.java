@@ -62,12 +62,13 @@ public class ClassroomOccupy {
         return flag;
     }
 
-    public ClassRoomUsed createClassRoomUsed(String academicYear, String classSemester, String xxxqdm, Integer ksz, Integer jsz, int xq, int ksjc, int jsjc, String jasdm, String jxbid, String kbid) {
+    public ClassRoomUsed createClassRoomUsed(String academicYear, String classSemester, String xxxqdm, Integer ksz,
+                                             Integer jsz, int xq, int ksjc, int jsjc, String jasdm, String jxbid, String kbid) {
         ClassRoomUsed classRoomUsed = new ClassRoomUsed();
 
         classRoomUsed.setXNXQDM(WebServiceUtil.getXNXQDM(academicYear, classSemester));
         classRoomUsed.setXXXQDM(xxxqdm);
-        classRoomUsed.setZYLXDM("10");
+        classRoomUsed.setZYLXDM("101");
         classRoomUsed.setZC(WebServiceUtil.getZC(ksz, jsz));
         classRoomUsed.setXQ(xq);
         classRoomUsed.setKSJC(ksjc);
