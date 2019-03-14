@@ -1096,7 +1096,7 @@ public class TeacherController extends Base {
 
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet(className+classNum+"选课学生名单");
-        List<Map<String,Object>> students = classService.findStudents(classId);
+        List<Map<String,Object>> students = classService.findStudent(classId);
         String fileName =className+classNum+ "选课学生名单"  + ".xls";//设置要导出的文件的名字
         String[] headers={"姓名","学号"};
         HSSFRow headerRow=sheet.createRow(0);
@@ -1141,7 +1141,7 @@ public class TeacherController extends Base {
         System.out.print(classNum);
 
         response = ResponseWrap.setName(response, className+classNum + "班选课名单", "pdf");
-        List<Map<String,Object>> students = classService.findStudents(classId);
+        List<Map<String,Object>> students = classService.findStudent(classId);
         Map res = new HashMap();
         res.put("data", students);
         res.put("className",className);
@@ -1170,7 +1170,7 @@ public class TeacherController extends Base {
 
         Map<String,Object> res=new HashMap<>();
         Page page=PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> students = classService.findStudents(classId);
+        List<Map<String,Object>> students = classService.findStudent(classId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
         res.put("total",page.getTotal());
         List<Map<String,Object>> pageList=pageInfo.getList();

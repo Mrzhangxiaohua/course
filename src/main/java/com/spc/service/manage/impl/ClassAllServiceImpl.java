@@ -828,6 +828,30 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         return departList;
     }
 
+    @Override
+    public List<Map<String, Object>> getOneDimDepartTimeTable(int departId, String academicYear, String classSemester) {
+        return classAllDao.selectOneDimClassAll(departId, academicYear, classSemester);
+    }
+
+    @Override
+    public List<Map<String, Object>> getOneDimRoomTimeTable(String roomName, String academicYear, String classSemester) {
+        return classAllDao.selectOneDimRoomClassAll(roomName, academicYear, classSemester);
+    }
+
+    @Override
+    public List<Map<String, Object>> findRoomList(String academicYear, String classSemester) {
+        List<Map<String,Object>> roomList=classAllDao.selectAllRoom(academicYear,classSemester);
+
+        return roomList;
+    }
+
+    @Override
+    public String[][] getRoomTimeTable(String roomName, String academicYear, String classSemester) {
+        List<ClassAll> classes = classAllDao.selectRoomClassAll(roomName, academicYear, classSemester, null, null,
+                null, null, null, null);
+        return constructTimetable(classes);
+    }
+
     /**
      * 获取上课节次，和本科教务系统同步
      *

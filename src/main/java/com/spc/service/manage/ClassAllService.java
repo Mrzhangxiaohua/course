@@ -34,4 +34,12 @@ public interface ClassAllService {
     String[][] getDepartTimeTable(int departId, String academicYear, String classSemester);
 
     List<Map<String, Object>> findDepartList(String academicYear, String classSemester);
+
+    List<Map<String, Object>> getOneDimDepartTimeTable(int departId, String academicYear, String classSemester);
+
+    List<Map<String, Object>> findRoomList(String academicYear, String classSemester);
+
+    String[][] getRoomTimeTable(String roomName, String academicYear, String classSemester);
+
+    List<Map<String, Object>> getOneDimRoomTimeTable(String roomName, String academicYear, String classSemester);
 }

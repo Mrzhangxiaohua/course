@@ -57,6 +57,4 @@ public interface StudentDao {
 
     public List<Map<String, Object>> showCommentList(@Param("stuId") String stuId, @Param("classId") String classId);
 
-
-    List findStudents( @Param("classId") int classId);
 }
