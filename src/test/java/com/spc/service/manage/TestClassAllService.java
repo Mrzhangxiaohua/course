@@ -2,7 +2,11 @@ package com.spc.service.manage;
 
 import com.spc.model.ClassAll;
 import com.spc.service.classes.ClassService;
+import com.spc.service.manage.stuAdjust.StuAdjustService;
 import com.spc.service.teacher.TeacherService;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,9 @@ public class TestClassAllService {
 
     @Autowired
     public ClassAllService classAllService;
+
+    @Autowired
+    public StuAdjustService stuAdjustService;
 
     @Test
     public void testScheduleClass(){
@@ -60,4 +67,20 @@ public class TestClassAllService {
         classAllService.scheduleClass(c);
     }
 
+    @Test
+    public void testStuAdjustController(){
+        String value = "{\"stuList\":[\"3118105307\",\"3118105217\"],\"newClassId\":468,\"oldClassId\":476}";
+        try {
+            JSONObject obj = new JSONObject(value);
+            JSONArray stuId = obj.getJSONArray("stuList");
+            Integer oldClassId = obj.getInt("oldClassId");
+            Integer newClassId = obj.getInt("newClassId");
+            System.out.println(stuId);
+            // 2. 根据获得的信息进行调整班级
+            int x = stuAdjustService.moveStudent(stuId, oldClassId, newClassId);
+            System.out.println(x);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
