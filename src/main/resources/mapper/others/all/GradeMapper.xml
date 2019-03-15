@@ -38,4 +38,9 @@
         on a.stuId = c.stuId
         where a.stuId = #{stuId}
     </select>
+    <update id="updateGrade">
+      update course.Course_choose set course.Course_choose.xbsjGrade=#{grade}
+      where classId=#{classId}
+      and stuId=#{stuId}
+     </update>
 </mapper>

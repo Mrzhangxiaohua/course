@@ -655,7 +655,6 @@ public class ManageController extends Base {
      *
      * @param currentPage
      * @param pageSize
-     * @param classStr
      * @return
      */
     @RequestMapping("/find/student")
@@ -778,11 +777,7 @@ public class ManageController extends Base {
     public int timeSwitch2(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
         System.out.println(json);
-//        JSONObject obj = null;
         try {
-//            obj = new JSONObject(json);
-//            JSONObject sts = obj.getJSONObject("params").getJSONObject("values");
-//            JSONObject timeSwitchArray = sts.getJSONObject("timeSwitch2");
             JSONArray Jarray = new JSONArray(json);
 
             for (int i = 0; i < Jarray.length(); i++) {

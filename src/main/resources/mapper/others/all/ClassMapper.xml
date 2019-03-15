@@ -338,4 +338,8 @@
         where classId = #{classStr}
     </select>
 
+    <update id="updateGradeFlag">
+        update Course set isGrade=1
+        where classId=#{classId}
+    </update>
 </mapper>

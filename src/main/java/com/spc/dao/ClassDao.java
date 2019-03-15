@@ -81,4 +81,6 @@ public interface ClassDao {
     Map getClassInfo(Integer id);
 
     int updateClass( ClassAll classAll);
+
+    int updateGradeFlag(@Param("classId") int classId);
 }

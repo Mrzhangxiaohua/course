@@ -25,4 +25,10 @@
        where type=#{type}
        and flag=1
     </update>
+
+    <select id=" selectGradeExcel" resultType="map">
+       select *
+       from course.fileInfo
+       where fileInfoId=#{fileInfoId}
+    </select>
 </mapper>

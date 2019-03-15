@@ -1,6 +1,7 @@
 package com.spc.service.teacher;
 
 import com.spc.model.ClassApplicationDomain;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -36,4 +37,8 @@ public interface TeacherService {
     Map<String, Object> findGradePercent(); // 获取成绩百分比
 
     Map<String, Object> findCourseClassTime(String classNum, String stuId);
+
+    int uploadFile(MultipartFile file, String userId, String dep, int type, String filePath);
+
+    int insertGradeExcel(int classId, int fileInfoId);
 }
