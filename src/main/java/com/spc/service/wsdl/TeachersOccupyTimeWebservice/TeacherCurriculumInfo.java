@@ -143,7 +143,7 @@ public class TeacherCurriculumInfo extends Base {
     public static void main(String[] args) {
         TeacherCurriculumInfo aClass = new TeacherCurriculumInfo();
         List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0002002065", "2018-2019", "春季");
-        boolean[][] occupyTimes = aClass.getTeacherOccupyTime("0002002065", "2018-2019", "春季", 1, 8, "", "3118105316", "张发");
+        boolean[][] occupyTimes = aClass.getTeacherOccupyTime("0002016056", "2018-2019", "春季", 1, 8, "", "3118105316", "张发");
         for (TeacherOccupyTime teacherOccupyTime : res) {
             System.out.println(teacherOccupyTime);
         }

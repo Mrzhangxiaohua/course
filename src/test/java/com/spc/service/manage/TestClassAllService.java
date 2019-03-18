@@ -35,36 +35,39 @@ public class TestClassAllService {
         ClassAll c = new ClassAll();
 
         c.setAcademicYear("2018-2019");
-        c.setClassDateDesc("0-6,1-6,");
+        c.setClassDateDesc("12-6,");
         c.setClassHour(16);
-        c.setClassName("3班");
-        c.setClassPlaceId("1001375");
-        c.setClassPlaceName("主楼A-104");
+        c.setClassName("233333班");
+        c.setClassPlaceId("1002397");
+        c.setClassPlaceName("主楼B-205");
         c.setClassSemester("春季");
-        c.setClassWeeks("00000011000000000000000000");
+        c.setClassWeeks("11111111000000000000000000");
         c.setConflictDesc("");
-        c.setCourseId("WS19018001");
-        c.setCourseNameCHS("公共管理专业英语小班实践课程");
-        c.setCourseNameEN("Academic English  of public administration");
-        c.setDepartId(18);
+        c.setCourseId("WS19005001");
+        c.setCourseNameCHS("电子与信息工程英语专业实践");
+        c.setCourseNameEN("English Practice for Electronic and Information Engineering");
+        c.setDepartId(5);
         c.setEndWeek(8);
-        c.setId(1684);
-        c.setInstructorId("0002011101");
-        c.setInstructorName("周忠良");
+        c.setId(2030);
+        c.setInstructorId("0002016056");
+        c.setInstructorName("李辰");
+        c.setIsModify(true);
         c.setModuleId("3");
-        c.setOperatorId("0000005146");
-        c.setOperatorName("忽春娣");
+
+        c.setOperatorId("0002017115");
+        c.setOperatorName("董博");
         c.setScheduled(1);
         c.setSchoolDistrictId(1);
-        c.setStartWeek(7);
+        c.setStartWeek(1);
         c.setStuChooseNum(0);
-        c.setStuNumUpperLimit(20);
-        c.setTeacherId("0002011101");
-        c.setTeacherName("周忠良");
-        c.setTeachingTeamIds("0002017104,0002015178,0002002120,0002004105,0002014080,FZB2014002");
-        c.setTeachingTeamNames("吴启焰,杜金锋,王昕红,孟凡蓉,王立剑,柳江华");
+        c.setStuNumUpperLimit(28);
+        c.setTeacherId("0002011042");
+        c.setTeacherName("杜清河");
+        c.setTeachingTeamIds("0002013070,0002017003,0002016056,0002017046,0002018035,0002001021,0002012002,SZB2014013,0002011065,0002012094,0002010100,SZB2013058,0002009260");
+        c.setTeachingTeamNames("刘明,陈晓明,李辰,李峰,蔡寅,易文辉,高贞贞,惠维,徐静,张洁,陈希,王熠晨,周迪");
 
         classAllService.scheduleClass(c);
+        System.out.println("===jieshu");
     }
 
     @Test
