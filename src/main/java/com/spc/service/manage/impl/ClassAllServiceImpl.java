@@ -160,6 +160,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             timetableTFT[rowIndex][colIndex] = true;
         }
 
+
         // 1. 校验班级名称冲突
         if (checkClassName(c, res, msgBuilder)) {
             return res;
@@ -208,6 +209,10 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             int count = classAllDao.updateClass(c);
             // TODO CHECK
             synchroTableService.updateRecord(c);
+            //更新选课人数上限
+            int classAllId=c.getId();
+            int stuNumUpperLimit=c.getStuNumUpperLimit();
+            classAllDao.updateStuNumUpperLimit(classAllId,stuNumUpperLimit);
 
             logger.info("updateClass: " + c.toString());
 
@@ -836,6 +841,11 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     @Override
     public List<Map<String, Object>> getOneDimRoomTimeTable(String roomName, String academicYear, String classSemester) {
         return classAllDao.selectOneDimRoomClassAll(roomName, academicYear, classSemester);
+    }
+
+    @Override
+    public void updateStuNumUpperLimit(int classAllId,int stuNumUpperLimit) {
+        classAllDao.updateStuNumUpperLimit(classAllId,stuNumUpperLimit);
     }
 
     @Override

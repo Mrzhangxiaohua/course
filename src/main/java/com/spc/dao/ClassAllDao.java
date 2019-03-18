@@ -3,6 +3,7 @@ package com.spc.dao;
 import com.spc.model.ClassAll;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -72,4 +73,6 @@ public interface ClassAllDao {
                                   @Param("teacherName") String teacherName,
                                   @Param("classPlaceId") String classPlaceId,
                                   @Param("selectDepartId") String selectDepartId);
+
+    void updateStuNumUpperLimit(@Param("classAllId") int classAllId, @Param("stuNumUpperLimit") int stuNumUpperLimit);
 }

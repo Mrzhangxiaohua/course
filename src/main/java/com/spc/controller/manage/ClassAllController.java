@@ -243,7 +243,6 @@ public class ClassAllController extends Base {
         classAll.setOperatorId(operatorId);
         classAll.setOperatorName(operatorName);
         logger.info("scheduleClass: " + classAll.toString());
-
         return classAllService.scheduleClass(classAll);
     }
 
@@ -574,7 +573,7 @@ public class ClassAllController extends Base {
     }
 
     /**
-     * 一键获取所有学院的上课的一维课表 excel格式
+     * 一键获取所有教室的上课的一维课表 excel格式
      *
      * @param classSemester 春、秋、departId
      * @return
@@ -697,5 +696,18 @@ public class ClassAllController extends Base {
         response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName,"utf-8"));
         response.flushBuffer();
         workbook.write(response.getOutputStream());
+    }
+
+    /**
+     * 修改选课人数上限
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping("/updata/stuNumUpperLimit")
+    @ResponseBody
+    public void updateStuNumUpperLimit(@RequestParam int id,@RequestParam int stuNumUpperLimit) {
+        int classAllId=id;
+        classAllService.updateStuNumUpperLimit(classAllId,stuNumUpperLimit);
     }
 }

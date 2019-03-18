@@ -259,6 +259,12 @@
         and  a.classSemester like #{classSemester}
     </select>
 
-
+    <update id="updateStuNumUpperLimit" flushCache="true">
+        update course.ClassAll a
+        left join course.Course b
+        on a.id=b.classAllId
+        set a.stuNumUpperLimit  = #{stuNumUpperLimit},b.classUpperLimit = #{stuNumUpperLimit}
+        where a.id = #{classAllId}
+    </update>
 
 </mapper>
