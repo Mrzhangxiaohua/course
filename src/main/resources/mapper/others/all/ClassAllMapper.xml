@@ -104,7 +104,7 @@
         insert into ClassAll (departId, courseId, courseNameCHS, courseNameEN, moduleId, academicYear, classSemester,
         classHour, stuNumUpperLimit, teacherId, teacherName, teachingTeamIds, teachingTeamNames, schoolDistrictId,
         className, instructorId, instructorName, startWeek, endWeek, classDateDesc, classPlaceId, classPlaceName,
-        conflictDesc, scheduled, operatorId, operatorName)
+        classWeeks,conflictDesc, scheduled, operatorId, operatorName)
         values
         <trim prefix="(" suffix=")">
             #{departId}, #{courseId}, #{courseNameCHS}, #{courseNameEN},
@@ -112,8 +112,8 @@
             #{stuNumUpperLimit}, #{teacherId}, #{teacherName}, #{teachingTeamIds},
             #{teachingTeamNames}, #{schoolDistrictId}, #{className},
             #{instructorId}, #{instructorName}, #{startWeek}, #{endWeek},
-            #{classDateDesc}, #{classPlaceId}, #{classPlaceName}, #{conflictDesc},
-            #{scheduled}, #{operatorId}, #{operatorName}
+            #{classDateDesc}, #{classPlaceId}, #{classPlaceName},#{classWeeks},
+            #{conflictDesc},#{scheduled}, #{operatorId}, #{operatorName}
         </trim>
     </insert>
 
@@ -132,7 +132,9 @@
             conflictDesc = #{classAll.conflictDesc},
             scheduled = #{classAll.scheduled},
             operatorId = #{classAll.operatorId},
-            operatorName = #{classAll.operatorName}
+            operatorName = #{classAll.operatorName},
+            stuNumUpperLimit = #{classAll.stuNumUpperLimit},
+            classWeeks = #{classAll.classWeeks}
         </set>
         where id = #{classAll.id}
     </update>
