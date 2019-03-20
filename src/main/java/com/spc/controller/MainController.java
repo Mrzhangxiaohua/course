@@ -90,7 +90,6 @@ public class MainController extends Base {
         return res;
     }
 
-
     private HttpSession putInfo(HttpSession session) {
 
         //首先获得用户信息

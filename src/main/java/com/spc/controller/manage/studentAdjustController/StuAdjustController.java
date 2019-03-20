@@ -21,13 +21,13 @@ import java.util.Map;
  * @Description:
  * @Date: 2019/1/24 11:10
  */
-
-@RequestMapping("/manage")
 @Controller
+@RequestMapping("/manage")
 
 public class StuAdjustController extends Base {
 
-    @Autowired StuAdjustService stuAdjustService;
+    @Autowired
+    StuAdjustService stuAdjustService;
 
     // 获取所有开课季节的课程
 

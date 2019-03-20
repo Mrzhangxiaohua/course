@@ -123,8 +123,7 @@ public class SynchroTableImpl extends Base implements SynchroTable {
         return 1;
     }
 
-
-
+    
     private List<String> convertDateDesc(String classDateDesc) {
         // 首先划分得到每一个小时粒度的课程
         String[] descs = classDateDesc.split(",");

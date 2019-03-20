@@ -3,6 +3,8 @@ package com.spc.service.manage;
 import com.spc.model.ClassAll;
 import com.spc.service.classes.ClassService;
 import com.spc.service.manage.stuAdjust.StuAdjustService;
+import com.spc.service.student.StudentService;
+import com.spc.service.student.studentEvaluate.StudentEvaluateService;
 import com.spc.service.teacher.TeacherService;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +31,9 @@ public class TestClassAllService {
     public ClassAllService classAllService;
 
     @Autowired
+    public StudentEvaluateService studentEvaluateService;
+
+    @Autowired
     public StuAdjustService stuAdjustService;
 
     @Test
@@ -35,11 +41,11 @@ public class TestClassAllService {
         ClassAll c = new ClassAll();
 
         c.setAcademicYear("2018-2019");
-        c.setClassDateDesc("12-6,");
-        c.setClassHour(16);
-        c.setClassName("233333班");
-        c.setClassPlaceId("1002397");
-        c.setClassPlaceName("主楼B-205");
+        c.setClassDateDesc("4-0,4-1,4-2,4-3,4-4,5-0,5-1,5-2,5-3,5-4,");
+        c.setClassHour(32);
+        c.setClassName("3班");
+        c.setClassPlaceId("4001529");
+        c.setClassPlaceName("公共学院5号楼-304");
         c.setClassSemester("春季");
         c.setClassWeeks("11111111000000000000000000");
         c.setConflictDesc("");
@@ -85,5 +91,20 @@ public class TestClassAllService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testStudentEvaluate(){
+        String json = "{\n" +
+                "\t\"classId\": 480,\n" +
+                "\t\"stuId\": 3118105316,\n" +
+                "\t\"score1\": [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"10\"],\n" +
+                "\t\"score2\": [\"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"税收数\", \"8\", \"9\", \"10\"],\n" +
+                "\t\"score3\": [\"1\", \"2\", \"3\", \"4\", \"5\", \"我是\", \"7\", \"8\", \"9\", \"10\"]\n" +
+                "}";
+        JSONArray a = new JSONArray();
+
+        studentEvaluateService.stuEvaluate(480, "3118105316",a,a,a);
+        System.out.println("成功");
     }
 }
