@@ -107,4 +107,8 @@ public class TestClassAllService {
         studentEvaluateService.stuEvaluate(480, "3118105316",a,a,a);
         System.out.println("成功");
     }
+    @Test
+    public void testSelectList(){
+        studentEvaluateService.selectList("3118305556");
+    }
 }

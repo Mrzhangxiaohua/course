@@ -3,14 +3,14 @@
 
 <mapper namespace="com.spc.dao.studentDao.studentEvaluateDao.StudentEvaluateDao">
     <select id="selectList" resultType="map">
-        SELECT c.*, d.stuId, d.classId, e.departName
+        SELECT c.*,f.isComment,f.classId, d.stuId, d.classId, e.departName
         FROM course.Course c
         LEFT JOIN course.Course_choose d
         ON d.classId = c.classId
         LEFT JOIN course.Department e
         ON c.departId = e.departId
         LEFT JOIN course.studentComment f
-        ON c.classId = f.classId
+        ON d.stuId = f.stuId and c.classId =f.classId
         WHERE d.stuId = #{stuId}
     </select>
 

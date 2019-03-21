@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Description:
+ * @Description: 主要完成学生评教页面的功能
  * @Author: zf
  * @Date: 2019/3/20 10:48
  */
@@ -31,21 +31,28 @@ public class StuEvaluateController extends Base {
 
     /**
      * 根据学生选择的课程判断是否评教过
+     *
      * @param session
      * @return 学生选课结果
      */
     @RequestMapping(value = "/stuSelectList")
     @ResponseBody
-    public List<Map<String, Object>> selectList(HttpSession session){
+    public List<Map<String, Object>> selectList(HttpSession session) {
         String stuId = (String) session.getAttribute("userId");
         return studentEvaluateService.selectList(stuId);
     }
 
-
+    /**
+     * 完成评价的功能
+     *
+     * @param request 接收前端传递的评价内容
+     * @return 成功则返回插入信息，否则返回 0
+     */
     @RequestMapping(value = "/stuEvaluate")
     @ResponseBody
-    public int stuEvaluate(HttpServletRequest request){
+    public int stuEvaluate(HttpServletRequest request) {
         String json = RequestPayload.getRequestPayload(request);
+        logger.info(json);
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
@@ -54,7 +61,7 @@ public class StuEvaluateController extends Base {
             JSONArray score2 = obj.getJSONArray("score2");
             JSONArray score3 = obj.getJSONArray("score3");
             return studentEvaluateService.stuEvaluate(classId, stuId, score1, score2, score3);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
