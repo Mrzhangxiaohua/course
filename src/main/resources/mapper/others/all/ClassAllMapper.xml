@@ -186,7 +186,7 @@
 
 
     <select id="selectOneDimClassAll" resultType="map">
-        select  a.departId,a.courseId,a.courseNameCHS,a.classHour,a.className,b.teaName,b.classChooseNum,b.classPlace,b.startWeek,b.endWeek,b.classDateDescription,c.name
+        select  a.departId,a.courseId,a.courseNameCHS,a.classHour,a.className,b.teaName,b.classChooseNum,b.classPlace,b.startWeek,b.endWeek,b.classDateDescription,b.classNum,c.name
         from course.ClassAll  a
         join course.Course b
         on a.id=b.classAllId

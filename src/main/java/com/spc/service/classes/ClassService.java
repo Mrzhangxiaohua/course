@@ -17,6 +17,10 @@ public interface ClassService {
 
     List findStudent(int classId);
 
+    Map findClassId(String courseId,int classNum);
+
+    int findIsGrade(int classId);
+
 
 //    int updateScore1(String className,int classNum, String stuId, int wlzzxxGrade,int knskGrade);
 //    int updateScore2(String className,int classNum, String stuId, int xbsjGrade);
@@ -36,6 +40,13 @@ public interface ClassService {
 
     List<Map<String,Object>>  findTeachCourse(String teacherId);
 
+    List<Map<String,Object>>  findTeachCourse2(String teacherId,String academicYear);
 
     Map findClassInfo(String classStr);
+
+    List<Map<String,Object>> findAllDepartment();
+
+    void updateXbsjScore(int classId,String stuId,int xbsjGrade);
+
+    void updateIsGrade(int classId);
 }

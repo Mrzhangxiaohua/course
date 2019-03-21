@@ -6,7 +6,7 @@
     <insert id="insertOral" useGeneratedKeys="true" keyProperty="id" flushCache="true">
         insert into oral(teaId,teaName,testTime,place,stuLimit,curChoose,
                 flag,yearSemester,operatorId,operatorName,examRoom)
-        values(#{teaId},#{teaName,#{time},#{place},#{stuLimit},#{curChoose},
+        values(#{teaId},#{teaName},#{time},#{place},#{stuLimit},#{curChoose},
                #{flag},#{yearSemester},#{operatorId},#{operatorName},#{examRoom})
     </insert>
 

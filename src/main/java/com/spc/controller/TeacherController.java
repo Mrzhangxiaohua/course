@@ -2,12 +2,10 @@ package com.spc.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 import com.github.pagehelper.PageInfo;
-import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.model.CourseApplication;
 import com.spc.model.CourseTableExcelDomain;
@@ -21,8 +19,8 @@ import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
 import com.spc.view.StudentsListPdfView;
-import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
-import org.apache.ibatis.annotations.Param;
+import com.spc.view.StudentsScoreListPdfView;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
@@ -31,7 +29,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.spc.util.RequestPayload;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,8 +37,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.plaf.multi.MultiMenuItemUI;
-import javax.wsdl.Output;
 
 import java.io.*;
 import java.net.URLEncoder;
@@ -1101,7 +1096,7 @@ public class TeacherController extends Base {
 
     }
     /**
-     * 教师端：根据教师Id查询教师课程
+     * 教师端：根据教师Id查询教师小班实践课程
      * @param session
      * @param
      * @return
@@ -1118,7 +1113,7 @@ public class TeacherController extends Base {
         Map<String,Object> res=new HashMap<>();
 //        PageHelper.startPage(currentPage, pageSize);
         Page page=PageHelper.startPage(currentPage, pageSize);
-        List classes = classService.findTeachCourse(teacherId);
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
 //        res.put("total",page.getTotal());
         List<Map<String,Object>> pageList=pageInfo.getList();
@@ -1131,6 +1126,8 @@ public class TeacherController extends Base {
         res.put("status", "SUCCESS");
         return res;
     }
+
+
 
     /**
      * 教师端：根据班级Id导出选课学生名单Excel
@@ -1238,9 +1235,11 @@ public class TeacherController extends Base {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("成绩表");
         List<Map<String,Object>> students = classService.findStudent(classId);
-        String fileName = "学生名单"  + ".xls";//设置要导出的文件的名字
+        String className= (String) students.get(0).get("className");
+        int classNum= (int) students.get(0).get("classNum");
+        String fileName = className+classNum+"学生名单"  + ".xls";//设置要导出的文件的名字
 
-        String[] headers={"姓名","学号","班级","成绩"};
+        String[] headers={"姓名","学号","所属学院","所属专业","成绩"};
         HSSFRow headerRow=sheet.createRow(0);
         //添加表头
         for(int i=0;i<headers.length;i++){
@@ -1253,7 +1252,8 @@ public class TeacherController extends Base {
             HSSFRow row=sheet.createRow(rowNum);
             row.createCell(0).setCellValue((String) stu.get("stuName"));
             row.createCell(1).setCellValue((String) stu.get("stuId"));
-            row.createCell(2).setCellValue((String) stu.get("className")+stu.get("classNum")+"班");
+            row.createCell(2).setCellValue((String) stu.get("departName"));
+            row.createCell(3).setCellValue((String) stu.get("speciality"));
             rowNum++;
         }
         response.setContentType("application/octet-stream");
@@ -1264,7 +1264,8 @@ public class TeacherController extends Base {
     }
     @RequestMapping("/uploadGradeExcel")
     @ResponseBody
-    public Map<String, Object> uploadGradeExcel(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+    public Map<String, Object> uploadGradeExcel(@RequestParam("file") MultipartFile file,
+                                                HttpServletRequest request){
         Map<String,Object> res=new HashMap<>();
         String userId= (String) request.getSession().getAttribute("userId");
         String dep= (String) request.getSession().getAttribute("dep");
@@ -1279,10 +1280,19 @@ public class TeacherController extends Base {
         }
         return res;
     }
-    @RequestMapping("insertGradeExcel")
+    @RequestMapping("/insertGradeExcel")
     @ResponseBody
-    public Map<String,Object> insertGradeExcel(@RequestParam("classId") int classId,@RequestParam("fileInfoId") int fileInfoId){
+    public Map<String,Object> insertGradeExcel( @RequestParam("status") int status,
+                                                @RequestParam("classId") int classId,
+                                                @RequestParam("fileInfoId") int fileInfoId){
+
         Map<String,Object> res=new HashMap<>();
+        int isGrade=classService.findIsGrade(classId);
+        if(isGrade!=0)
+        {
+            res.put("status","成绩已提交无法修改！");
+            return res;
+        }
         int flag=teacherService.insertGradeExcel(classId,fileInfoId);
         if(flag==0){
             res.put("status","上传成绩失败！");
@@ -1291,6 +1301,153 @@ public class TeacherController extends Base {
         }
         return res;
     }
+
+    /**
+     * 教师端：根据班级Id导出学生成绩单PDF
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/downloadStudentsScorePdf")
+    @ResponseBody
+    public ModelAndView downloadStudentsPdf(@RequestParam("classId") int classId,
+                                            HttpSession session, HttpServletResponse response) {
+
+        int isGrade=classService.findIsGrade(classId);
+        if(isGrade==0)
+        {
+            return null;
+        }
+        ClassDomain classes =  classService.findClassById(classId);
+        String className=classes.getClassName();
+        int classNum=classes.getClassNum();
+        response = ResponseWrap.setName(response, className+classNum + "班学生成绩单", "pdf");
+        List<Map<String,Object>> students = classService.findStudent(classId);
+        Map res = new HashMap();
+        res.put("data", students);
+        res.put("className",className);
+        res.put("classNum",classNum);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+
+        return new ModelAndView(new StudentsScoreListPdfView(), model);
+    }
+
+    /**
+     * 教师端：查看所有学生成绩
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/findStudentsScore")
+    @ResponseBody
+    public Map findStudentsScore(@RequestParam("classId") int classId,
+                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                 HttpSession session) {
+        int isGrade=classService.findIsGrade(classId);
+        ClassDomain classes =  classService.findClassById(classId);
+        String className=classes.getClassName();
+        int classNum=classes.getClassNum();
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> students = classService.findStudent(classId);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("className",className);
+        res.put("classNum",classNum);
+        res.put("isGrade",isGrade);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    /**
+     * 教师端：手动上传或更新学生成绩
+     * @param
+     * @param   status 0表示保存，1表示提交
+     * @return
+     */
+    @RequestMapping("/updateStudentsScore")
+    @ResponseBody
+    public String findStudentsScore(@RequestParam("classId") int classId,
+                                    @RequestParam("stuList") ArrayList<Map> stuList,
+                                    @RequestParam("status") int status,
+                                  HttpSession session) {
+
+        int isGrade=classService.findIsGrade(classId);
+        if(isGrade!=0)
+        {
+            return "成绩已提交无法修改";
+        }
+        for(Map stu:stuList){
+            String stuId= (String) stu.get("stuId");
+            int xbsjGrade= (int) stu.get("xbsjGrade");
+            classService.updateXbsjScore(classId,stuId,xbsjGrade);
+        }
+
+        if(status==1){
+            classService.updateIsGrade(classId);
+            return "成绩提交成功";
+        }
+        else
+            return "成绩保存成功";
+    }
+
+
+    /**
+     * 教师端：该部分由于课内授课成绩管理
+     */
+
+    /**
+     * 教师端：根据教师Id查询课内授课课程
+     * @param session
+     * @param
+     * @return
+     */
+    @RequestMapping("teach/findCourse2")
+    @ResponseBody
+    public Map findTeachCourse2(
+//            @RequestParam("academicYear") String academicYear,
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            HttpSession session
+    ) {
+//        String teacherId = (String) session.getAttribute("userId");
+        String academicYear="2018-2019";
+        String teacherId = "0002004016";
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> classes = classService.findTeachCourse2(teacherId,academicYear);
+//        for(Map cl:classes){
+//            if(cl.get("KCH")=="121066") {
+//                cl.put("KCM","学术英语(一)");
+//            }
+//            if(cl.get("KCH")=="121067") {
+//                cl.put("KCM","学术英语(二)");
+//            }
+//            if(cl.get("KCH")=="122036") {
+//                cl.put("KCM","学术英语写作");
+//            }
+//        }
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
 
 
 }

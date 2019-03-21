@@ -332,6 +332,8 @@
         where  teaId=#{teacherId}
     </select>
 
+
+
     <select id="findClassInfo" resultType="Map">
         select *
         from course.Course
@@ -342,4 +344,43 @@
         update Course set isGrade=1
         where classId=#{classId}
     </update>
+
+    <select id="findClassId" resultType="Map">
+        select c.classId,c.isGrade
+        from course.Course c
+        join course.ClassAll  b
+        on  b.id=c.classAllId
+        where b.courseId=#{courseId}
+        and c.classNum=#{classNum}
+    </select>
+
+    <select id="findAllDepartment" resultType="Map">
+        select *
+        from course.Department
+    </select>
+
+    <select id="findIsGrade" resultType="int">
+        select c.isGrade
+        from course.Course c
+        where c.classId=#{classId}
+    </select>
+
+    <update id="updateIsGrade">
+        update Course set isGrade=1
+        where classId=#{classId}
+    </update>
+
+    <update id="updateXbsjScore">
+        update course.Course_choose set course.Course_choose.xbsjGrade=#{xbsjGrade}
+        where classId=#{classId} and stuId=#{stuId}
+    </update>
+
+    <select id="findTeachCourse2" resultType="Map">
+        select *
+        from course.v_t_xk_by_yjsrw
+        where  (SKJS=#{teacherId})
+        and (KCH='121066' OR KCH='121067' OR KCH='122036')
+        and XNXQDM like "%"#{academicYear}"%"
+    </select>
+
 </mapper>

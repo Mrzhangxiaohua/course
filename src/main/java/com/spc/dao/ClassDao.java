@@ -77,10 +77,22 @@ public interface ClassDao {
 
     List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId);
 
+    List<Map<String, Object>> findTeachCourse2(@Param("teacherId") String teacherId,@Param("academicYear") String academicYear);
+
     Map findClassInfo(@Param("classStr") String classStr);
     Map getClassInfo(Integer id);
 
     int updateClass( ClassAll classAll);
 
     int updateGradeFlag(@Param("classId") int classId);
+
+    Map findClassId(@Param("courseId")String courseId,@Param("classNum") int classNum);
+
+    int findIsGrade(@Param("classId")int classId);
+
+    List<Map<String, Object>> findAllDepartment();
+
+    void updateXbsjScore(@Param("classId")int classId,@Param("stuId")String stuId,@Param("xbsjGrade")int xbsjGrade);
+
+    void updateIsGrade(@Param("classId")int classId);
 }

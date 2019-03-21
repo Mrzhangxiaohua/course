@@ -9,6 +9,7 @@ import com.spc.service.classes.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +88,16 @@ public class ClassServiceImpl implements ClassService {
         List s = studentDao.findStudent(classId);
         return studentDao.findStudent(classId);
     }
+
+    @Override
+    public Map findClassId(String courseId, int classNum) {
+        return  classDao.findClassId(courseId, classNum);
+    }
+
+    @Override
+    public int findIsGrade(int classId) {
+        return  classDao.findIsGrade(classId);
+    }
   /*  @Override
     public List findWeekStudent(int classId,int weekth) {
         List<Map<String,Object>> students=studentDao.findStudent(classId);
@@ -121,10 +132,43 @@ public class ClassServiceImpl implements ClassService {
         return classDao.findTeachCourse(teacherId);
     }
 
+    @Override
+    public List<Map<String, Object>> findTeachCourse2(String teacherId,String academicYear) {
+        List<Map<String, Object>> classes = classDao.findTeachCourse2(teacherId,academicYear);
+
+        for(Map cl:classes){
+            if(cl.get("KCH").equals("121066")) {
+                cl.put("KCM","学术英语(一)");
+            }
+            if(cl.get("KCH").equals("121067")) {
+                cl.put("KCM","学术英语(二)");
+            }
+            if(cl.get("KCH").equals("122036")) {
+                cl.put("KCM","学术英语写作");
+            }
+        }
+        return classes;
+    }
+
 
     @Override
     public Map findClassInfo(String classStr) {
         return classDao.findClassInfo(classStr);
+    }
+
+    @Override
+    public List<Map<String, Object>> findAllDepartment() {
+        return  classDao.findAllDepartment();
+    }
+
+    @Override
+    public void updateXbsjScore(int classId, String stuId, int xbsjGrade) {
+        classDao.updateXbsjScore(classId,stuId,xbsjGrade);
+    }
+
+    @Override
+    public void updateIsGrade(int classId) {
+        classDao.updateIsGrade(classId);
     }
 
 

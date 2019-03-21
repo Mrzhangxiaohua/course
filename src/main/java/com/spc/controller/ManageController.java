@@ -14,6 +14,8 @@ import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
 import com.spc.view.ManageScorePdfView;
 import com.spc.view.StudentTablePdfView;
+import com.spc.view.StudentsListPdfView;
+import com.spc.view.StudentsScoreListPdfView;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -947,6 +949,90 @@ public class ManageController extends Base {
         List<CourseApplication> courseAppList=courseAllService.findAllCourseApp();
         return courseAppList;
     }
+
+
+    /**
+     * 教师端：根据课程编码和班级号导出学生列表PDF
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/downloadStudentsPdf")
+    @ResponseBody
+    public ModelAndView downloadStudentsPdf(@RequestParam("courseId")String courseId,@RequestParam("classNum")int classNum,
+            HttpSession session, HttpServletResponse response) {
+//        int classId=480;
+//        String className="英语";
+//        int classNum=1;
+        Map classIdAndFlag=classService.findClassId(courseId,classNum);
+//        System.out.print(classId);
+        int classId=(int)classIdAndFlag.get("classId");
+        ClassDomain classes =  classService.findClassById(classId);
+        String className=classes.getClassName();
+        response = ResponseWrap.setName(response, className+classNum + "班选课学生名单", "pdf");
+        List<Map<String,Object>> students = classService.findStudent(classId);
+        Map res = new HashMap();
+        res.put("data", students);
+        res.put("className",className);
+        res.put("classNum",classNum);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+
+        return new ModelAndView(new StudentsListPdfView(), model);
+    }
+
+
+    /**
+     * 管理员端通过学院和班级下载成绩单
+     *
+     * @return
+     */
+    @RequestMapping("/find/department")
+    @ResponseBody
+    public List<Map> getAllDepartment() {
+        List department = classService.findAllDepartment();
+        return department;
+    }
+
+    @RequestMapping("/find/departmentCourse")
+    @ResponseBody
+    public List<Map<String,Object>> getDepartmentCourse(@RequestParam String academicYear, @RequestParam String classSemester,@RequestParam("departId")int departId) {
+        List<Map<String,Object>> depCourse = classAllService.getOneDimDepartTimeTable(departId, academicYear, classSemester);
+        return depCourse;
+    }
+
+
+    @RequestMapping("/downloadStudentsScorePdf")
+    @ResponseBody
+    public ModelAndView downloadStudentsScorePdf(@RequestParam("courseId")String courseId,@RequestParam("classNum")int classNum,
+                                            HttpSession session, HttpServletResponse response) {
+
+        Map classIdAndFlag=classService.findClassId(courseId,classNum);
+        int classId=(int)classIdAndFlag.get("classId");
+        int isGrade=(int)classIdAndFlag.get("isGrade");
+        if(isGrade==0)//成绩未提交无法下载成绩
+        {
+            return null;
+        }
+        ClassDomain classes =  classService.findClassById(classId);
+        String className=classes.getClassName();
+        response = ResponseWrap.setName(response, className+classNum + "班学生成绩单", "pdf");
+        List<Map<String,Object>> students = classService.findStudent(classId);
+        Map res = new HashMap();
+        res.put("data", students);
+        res.put("className",className);
+        res.put("classNum",classNum);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+
+        return new ModelAndView(new StudentsScoreListPdfView(), model);
+    }
+
+
+
+
 
 }
 
