@@ -4,6 +4,7 @@ import com.spc.dao.OralDao;
 import com.spc.model.Oral;
 import com.spc.service.oral.OralService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,8 @@ import java.util.Map;
  * @author Milingyun
  * @date 2019-03-12 15:18
  */
+
+@Service
 public class OralServiceImpl implements OralService {
     @Autowired
     OralDao oralDao;

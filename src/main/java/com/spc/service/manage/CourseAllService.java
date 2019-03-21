@@ -29,4 +29,7 @@ public interface CourseAllService {
     int checkCourseApp(List<Integer>idList, int result,int departId);
 
     List<CourseApplication> findAllCourseApp();
+
+    //管理员修订课程目录时直接添加课程到courseApplication表，标志位isChecked为3
+    int addCourseAll(CourseApplication courseApp);
 }

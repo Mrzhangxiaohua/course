@@ -940,12 +940,77 @@ public class ManageController extends Base {
     /*
      *超级管理员新增学年课程目录时，从courseApplication表中导入申请开课和直接新增的课程
      */
-    @RequestMapping("/findCourseApplication")
+    @RequestMapping(value="/findCourseApplication", method = RequestMethod.POST)
     @ResponseBody
     public List<CourseApplication> findCourseApp(HttpServletRequest request){
 
         List<CourseApplication> courseAppList=courseAllService.findAllCourseApp();
         return courseAppList;
+    }
+    /*
+     *超级管理员直接新增课程
+     */
+
+    @RequestMapping(value = "/addCourseAll", method = RequestMethod.POST)
+    @ResponseBody
+    public int addClassApplication(HttpServletRequest request) throws JSONException  {
+        String userId= (String) request.getSession().getAttribute("userId");
+        String username= (String) request.getSession().getAttribute("username");
+        int departId= (int) request.getSession().getAttribute("departId");
+        String departName=(String) request.getSession().getAttribute("dep");
+        String json = RequestPayload.getRequestPayload(request);
+        JSONObject obj = new JSONObject(json);
+        String courseNameCHS=obj.getString("className");
+        String courseNameEN=obj.getString("classNameEN");
+        int moduleId=obj.getInt("classModuleNum");
+        String academicYear=obj.getString("classYear");
+        int classSemesterInt=obj.getInt("classSemester");
+        int classHour=obj.getInt("classTime");
+        int stuNumUpperLimit=obj.getInt("limitPerson");
+        String teacherName=obj.getString("mainLecturer");
+        String teacherId=obj.getString("mainLecturerId");
+        JSONArray teacherArray= (JSONArray) obj.get("teacherList");
+
+        String courseInfo=obj.getString("courseInfo");
+        String teacherInfo=obj.getString("teacherInfo");
+
+        CourseApplication courseApp=new CourseApplication();
+        courseApp.setDepartId(departId);
+        courseApp.setDepartName(departName);
+        courseApp.setCourseNameEN(courseNameEN);
+        courseApp.setCourseNameCHS(courseNameCHS);
+        courseApp.setModuleId(moduleId);
+        courseApp.setAcademicYear(academicYear);
+        if(classSemesterInt==1){
+            courseApp.setClassSemester("春季");
+        }else if(classSemesterInt==2){
+            courseApp.setClassSemester("秋季");
+        }else if(classSemesterInt==3){
+            courseApp.setClassSemester("春秋季");
+        }
+        courseApp.setClassHour(classHour);
+        courseApp.setStuNumUpperLimit(stuNumUpperLimit);
+        courseApp.setTeacherId(teacherId);
+        courseApp.setTeacherName(teacherName);
+        StringBuilder teachingTeamIds=new StringBuilder();
+        StringBuilder teachingTeamNames=new StringBuilder();
+        for(int i=0;i<teacherArray.length();i++){
+            JSONObject jsonObject= (JSONObject) teacherArray.get(i);
+            teachingTeamIds.append(jsonObject.getString("teaId"));
+            teachingTeamIds.append(",");
+            teachingTeamNames.append(jsonObject.getString("teaName"));
+            teachingTeamNames.append(",");
+        }
+        teachingTeamIds.deleteCharAt(teachingTeamIds.length()-1);
+        teachingTeamNames.deleteCharAt(teachingTeamNames.length()-1);
+        courseApp.setTeachingTeamIds(teachingTeamIds.toString());
+        courseApp.setTeachingTeamNames(teachingTeamNames.toString());
+        courseApp.setCourseInfo(courseInfo);
+        courseApp.setTeacherInfo(teacherInfo);
+        courseApp.setOperatorId(userId);
+        courseApp.setOperatorName(username);
+        courseApp.setOperateDate(new Date());
+        return courseAllService.addCourseAll(courseApp);
     }
 
 }

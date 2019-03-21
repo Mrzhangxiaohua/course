@@ -152,6 +152,11 @@ public class CourseAllServiceImpl implements CourseAllService {
     }
 
     @Override
+    public int addCourseAll(CourseApplication courseApp) {
+        return 0;
+    }
+
+    @Override
     public int ModifyCourseAll(CourseAll courseAll, String userId,String username) {
         courseAll.setOperatorId(userId);
         courseAll.setOperatorName(username);
