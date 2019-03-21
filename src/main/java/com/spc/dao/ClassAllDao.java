@@ -1,6 +1,7 @@
 package com.spc.dao;
 
 import com.spc.model.ClassAll;
+import com.spc.model.CourseAll;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,4 +76,6 @@ public interface ClassAllDao {
                                   @Param("selectDepartId") String selectDepartId);
 
     void updateStuNumUpperLimit(@Param("classAllId") int classAllId, @Param("stuNumUpperLimit") int stuNumUpperLimit);
+
+    int addFirstClass(CourseAll courseAll);
 }

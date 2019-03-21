@@ -9,9 +9,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
+import com.spc.model.CourseApplication;
 import com.spc.model.CourseTableExcelDomain;
 import com.spc.service.classes.ClassService;
 import com.spc.service.grade.GradeService;
+import com.spc.service.manage.CourseAllService;
 import com.spc.service.teacher.TeacherService;
 
 import com.spc.util.CalculateWeekth;
@@ -64,6 +66,9 @@ public class TeacherController extends Base {
 
     @Autowired
     TeacherService teacherService;
+
+    @Autowired
+    CourseAllService courseAllService;
 
     /**
      * 教师端：录入分数
@@ -475,20 +480,66 @@ public class TeacherController extends Base {
 
     @RequestMapping(value = "/add/classApplication", method = RequestMethod.POST)
     @ResponseBody
-    public int addClassApplication(@RequestBody ClassApplicationDomain cad,
-                                   HttpSession session)  {
+    public int addClassApplication(HttpServletRequest request) throws JSONException  {
+        String userId= (String) request.getSession().getAttribute("userId");
+        String username= (String) request.getSession().getAttribute("username");
+        int departId= (int) request.getSession().getAttribute("departId");
+        String departName=(String) request.getSession().getAttribute("dep");
+        String json = RequestPayload.getRequestPayload(request);
+        JSONObject obj = new JSONObject(json);
+        String courseNameCHS=obj.getString("className");
+        String courseNameEN=obj.getString("classNameEN");
+        int moduleId=obj.getInt("classModuleNum");
+        String academicYear=obj.getString("classYear");
+        int classSemesterInt=obj.getInt("classSemester");
+        int classHour=obj.getInt("classTime");
+        int stuNumUpperLimit=obj.getInt("limitPerson");
+        String teacherName=obj.getString("mainLecturer");
+        String teacherId=obj.getString("mainLecturerId");
+        JSONArray teacherArray= (JSONArray) obj.get("teacherList");
 
-        System.out.println(cad);
-        cad.setChecked(2);
-        boolean urlTou = cad.getHomepage().contains("http://");
-        String homePage = cad.getHomepage();
-        if(urlTou) {
-            homePage = cad.getHomepage().replace("http://", "");
+        String courseInfo=obj.getString("courseInfo");
+        String teacherInfo=obj.getString("teacherInfo");
+        int fileInfoId=obj.getInt("fileInfoId");
+
+        CourseApplication courseApp=new CourseApplication();
+        courseApp.setDepartId(departId);
+        courseApp.setDepartName(departName);
+        courseApp.setCourseNameEN(courseNameEN);
+        courseApp.setCourseNameCHS(courseNameCHS);
+        courseApp.setModuleId(moduleId);
+        courseApp.setAcademicYear(academicYear);
+        if(classSemesterInt==1){
+            courseApp.setClassSemester("春季");
+        }else if(classSemesterInt==2){
+            courseApp.setClassSemester("秋季");
+        }else if(classSemesterInt==3){
+            courseApp.setClassSemester("春秋季");
         }
-        cad.setTeacherInfo(cad.getTeacherInfo()+":"+homePage);
-        cad.setShenQingRenName((String) session.getAttribute("username"));
-        cad.setShenQingRenId((String) session.getAttribute("userId"));
-        return teacherService.addClassApplication(cad);
+        courseApp.setClassHour(classHour);
+        courseApp.setStuNumUpperLimit(stuNumUpperLimit);
+        courseApp.setTeacherId(teacherId);
+        courseApp.setTeacherName(teacherName);
+        StringBuilder teachingTeamIds=new StringBuilder();
+        StringBuilder teachingTeamNames=new StringBuilder();
+        for(int i=0;i<teacherArray.length();i++){
+            JSONObject jsonObject= (JSONObject) teacherArray.get(i);
+            teachingTeamIds.append(jsonObject.getString("teaId"));
+            teachingTeamIds.append(",");
+            teachingTeamNames.append(jsonObject.getString("teaName"));
+            teachingTeamNames.append(",");
+        }
+        teachingTeamIds.deleteCharAt(teachingTeamIds.length()-1);
+        teachingTeamNames.deleteCharAt(teachingTeamNames.length()-1);
+        courseApp.setTeachingTeamIds(teachingTeamIds.toString());
+        courseApp.setTeachingTeamNames(teachingTeamNames.toString());
+        courseApp.setCourseInfo(courseInfo);
+        courseApp.setTeacherInfo(teacherInfo);
+        courseApp.setFileInfoId(fileInfoId);
+        courseApp.setOperatorId(userId);
+        courseApp.setOperatorName(username);
+        courseApp.setOperateDate(new Date());
+        return courseAllService.addCourseApp(courseApp);
     }
 
     @RequestMapping("/find/application")
@@ -1181,7 +1232,65 @@ public class TeacherController extends Base {
         res.put("status", "SUCCESS");
         return res;
     }
+    @RequestMapping("/downloadExcel")
+    @ResponseBody
+    public void downloadExcel(HttpServletResponse response,@RequestParam("classId") int classId) throws IOException {
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("成绩表");
+        List<Map<String,Object>> students = classService.findStudent(classId);
+        String fileName = "学生名单"  + ".xls";//设置要导出的文件的名字
 
+        String[] headers={"姓名","学号","班级","成绩"};
+        HSSFRow headerRow=sheet.createRow(0);
+        //添加表头
+        for(int i=0;i<headers.length;i++){
+            HSSFCell cell=headerRow.createCell(i);
+            HSSFRichTextString text=new HSSFRichTextString(headers[i]);
+            cell.setCellValue(text);
+        }
+        int rowNum=1;
+        for(Map<String,Object> stu:students){
+            HSSFRow row=sheet.createRow(rowNum);
+            row.createCell(0).setCellValue((String) stu.get("stuName"));
+            row.createCell(1).setCellValue((String) stu.get("stuId"));
+            row.createCell(2).setCellValue((String) stu.get("className")+stu.get("classNum")+"班");
+            rowNum++;
+        }
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName,"utf-8"));
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+
+    }
+    @RequestMapping("/uploadGradeExcel")
+    @ResponseBody
+    public Map<String, Object> uploadGradeExcel(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+        Map<String,Object> res=new HashMap<>();
+        String userId= (String) request.getSession().getAttribute("userId");
+        String dep= (String) request.getSession().getAttribute("dep");
+        String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
+        int type=3;
+        int fileInfoId= teacherService.uploadFile(file,userId,dep,type,filePath);
+        if (fileInfoId==0){
+            res.put("status","error");
+        }else{
+            res.put("status","success");
+            res.put("fileInfoId",fileInfoId);
+        }
+        return res;
+    }
+    @RequestMapping("insertGradeExcel")
+    @ResponseBody
+    public Map<String,Object> insertGradeExcel(@RequestParam("classId") int classId,@RequestParam("fileInfoId") int fileInfoId){
+        Map<String,Object> res=new HashMap<>();
+        int flag=teacherService.insertGradeExcel(classId,fileInfoId);
+        if(flag==0){
+            res.put("status","上传成绩失败！");
+        }else{
+            res.put("status","上传成绩成功！");
+        }
+        return res;
+    }
 
 
 }

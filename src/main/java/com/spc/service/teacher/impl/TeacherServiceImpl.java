@@ -6,9 +6,18 @@ import com.spc.model.ClassApplicationDomain;
 import com.spc.model.FileInfo;
 import com.spc.service.teacher.TeacherService;
 import com.spc.util.MakeTimeTable;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -33,6 +42,9 @@ public class TeacherServiceImpl extends Base implements TeacherService {
 
     @Autowired
     SchoolCalendarDao schoolCalendarDao;
+
+    @Autowired
+    GradeDao gradeDao;
 
 
     @Override
@@ -189,5 +201,86 @@ public class TeacherServiceImpl extends Base implements TeacherService {
     @Override
     public Map<String, Object> findCourseClassTime(String classNum, String stuId) {
         return teacherDao.findCourseClassTime(classNum, stuId);
+    }
+
+    @Override
+    public int uploadFile(MultipartFile file, String userId, String dep, int type, String filePath) {
+        if (file.isEmpty()){
+            return 0;
+        }
+        String fileName = file.getOriginalFilename();
+        logger.info("上传的文件名为：" + fileName);
+
+        String path = filePath + fileName;
+        File dest = new File(path);
+        // 检测是否存在目录
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();// 新建文件夹
+        }
+        try {
+            file.transferTo(dest);// 文件写入
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date=sdf.format(new Date());
+
+            FileInfo fileInfo = new FileInfo();
+            fileInfo.setUserId(userId);
+            fileInfo.setFileName(fileName);
+            fileInfo.setPath(path);
+            fileInfo.setType(type);
+            fileInfo.setDep(dep);
+            fileInfo.setTime(date);
+            fileInfo.setFlag(1);
+            fileInfoDao.insertFile(fileInfo);
+            return fileInfo.getFileInfoId();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int insertGradeExcel(int classId, int fileInfoId) {
+        Map<String, Object> fileInfo= (Map<String, Object>) fileInfoDao.selectGradeExcel(fileInfoId).get(0);
+        String fileName=(String)fileInfo.get("fileName");
+        String path=(String)fileInfo.get("path");
+        File file=new File(path+fileName);
+        if(file==null){
+            return 0;
+        }
+        Workbook workbook=null;
+        try (FileInputStream is = new FileInputStream(file)) {
+            if (file.getName().endsWith(".xls")) {
+                workbook = new HSSFWorkbook(is);
+            } else if (file.getName().endsWith(".xlsx")) {
+                workbook = new XSSFWorkbook(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(workbook!=null){
+            int sheetNum=workbook.getNumberOfSheets();
+            for(int i=0;i<sheetNum;i++){
+                Sheet sheet=workbook.getSheetAt(i);
+                for(int j=1;j<sheet.getLastRowNum();j++){
+                    Row row=sheet.getRow(j);
+                    if(row ==null){
+                        continue;
+                    }
+
+                    String stuId=row.getCell(1).getStringCellValue();
+                    String grade= row.getCell(3).getStringCellValue();
+                    if(grade!=null && grade.equals("")){
+                        gradeDao.updateGrade(classId,stuId,Float.parseFloat(grade));
+                    }
+
+                }
+                classDao.updateGradeFlag(classId);
+            }
+            return 1;
+        }
+
+
+        return 0;
     }
 }

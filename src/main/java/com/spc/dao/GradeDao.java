@@ -18,5 +18,7 @@ public interface GradeDao {
 
     List selectGetTitle();
 
+    int updateGrade(@Param("classId")int classId,@Param("stuId") String stuId,@Param("grade") float grade);
+
     List<Map<String, Object>> getModelGrade(@Param("stuId") String stuId);
 }

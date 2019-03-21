@@ -14,4 +14,6 @@ public interface FileInfoDao {
     int updateFlagZero(@Param("type") int type);
 
     void insertFile(FileInfo fileInfo);
+
+    Map<String, Object> selectGradeExcel(@Param("fileInfoId") int fileInfoId);
 }

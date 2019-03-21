@@ -39,4 +39,89 @@
         limit 1
     </select>
 
+    <select id="selectCourseAllByYearAndDep" resultType="com.spc.model.CourseAll">
+        select
+        <include refid="Base_Column_List" />
+        from CourseAll
+        <where>
+            1
+            <if test="year!=null and year!=''">
+                and  academicYear=#{year}
+            </if>
+            <if test="depId！=null and depId!=''">
+                and  departId=#{depId}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateCourseAll" >
+      update CourseAll set departId=#{departId},courseId=#{courseId},courseNameCHS=#{courseNameCHS},courseNameEN=#{courseNameEN},moduleId=#{moduleId},academicYear=#{academicYear},
+        classSemester=#{classSemester},classHour=#{classHour},stuNumUpperLimit=#{stuNumUpperLimit},teacherId=#{teacherId},teacherName=#{teacherName},teachingTeamIds=#{teachingTeamIds},
+        teachingTeamNames=#{teachingTeamNames},courseInfo=#{courseInfo},teacherInfo=#{teacherInfo},operatorId=#{operatorId},operatorName=#{operatorName},operateDate=#{operateDate}
+      where id=#{id}
+    </update>
+
+    <insert id="insertYearCourse"  useGeneratedKeys="true" keyProperty="id" flushCache="true" >
+      insert into CourseAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,
+    teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,operatorId,operatorName,operateDate)
+      values(#{departId},#{courseId},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},
+    #{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames},#{courseInfo},#{teacherInfo},#{operatorId},#{operatorName},#{operateDate})
+    </insert>
+
+    <insert id="insertCourseApp"  useGeneratedKeys="true" keyProperty="id" flushCache="true" >
+      insert into courseApplication(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,
+    teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,fileInfoId,operatorId,operatorName,operateDate,isChecked)
+      values(#{departId},#{courseId},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},
+    #{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames},#{courseInfo},#{teacherInfo},#{fileInfoId},#{operatorId},#{operatorName},#{operateDate},#{isChecked})
+    </insert>
+
+    <select id="selectCourseApp" resultType="Map">
+        select id,departName, courseId, courseNameCHS, courseNameEN,moduleId,academicYear,classSemester,classHour,
+        stuNumUpperLimit,fileInfoId,teacherName,teachingTeamNames,courseInfo,teacherInfo,operatorName,operatorId,operateDate ,isChecked
+        from courseApplication
+        <where>
+            isChecked &lt;&gt; 3
+            and departId=#{departId}
+            <if test="date != null and date !=''">
+                and DATE_FORMAT(operateDate,'%Y-%m-%d') = #{date}
+            </if>
+            <if test="operatorId != null and operatorId !=''">
+                and operatorId = #{operatorId}
+            </if>
+            <if test="operatorName != null and operatorName !=''">
+                and operatorName = #{operatorName}
+            </if>
+        </where>
+        order by isChecked asc,operateDate desc
+
+    </select>
+
+    <select id="findCourseAppCount" >
+        select count(*)
+        from courseApplication
+        where substring(courseId,2,2)=#{twoYear}
+    </select>
+    <update id="updateCourseAppflag">
+        update courseApplication set isChecked=#{result}
+        <if test="courseId != null and courseId !=''">
+            ,coureseId=#{courseId}
+        </if>
+        where courseAppId=#{courseAppId}
+    </update>
+
+
+    <select id=" findAppByTeaId" resultType="Map" >
+        select *
+        from courseApplication
+        where  operatorId=#{userId}
+        order by isChecked asc,operatorDate desc
+    </select>
+
+    <select id=" findAllApp" resultType="com.spc.model.CourseApplication" >
+        select *
+        from courseApplication
+        where flag=1
+        order by isChecked asc,operatorDate desc
+    </select>
+
 </mapper>

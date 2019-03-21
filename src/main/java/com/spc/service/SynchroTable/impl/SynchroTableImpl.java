@@ -112,15 +112,49 @@ public class SynchroTableImpl extends Base implements SynchroTable {
 
     @Override
     public int updateRecord(ClassAll classAll) {
-        // 不要偷懒，做真正的update
+        // 不要偷懒，做真正的update(by zhangfa)
+        //说的对(by xiaomi)
         Map map = classDao.getClassId(classAll.getId());
         Integer classID = (Integer) map.get("classId");
-        logger.info("准备要删除的在course中的classId为：" + classID + "====================");
-        removeRecord(classAll.getId());
+        //logger.info("准备要删除的在course中的classId为：" + classID + "====================");
+        ClassDomain classDomain = new ClassDomain();
+          removeRecord(classAll.getId());
         if (classAll.getClassDateDesc() != null) {
-            insertRecord1(classAll, classID);
+            CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId());
+            logger.info(courseAll.toString());
+
+            classDomain.setClassAllId(classAll.getId());
+            classDomain.setClassName(courseAll.getCourseNameCHS());
+            if (classAll.getClassName() != null && !classAll.getClassName().isEmpty()) {
+                classDomain.setClassNum(getNum(classAll.getClassName()));
+            }
+            classDomain.setClassChooseNum((Integer) map.get("classChooseNum"));
+            classDomain.setTeaId(classAll.getInstructorId());
+            classDomain.setTeaName(classAll.getInstructorName());
+            classDomain.setClassGradePoint(0);
+            classDomain.setClassUpperLimit(courseAll.getStuNumUpperLimit());
+            if (classAll.getClassDateDesc() != null && !classAll.getClassDateDesc().isEmpty()) {
+                classDomain.setClassDateDescription(wrapDateDesc(convertDateDesc(classAll.getClassDateDesc())));
+            }
+            classDomain.setClassId(classID);
+
+            classDomain.setClassPlace(classAll.getClassPlaceName());
+            classDomain.setClassLength(0);
+            classDomain.setClassModuleNum(getMI(courseAll.getModuleId()));
+            classDomain.setDepartId(courseAll.getDepartId());
+            classDomain.setStartWeek(classAll.getStartWeek());
+            classDomain.setEndWeek(classAll.getEndWeek());
+            classDomain.setClassSemester(courseAll.getAcademicYear() + courseAll.getClassSemester());
+            classDomain.setCourseInfo(courseAll.getCourseInfo());
+            classDomain.setTeacherInfo(courseAll.getTeacherInfo());
+            classDomain.setClassTime(courseAll.getClassHour());
+            classDomain.setMainLecturer(classAll.getTeacherName());
+            classDomain.setClassEncode(courseAll.getCourseId());
+            classDomain.setShenQingRenId(null);
+            classDomain.setSchoolDistrictId(classAll.getSchoolDistrictId());
         }
-        return 1;
+        int count = classDao.insert(classDomain);
+        return count;
     }
 
 
