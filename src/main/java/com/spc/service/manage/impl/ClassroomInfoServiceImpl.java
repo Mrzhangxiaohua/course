@@ -18,4 +18,9 @@ public class ClassroomInfoServiceImpl implements ClassroomInfoService {
     public List<ClassroomInfo> getClassrooms(String schoolDistrictId, String classroomName) {
         return classroomInfoDao.selectAll(schoolDistrictId, classroomName);
     }
+
+    @Override
+    public int getClassRoomToSchoolDistrict(String classroomNameId) {
+        return classroomInfoDao.getSchoolDistrict(classroomNameId);
+    }
 }
