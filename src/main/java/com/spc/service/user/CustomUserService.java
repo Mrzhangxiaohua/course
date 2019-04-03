@@ -56,8 +56,8 @@ public class CustomUserService implements AuthenticationUserDetailsService {
     public UserDetails loadUserDetails(Authentication token) throws UsernameNotFoundException {
         System.out.printf("=======================%s用户已登录===========================\n",token.getName());
 
-
         UserInfoDto userInfoDto = getInfo.getInfoById(token.getName());
+
         return userInfoDto;
 
     }

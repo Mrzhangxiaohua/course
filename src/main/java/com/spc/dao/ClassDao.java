@@ -13,7 +13,6 @@ import java.util.Map;
 @Repository
 public interface ClassDao {
 
-
     ClassDomain findCourseByIdForUpdate(@Param("classId") Integer courseId);
 
     List<Map> kaiKe(@Param("departId") Integer departId, @Param("classSemester") String classSemester);

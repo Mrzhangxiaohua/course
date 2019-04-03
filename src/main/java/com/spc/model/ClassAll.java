@@ -65,6 +65,9 @@ public class ClassAll {
 
     private boolean force;
 
+    private boolean isModify;
+
+
     public ClassAll() {
     }
 
@@ -375,6 +378,22 @@ public class ClassAll {
         this.force = force;
     }
 
+    public Integer getStuChooseNum() {
+        return stuChooseNum;
+    }
+
+    public void setStuChooseNum(Integer stuChooseNum) {
+        this.stuChooseNum = stuChooseNum;
+    }
+
+    public boolean getIsModify() {
+        return isModify;
+    }
+
+    public void setIsModify(boolean isModify) {
+        this.isModify = isModify;
+    }
+
     @Override
     public String toString() {
         return "ClassAll{" +
@@ -412,11 +431,4 @@ public class ClassAll {
                 '}';
     }
 
-    public Integer getStuChooseNum() {
-        return stuChooseNum;
-    }
-
-    public void setStuChooseNum(Integer stuChooseNum) {
-        this.stuChooseNum = stuChooseNum;
-    }
 }

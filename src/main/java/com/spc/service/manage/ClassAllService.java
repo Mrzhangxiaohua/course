@@ -42,4 +42,5 @@ public interface ClassAllService {
     String[][] getRoomTimeTable(String roomName, String academicYear, String classSemester);
 
     List<Map<String, Object>> getOneDimRoomTimeTable(String roomName, String academicYear, String classSemester);
+
 }

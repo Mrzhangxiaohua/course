@@ -37,7 +37,7 @@ public class StuAdjustServiceImpl extends Base implements StuAdjustService {
         Map<String, Object> capacity= stuAdjustDao.findCapacity(newClassId);
         int leftCapacity = (int) capacity.get("classUpperLimit") - (int)capacity.get("classChooseNum");
         // 2.当移动数小于等于容量数，且当前班级不等于要移动到的班级，则可以插入
-        if (stuIdLen <= leftCapacity && oldClassId.equals(newClassId)){
+        if (stuIdLen <= leftCapacity && !oldClassId.equals(newClassId)){
             // 2.1 获取要更新的
             for (int i = 0; i < stuId.length(); i++){
                 try {
@@ -45,9 +45,9 @@ public class StuAdjustServiceImpl extends Base implements StuAdjustService {
                     stuAdjustDao.moveStudent(s, oldClassId, newClassId);
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    return 1; // 表示成功执行
                 }
             }
+            return 1; // 表示成功执行
         }
         return 0; // 错误执行
     }

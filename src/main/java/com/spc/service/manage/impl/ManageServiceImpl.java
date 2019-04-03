@@ -346,9 +346,9 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public int addTemplateFileInfo(String teaId, String fileName, String path, int type, String dep, String date, int flag) {
+    public int addTemplateFileInfo(String teaId, String fileName, String pathName, int type, String dep, String date, int flag) {
         fileInfoDao.updateFlagZero(type);
-        return fileInfoDao.insertFileInfo(teaId, fileName, path, type, dep, date, flag);
+        return fileInfoDao.insertFileInfo(teaId, fileName, pathName, type, dep, date, flag);
 
     }
 

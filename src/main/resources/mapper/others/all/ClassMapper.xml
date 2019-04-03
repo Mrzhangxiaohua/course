@@ -61,7 +61,7 @@
         select
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
         classPlace,classLength,classModuleNum,m.modelsName as modelsName,teacherInfo,courseInfo,
-        a.departId,classSemester,classGradePoint,endWeek,startWeek,
+        a.departId,classSemester,classGradePoint,endWeek,startWeek,schoolDistrictId,
         classEncode,classTime,mainLecturer,b.departName as departName
 <!--        course.User.department as dpt -->
         from
@@ -87,7 +87,8 @@
                 and a.classModuleNum = #{modelsId}
             </if>
             <if test="className!=null and className!='' ">
-                and a.className like "%"#{className}"%"
+                <bind name="classNameLike" value="'%'+className+'%'"/>
+                and a.className like #{classNameLike}
             </if>
             <if test="teaName!=null and teaName!='' ">
                 and a.teaName like "%"#{teaName}"%"

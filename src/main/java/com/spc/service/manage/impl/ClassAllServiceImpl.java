@@ -161,136 +161,161 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             timetableTFT[rowIndex][colIndex] = true;
         }
 
-        // 1. 校验班级名称冲突
-        if (checkClassName(c, res, msgBuilder)) {
-            return res;
-        }
-
-        // 2. 校验老师时间冲突
-        String[] instructorIds = c.getInstructorId().split(ARRAY_SPLIT_CHAR);
-        String[] instructorNames = c.getInstructorName().split(ARRAY_SPLIT_CHAR);
-
-        // 2.1 校验老师已排课程时间冲突
-
-        if (checkGraduateCourseTime(c, res, msgBuilder, conflictDescBuilder, timetableTFT, instructorIds, instructorNames, conflictFlag)) {
-            return res;
-        }
-
-        // 2.2 校验本科时间冲突
-        if (checkUndergraduateCourseTime(c, res, msgBuilder, conflictDescBuilder, timetableTFT, instructorIds, instructorNames, conflictFlag)) {
-            return res;
-        }
-
-        // 3. 校验上课地点冲突
-        if (c.getClassPlaceId() != null && !c.getClassPlaceId().isEmpty()) { // 会议室无id不判断冲突
-            // 3.1 校验已排课程地点的冲突
-            if (checkGraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, timetableTFT, conflictFlag)) {
-                return res;
-            }
-            // 3.2 校验本科课程地点的冲突
-            if (checkUndergraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, rows, cols, conflictFlag)) {
-                return res;
-            }
-        }
-        // 冲突状态
-        c.setConflictDesc(conflictDescBuilder.toString());
-        c.setScheduled(1);
-
-        // 如果没有冲突，则保存对应的记录
-        if (c.getId() != null) {
-            ClassAll oldClass = classAllDao.selectClassAllById(c.getId());
+        // 判断是否为修改，若为修改，直接删除原来记录，释放原来资源，再插入新记录
+        if (c.getIsModify()){
             // 清空原有占用信息
+            ClassAll oldClass = classAllDao.selectClassAllById(c.getId());
             boolean freeFlag = freeClassroomAndTeacher(oldClass, res);
-            if (!freeFlag) {
-                return res;
-            }
-
+            logger.info("free true or false???" + freeFlag);
             // 修改记录
             int count = classAllDao.updateClass(c);
             // TODO CHECK
             synchroTableService.updateRecord(c);
+            // 重新教室占用
+            if (useClassroom(c, res, rows, cols, false)) {
+                return res;
+            }
+            // 重新教师时间占用
+            String[] instructorIds = c.getInstructorId().split(ARRAY_SPLIT_CHAR);
+            if (useTeacherTime(c, res, rows, cols, instructorIds, false)) {
+                return res;
+            }
+            res.put("status", "success");
+            res.put("msg", "提交成功！");
+            return res;
 
-            logger.info("updateClass: " + c.toString());
+        }else {
+            // 1. 校验班级名称冲突
+            if (checkClassName(c, res, msgBuilder)) {
+                return res;
+            }
 
-            // 先占用本科教务系统的老师、地点的相应时间
-            // 1. 地点占用
-            // 1.1 先判断是否有地点冲突,若有地点冲突，则跳过。------
-            if (conflictFlag.get("classroom") == true){
-                // 如果为空，则什么都不执行，只保存即可
-            }else {// 没有强制，则进行webservervice占用
-                if (useClassroom(c, res, rows, cols, false)) {
+            // 2. 校验老师时间冲突
+            String[] instructorIds = c.getInstructorId().split(ARRAY_SPLIT_CHAR);
+            String[] instructorNames = c.getInstructorName().split(ARRAY_SPLIT_CHAR);
+
+            // 2.1 校验老师已排课程时间冲突
+
+            if (checkGraduateCourseTime(c, res, msgBuilder, conflictDescBuilder, timetableTFT, instructorIds, instructorNames, conflictFlag)) {
+                return res;
+            }
+
+            // 2.2 校验本科时间冲突
+            if (checkUndergraduateCourseTime(c, res, msgBuilder, conflictDescBuilder, timetableTFT, instructorIds, instructorNames, conflictFlag)) {
+                return res;
+            }
+
+            // 3. 校验上课地点冲突
+            if (c.getClassPlaceId() != null && !c.getClassPlaceId().isEmpty()) { // 会议室无id不判断冲突
+                // 3.1 校验已排课程地点的冲突
+                if (checkGraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, timetableTFT, conflictFlag)) {
+                    return res;
+                }
+                // 3.2 校验本科课程地点的冲突
+                if (checkUndergraduateCoursePlace(c, res, msgBuilder, conflictDescBuilder, rows, cols, conflictFlag)) {
                     return res;
                 }
             }
-            // ---------------------------------------------------
-//            if (useClassroom(c, res, rows, cols, false)) {
-//                return res;
-//            }
+            // 冲突状态
+            c.setConflictDesc(conflictDescBuilder.toString());
+            c.setScheduled(1);
 
-            // 2. 老师占用
-            // ---------------------------------------------------
-            if (conflictFlag.get("teacher") == true){
-                // 如果为空，则什么都不执行，只保存即可
-            }else {
-                if (useTeacherTime(c, res, rows, cols, instructorIds, false)) {
+            // 如果没有冲突，则保存对应的记录
+            if (c.getId() != null) {
+                ClassAll oldClass = classAllDao.selectClassAllById(c.getId());
+                // 清空原有占用信息
+                boolean freeFlag = freeClassroomAndTeacher(oldClass, res);
+                if (!freeFlag) {
                     return res;
                 }
-            }
-            // ---------------------------------------------------
-//            if (useTeacherTime(c, res, rows, cols, instructorIds, false)) {
-//                return res;
-//            }
 
-            if (count > 0) {
-                res.put("status", "success");
-                res.put("msg", "提交成功！");
-            } else {
-                res.put("status", "error");
-                res.put("msg", "提交失败，请重试！");
-            }
-        } else {
-            // 新增记录
-            int count = classAllDao.insertClass(c);
-            // TODO CHECK
-            synchroTableService.insertRecord(c);
+                // 修改记录
+                int count = classAllDao.updateClass(c);
+                // TODO CHECK
+                synchroTableService.updateRecord(c);
 
-            logger.info("insertClass: " + c.toString());
-            if (count > 0) {
+                logger.info("updateClass: " + c.toString());
+
                 // 先占用本科教务系统的老师、地点的相应时间
-                // 1. 地点占用 ------------------------------
-                if (conflictFlag.get("classroom") == true){
+                // 1. 地点占用
+                // 1.1 先判断是否有地点冲突,若有地点冲突，则跳过。------
+                if (conflictFlag.get("classroom") == true) {
                     // 如果为空，则什么都不执行，只保存即可
-                }else {// 没有强制，则进行webservervice占用
+                } else {// 没有强制，则进行webservervice占用
                     if (useClassroom(c, res, rows, cols, false)) {
                         return res;
                     }
                 }
-                // -----------------------------------------
-//                if (useClassroom(c, res, rows, cols, true)) {
-//                    return res;
-//                }
-                // 2. 老师占用 ------------------------------
-                if (conflictFlag.get("teacher") == true){
+                // ---------------------------------------------------
+//            if (useClassroom(c, res, rows, cols, false)) {
+//                return res;
+//            }
+
+                // 2. 老师占用
+                // ---------------------------------------------------
+                if (conflictFlag.get("teacher") == true) {
                     // 如果为空，则什么都不执行，只保存即可
-                }else {
+                } else {
                     if (useTeacherTime(c, res, rows, cols, instructorIds, false)) {
                         return res;
                     }
                 }
-                // -------------------------------------
+                // ---------------------------------------------------
+//            if (useTeacherTime(c, res, rows, cols, instructorIds, false)) {
+//                return res;
+//            }
+
+                if (count > 0) {
+                    res.put("status", "success");
+                    res.put("msg", "提交成功！");
+                } else {
+                    res.put("status", "error");
+                    res.put("msg", "提交失败，请重试！");
+                }
+            } else {
+                // 新增记录
+                int count = classAllDao.insertClass(c);
+                // TODO CHECK
+                synchroTableService.insertRecord(c);
+
+                logger.info("insertClass: " + c.toString());
+                if (count > 0) {
+                    // 先占用本科教务系统的老师、地点的相应时间
+                    // 1. 地点占用 ------------------------------
+                    if (conflictFlag.get("classroom") == true) {
+                        // 如果为空，则什么都不执行，只保存即可
+                    } else {// 没有强制，则进行webservervice占用
+                        if (useClassroom(c, res, rows, cols, false)) {
+                            return res;
+                        }
+                    }
+                    // -----------------------------------------
+//                if (useClassroom(c, res, rows, cols, true)) {
+//                    return res;
+//                }
+                    // 2. 老师占用 ------------------------------
+                    if (conflictFlag.get("teacher") == true) {
+                        // 如果为空，则什么都不执行，只保存即可
+                    } else {
+                        if (useTeacherTime(c, res, rows, cols, instructorIds, false)) {
+                            return res;
+                        }
+                    }
+                    // -------------------------------------
 
 //                if (useTeacherTime(c, res, rows, cols, instructorIds, true)) {
 //                    return res;
 //                }
 
-                res.put("status", "success");
-                res.put("msg", "提交成功！");
-            } else {
-                res.put("status", "error");
-                res.put("msg", "提交失败，请重试！");
+                    res.put("status", "success");
+                    res.put("msg", "提交成功！");
+                } else {
+                    res.put("status", "error");
+                    res.put("msg", "提交失败，请重试！");
+                }
             }
+            return res;
         }
-        return res;
     }
 
     private boolean useTeacherTime(ClassAll classAll, Map<String, String> res, int[] rows, int[] cols, String[] instructorIds, boolean del) {

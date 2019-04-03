@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.studentDao.studentEvaluateDao.StudentEvaluateDao">
+    <select id="selectList" resultType="map">
+        SELECT c.*,f.isComment,f.classId, d.stuId, d.classId, e.departName
+        FROM course.Course c
+        LEFT JOIN course.Course_choose d
+        ON d.classId = c.classId
+        LEFT JOIN course.Department e
+        ON c.departId = e.departId
+        LEFT JOIN course.studentComment f
+        ON d.stuId = f.stuId and c.classId =f.classId
+        WHERE d.stuId = #{stuId}
+    </select>
+
+    <insert id="stuEvaluate">
+        INSERT INTO studentComment(classId, isComment, stuId, score1, score2, score3)
+        VALUES (#{classId}, '1', #{stuId}, #{strScore1}, #{strScore2}, #{strScore3})
+    </insert>
+</mapper>

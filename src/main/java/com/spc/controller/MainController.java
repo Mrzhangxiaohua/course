@@ -89,7 +89,6 @@ public class MainController extends Base {
         return res;
     }
 
-
     private HttpSession putInfo(HttpSession session) {
 
         //首先获得用户信息
@@ -106,7 +105,7 @@ public class MainController extends Base {
         if (!(departCode == null && departCode == "")) {
             departId = (int) userService.findDepId(departCode).get("departId");
         }
-        session.setAttribute("departId", 99);//改变
+        session.setAttribute("departId", departId);//改变
         //将这个用户信息存储与用户信息库里面
         UserInfoDto userDetails = AuthMess.userDetails(baseInfo.getAuthentication());
         dataService.storeUserInformation(userDetails);

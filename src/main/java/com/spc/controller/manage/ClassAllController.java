@@ -104,9 +104,6 @@ public class ClassAllController extends Base {
 
         int departId = Integer.parseInt(departIdObject.toString());
 //        int departId = 8;
-        if (departId == 99){
-
-        }
 
         PageHelper.startPage(currentPage, pageSize);
         List<ClassAll> courses = classAllService.getClassAll(departId, academicYear, classSemester, courseId,
@@ -449,7 +446,7 @@ public class ClassAllController extends Base {
     @RequestMapping("/getTeacherOccupyTime")
     @ResponseBody
 //    classWeeks是0101的串
-    public boolean[][] getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, HttpServletRequest request) {
+    public Map getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
         String operatorId = httpSession.getAttribute("userId").toString();
         String operatorName = httpSession.getAttribute("username").toString();
