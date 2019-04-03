@@ -75,4 +75,5 @@ public interface ClassAllDao {
                                   @Param("selectDepartId") String selectDepartId);
 
     int addFirstClass(CourseAll courseAll);
+
 }

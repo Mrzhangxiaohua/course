@@ -26,7 +26,12 @@
        and flag=1
     </update>
 
-    <select id=" selectGradeExcel" resultType="map">
+    <select id="selectGradeExcel" resultType="map">
+       select *
+       from course.fileInfo
+       where fileInfoId=#{fileInfoId}
+    </select>
+    <select id="findById" resultType="com.spc.model.FileInfo">
        select *
        from course.fileInfo
        where fileInfoId=#{fileInfoId}

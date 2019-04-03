@@ -505,7 +505,7 @@ public class ClassAllController extends Base {
                 String weekTime=(String)tab.get("classDateDescription");
                 String [] weekTimes1=weekTime.split(",");
                 String[] weekdays={"  星期一  ","  星期二  ","  星期三  ","  星期四  ","  星期五  ","  星期六  ","  星期日  "};
-                String[] courseTime={"上1","上2","上3","上4","N1","N2","下5","下6","下7","下8","晚9","晚10","晚11"};
+                String[] courseTime={"上1","上2","上3","上4","下5","下6","下7","下8","晚9","晚10","晚11"};
                 for(int i=0;i<weekTimes1.length;i++)
                 {
                     String [] weekTimes=weekTimes1[i].split(":");

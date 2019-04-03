@@ -857,7 +857,6 @@ public class TeacherController extends Base {
                                            @RequestParam(required = false, defaultValue = "88888888") int classId){
 
         String teaId = (String) request.getSession().getAttribute("userId");
-        teaId="0002017115";
       /*  String jsonString = RequestPayload.getRequestPayload(request);
         System.out.println(jsonString);*/
         System.out.println(currentPage+"\n"+classId);
@@ -969,25 +968,18 @@ public class TeacherController extends Base {
         JSONObject json=jsonArray.getJSONObject(0);
         int weekth = (int) json.get("weekth");
         int classId = Integer.parseInt((String) json.get("classId"));
-        System.out.println(weekth);
-        System.out.println(classId);
         JSONArray studentjsonArray=json.getJSONArray("students");
         List<Map<String,Object>> commentList =new ArrayList<>();
-        System.out.println("studentjsonArray"+studentjsonArray);
         for (int i=0; i<studentjsonArray.length(); i++){
             JSONObject studentJson=studentjsonArray.getJSONObject(i);
-            System.out.println(studentJson);
             Map<String,Object> studentMap=new HashMap<>();
             studentMap.put("stuId",studentJson.getString("stuId"));
-            System.out.println(studentJson.getString("stuId"));
             for(int j=0;j<4;j++){
                 studentMap.put("score"+(j+1),studentJson.getString("score"+(j+1)));
             }
             studentMap.put("suggestion",studentJson.getString("comment"));
-            System.out.println(studentMap);
             commentList.add(studentMap);
         }
-        System.out.println("\ncommentList"+commentList);
 
         String teaId= (String) request.getSession().getAttribute("userId");
         String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
