@@ -337,9 +337,7 @@ public class ClassAllController extends Base {
 
         ExportParams params = new ExportParams();
         params.setTitle("课表");
-        System.out.println("before");
         Workbook workbook = ExcelExportUtil.exportExcel(params, CourseTableExcelDomain.class, liC);
-        System.out.println("after");
         try {
             workbook.write(response.getOutputStream());
         } catch (IOException e) {
@@ -347,7 +345,7 @@ public class ClassAllController extends Base {
         }
     }
 
-    /**
+    /**a'ge
      * 一键获取所有学院的上课课表 excel格式
      *
      * @param classSemester 春、秋、departId
@@ -504,7 +502,7 @@ public class ClassAllController extends Base {
                 String weekTime=(String)tab.get("classDateDescription");
                 String [] weekTimes1=weekTime.split(",");
                 String[] weekdays={"  星期一  ","  星期二  ","  星期三  ","  星期四  ","  星期五  ","  星期六  ","  星期日  "};
-                String[] courseTime={"上1","上2","上3","上4","N1","N2","下5","下6","下7","下8","晚9","晚10","晚11"};
+                String[] courseTime={"上1","上2","上3","上4","下5","下6","下7","下8","晚9","晚10","晚11"};
                 for(int i=0;i<weekTimes1.length;i++)
                 {
                     String [] weekTimes=weekTimes1[i].split(":");

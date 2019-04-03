@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.spc.dao.OralDao">
+
+    <insert id="insertOral" useGeneratedKeys="true" keyProperty="id" flushCache="true">
+        insert into oral(teaId,teaName,testTime,place,stuLimit,curChoose,
+                flag,yearSemester,operatorId,operatorName,examRoom)
+        values(#{teaId},#{teaName},#{time},#{place},#{stuLimit},#{curChoose},
+               #{flag},#{yearSemester},#{operatorId},#{operatorName},#{examRoom})
+    </insert>
+
+    <update id="deleteOral">
+        update oral
+        set flag=0
+        AND operatorId=#{operatorId}
+        AND  operatorName=#{operatorName}
+        where id=#{id}
+
+    </update>
+
+    <update id="updateOral">
+        update oral
+        set teaId=#{teaId},teaName=#{teaName}, testTime=#{testTime},examRoom=#{examRoom},
+        operatorId=#{operatorId},operatorName=#{operatorName},stuLimit=#{stuLimit},place=#{place}
+        where id=#{id}
+
+    </update>
+
+    <insert id="insertOralChoose" useGeneratedKeys="true" keyProperty="id" flushCache="true">
+        insert into oral_choose(oralId, stuId, stuName)
+        values(#{oralId},#{stuId},#{stuName})
+    </insert>
+
+    <update id="addOralChoose">
+        update oral
+        set curChoose=curChoose+1
+        where id=#{oralId}
+    </update>
+
+    <select id="selectById" resultType="com.spc.model.Oral">
+        select *
+        from oral
+        where id=#{oralId}
+    </select>
+
+    <delete id="deleteOralChoose">
+        delete *
+        from oral_choose
+        where oralId=#{oralId}
+        and stuId=#{stuId}
+    </delete>
+
+    <select id="selectAllOral" resultType="Map">
+        select *
+        from oral
+        where yearSemester=#{currentSemester}
+    </select>
+
+    <select id="selectStudentsByTeaId" resultType="Map">
+        select *
+        from oral o
+        join oral_choose  b
+        on o.id=b.oralId
+        left join XjtuUserInfo c
+        on b.stuId=c.userno
+        where o.curChoose=#{currentSemester}
+        and o.teaId=#{teaId}
+    </select>
+
+</mapper>

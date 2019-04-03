@@ -263,6 +263,12 @@
         and  a.classSemester like #{classSemester}
     </select>
 
+    <insert id="addFirstClass" useGeneratedKeys="true" keyProperty="id" flushCache="true"
+            parameterType="com.spc.model.CourseAll">
+      insert into course.ClassAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,teachingTeamIds,teachingTeamNames)
+      values(#{departId},#{courseId},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},#{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames})
+    </insert>
+
 
 
 </mapper>

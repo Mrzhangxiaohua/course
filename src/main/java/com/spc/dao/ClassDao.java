@@ -1,5 +1,6 @@
 package com.spc.dao;
 
+import com.spc.model.ClassAll;
 import com.spc.model.ClassDomain;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
@@ -76,4 +77,9 @@ public interface ClassDao {
     List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId);
 
     Map findClassInfo(@Param("classStr") String classStr);
+    Map getClassInfo(Integer id);
+
+    int updateClass( ClassAll classAll);
+
+    int updateGradeFlag(@Param("classId") int classId);
 }

@@ -6,6 +6,7 @@ import com.spc.controller.Base;
 import com.spc.dao.*;
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
+import com.spc.model.FileInfo;
 import com.spc.model.StudentApplicationDomain;
 import com.spc.service.manage.ManageService;
 import com.spc.util.MakeTimeTable;
@@ -170,12 +171,6 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public void deleteCourseRecord(int classId) {
-        classDao.delete(classId);
-    }
-
-
-    @Override
     public int addCourseStudent(String stuId, String classId) {
 //        String newStr = classStr.replace("(", ",").replace(")", "");
 //        String[] strs = newStr.substring(0, newStr.length() - 1).split(",");
@@ -225,17 +220,6 @@ public class ManageServiceImpl extends Base implements ManageService {
     public List findStudentByStudentId(int pageSize, int currentPage, String stuId) {
         PageHelper.startPage(currentPage, pageSize);
         return studentDao.findStudentByStudentId(stuId);
-    }
-    @Override
-    public List<ClassApplicationDomain> checkedClassMessage(String shenQingRenId, String className, int tabKey, String shenqingrenname) {
-        return classApplicationDao.findallClass(shenQingRenId, className, tabKey, shenqingrenname);
-    }
-
-    @Override
-    public List<ClassApplicationDomain> checkedClassMessageAndDate(String shenQingRenId, String className, Date date, int tabKey, String shenqingrenname) {
-        java.sql.Date dateSql = new java.sql.Date(date.getTime());
-        System.out.println("时间time是======" + dateSql);
-        return classApplicationDao.findallClassWithDate(shenQingRenId, className, date, tabKey, shenqingrenname);
     }
 
     @Override
@@ -362,9 +346,9 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public int addTemplateFileInfo(String teaId, String fileName, String path, int type, String dep, String date, int flag) {
+    public int addTemplateFileInfo(String teaId, String fileName, String pathName, int type, String dep, String date, int flag) {
         fileInfoDao.updateFlagZero(type);
-        return fileInfoDao.insertFileInfo(teaId, fileName, path, type, dep, date, flag);
+        return fileInfoDao.insertFileInfo(teaId, fileName, pathName, type, dep, date, flag);
 
     }
 
@@ -372,5 +356,15 @@ public class ManageServiceImpl extends Base implements ManageService {
     public int addGradePercent(int knsk, int xbsj, int zzxx, String userId, String date) {
         gradePercentDao.updateFlagZero();
         return gradePercentDao.insertGradePercent(knsk,xbsj,zzxx,userId,date);
+    }
+
+    @Override
+    public FileInfo findAppFile(int fileInfoId) {
+        return fileInfoDao.findById(fileInfoId);
+    }
+
+    @Override
+    public int deleteCourseAll(Integer id) {
+        return courseAllDao.delete(id);
     }
 }

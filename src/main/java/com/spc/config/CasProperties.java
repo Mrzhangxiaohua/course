@@ -45,7 +45,7 @@ public class CasProperties {
         return casServerLogoutUrl;
     }
 
-    public void setCasServerLogoutUrl(String casServerLogoutUrl) {
+    public void setCa4sServerLogoutUrl(String casServerLogoutUrl) {
         this.casServerLogoutUrl = casServerLogoutUrl;
     }
 

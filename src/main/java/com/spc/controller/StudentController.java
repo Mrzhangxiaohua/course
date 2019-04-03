@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -290,7 +291,16 @@ public class StudentController extends Base{
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
-            return studentService.deleteCourse(classId, (String) request.getSession().getAttribute("userId"));
+            List<Map<String,Object>> waitingList=studentService.findWaiting(classId);
+            studentService.deleteCourse(classId, (String) request.getSession().getAttribute("userId"));
+            if(waitingList.size()!=0) {
+                String stuId= (String) waitingList.get(0).get("stuId");
+                int id= (int) waitingList.get(0).get("id");
+                studentService.addyuanzi(classId,stuId);
+                studentService.updateWaitingFlag(id);
+                return 1;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -487,5 +497,36 @@ public class StudentController extends Base{
         return res;
     }
 
+    @RequestMapping("waiting/apply")
+    @ResponseBody
+    public int waitingApply( HttpSession session, @RequestParam int classId){
+        String stuId= (String) session.getAttribute("userId");
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date=sdf.format(new Date());
+        return studentService.addWaiting(stuId,classId,1,date);
+    }
+
+    @RequestMapping("waiting/delete")
+    @ResponseBody
+    public int waitingDelete( HttpSession session, @RequestParam int id){
+
+        return studentService.deleteWaiting(id);
+    }
+
+/*
+    @RequestMapping("waiting/lookUp")
+    @ResponseBody
+    public Map<String,Object> waitingFind( HttpSession session,@RequestParam int classId){
+        String stuId= (String) session.getAttribute("userId");
+        return studentService.lookUpWaitingOrder(stuId,classId);
+    }
+*/
+
+    @RequestMapping("waiting/findStatus")
+    @ResponseBody
+    public Map<String,Object>  findStatus( HttpSession session,@RequestParam int id){
+        String stuId= (String) session.getAttribute("userId");
+        return studentService.findWaitStatus(id);
+    }
 }
 

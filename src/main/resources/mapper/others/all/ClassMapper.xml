@@ -227,11 +227,17 @@
     </delete>
 
     <select id="getClassId" resultType="map">
-        select classId
+        select classId,classChooseNum
         from course.Course
         where classAllId = #{classAllId}
     </select>
 
+
+    <select id="getClassInfo" resultType="map">
+        select *
+        from course.Course
+        where classAllId = #{classAllId}
+    </select>
     <select id="haveStuInClass" resultType="map">
         select stuId,classId
         from course.Course_choose
@@ -332,4 +338,9 @@
         from course.Course
         where classId = #{classStr}
     </select>
+
+    <update id="updateGradeFlag">
+        update Course set isGrade=1
+        where classId=#{classId}
+    </update>
 </mapper>
