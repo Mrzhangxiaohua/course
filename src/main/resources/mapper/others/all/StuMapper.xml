@@ -191,5 +191,8 @@
         WHERE stuId = #{stuId} AND classId = #{classId}
     </select>
 
+    <select id="finSchoolDistrict" resultType="int">
+        select XQDM from course.XjtuUserInfo where userno = #{stuId}
+    </select>
 
 </mapper>

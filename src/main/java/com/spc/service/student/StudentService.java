@@ -41,4 +41,6 @@ public interface StudentService {
 
     public List<Map<String, Object>> showCommentList(String stuId, String classId);
 
+    int finSchoolDistrict(String stuId);
+
 }
