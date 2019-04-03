@@ -849,8 +849,11 @@ public class ManageController extends Base {
             logger.info("文件的后缀名为：" + suffixName);
             // 设置文件存储路径
             String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
-            String path = filePath+fileName;
-            File dest = new File(path);
+            SimpleDateFormat sdf2=new SimpleDateFormat("yyMMddHHmmss");
+            String str=sdf2.format(new Date());
+            //文件路径+原文件名+时间戳+随机数防止重名文件覆盖，下载文件时按照该路径下载;
+            String pathName = filePath+fileName+str+(new Random().nextInt(100));
+            File dest = new File(pathName);
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();// 新建文件夹
@@ -858,7 +861,7 @@ public class ManageController extends Base {
             file.transferTo(dest);// 文件写入
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            manageService.addTemplateFileInfo(teaId,fileName,filePath,1,dep,date,1);
+            manageService.addTemplateFileInfo(teaId,fileName,pathName,1,dep,date,1);
             return "上传成功";
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -872,7 +875,7 @@ public class ManageController extends Base {
     public String downloadAppFile(HttpServletResponse response, @RequestParam("fileInfoId") int fileInfoId){
         FileInfo fileInfo=manageService.findAppFile(fileInfoId);
         String fileName=fileInfo.getFileName();
-        String path=(String)fileInfo.getPath();
+        String path=fileInfo.getPath();
         File file=new File(path);
         if(file.exists()){
             response.setContentType("application/force-download");

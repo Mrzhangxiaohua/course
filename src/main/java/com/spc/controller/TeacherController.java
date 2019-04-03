@@ -1010,7 +1010,7 @@ public class TeacherController extends Base {
         Map<String, Object> fileInfo=teacherService.findTemplateFile();
         String fileName=(String)fileInfo.get("fileName");
         String path=(String)fileInfo.get("path");
-        File file=new File(path+fileName);
+        File file=new File(path);
         if(file.exists()){
             response.setContentType("application/force-download");
             try {
@@ -1071,8 +1071,11 @@ public class TeacherController extends Base {
 
             // 设置文件存储路径
             String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
-            String path = filePath + fileName;
-            File dest = new File(path);
+            SimpleDateFormat sdf2=new SimpleDateFormat("yyMMddHHmmss");
+            String str=sdf2.format(new Date());
+            //文件路径+原文件名+时间戳+随机数防止重名文件覆盖，下载文件时按照该路径下载;
+            String pathName = filePath+fileName+str+(new Random().nextInt(100));
+            File dest = new File(pathName);
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();// 新建文件夹
@@ -1080,7 +1083,7 @@ public class TeacherController extends Base {
             file.transferTo(dest);// 文件写入
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            int fileInfoId=teacherService.addFileInfo(teaId,fileName,path,2,dep,date,1);
+            int fileInfoId=teacherService.addFileInfo(teaId,fileName,pathName,2,dep,date,1);
             res.put("status","上传成功");
             res.put("fileInfoId",fileInfoId);
             return res;
