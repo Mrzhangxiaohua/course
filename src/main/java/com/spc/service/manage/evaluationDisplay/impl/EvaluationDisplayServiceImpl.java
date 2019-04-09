@@ -50,7 +50,7 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
             int classId = cd.getClassId();
             String className = cd.getClassName() + cd.getClassSemester();;
             String classNum = String.valueOf(cd.getClassNum());
-            String allClassName = cd.getDepartName() + cd.getClassName();
+            String allClassName = cd.getDepartName() + cd.getClassName() + cd.getClassSemester();
 
             boolean in = false;
             if (departTemp.size() != 0) {
@@ -111,13 +111,13 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
             }
         }
 
-        logger.info(String.valueOf(res));
+//        logger.info(String.valueOf(res));
         return res;
     }
 
     public Map creatClassOrDepartMap(String className, int classId) {
         Map tempChild2 = new HashMap();
-        tempChild2.put("value", classId);
+        tempChild2.put("value", 88888888);
         tempChild2.put("label", className);
         List<Map> res = new ArrayList<>();
         tempChild2.put("children", res);
