@@ -247,10 +247,12 @@ public class ManageServiceImpl extends Base implements ManageService {
         for (ClassDomain cd : classes) {
             //判断是否这个学院
             String departName = cd.getDepartName();
+            int departId = cd.getDepartId();
+
             int classId = cd.getClassId();
             String className = cd.getClassName();
             String classNum = String.valueOf(cd.getClassNum());
-            int departId = cd.getDepartId();
+
             String allClassName = cd.getDepartName() + cd.getClassName();
 
             boolean in = false;
@@ -285,8 +287,6 @@ public class ManageServiceImpl extends Base implements ManageService {
                     }
                 }
                 if (!in2) classTemp.add(allClassName);
-//                System.out.println(allClassName);
-                //没有这个课程
                 if (!in2) {
 
                     Map classM = creatClassOrDepartMap(className, classId);
