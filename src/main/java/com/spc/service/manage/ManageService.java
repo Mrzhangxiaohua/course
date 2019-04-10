@@ -2,8 +2,8 @@ package com.spc.service.manage;
 
 import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
-import com.spc.model.FileInfo;
 import com.spc.model.StudentApplicationDomain;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -28,7 +28,7 @@ public interface ManageService {
     int deleteCourse(int classId,String stuId);
 
     void addCourse(ClassDomain cd);
-
+    void deleteCourseRecord(int classId);
 
 
     int addCourseStudent(String stuId ,String classId);
@@ -43,6 +43,10 @@ public interface ManageService {
 
     List findStudentByStudentId(int pageSize, int currentPage, String stuId);
 
+    List<ClassApplicationDomain> checkedClassMessage(String teaId, String className, int tabKey,String shenqingrenname);
+
+    List<ClassApplicationDomain> checkedClassMessageAndDate(String teaId, String className, Date date,int tabKey,String shenqingrenname);
+
     int addTimeSwitch(int timeSwitch);
     int updateTimeSwitch(int timeSwitch);
     int updateTimeSwitch2(String startDate,String endDate);
@@ -51,11 +55,41 @@ public interface ManageService {
 
     int addSchoolCalendar(String year,String firstWeek, String semester);
 
-    int addTemplateFileInfo(String teaId, String fileName, String pathName,int type,String dep, String date,int flag);
+    int addTemplateFileInfo(String teaId, String fileName, String path,int type,String dep, String date,int flag);
 
     int addGradePercent(int knsk, int xbsj, int zzxx, String userId, String date);
 
-    FileInfo findAppFile(int fileInfoId);
+    List<Map<String,Object>> findAllStudent(int moduleId,String academicYear,int submit,int depId,String stuId);
 
-    int deleteCourseAll(Integer id);
+
+    List<Map<String,Object>> findStuById(String stuId,int modelId);
+
+    void updateScore(String stuId,float grade,int modelId,int status);
+
+    void insertStu(String stuId,String academicYear);
+
+    List<Map<String,Object>> findAlldepartment();
+
+    Map insertGradeExcel(int moduleId, int fileInfoId,String academicYear);
+
+    int findIsGrade(int moduleId,String academicYear);
+
+    List<Map<String,Object>> findXbsjStudents(int classId);
+
+    List<Map<String,Object>> findKnskStudents(String classId);
+
+    void updateXbsjChecked(int slassId,String stuId,int isChecked);
+
+    void updateKnskChecked(String classId,String stuId,int isChecked);
+
+   void  updateXbsjSubmit(int classId);
+
+    void updateKnskSubmit(String classId);
+
+    List<Map<String,Object>> findAllScore(int departId,String stuId);
+
+    void uploadAllGradeOther(String stuId,float grade,int moduleId);
+
+    void updateIsSubmit(int moduleId);
+
 }

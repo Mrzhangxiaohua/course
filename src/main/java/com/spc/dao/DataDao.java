@@ -12,6 +12,4 @@ public interface DataDao {
     int selectXuanKeStu(@Param("stuId") String stuId);
 
     List<Map<String, String>> allXuanKeStu();
-
-    List<Integer> findDepartId(@Param("departCode")String departCode);
 }

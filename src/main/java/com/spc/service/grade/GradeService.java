@@ -15,4 +15,9 @@ public interface GradeService {
     public int addScore(int classId, String stuId, int score);
 
     List<Map<String, Object>> selectGetTitle();
+
+    void uploadAllGradeKnsk(String stuId,float grade);
+
+    void uploadAllGradeXbsj(String stuId,float grade);
+
 }

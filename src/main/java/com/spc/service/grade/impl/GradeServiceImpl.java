@@ -59,6 +59,17 @@ public class GradeServiceImpl extends Base implements GradeService {
     }
 
     @Override
+    public void uploadAllGradeKnsk(String stuId, float grade) {
+        gradeDao.uploadAllGradeKnsk(stuId,grade);
+    }
+
+    @Override
+    public void uploadAllGradeXbsj(String stuId, float grade) {
+        gradeDao.uploadAllGradeXbsj(stuId,grade);
+    }
+
+
+    @Override
     public int addScore(int classId, String stuId, int score) {
         return gradeDao.addScore(stuId, classId, score);
     }

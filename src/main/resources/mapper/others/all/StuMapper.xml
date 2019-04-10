@@ -28,7 +28,7 @@
 
     <select id="findStudent" resultType="map" useCache="false">
         select DISTINCT
-        a.stuId,b.username as stuName,a.xbsjGrade,c.className,b.tutoremployeeid,b.speciality,b.dep as departName,c.teaName,c.classNum,a.knskGrade,a.wlzzxxGrade
+        a.stuId,b.username as stuName,a.xbsjGrade,a.isChecked,c.className,b.tutoremployeeid,b.speciality,b.dep as departName,c.teaName,c.classNum,a.knskGrade,a.wlzzxxGrade
         from course.Course_choose a
         left join course.XjtuUserInfo b
         on a.stuId = b.userno
@@ -45,7 +45,7 @@
 
     <select id="findStudentByStudentId" resultType="map">
         select DISTINCT
-        a.stuId,b.username as stuName,a.xbsjGrade,c.className,b.tutoremployeeid,b.speciality,b.dep as departName,c.teaName,c.classNum,a.knskGrade,a.wlzzxxGrade,a.classId
+        a.stuId,b.username as stuName,a.xbsjGrade,a.isChecked,c.className,b.tutoremployeeid,b.speciality,b.dep as departName,c.teaName,c.classNum,a.knskGrade,a.wlzzxxGrade,a.classId
         from course.Course_choose a
         left join course.XjtuUserInfo b
         on a.stuId = b.userno
@@ -191,8 +191,9 @@
         WHERE stuId = #{stuId} AND classId = #{classId}
     </select>
 
-    <select id="finSchoolDistrict" resultType="int">
-        select XQDM from course.XjtuUserInfo where userno = #{stuId}
-    </select>
+
+
+
+
 
 </mapper>

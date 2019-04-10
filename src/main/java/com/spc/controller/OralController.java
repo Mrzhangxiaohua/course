@@ -24,6 +24,7 @@ import java.util.Map;
  */
 
 @Controller
+
 public class OralController extends Base{
     @Autowired
     OralService oralService;
