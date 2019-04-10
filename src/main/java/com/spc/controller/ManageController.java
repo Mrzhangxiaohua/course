@@ -1262,7 +1262,7 @@ public class ManageController extends Base {
     @ResponseBody
     public ModelAndView downloadOtherScore(@RequestParam("moduleId") int moduleId,
                                            @RequestParam("academicYear") String academicYear,
-                                           @RequestParam(required = false, defaultValue = "88888888") int depId,
+                                           @RequestParam(required = false, defaultValue = "88888888") int departId,
                                            @RequestParam(required = false, defaultValue = "88888888") String stuId,
                                             HttpSession session, HttpServletResponse response) {
         String moduleName=null;
@@ -1277,7 +1277,7 @@ public class ManageController extends Base {
         }
         response = ResponseWrap.setName(response, academicYear + moduleName + "班学生成绩单", "pdf");
         int submit=1;
-        List<Map<String,Object>> students = manageService.findAllStudent(moduleId,academicYear,submit,depId,stuId);
+        List<Map<String,Object>> students = manageService.findAllStudent(moduleId,academicYear,submit,departId,stuId);
         Map res = new HashMap();
         res.put("data", students);
         res.put("academicYear",academicYear);
