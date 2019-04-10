@@ -33,9 +33,9 @@ import java.util.Map;
 public class ClassAllServiceImpl extends Base implements ClassAllService {
 
     /**
-     * 每天一共13个学时, 4+2+4+3
+     * 每天一共11个学时, 4+4+3
      */
-    private static final int CLASS_HOURS_PER_DAY = 13;
+    private static final int CLASS_HOURS_PER_DAY = 11;
     /**
      * 每周一共7天
      */
@@ -115,6 +115,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             for (int k = 0; k < classDates.length; k++) {
                 String[] indexes = classDates[k].split(INDEX_SPLIT_CHAR);
                 int i = Integer.parseInt(indexes[0]);
+                if(i>=6){ i=i-2;}
                 int j = Integer.parseInt(indexes[1]);
 
                 StringBuilder sb = new StringBuilder();

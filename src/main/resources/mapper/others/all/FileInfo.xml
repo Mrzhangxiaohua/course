@@ -12,7 +12,7 @@
     </select>
     <insert id="insertFileInfo" useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true" >
     insert into fileInfo(fileName, path, type, userId, department, time, flag )
-    values(#{fileName},#{path},#{type},#{teaId},#{dep},#{time},1)
+    values(#{fileName},#{pathName},#{type},#{teaId},#{dep},#{time},1)
     </insert>
 
     <insert id="insertFile" parameterType="com.spc.model.FileInfo" useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true"  keyColumn="fileInfoId">
@@ -26,7 +26,12 @@
        and flag=1
     </update>
 
-    <select id=" selectGradeExcel" resultType="map">
+    <select id="selectGradeExcel" resultType="map">
+       select *
+       from course.fileInfo
+       where fileInfoId=#{fileInfoId}
+    </select>
+    <select id="findById" resultType="com.spc.model.FileInfo">
        select *
        from course.fileInfo
        where fileInfoId=#{fileInfoId}

@@ -4,6 +4,7 @@ import com.spc.model.CourseAll;
 import com.spc.model.CourseApplication;
 import com.spc.model.TeacherInfo;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +19,20 @@ public interface CourseAllService {
 
     int ModifyCourseAll(CourseAll courseAll, String userId, String username);
 
-    List<CourseAll> getCourseAllByYearAndDep(String year, int depId);
-
-    int addYearCourseAll(List<CourseAll> courseList, String userId, String username,String year);
 
     int addCourseApp(CourseApplication courseApp);
 
-    List<Map<String,Object>> findCourseApp(String date, String operatorId, String operatorName, int departId);
+    int checkCourseApp(List<Integer>idList, int result,int departId,String username, String userId);
 
-    int checkCourseApp(List<Integer>idList, int result,int departId);
+    List<CourseApplication> findAllCourseApp(String operatorId,String operatorName,String operateDate,int tabKey);
 
-    List<CourseApplication> findAllCourseApp();
+    List<CourseApplication> findAllCourseApp(String operatorId,String operatorName,int tabKey);
+
+    int addCourseAll(CourseAll courseAll);
+
+    List findCourseAll(String academicYear, String courseId, String courseName, int departId);
+
+    CourseAll findCourseAll(int id);
+
+    int makeSureCourseAll(String academicYear);
 }

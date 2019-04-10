@@ -968,4 +968,5 @@ public class UserInfoDto implements java.io.Serializable, UserDetails {
                         _javaType, _xmlType, typeDesc);
     }
 
+
 }

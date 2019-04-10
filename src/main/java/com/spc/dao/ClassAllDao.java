@@ -78,4 +78,5 @@ public interface ClassAllDao {
     void updateStuNumUpperLimit(@Param("classAllId") int classAllId, @Param("stuNumUpperLimit") int stuNumUpperLimit);
 
     int addFirstClass(CourseAll courseAll);
+
 }

@@ -22,7 +22,7 @@ public class StudentTablePdfView extends AbstractPdfView {
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
         int studentSwitch = (int) model.get("student");
-        // 拿到传过来的课程结构数据，12行7列，用于下面pdf的生成
+        // 拿到传过来的课程结构数据，11行7列，用于下面pdf的生成
         String[][] tables = (String[][]) map.get("data");
 
         System.out.println(tables);
@@ -107,15 +107,15 @@ public class StudentTablePdfView extends AbstractPdfView {
             String[] t = tables[i];
             PdfPCell cell;
 //            cell = new PdfPCell(new Phrase(Integer.toString(i  + 1) + "-" + Integer.toString(i + 2) + "节", textFont));
-            if (i<4){
+//            if (i<4){
                 cell = new PdfPCell(new Phrase(Integer.toString(i + 1) + "节", textFont));
-            }else if(i==4){
-                cell = new PdfPCell(new Phrase("N1"  + "节", textFont));
-            }else if(i == 5){
-                cell = new PdfPCell(new Phrase("N2"  + "节", textFont));
-            }else {
-                cell = new PdfPCell(new Phrase(Integer.toString(i - 1) + "节", textFont));
-            }
+//            }else if(i==4){
+//                cell = new PdfPCell(new Phrase("N1"  + "节", textFont));
+//            }else if(i == 5){
+//                cell = new PdfPCell(new Phrase("N2"  + "节", textFont));
+//            }else {
+//                cell = new PdfPCell(new Phrase(Integer.toString(i - 1) + "节", textFont));
+//            }
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(cell);

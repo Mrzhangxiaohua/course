@@ -30,7 +30,6 @@ public class StuAdjustController extends Base {
     StuAdjustService stuAdjustService;
 
     // 获取所有开课季节的课程
-
     @RequestMapping("/getAllCourse")
     @ResponseBody
     public List<Map<String, Object>> getAllCourse(@RequestParam(required = false, defaultValue = "") String departId){

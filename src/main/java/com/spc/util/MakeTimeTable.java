@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MakeTimeTable extends Base {
     public static String[][] makeBigTable(List<HashMap<String, Object>> lis, int student) {
-        String temp[][] = new String[13][7];
+        String temp[][] = new String[11][7];
         for (HashMap<String, Object> li : lis) {
             String date = (String) li.get("classDateDescription");
             String classPlace = (String) li.get("classPlace");
@@ -25,6 +25,7 @@ public class MakeTimeTable extends Base {
 
                 Integer t = Integer.parseInt(ints[0]);//星期几
                 Integer l = Integer.parseInt(ints[1]);//第几节开始
+                if(l>=7){l=l-2;}
                 Integer z = Integer.parseInt(ints[2]);//上几节课
 
                 int r = t;

@@ -21,14 +21,8 @@
 
     <update id="updateOral">
         update oral
-        set teaId=#{teaId}
-        and teaName=#{teaName}
-        and testTime=#{time}
-        and examRoom=#{examRoom}
-        and operatorId=#{operatorId}
-        and operatorName=#{operatorName}
-        and stuLimit=#{stuLimit}
-        and place=#{place}
+        set teaId=#{teaId},teaName=#{teaName}, testTime=#{testTime},examRoom=#{examRoom},
+        operatorId=#{operatorId},operatorName=#{operatorName},stuLimit=#{stuLimit},place=#{place}
         where id=#{id}
 
     </update>
