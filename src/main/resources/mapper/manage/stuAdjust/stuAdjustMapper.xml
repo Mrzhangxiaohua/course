@@ -27,6 +27,10 @@
         </set>
         UPDATE course.Course b
         <set>
+            b.classChooseNum = b.classChooseNum -1 where b.classId = #{oldClassId};
+        </set>
+        UPDATE course.Course b
+        <set>
             b.classChooseNum = b.classChooseNum + 1 where b.classId = #{newClassId};
         </set>
     </update>

@@ -104,9 +104,6 @@ public class ClassAllController extends Base {
 
         int departId = Integer.parseInt(departIdObject.toString());
 //        int departId = 8;
-        if (departId == 99){
-
-        }
 
         PageHelper.startPage(currentPage, pageSize);
         List<ClassAll> courses = classAllService.getClassAll(departId, academicYear, classSemester, courseId,

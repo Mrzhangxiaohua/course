@@ -21,13 +21,13 @@ import java.util.Map;
  * @Description:
  * @Date: 2019/1/24 11:10
  */
-
-@RequestMapping("/manage")
 @Controller
+@RequestMapping("/manage")
 
 public class StuAdjustController extends Base {
 
-    @Autowired StuAdjustService stuAdjustService;
+    @Autowired
+    StuAdjustService stuAdjustService;
 
     // 获取所有开课季节的课程
 
@@ -43,8 +43,10 @@ public class StuAdjustController extends Base {
     public int moveStudent(HttpServletRequest request){
         try {
             JSONObject obj = new JSONObject(RequestPayload.getRequestPayload(request));
+            logger.info("接收到的对象信息为："+obj);
             // 1. 需要获取到学生ID，目前的班级classId，要调整到的班级classId
-            JSONArray stuId = obj.getJSONArray("studId");
+            JSONArray stuId = obj.getJSONArray("stuList");
+            logger.info("解析到的学号信息为："+stuId);
             Integer oldClassId = obj.getInt("oldClassId");
             Integer newClassId = obj.getInt("newClassId");
             // 2. 根据获得的信息进行调整班级

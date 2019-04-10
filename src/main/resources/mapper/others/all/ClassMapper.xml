@@ -87,7 +87,8 @@
                 and a.classModuleNum = #{modelsId}
             </if>
             <if test="className!=null and className!='' ">
-                and a.className like "%"#{className}"%"
+                <bind name="classNameLike" value="'%'+className+'%'"/>
+                and a.className like #{classNameLike}
             </if>
             <if test="teaName!=null and teaName!='' ">
                 and a.teaName like "%"#{teaName}"%"
