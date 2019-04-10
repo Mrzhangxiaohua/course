@@ -128,8 +128,8 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<Map<String, Object>> findTeachCourse(String teacherId) {
-        return classDao.findTeachCourse(teacherId);
+    public List<Map<String, Object>> findTeachCourse(String teacherId,String academicYear) {
+        return classDao.findTeachCourse(teacherId,academicYear);
     }
 
     @Override
@@ -162,13 +162,178 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public void updateXbsjScore(int classId, String stuId, int xbsjGrade) {
+    public void updateXbsjScore(int classId, String stuId, float xbsjGrade) {
         classDao.updateXbsjScore(classId,stuId,xbsjGrade);
     }
 
     @Override
     public void updateIsGrade(int classId) {
         classDao.updateIsGrade(classId);
+    }
+
+    @Override
+    public List findClassIds() {
+       return classDao.findClassIds();
+    }
+
+
+    @Override
+    public List<Map<String, Object>> findKnskStudents(String JXBID) {
+        return classDao.findKnskStudents(JXBID);
+    }
+
+    @Override
+    public int findKnskIsGrade(String JXBID) {
+        return  classDao.findKnskIsGrade(JXBID);
+    }
+
+    @Override
+    public List<Map<String, Object>> findStudentsList() {
+        return  classDao.findStudentsList();
+    }
+
+
+    @Override
+    public void updateKnskGradeFlag(String JXBID) {
+        classDao.updateKnskGradeFlag(JXBID);
+    }
+
+    @Override
+    public Map<String, Object> findKnskClassById(String JXBID) {
+        Map cl=classDao.findKnskClassById(JXBID);
+        if(cl.get("KCH").equals("121066")) {
+            cl.put("KCM","学术英语(一)");
+        }
+        if(cl.get("KCH").equals("121067")) {
+            cl.put("KCM","学术英语(二)");
+        }
+        if(cl.get("KCH").equals("122036")) {
+            cl.put("KCM","学术英语写作");
+        }
+        return cl;
+
+    }
+
+    @Override
+    public List<Map<String, Object>> findAllXbsjCourse(int departId, String academicYear,String courseId,String className,String classNum,String teaName,int currentTab) {
+        List<Map<String, Object>> courses=classDao.findAllXbsjCourse(departId,academicYear,courseId,className,classNum,teaName);
+        List<Map<String, Object>> res=new ArrayList<>();
+        if(courses.size()==0)
+            return courses;
+        for(Map course:courses) {
+            int classId = (int) course.get("classId");
+            List<Map<String, Object>> students = studentDao.findStudent(classId);
+            int uncheckedNum = 0;
+            int checkedNum = 0;
+            int recheckedNum = 0;
+            for (Map student : students) {
+                if ((int) student.get("isChecked") == 1)
+                    checkedNum = checkedNum + 1;
+                else if ((int) student.get("isChecked") == 2)
+                    recheckedNum = recheckedNum + 1;
+                else
+                    uncheckedNum = uncheckedNum + 1;
+            }
+            if(checkedNum!=0 || recheckedNum!=0)
+                course.put("isSubmit",1);
+            if(recheckedNum!=0)
+                course.put("status",2);
+            else if(uncheckedNum!=0)
+                course.put("status",0);
+            else
+                course.put("status",1);
+            course.put("uncheckedNum", uncheckedNum);
+            course.put("checkedNum", checkedNum);
+            course.put("recheckedNum", recheckedNum);
+            course.put("moduleId",0);
+        }
+        if(currentTab==3)
+            return courses;
+        for(Map stu:courses)
+        {
+            if((int)stu.get("status")==currentTab)
+                res.add(stu);
+        }
+        return res;
+    }
+
+    @Override
+    public List<Map<String, Object>> findAllKnskCourse( String academicYear,String courseId,String className,String classNum,String teaName,int currentTab) {
+        List<Map<String, Object>> courses=classDao.findAllKnskCourse(academicYear,courseId,className,classNum,teaName);
+        List<Map<String, Object>> res=new ArrayList<>();
+        if(courses.size()==0)
+            return courses;
+        for(Map course:courses) {
+            String classId = (String) course.get("classId");
+            String KCH= (String) course.get("courseId");
+            if(KCH.equals("121066")) {
+                course.put("className","学术英语(一)");
+            }
+            else if(KCH.equals("121067")) {
+                course.put("className","学术英语(二)");
+            }
+            else {
+                course.put("className","学术英语写作");
+            }
+            String semesterName= (String) course.get("semesterName");
+            if(semesterName.substring(9,11).equals("-1"))
+                course.put("semesterName",semesterName.substring(0,9)+"秋季");
+            else
+                course.put("semesterName",semesterName.substring(0,9)+"春季");
+            List<Map<String, Object>> students = classDao.findKnskStudents(classId);
+            int uncheckedNum = 0;
+            int checkedNum = 0;
+            int recheckedNum = 0;
+            for (Map student : students) {
+                if ((int) student.get("isChecked") == 1)
+                    checkedNum = checkedNum + 1;
+                else if ((int) student.get("isChecked") == 2)
+                    recheckedNum = recheckedNum + 1;
+                else
+                    uncheckedNum = uncheckedNum + 1;
+            }
+            if(checkedNum!=0 || recheckedNum!=0)
+                course.put("isSubmit",1);
+            if(recheckedNum!=0)
+                course.put("status",2);
+            else if(uncheckedNum!=0)
+                course.put("status",0);
+            else
+                course.put("status",1);
+            course.put("uncheckedNum", uncheckedNum);
+            course.put("checkedNum", checkedNum);
+            course.put("recheckedNum", recheckedNum);
+            course.put("moduleId",1);
+            course.put("departName","外国语学院");
+        }
+        if(currentTab==3)
+            return courses;
+        for(Map stu:courses)
+        {
+            if((int)stu.get("status")==currentTab)
+                res.add(stu);
+        }
+        return res;
+    }
+
+    @Override
+    public void updateXbsjChecked(int classId,String stuId) {
+        classDao.updateXbsjChecked(classId,stuId);
+    }
+
+    @Override
+    public void updateKnskChecked(String classId,String stuId) {
+        classDao.updateKnskChecked(classId,stuId);
+    }
+
+    @Override
+    public List<Map<String, Object>> findStuXbsjClass(String stuId) {
+        return  classDao.findStuXbsjClass(stuId);
+    }
+
+    @Override
+    public Map<String, Object> findCourseById(int classId) {
+        return classDao.findCourseById(classId);
     }
 
 

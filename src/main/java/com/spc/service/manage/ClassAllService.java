@@ -43,6 +43,7 @@ public interface ClassAllService {
 
     List<Map<String, Object>> getOneDimRoomTimeTable(String roomName, String academicYear, String classSemester);
 
-
     void updateStuNumUpperLimit(int classAllId,int stuNumUpperLimit);
+
+    List<Map<String,Object>>  getKnskCourse(String academicYear);
 }

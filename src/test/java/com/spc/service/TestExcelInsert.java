@@ -1,13 +1,7 @@
+package com.spc.service;
+
 import com.spc.dao.FileInfoDao;
-import com.spc.model.ClassAll;
-import com.spc.service.classes.ClassService;
-import com.spc.service.manage.stuAdjust.StuAdjustService;
-import com.spc.service.student.StudentService;
-import com.spc.service.student.studentEvaluate.StudentEvaluateService;
-import com.spc.service.teacher.TeacherService;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

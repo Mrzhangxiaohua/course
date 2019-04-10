@@ -33,7 +33,8 @@ CREATE TABLE `v_t_xk_by_yjsyxkb`  (
   `KSJC` int(11) NULL DEFAULT NULL COMMENT '开始节次',
   `JSJC` int(11) NULL DEFAULT NULL COMMENT '结束节次',
   `BZ` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
-  `KXH` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课序号'
+  `KXH` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课序号',
+  `JXBID` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '教学班Id'
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '研究生已选课表' ROW_FORMAT = Compact;
 
 SET FOREIGN_KEY_CHECKS = 1;

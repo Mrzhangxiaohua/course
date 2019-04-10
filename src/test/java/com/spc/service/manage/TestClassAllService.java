@@ -1,11 +1,13 @@
 package com.spc.service.manage;
 
 import com.spc.model.ClassAll;
-import com.spc.service.manage.evaluationDisplay.EvaluationDisplayService;
+import com.spc.service.classes.ClassService;
 import com.spc.service.manage.stuAdjust.StuAdjustService;
+import com.spc.service.student.StudentService;
 import com.spc.service.student.studentEvaluate.StudentEvaluateService;
-import com.spc.service.wsdl.TeachersOccupyTimeWebservice.TeacherCurriculumInfo;
+import com.spc.service.teacher.TeacherService;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description:
@@ -31,12 +35,6 @@ public class TestClassAllService {
 
     @Autowired
     public StuAdjustService stuAdjustService;
-
-    @Autowired
-    ClassroomInfoService classroomInfoService;
-
-    @Autowired
-    public EvaluationDisplayService evaluationDisplayService;
 
     @Test
     public void testScheduleClass(){
@@ -109,9 +107,8 @@ public class TestClassAllService {
         studentEvaluateService.stuEvaluate(480, "3118105316",a,a,a);
         System.out.println("成功");
     }
-
     @Test
-    public void testEvaluationDisplay(){
-        evaluationDisplayService.getCascade();
+    public void testSelectList(){
+        studentEvaluateService.selectList("3118305556");
     }
 }

@@ -15,7 +15,7 @@ public interface OralDao {
     int deleteOral(@Param("id") String id, @Param("operatorId") String operatorId,@Param("operatorName") String operatorName);
 
     int updateOral(@Param("id") int id,@Param("teaId") String teaId,@Param("teaName") String teaName,
-                   @Param("testTime") String time, @Param("examRoom") String examRoom,@Param("place") String place,
+                   @Param("time") String time, @Param("examRoom") String examRoom,@Param("place") String place,
                    @Param("stuLimit") int stuLimit, @Param("operatorId") String operatorId,
                    @Param("operatorName") String operatorName);
 

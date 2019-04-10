@@ -7,10 +7,6 @@
     id,departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,
     teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,operatorId,operatorName,operateDate
   </sql>
-    <sql id="courseApplication_base">
-    id,departId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,fileInfoId,
-    teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,operatorId,operatorName
-  </sql>
 
     <insert id="insertCourse"  useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true" >
       insert into CourseAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,courseInfo,teacherInfo)
@@ -73,9 +69,9 @@
     </insert>
 
     <insert id="insertCourseApp"  useGeneratedKeys="true" keyProperty="id" flushCache="true" >
-      insert into courseApplication(departId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,
+      insert into courseApplication(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,
     teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,fileInfoId,operatorId,operatorName,operateDate,isChecked)
-      values(#{departId},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},
+      values(#{departId},#{courseId},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},
     #{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames},#{courseInfo},#{teacherInfo},#{fileInfoId},#{operatorId},#{operatorName},#{operateDate},#{isChecked})
     </insert>
 
@@ -100,127 +96,32 @@
 
     </select>
 
-    <select id="findCourseCount" resultType="int">
-        select IFNULL(max(substring(courseId,8,3)),0)
-        from CourseAll
-        where substring(courseId,3,5)=#{yearDepart}
+    <select id="findCourseAppCount" >
+        select count(*)
+        from courseApplication
+        where substring(courseId,2,2)=#{twoYear}
     </select>
     <update id="updateCourseAppflag">
         update courseApplication set isChecked=#{result}
-        where id=#{courseAppId}
+        <if test="courseId != null and courseId !=''">
+            ,coureseId=#{courseId}
+        </if>
+        where courseAppId=#{courseAppId}
     </update>
 
 
-    <select id="findAppByTeaId" resultType="Map" >
+    <select id=" findAppByTeaId" resultType="Map" >
         select *
         from courseApplication
         where  operatorId=#{userId}
-        order by isChecked asc,operateDate desc
+        order by isChecked asc,operatorDate desc
     </select>
 
-    <select id="findAllAppByDate" resultType="map" >
-        select <include refid="courseApplication_base" />, DATE_FORMAT(a.operateDate,'%Y-%m-%d')as operateDate,b.modelsName as moduleName
-        from courseApplication a
-        join models b
-        on a.moduleId=b.modelsId
-        where 1=1
-        <if test="operatorName != ''">
-            and operatorName= #{operatorName}
-        </if>
-        <if test="operatorId != ''">
-            and operatorId= #{operatorId}
-        </if>
-        <if test="operateDate != ''">
-            and DATE_FORMAT(operateDate,'%Y-%m-%d') = #{operateDate}
-        </if>
-        <if test="tabKey !=0 and tabKey==1">
-            and isChecked = 1
-        </if>
-        <if test="tabKey !=0 and tabKey==2">
-            and isChecked = 0
-        </if>
-        <if test="tabKey !=0 and tabKey==3">
-            and isChecked = 2
-        </if>
-        order by isChecked asc,operateDate desc
-    </select>
-    <select id="findAllApp" resultType="map" >
-        select <include refid="courseApplication_base" />, DATE_FORMAT(a.operateDate,'%Y-%m-%d')as operateDate,b.modelsName as moduleName
-        from courseApplication a
-        join models b
-        on a.moduleId=b.modelsId
-        where 1=1
-        <if test="operatorName != ''">
-            and operatorName= #{operatorName}
-        </if>
-        <if test="operatorId != ''">
-            and operatorId= #{operatorId}
-        </if>
-        <if test="tabKey !=0 and tabKey==1">
-            and isChecked = 1
-        </if>
-        <if test="tabKey !=0 and tabKey==2">
-            and isChecked = 0
-        </if>
-        <if test="tabKey !=0 and tabKey==3">
-            and isChecked = 2
-        </if>
-        order by isChecked asc,operateDate desc
-    </select>
-    <select id="findById" resultType="com.spc.model.CourseApplication">
+    <select id=" findAllApp" resultType="com.spc.model.CourseApplication" >
         select *
         from courseApplication
-        where id=#{id}
+        where flag=1
+        order by isChecked asc,operatorDate desc
     </select>
 
-    <insert id="insertPassApp" parameterType="com.spc.model.CourseAll">
-      insert into CourseAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo)
-      values(#{departId},#{courseId},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},#{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames},#{courseInfo},#{teacherInfo})
-    </insert>
-    <select id="findCourseAll" resultType="map">
-        select a.*,b.modelsName as modelName,c.departName
-        from course.CourseAll a
-        join course.models b
-        on a.moduleId=b.modelsId
-        join Department c
-         on c.departId=a.departId
-        where 1=1
-        <if test="courseId != '8888' and courseId!=''">
-            and a.courseId = #{courseId}
-        </if>
-        <if test="courseName != '8888' and courseName!=''">
-            and a.courseNameCHS = #{courseName}
-        </if>
-        <if test="departId != '8888' and departId!=''">
-            and a.departId = #{departId}
-        </if>
-        <if test="academicYear != '8888'and academicYear!=''">
-            and a.academicYear = #{academicYear}
-        </if>
-    </select>
-    <select id="selectCourseYear" resultType="string">
-        select distinct academicYear
-        from CourseAll
-    </select>
-    <delete id="delete">
-        delete from CourseAll where id=#{id}
-    </delete>
-
-    <select id="findCourseAllById" resultType="com.spc.model.CourseAll">
-        select *
-        from course.CourseAll
-        where id=#{id}
-    </select>
-    <update id="updateFlag">
-        update course.CourseAll
-        set flag=1
-        where academicYear=#{academicYear}
-        and flag=0;
-    </update>
-    <select id="findNotSure" resultType="com.spc.model.CourseAll">
-        select *
-        from course.CourseAll
-        where academicYear=#{academicYear}
-        and flag=0;
-    </select>
 </mapper>

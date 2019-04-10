@@ -74,7 +74,7 @@ public interface ClassDao {
     int zzGrade(@Param("className") String className, @Param("classNum") int classNum, @Param("stuId") String stuId,
                 @Param("zzGrade") int zzGrade, @Param("flag") int flag);
 
-    List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId);
+    List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId,@Param("academicYear") String academicYear);
 
     List<Map<String, Object>> findTeachCourse2(@Param("teacherId") String teacherId,@Param("academicYear") String academicYear);
 
@@ -91,7 +91,34 @@ public interface ClassDao {
 
     List<Map<String, Object>> findAllDepartment();
 
-    void updateXbsjScore(@Param("classId")int classId,@Param("stuId")String stuId,@Param("xbsjGrade")int xbsjGrade);
+    void updateXbsjScore(@Param("classId")int classId,@Param("stuId")String stuId,@Param("xbsjGrade")float xbsjGrade);
 
     void updateIsGrade(@Param("classId")int classId);
+
+    List<Map<String, Object>> findClassIds();
+
+    List<Map<String, Object>> findKnskStudents(@Param("JXBID")String JXBID);
+
+    int findKnskIsGrade(@Param("JXBID")String JXBID);
+
+    int updateKnskGradeFlag(@Param("JXBID") String JXBID);
+
+    List<Map<String, Object>> findStudentsList();
+
+
+    Map<String, Object> findKnskClassById(@Param("JXBID") String JXBID);
+
+    List<Map<String, Object>> findAlldepartment();
+
+    List<Map<String, Object>> findAllXbsjCourse(@Param("departId") int departId,@Param("academicYear") String academicYear,@Param("courseId") String courseId,@Param("className") String className,@Param("classNum") String classNum,@Param("teaName") String teaName);
+
+    List<Map<String, Object>> findAllKnskCourse(@Param("academicYear") String academicYear,@Param("courseId") String courseId,@Param("className") String className,@Param("classNum") String classNum,@Param("teaName") String teaName);
+
+    void updateXbsjChecked(@Param("classId") int classId,@Param("stuId")String stuId);
+
+    void updateKnskChecked(@Param("classId") String classId,@Param("stuId")String stuId);
+
+    List<Map<String, Object>> findStuXbsjClass(@Param("stuId")String stuId);
+
+    Map<String, Object> findCourseById(@Param("classId") int classId);
 }

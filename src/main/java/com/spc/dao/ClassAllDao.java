@@ -79,4 +79,5 @@ public interface ClassAllDao {
 
     int addFirstClass(CourseAll courseAll);
 
+    List<Map<String, Object>> getKnskCourse(@Param("academicYear") String academicYear);
 }

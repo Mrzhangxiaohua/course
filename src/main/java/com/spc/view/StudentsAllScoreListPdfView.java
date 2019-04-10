@@ -1,10 +1,7 @@
 package com.spc.view;
 
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -12,10 +9,12 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class StudentsScoreListPdfView extends AbstractPdfView {
+public class StudentsAllScoreListPdfView extends AbstractPdfView {
 
 
     @Override
@@ -27,10 +26,12 @@ public class StudentsScoreListPdfView extends AbstractPdfView {
 
         List<Map> students = (List<Map>) map.get("data");
 
-        PdfPTable table = new PdfPTable(5);
+        document.open();
+
+        PdfPTable table = new PdfPTable(8);
 
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{2, 2, 2, 2, 2});
+        table.setWidths(new int[]{2, 2, 2, 2, 2, 2, 2, 2});
 
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -39,13 +40,21 @@ public class StudentsScoreListPdfView extends AbstractPdfView {
         BaseFont baseFont2 = BaseFont.createFont("/static/font/STKAITI.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         Font textFont = new Font(baseFont2);
 
+        BaseFont bfHei = BaseFont.createFont("/static/font/STSONG.TTF",BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+        Font font = new Font(bfHei, 20);
+        String test="西安交通大学";
+        Paragraph paragraph = new Paragraph(test,font);
+        paragraph.setSpacingAfter(5);
+        paragraph.setSpacingBefore(5);
+        paragraph.setAlignment(Element.ALIGN_CENTER);
+        document.add(paragraph);
+        String test1="成绩报告单";
+        Paragraph paragraph1 = new Paragraph(test1,headFont);
+        paragraph1.setSpacingAfter(20);
+        paragraph1.setSpacingBefore(5);
+        paragraph1.setAlignment(Element.ALIGN_CENTER);
+        document.add(paragraph1);
 
-        PdfPCell hcell1;
-        hcell1 = new PdfPCell(new Phrase(map.get("className")+Integer.toString((Integer) map.get("classNum"))+"班学生成绩单", headFont));
-        hcell1.setFixedHeight(20f);
-        hcell1.setColspan(5);
-        hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(hcell1);
 
         PdfPCell hcell;
         hcell = new PdfPCell(new Phrase("姓名", headFont));
@@ -56,15 +65,27 @@ public class StudentsScoreListPdfView extends AbstractPdfView {
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
-        hcell = new PdfPCell(new Phrase("所属学院", headFont));
+        hcell = new PdfPCell(new Phrase("小班实践成绩", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
-        hcell = new PdfPCell(new Phrase("所属专业", headFont));
+        hcell = new PdfPCell(new Phrase("课内授课成绩", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
-        hcell = new PdfPCell(new Phrase("成绩", headFont));
+        hcell = new PdfPCell(new Phrase("网络自主学习成绩", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
+        table.addCell(hcell);
+        hcell = new PdfPCell(new Phrase("第二课堂活动成绩", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
+        table.addCell(hcell);
+        hcell = new PdfPCell(new Phrase("期末能力测试成绩", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
+        table.addCell(hcell);
+        hcell = new PdfPCell(new Phrase("总成绩", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
@@ -83,32 +104,53 @@ public class StudentsScoreListPdfView extends AbstractPdfView {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase((String) t.get("departName"), textFont));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setPaddingBottom(6);
-            table.addCell(cell);
-            cell = new PdfPCell(new Phrase((String) t.get("speciality"), textFont));
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setPaddingBottom(6);
-            table.addCell(cell);
             cell = new PdfPCell(new Phrase(String.valueOf((float) t.get("xbsjGrade")), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
+            cell = new PdfPCell(new Phrase(String.valueOf((float) t.get("knskGrade")), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase(String.valueOf((float) t.get("wlzzGrade")), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase(String.valueOf((float) t.get("dektGrade")), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase(String.valueOf((float) t.get("nlcsGrade")), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase(String.valueOf((float) t.get("grade")), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
         }
-
-
-        PdfPCell hcell2;
-        hcell2 = new PdfPCell(new Phrase("签名:                   .", headFont));
-        hcell2.setFixedHeight(20f);
-        hcell2.setColspan(5);
-        hcell2.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        table.addCell(hcell2);
-
-
         document.add(table);
+
+        String test2="课程负责人签字                                                                  院系（盖章）                                  ";
+        Paragraph paragraph2 = new Paragraph(test2,headFont);
+        paragraph2.setSpacingAfter(5);
+        paragraph2.setSpacingBefore(20);
+        paragraph2.setAlignment(Element.ALIGN_CENTER);
+        document.add(paragraph2);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        String test3="                                                                                                                           "+String.valueOf(df.format(new Date()));
+        Paragraph paragraph3 = new Paragraph(test3,headFont);
+        paragraph3.setSpacingAfter(5);
+        paragraph3.setSpacingBefore(5);
+        paragraph3.setAlignment(Element.ALIGN_CENTER);
+        document.add(paragraph3);
+        document.close();
     }
 }

@@ -70,4 +70,12 @@
         ON a.classId = b.classId
         WHERE b.stuId = #{stuId} AND a.classNum = #{classNum}
     </select>
+
+    <select id="selectGradeExcel" resultType="map">
+        select a.*
+        from course.fileInfo a
+        where a.fileInfoId = #{fileInfoId}
+    </select>
+
+
 </mapper>

@@ -48,5 +48,4 @@ public class BaseDataContoller extends Base {
         res.put("UserName", session.getAttribute("username"));
         return res;
     }
-
 }

@@ -470,9 +470,6 @@ public class StudentController extends Base{
         List<ClassDomain> classes = studentService.selectClassed(map);
 
         Map<String, Object> res = new HashMap<>();
-        // 查询出stuId并返回前端学生校区
-        stuId = (String) session.getAttribute("userId");
-        int schoolDistrict = studentService.finSchoolDistrict(stuId);
         res.put("status", "SUCCESS");
 
         Map<String, Object> data = new HashMap<>();
@@ -480,7 +477,6 @@ public class StudentController extends Base{
         data.put("pageSize", pageSize);
         data.put("currentPage", currentPage);
         data.put("list", classes);
-        data.put("personalSchoolId",schoolDistrict);
         res.put("data", data);
         return res;
     }

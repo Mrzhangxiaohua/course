@@ -38,7 +38,7 @@ public interface ClassService {
 
     int zzGrade(String className,int classNum, String stuId, int zzGrade, int flag);
 
-    List<Map<String,Object>>  findTeachCourse(String teacherId);
+    List<Map<String,Object>>  findTeachCourse(String teacherId,String academicYear);
 
     List<Map<String,Object>>  findTeachCourse2(String teacherId,String academicYear);
 
@@ -46,7 +46,32 @@ public interface ClassService {
 
     List<Map<String,Object>> findAllDepartment();
 
-    void updateXbsjScore(int classId,String stuId,int xbsjGrade);
+    void updateXbsjScore(int classId,String stuId,float xbsjGrade);
 
     void updateIsGrade(int classId);
+
+    List<Map<String, Object>> findClassIds();
+
+    List<Map<String, Object>> findKnskStudents(String JXBID);
+
+    int findKnskIsGrade(String JXBID);
+
+    List<Map<String, Object>> findStudentsList();
+
+
+    void updateKnskGradeFlag(String JXBID);
+
+    Map<String,Object> findKnskClassById(String JXBID);
+
+    List<Map<String, Object>> findAllXbsjCourse(int departId,String academicYear,String courseId,String className,String classNum,String teaName,int currentTab);
+
+    List<Map<String, Object>> findAllKnskCourse(String academicYear,String courseId,String className,String classNum,String teaName,int currentTab);
+
+    void updateXbsjChecked(int classId,String stuId);
+
+    void updateKnskChecked(String classId,String stuId);
+
+    List<Map<String, Object>> findStuXbsjClass(String stuId);
+
+    Map<String,Object> findCourseById(int classId);
 }

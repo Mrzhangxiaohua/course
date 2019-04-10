@@ -41,8 +41,6 @@ public interface StudentService {
 
     public List<Map<String, Object>> showCommentList(String stuId, String classId);
 
-    int finSchoolDistrict(String stuId);
-
     int addWaiting(String stuId, int classId, int flag,String time);
 
     List<Map<String,Object>> findWaiting(Integer classId);
