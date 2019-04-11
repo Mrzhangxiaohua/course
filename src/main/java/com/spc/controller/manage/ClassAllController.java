@@ -577,6 +577,7 @@ public class ClassAllController extends Base {
     @ResponseBody
     public void getAllRoomOneDimTimeTableExcel(@RequestParam String academicYear,
                                                  @RequestParam String classSemester,HttpServletResponse response) throws IOException {
+//        classSemester=classSemester+"季";
         List<Map<String,Object>> roomList=classAllService.findRoomList(academicYear,classSemester);
         List<Map<String,Object>> list=new ArrayList<>();
         HSSFWorkbook workbook = new HSSFWorkbook();
