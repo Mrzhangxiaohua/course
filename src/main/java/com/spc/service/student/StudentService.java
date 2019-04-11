@@ -42,19 +42,19 @@ public interface StudentService {
     public List<Map<String, Object>> showCommentList(String stuId, String classId);
 
     int finSchoolDistrict(String stuId);
-
-    int addWaiting(String stuId, int classId, int flag,String time);
-
-    List<Map<String,Object>> findWaiting(Integer classId);
+//
+//    int addWaiting(String stuId, int classId, int flag,String time);
+//
+//    List<Map<String,Object>> findWaiting(Integer classId);
 
     int addyuanzi(int classId, String stuId);
 
-    int updateWaitingFlag(int id);
-
-    int deleteWaiting(int id);
+//    int updateWaitingFlag(int id);
+//
+//    int deleteWaiting(int id);
 
     /*   Map<String,Object> lookUpWaitingOrder(String stuId, int classId);*/
 
-    Map<String, Object> findWaitStatus(int id);
+//    Map<String, Object> findWaitStatus(int id);
 
 }

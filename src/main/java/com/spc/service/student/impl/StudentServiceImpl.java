@@ -575,7 +575,7 @@ public class StudentServiceImpl extends Base implements StudentService {
             return l;
         }
     }
-    @Override
+   /* @Override
     public int addWaiting(String stuId, int classId, int flag,String time) {
         return  waitingDao.insert(stuId,classId,flag,time);
     }
@@ -610,6 +610,8 @@ public class StudentServiceImpl extends Base implements StudentService {
         }
         return null;
     }
+*/
+
 
     @Override
     public int finSchoolDistrict(String stuId) {

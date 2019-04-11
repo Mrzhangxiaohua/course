@@ -2,53 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.spc.dao.WaitingDao">
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id" flushCache="true">
-        insert into waiting (stuId,classId, flag, operateTime)
-        values (#{stuId},#{classId},#{flag},#{time})
-    </insert>
+    <!--<insert id="insert" useGeneratedKeys="true" keyProperty="id" flushCache="true">-->
+        <!--insert into waiting (stuId,classId, flag, operateTime)-->
+        <!--values (#{stuId},#{classId},#{flag},#{time})-->
+    <!--</insert>-->
 
-    <select id="selectWaitings" resultType="map">
-        select * from waiting
-        where classId=#{classId}
-        and flag=1
-        order by time asc
-    </select>
+    <!--<select id="selectWaitings" resultType="map">-->
+        <!--select * from waiting-->
+        <!--where classId=#{classId}-->
+        <!--and flag=1-->
+        <!--order by time asc-->
+    <!--</select>-->
 
-    <update id="updateFlag">
-        update waiting set flag=0
-        where id=#{id}
-    </update>
+    <!--<update id="updateFlag">-->
+        <!--update waiting set flag=0-->
+        <!--where id=#{id}-->
+    <!--</update>-->
 
-    <update id="delete">
-        update waiting set flag=2
-        where id=#{id}
-    </update>
+    <!--<update id="delete">-->
+        <!--update waiting set flag=2-->
+        <!--where id=#{id}-->
+    <!--</update>-->
 
 
-    <select id="findByStuId" resultType="map">
-        select * from waiting
-        where stuId=#{stuId}
-        and flag=1
-        order by operateTime asc
-    </select>
+    <!--<select id="findByStuId" resultType="map">-->
+        <!--select * from waiting-->
+        <!--where stuId=#{stuId}-->
+        <!--and flag=1-->
+        <!--order by operateTime asc-->
+    <!--</select>-->
 
-    <select id="findOrder">
-        select count(*) as order
-        from waiting
-        where flag=1
-        and classId=#{classId}
-        and operateTime &lt;= #{time}
-    </select>
+    <!--<select id="findOrder">-->
+        <!--select count(*) as order-->
+        <!--from waiting-->
+        <!--where flag=1-->
+        <!--and classId=#{classId}-->
+        <!--and operateTime &lt;= #{time}-->
+    <!--</select>-->
 
-    <select id="findByStuAndClass" resultType="map">
-        select * from waiting
-        where stuId=#{stuId}
-        and classId=#{classId}
-        and flag=1
-    </select>
+    <!--<select id="findByStuAndClass" resultType="map">-->
+        <!--select * from waiting-->
+        <!--where stuId=#{stuId}-->
+        <!--and classId=#{classId}-->
+        <!--and flag=1-->
+    <!--</select>-->
 
-    <select id="findById" resultType="map">
-        select * from waiting
-        where id=#{id}
-    </select>
+    <!--<select id="findById" resultType="map">-->
+        <!--select * from waiting-->
+        <!--where id=#{id}-->
+    <!--</select>-->
 </mapper>
