@@ -611,5 +611,8 @@ public class StudentServiceImpl extends Base implements StudentService {
         return null;
     }
 
-
+    @Override
+    public int finSchoolDistrict(String stuId) {
+        return studentDao.finSchoolDistrict(stuId);
+    }
 }
