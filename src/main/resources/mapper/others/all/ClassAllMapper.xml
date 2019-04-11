@@ -260,7 +260,7 @@
         join course.SchoolDistrict c
         on a.schoolDistrictId=c.id
         where a.classPlaceName = #{roomName} and  a.academicYear = #{academicYear}
-        and  a.classSemester like #{classSemester}
+        and  a.classSemester like "%"#{classSemester}"%"
     </select>
 
     <insert id="addFirstClass" useGeneratedKeys="true" keyProperty="id" flushCache="true"
