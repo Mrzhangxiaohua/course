@@ -12,6 +12,4 @@ import java.util.List;
  **/
 public interface ClassroomInfoService {
     List<ClassroomInfo> getClassrooms(String schoolDistrictId, String classroomName);
-
-    int getClassRoomToSchoolDistrict(String classroomNameId);
 }

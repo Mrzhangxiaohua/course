@@ -11,6 +11,4 @@ public interface ClassroomInfoDao {
 
     List<ClassroomInfo> selectAll(@Param("schoolDistrictId") String schoolDistrictId,
                                   @Param("classroomName") String classroomName);
-
-    int getSchoolDistrict(@Param("classroomNameId") String classroomNameId);
 }

@@ -34,5 +34,4 @@
             b.classChooseNum = b.classChooseNum + 1 where b.classId = #{newClassId};
         </set>
     </update>
-
 </mapper>

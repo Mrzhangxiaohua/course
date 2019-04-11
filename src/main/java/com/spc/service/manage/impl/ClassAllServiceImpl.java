@@ -865,6 +865,16 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     }
 
     @Override
+    public void updateStuNumUpperLimit(int classAllId, int stuNumUpperLimit) {
+
+    }
+
+    @Override
+    public List<Map<String, Object>> getKnskCourse(String academicYear) {
+        return null;
+    }
+
+    @Override
     public List<Map<String, Object>> findRoomList(String academicYear, String classSemester) {
         List<Map<String,Object>> roomList=classAllDao.selectAllRoom(academicYear,classSemester);
 

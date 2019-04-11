@@ -55,7 +55,10 @@ public class BaseInfo {
         this.dep = department;
     }
 
-    public String getDepid() { return depid; }
+    public String getDepid() {
+        return depid;
+    }
+
     public void setDepid(String depid) {
         this.depid = depid;
     }

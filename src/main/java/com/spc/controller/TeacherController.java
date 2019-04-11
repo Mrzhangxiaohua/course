@@ -2,12 +2,10 @@ package com.spc.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
 import com.github.pagehelper.PageInfo;
-import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.model.CourseApplication;
 import com.spc.model.CourseTableExcelDomain;
@@ -20,9 +18,10 @@ import com.spc.util.CalculateWeekth;
 import com.spc.util.CourseDateTrans;
 import com.spc.util.ResponseWrap;
 import com.spc.view.StudentTablePdfView;
+import com.spc.view.StudentsKnskScoreListPdfView;
 import com.spc.view.StudentsListPdfView;
-import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
-import org.apache.ibatis.annotations.Param;
+import com.spc.view.StudentsScoreListPdfView;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
@@ -31,7 +30,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.spc.util.RequestPayload;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,8 +38,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.plaf.multi.MultiMenuItemUI;
-import javax.wsdl.Output;
 
 import java.io.*;
 import java.net.URLEncoder;
@@ -857,6 +853,7 @@ public class TeacherController extends Base {
                                            @RequestParam(required = false, defaultValue = "88888888") int classId){
 
         String teaId = (String) request.getSession().getAttribute("userId");
+        teaId="0002017115";
       /*  String jsonString = RequestPayload.getRequestPayload(request);
         System.out.println(jsonString);*/
         System.out.println(currentPage+"\n"+classId);
@@ -968,18 +965,25 @@ public class TeacherController extends Base {
         JSONObject json=jsonArray.getJSONObject(0);
         int weekth = (int) json.get("weekth");
         int classId = Integer.parseInt((String) json.get("classId"));
+        System.out.println(weekth);
+        System.out.println(classId);
         JSONArray studentjsonArray=json.getJSONArray("students");
         List<Map<String,Object>> commentList =new ArrayList<>();
+        System.out.println("studentjsonArray"+studentjsonArray);
         for (int i=0; i<studentjsonArray.length(); i++){
             JSONObject studentJson=studentjsonArray.getJSONObject(i);
+            System.out.println(studentJson);
             Map<String,Object> studentMap=new HashMap<>();
             studentMap.put("stuId",studentJson.getString("stuId"));
+            System.out.println(studentJson.getString("stuId"));
             for(int j=0;j<4;j++){
                 studentMap.put("score"+(j+1),studentJson.getString("score"+(j+1)));
             }
             studentMap.put("suggestion",studentJson.getString("comment"));
+            System.out.println(studentMap);
             commentList.add(studentMap);
         }
+        System.out.println("\ncommentList"+commentList);
 
         String teaId= (String) request.getSession().getAttribute("userId");
         String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
@@ -1010,7 +1014,7 @@ public class TeacherController extends Base {
         Map<String, Object> fileInfo=teacherService.findTemplateFile();
         String fileName=(String)fileInfo.get("fileName");
         String path=(String)fileInfo.get("path");
-        File file=new File(path);
+        File file=new File(path+fileName);
         if(file.exists()){
             response.setContentType("application/force-download");
             try {
@@ -1071,11 +1075,8 @@ public class TeacherController extends Base {
 
             // 设置文件存储路径
             String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
-            SimpleDateFormat sdf2=new SimpleDateFormat("yyMMddHHmmss");
-            String str=sdf2.format(new Date());
-            //文件路径+原文件名+时间戳+随机数防止重名文件覆盖，下载文件时按照该路径下载;
-            String pathName = filePath+fileName+str+(new Random().nextInt(100));
-            File dest = new File(pathName);
+            String path = filePath + fileName;
+            File dest = new File(path);
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();// 新建文件夹
@@ -1083,7 +1084,7 @@ public class TeacherController extends Base {
             file.transferTo(dest);// 文件写入
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            int fileInfoId=teacherService.addFileInfo(teaId,fileName,pathName,2,dep,date,1);
+            int fileInfoId=teacherService.addFileInfo(teaId,fileName,path,2,dep,date,1);
             res.put("status","上传成功");
             res.put("fileInfoId",fileInfoId);
             return res;
@@ -1096,7 +1097,7 @@ public class TeacherController extends Base {
 
     }
     /**
-     * 教师端：根据教师Id查询教师课程
+     * 教师端：根据教师Id查询教师小班实践课程
      * @param session
      * @param
      * @return
@@ -1104,6 +1105,7 @@ public class TeacherController extends Base {
     @RequestMapping("teach/findCourse")
     @ResponseBody
     public Map findTeachCourse(
+            @RequestParam("classSemester") String academicYear,
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             HttpSession session
@@ -1113,7 +1115,7 @@ public class TeacherController extends Base {
         Map<String,Object> res=new HashMap<>();
 //        PageHelper.startPage(currentPage, pageSize);
         Page page=PageHelper.startPage(currentPage, pageSize);
-        List classes = classService.findTeachCourse(teacherId);
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,academicYear);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
 //        res.put("total",page.getTotal());
         List<Map<String,Object>> pageList=pageInfo.getList();
@@ -1126,6 +1128,8 @@ public class TeacherController extends Base {
         res.put("status", "SUCCESS");
         return res;
     }
+
+
 
     /**
      * 教师端：根据班级Id导出选课学生名单Excel
@@ -1182,9 +1186,7 @@ public class TeacherController extends Base {
 //        int classId=501;
 //        String className="英语";
 //        int classNum=1;
-        System.out.print(classId);
-        System.out.print(className);
-        System.out.print(classNum);
+
 
         response = ResponseWrap.setName(response, className+classNum + "班选课名单", "pdf");
         List<Map<String,Object>> students = classService.findStudent(classId);
@@ -1233,9 +1235,12 @@ public class TeacherController extends Base {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("成绩表");
         List<Map<String,Object>> students = classService.findStudent(classId);
-        String fileName = "学生名单"  + ".xls";//设置要导出的文件的名字
-
-        String[] headers={"姓名","学号","班级","成绩"};
+        String className= (String) students.get(0).get("className");
+        logger.info(className+"==========");
+        int classNum= (int) students.get(0).get("classNum");
+        String fileName = String.valueOf(className)+classNum+"班学生名单"  + ".xls";//设置要导出的文件的名字
+        logger.info(fileName+"==========");
+        String[] headers={"姓名","学号","所属学院","所属专业","成绩"};
         HSSFRow headerRow=sheet.createRow(0);
         //添加表头
         for(int i=0;i<headers.length;i++){
@@ -1248,18 +1253,20 @@ public class TeacherController extends Base {
             HSSFRow row=sheet.createRow(rowNum);
             row.createCell(0).setCellValue((String) stu.get("stuName"));
             row.createCell(1).setCellValue((String) stu.get("stuId"));
-            row.createCell(2).setCellValue((String) stu.get("className")+stu.get("classNum")+"班");
+            row.createCell(2).setCellValue((String) stu.get("departName"));
+            row.createCell(3).setCellValue((String) stu.get("speciality"));
             rowNum++;
         }
         response.setContentType("application/octet-stream");
-        response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName,"utf-8"));
+        response.setHeader("Content-disposition", "attachment;filename=" + new String( fileName.getBytes("gb2312"), "ISO8859-1" ));
         response.flushBuffer();
         workbook.write(response.getOutputStream());
 
     }
     @RequestMapping("/uploadGradeExcel")
     @ResponseBody
-    public Map<String, Object> uploadGradeExcel(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+    public Map<String, Object> uploadGradeExcel(@RequestParam("file") MultipartFile file,
+                                                HttpServletRequest request){
         Map<String,Object> res=new HashMap<>();
         String userId= (String) request.getSession().getAttribute("userId");
         String dep= (String) request.getSession().getAttribute("dep");
@@ -1267,18 +1274,27 @@ public class TeacherController extends Base {
         int type=3;
         int fileInfoId= teacherService.uploadFile(file,userId,dep,type,filePath);
         if (fileInfoId==0){
-            res.put("status","error");
+            res.put("status","上传失败");
         }else{
-            res.put("status","success");
+            res.put("status","上传成功");
             res.put("fileInfoId",fileInfoId);
         }
         return res;
     }
-    @RequestMapping("insertGradeExcel")
+    @RequestMapping("/insertGradeExcel")
     @ResponseBody
-    public Map<String,Object> insertGradeExcel(@RequestParam("classId") int classId,@RequestParam("fileInfoId") int fileInfoId){
+    public Map<String,Object> insertGradeExcel( @RequestParam("status") int status,
+                                                @RequestParam("classId") int classId,
+                                                @RequestParam("fileInfoId") int fileInfoId){
+
         Map<String,Object> res=new HashMap<>();
-        int flag=teacherService.insertGradeExcel(classId,fileInfoId);
+        int isGrade=classService.findIsGrade(classId);
+        if(isGrade!=0)
+        {
+            res.put("status","成绩已提交无法修改！");
+            return res;
+        }
+        int flag=teacherService.insertGradeExcel(status,classId,fileInfoId);
         if(flag==0){
             res.put("status","上传成绩失败！");
         }else{
@@ -1287,5 +1303,420 @@ public class TeacherController extends Base {
         return res;
     }
 
+    /**
+     * 教师端：根据班级Id导出学生成绩单PDF
+     * @param
+     * @param
+     * @return
+     */
 
+    @RequestMapping("/showGradeExcel")
+    @ResponseBody
+    public Map<String,Object> showGradeExcel(@RequestParam("fileInfoId") int fileInfoId,
+                                             @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                             @RequestParam(required = false, defaultValue = "10") int pageSize){
+
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        System.out.println(11);
+        List<Map<String,Object>> students = teacherService.showGradeExcel(fileInfoId);
+        System.out.println(22);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    @RequestMapping("/showKnskGradeExcel")
+    @ResponseBody
+    public Map<String,Object> showKnskGradeExcel(@RequestParam("fileInfoId") int fileInfoId,
+                                             @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                             @RequestParam(required = false, defaultValue = "10") int pageSize){
+
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        System.out.println(11);
+        List<Map<String,Object>> students = teacherService.showKnskGradeExcel(fileInfoId);
+        System.out.println(22);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+
+
+    /**
+     * 教师端：根据班级Id导出学生成绩单PDF
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/downloadStudentsScorePdf")
+    @ResponseBody
+    public ModelAndView downloadStudentsPdf(@RequestParam("classId") int classId,
+                                            HttpSession session, HttpServletResponse response) {
+
+        int isGrade=classService.findIsGrade(classId);
+        if(isGrade==0)
+        {
+            return null;
+        }
+        ClassDomain classes =  classService.findClassById(classId);
+        Map<String,Object> course=classService.findCourseById(classId);
+        String className=classes.getClassName();
+        String teaName=classes.getTeaName();
+        String classSemester=classes.getClassSemester();
+        int classNum=classes.getClassNum();
+        String depName= (String) course.get("departName");
+        String courseId= (String) course.get("courseId");
+        response = ResponseWrap.setName(response, className+classNum + "班学生成绩单", "pdf");
+        List<Map<String,Object>> students = classService.findStudent(classId);
+        Map res = new HashMap();
+        res.put("data", students);
+        res.put("className",className);
+        res.put("classNum",classNum);
+        res.put("teaName",teaName);
+        res.put("classSemester",classSemester);
+        res.put("depName",depName);
+        res.put("courseId",courseId);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+        logger.info(String.valueOf(model));
+        return new ModelAndView(new StudentsScoreListPdfView(), model);
+    }
+
+    /**
+     * 教师端：查看所有学生成绩
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/findStudentsScore")
+    @ResponseBody
+    public Map findStudentsScore(@RequestParam("classId") int classId,
+                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                 HttpSession session) {
+        int isGrade=classService.findIsGrade(classId);
+        ClassDomain classes =  classService.findClassById(classId);
+        String className=classes.getClassName();
+        int classNum=classes.getClassNum();
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> students = classService.findStudent(classId);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("className",className);
+        res.put("classNum",classNum);
+        res.put("isGrade",isGrade);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    /**
+     * 教师端：手动上传或更新学生成绩
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/updateStudentsScore")
+    @ResponseBody
+    public String updateXbsjStudentsScore(HttpServletRequest request,
+                                  HttpSession session) {
+        String json = RequestPayload.getRequestPayload(request);
+        try {
+            JSONObject obj = new JSONObject(json);
+            int classId=obj.getInt("classId");
+            int status=obj.getInt("status");
+            int isGrade=classService.findIsGrade(classId);
+            JSONArray stuList=  obj.getJSONArray("stuList");
+            if(isGrade==1)
+            {
+                return "成绩已提交无法修改";
+            }
+            for(int i=0;i<stuList.length();i++){
+                JSONObject stu=stuList.getJSONObject(i);
+                String stuId= (String) stu.get("stuId");
+                String xbsjGrade= String.valueOf(stu.get("xbsjGrade"));
+                int isChecked=stu.getInt("isChecked");
+                System.out.println("----------isChecked----------"+isChecked);
+                List<Map<String,Object>> stuXbsjClass=new ArrayList<>();
+                classService.updateXbsjScore(classId,stuId,Float.parseFloat(xbsjGrade));
+                stuXbsjClass=classService.findStuXbsjClass(stuId);
+                float grade=0;
+                for(Map course:stuXbsjClass){
+                    if((float)course.get("xbsjGrade")!=0)
+                        grade=grade+(float)course.get("xbsjGrade")*((int)course.get("classTime")/(float)32);
+                    else{
+                        grade=0;
+                        break;
+                    }
+                }
+                if(grade!=0){
+                    gradeService.uploadAllGradeXbsj(stuId,grade);
+                }
+                if(isChecked==2)
+                    classService.updateXbsjChecked(classId,stuId);
+            }
+
+            if(status==1){
+                classService.updateIsGrade(classId);
+                return "成绩提交成功";
+            }
+            else
+                return "成绩保存成功";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * 教师端：该部分由于课内授课成绩管理
+     */
+
+    /**
+     * 教师端：根据教师Id查询课内授课课程
+     * @param session
+     * @param
+     * @return
+     */
+    @RequestMapping("teach/findCourse2")
+    @ResponseBody
+    public Map findTeachCourse2(
+            @RequestParam("classSemester") String academicYear,
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            HttpSession session
+    ) {
+        String teacherId = (String) session.getAttribute("userId");
+//        String academicYear="2018-2019";
+//        String teacherId = "0002001022";
+        Map<String,Object> res=new HashMap<>();
+        if(academicYear.indexOf("春季")!=-1)
+            academicYear=academicYear.substring(0,9)+"-2";
+        else
+            academicYear=academicYear.substring(0,9)+"-1";
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> classes = classService.findTeachCourse2(teacherId,academicYear);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    /**
+     * 教师端：根据班级Id下载学生名单，用来导入成绩
+     * @param
+     * @param
+     * @return
+     */
+
+    @RequestMapping("/downloadKnskStuExcel")
+    @ResponseBody
+    public void downloadExcel(HttpServletResponse response,@RequestParam("classId") String JXBID,
+                              HttpSession session) throws IOException {
+//        String teacherId = (String) session.getAttribute("userId");
+        Map<String,Object> classInfo=classService.findKnskClassById(JXBID);
+        String JXBMC= (String) classInfo.get("JXBMC");
+        String KCM=(String)  classInfo.get("KCM");
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet(KCM+JXBMC+"成绩表");
+        List<Map<String,Object>> students = classService.findKnskStudents(JXBID);
+        String fileName = KCM+JXBMC+"学生名单"  + ".xls";//设置要导出的文件的名字
+
+        String[] headers={"姓名","学号","所属学院","所属专业","成绩"};
+        HSSFRow headerRow=sheet.createRow(0);
+        //添加表头
+        for(int i=0;i<headers.length;i++){
+            HSSFCell cell=headerRow.createCell(i);
+            HSSFRichTextString text=new HSSFRichTextString(headers[i]);
+            cell.setCellValue(text);
+        }
+        int rowNum=1;
+        for(Map<String,Object> stu:students){
+            HSSFRow row=sheet.createRow(rowNum);
+            row.createCell(0).setCellValue((String) stu.get("stuName"));
+            row.createCell(1).setCellValue((String) stu.get("stuId"));
+            row.createCell(2).setCellValue((String) stu.get("departName"));
+            row.createCell(3).setCellValue((String) stu.get("speciality"));
+            rowNum++;
+        }
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + new String( fileName.getBytes("gb2312"), "ISO8859-1" ));
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+
+    }
+
+    /**
+     * 教师端：更新课内授课学生成绩
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/insertKnskGradeExcel")
+    @ResponseBody
+    public Map<String,Object> insertKnskGradeExcel( @RequestParam("status") int status,
+                                                @RequestParam("JXBID") String JXBID,
+                                                @RequestParam("fileInfoId") int fileInfoId){
+
+        Map<String,Object> res=new HashMap<>();
+        int isGrade=classService.findKnskIsGrade(JXBID);
+        if(isGrade!=0)
+        {
+            res.put("status","成绩已提交无法修改！");
+            return res;
+        }
+        int flag=teacherService.insertKnskGradeExcel(status,JXBID,fileInfoId);
+        if(flag==0){
+            res.put("status","上传成绩失败！");
+        }else{
+            res.put("status","上传成绩成功！");
+        }
+        return res;
+    }
+
+    /**
+     * 教师端：查看所有学生成绩
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/findStudentsKnskScore")
+    @ResponseBody
+    public Map findStudentsKnskScore(@RequestParam("classId") String JXBID,
+                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                 HttpSession session) {
+        int isGrade=classService.findKnskIsGrade(JXBID);
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> students = classService.findKnskStudents(JXBID);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("isGrade",isGrade);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    /**
+     * 教师端：手动上传或更新课内授课学生成绩
+     * @param
+     * @param  
+     * @return
+     */
+    @RequestMapping("/updateStudentsKnskScore")
+    @ResponseBody
+    public String updateStudentsKnskScore(HttpServletRequest request,
+                                    HttpSession session) {
+        String json=RequestPayload.getRequestPayload(request);
+        try {
+            JSONObject obj= new JSONObject(json);
+            String JXBID= (String) obj.get("classId");
+            int isGrade=classService.findKnskIsGrade(JXBID);
+            if(isGrade==1)
+            {
+                return "成绩已提交无法修改";
+            }
+            int status=obj.getInt("status");
+            JSONArray stuList=  obj.getJSONArray("stuList");
+            for(int i=0;i<stuList.length();i++){
+                JSONObject stu=stuList.getJSONObject(i);
+                String stuId= (String) stu.get("stuId");
+                String knskGrade= String.valueOf(stu.get("knskGrade"));
+                int isChecked=stu.getInt("isChecked");
+                teacherService.updateKnskScore(JXBID,stuId,Float.parseFloat(knskGrade));
+                gradeService.uploadAllGradeKnsk(stuId,Float.parseFloat(knskGrade));
+                if(isChecked==2)
+                    classService.updateKnskChecked(JXBID,stuId);
+            }
+            if(status==1){
+                classService.updateKnskGradeFlag(JXBID);
+                return "成绩提交成功";
+            }
+            else
+                return "成绩保存成功";
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    /**
+     * 教师端：根据JXBID导出学生成绩单PDF
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/downloadStudentsKnskScorePdf")
+    @ResponseBody
+    public ModelAndView downloadStudentsPdf(@RequestParam("classId")String JXBID,
+                                            HttpSession session, HttpServletResponse response) {
+
+        Map res = new HashMap();
+        int isGrade=classService.findKnskIsGrade(JXBID);
+        if(isGrade==0)
+        {
+            return null;
+        }
+        Map<String,Object> classInfo=classService.findKnskClassById(JXBID);
+        String JXBMC= (String) classInfo.get("JXBMC");
+        String KCM=(String)  classInfo.get("KCM");
+        String courseId= (String) classInfo.get("KCH");
+        String teaName= (String) classInfo.get("teaName");
+        String semesterName= (String) classInfo.get("XNXQDM");
+        System.out.println("---------------------------"+semesterName);
+        if(semesterName.substring(9,11).equals("-1"))
+            res.put("semesterName",semesterName.substring(0,9)+"秋季");
+        else
+            res.put("semesterName",semesterName.substring(0,9)+"春季");
+        response = ResponseWrap.setName(response, KCM+ JXBMC + "学生成绩单", "pdf");
+        System.out.println("---------------1111--------------");
+        List<Map<String,Object>> students = classService.findKnskStudents(JXBID);
+        res.put("data", students);
+        res.put("className",KCM);
+        res.put("classNum",JXBMC);
+        res.put("courseId",courseId);
+        res.put("teaName",teaName);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+        return new ModelAndView(new StudentsKnskScoreListPdfView(), model);
+    }
 }

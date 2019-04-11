@@ -18,7 +18,4 @@
         order by XXXQDM, JASDM asc
     </select>
 
-    <select id="getSchoolDistrict" resultType="int">
-        select XXXQDM from ClassroomInfo where JASDM= #{classroomNameId}
-    </select>
 </mapper>

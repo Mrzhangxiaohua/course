@@ -55,31 +55,31 @@ public class CourseAllServiceImpl implements CourseAllService {
         return teacherInfoDao.selectByTeacherIds(teacherIds);
     }
 
-//    @Override
-//    public List<CourseAll> getCourseAllByYearAndDep(String year,int depId) {
-//        return courseAllDao.selectCourseAllByYearAndDep(year,depId);
-//    }
+    @Override
+    public List<CourseAll> getCourseAllByYearAndDep(String year,int depId) {
+        return courseAllDao.selectCourseAllByYearAndDep(year,depId);
+    }
 
-//    @Override
-//    @Transactional
-//    public int addYearCourseAll(List<CourseAll> courseList, String userId, String username,String year) {
-//        int i=0;
-//        for(CourseAll courseAll:courseList){
-//            courseAll.setOperatorName("username");
-//            courseAll.setOperatorId("userId");
-//            courseAll.setOperateDate(new Date());
-//            int flag=courseAllDao.insertYearCourse(courseAll);
-//            //插入一个课程目录，同时在ClassAll中插入一个默认的一班
-//            classAllDao.addFirstClass(courseAll);
-//            if(flag==1){
-//                i++;
-//            }
-//        }
-//        if(i==courseList.size()){
-//            return 1;
-//        }
-//        return 0;
-//    }
+    @Override
+    @Transactional
+    public int addYearCourseAll(List<CourseAll> courseList, String userId, String username,String year) {
+        int i=0;
+        for(CourseAll courseAll:courseList){
+            courseAll.setOperatorName("username");
+            courseAll.setOperatorId("userId");
+            courseAll.setOperateDate(new Date());
+            int flag=courseAllDao.insertYearCourse(courseAll);
+            //插入一个课程目录，同时在ClassAll中插入一个默认的一班
+            classAllDao.addFirstClass(courseAll);
+            if(flag==1){
+                i++;
+            }
+        }
+        if(i==courseList.size()){
+            return 1;
+        }
+        return 0;
+    }
 
     @Override
     public int addCourseApp(CourseApplication courseApp) {
@@ -88,128 +88,74 @@ public class CourseAllServiceImpl implements CourseAllService {
 
     }
 
+    @Override
+    public List<Map<String,Object>> findCourseApp(String date, String operatorId, String operatorName,int departId) {
+        if(departId!=0) {
+            List<Map<String, Object>> list = courseAllDao.selectCourseApp(date, operatorId, operatorName,departId);
+            for (Map<String, Object> li : list) {
+                if ((int) li.get("isChecked") == 0) {
+                    li.put("status", "未审核");
+                } else if ((int) li.get("isChecked") == 1) {
+                    li.put("status", "审核通过");
+                } else if ((int) li.get("isChecked") == 2) {
+                    li.put("status", "已拒绝");
+                } else {
+                    li.put("status", "");
+                }
+            }
+            return list;
+        }
+        return null;
+    }
 
     @Override
     @Transactional
-    public int checkCourseApp(List<Integer> idList, int result, int departId, String username, String userId) {
+    public int checkCourseApp(List<Integer> idList, int result,int departId) {
         //通过开课申请，自动生成课程编码
-        String courseId = null;
-        if (result == 1) {
-            StringBuilder courseIdPre = new StringBuilder();
+        String courseId=null;
+        if(result==1){
+            StringBuilder courseIdPre=new StringBuilder();
             courseIdPre.append("WS");
             Calendar now = Calendar.getInstance();
-            String currentYear = Integer.toString(now.get(Calendar.YEAR));
+            String currentYear=Integer.toString(now.get(Calendar.YEAR));
             //当前年份后两位
-            String twoYear = currentYear.substring(currentYear.length() - 2);
+            String twoYear=currentYear.substring(currentYear.length()-2);
             courseIdPre.append(twoYear);
             //departId=0管理员？
             /*if(departId==0){
                 return 0;
             }*/
             //三位departId
-            courseIdPre.append(String.format("%03d", departId));
+            courseIdPre.append(String.format("%03",departId));
             //查询当年流水号
-            int count = courseAllDao.findCourseCount(twoYear + String.format("%03d", departId));
+            int count=courseAllDao.findCourseAppCount(twoYear);
             //对每个记录根据流水号生成courseId，并修改isChecked标志位
-            for (Integer id : idList) {
+            for(Integer id:idList){
                 count++;
-                courseId = courseIdPre.toString() + String.format("%03d", count);
-                courseAllDao.updateCourseAppflag(id, result, courseId);
-                //通过的课插入CourseAll表，当年课程目录
-                CourseApplication courseApp = courseAllDao.findById(id).get(0);
-                CourseAll courseAll = new CourseAll();
-                courseAll.setDepartId(courseApp.getDepartId());
-                courseAll.setCourseId(courseId);
-                courseAll.setCourseNameCHS(courseApp.getCourseNameCHS());
-                courseAll.setCourseNameEN(courseApp.getCourseNameEN());
-                courseAll.setModuleId(Integer.toString(courseApp.getModuleId()));
-                courseAll.setAcademicYear(courseApp.getAcademicYear());
-                courseAll.setClassSemester(courseApp.getClassSemester());
-                courseAll.setClassHour(courseApp.getClassHour());
-                courseAll.setStuNumUpperLimit(courseApp.getStuNumUpperLimit());
-                courseAll.setTeacherId(courseApp.getTeacherId());
-                courseAll.setTeacherName(courseApp.getTeacherName());
-                courseAll.setTeachingTeamIds(courseApp.getTeachingTeamIds());
-                courseAll.setTeachingTeamNames(courseApp.getTeachingTeamNames());
-                courseAll.setCourseInfo(courseApp.getCourseInfo());
-                courseAll.setTeacherInfo(courseApp.getTeacherInfo());
-                courseAll.setOperateDate(new Date());
-                courseAll.setOperatorId(userId);
-                courseAll.setOperatorName(username);
-                courseAllDao.insertPassApp(courseAll);
-
+                courseId= courseIdPre.toString()+String.format("%03",count);
+                courseAllDao.updateCourseAppflag(id,result,courseId);
             }
-        } else if (result == 2) {
+        }else if(result==2){
             //2表示拒绝开课申请
 
-            for (Integer id : idList) {
-                courseAllDao.updateCourseAppflag(id, result, courseId);
+            for(Integer id:idList){
+                courseAllDao.updateCourseAppflag(id,result,courseId);
             }
         }
         return 0;
     }
 
     @Override
-    public List<CourseApplication> findAllCourseApp(String operatorId, String operatorName, String operateDate, int tabKey) {
-        return courseAllDao.findAllAppByDate(operatorName, operatorId, operateDate, tabKey);
+    public List<CourseApplication> findAllCourseApp() {
+        return courseAllDao.findAllApp();
 
     }
 
     @Override
-    public List<CourseApplication> findAllCourseApp(String operatorId, String operatorName, int tabKey) {
-        return courseAllDao.findAllApp(operatorName, operatorId, tabKey);
-
-    }
-
-    @Override
-    public int addCourseAll(CourseAll courseAll) {
-        StringBuilder courseIdPre = new StringBuilder();
-        courseIdPre.append("WS");
-        Calendar now = Calendar.getInstance();
-        String currentYear = Integer.toString(now.get(Calendar.YEAR));
-        //当前年份后两位
-        String twoYear = currentYear.substring(currentYear.length() - 2);
-        courseIdPre.append(twoYear);
-        //三位departId
-        courseIdPre.append(String.format("%03d", courseAll.getDepartId()));
-        //查询当年流水号
-        int count = courseAllDao.findCourseCount(twoYear + String.format("%03d", courseAll.getDepartId()));
-        count++;
-        String courseId = courseIdPre.toString() + String.format("%03d", count);
-        courseAll.setCourseId(courseId);
-        courseAllDao.insertPassApp(courseAll);
-        return 0;
-    }
-
-    @Override
-    public List<Map<String, Object>> findCourseAll(String academicYear, String courseId, String courseName, int departId) {
-        List<Map<String, Object>> list = courseAllDao.findCourseAll(academicYear, courseId, courseName, departId);
-        return list;
-    }
-
-    @Override
-    public CourseAll findCourseAll(int id) {
-        return courseAllDao.findCourseAllById(id).get(0);
-    }
-
-    @Override
-    @Transactional
-    public int makeSureCourseAll(String academicYear) {
-        List<CourseAll> list=courseAllDao.findNotSure(academicYear);
-        //修改标志位
-        courseAllDao.updateFlag(academicYear);
-        //在classAll中批量插入一班
-        for(CourseAll courseAll:list){
-            classAllDao.addFirstClass(courseAll);
-        }
-       return 1;
-    }
-
-    @Override
-    public int ModifyCourseAll(CourseAll courseAll, String userId, String username) {
+    public int ModifyCourseAll(CourseAll courseAll, String userId,String username) {
         courseAll.setOperatorId(userId);
         courseAll.setOperatorName(username);
         courseAll.setOperateDate(new Date());
-        return  courseAllDao.updateCourseAll(courseAll);
+        return courseAllDao.updateCourseAll(courseAll);
     }
 }

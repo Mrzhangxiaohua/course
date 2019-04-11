@@ -117,7 +117,7 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
 
     public Map creatClassOrDepartMap(String className, int classId) {
         Map tempChild2 = new HashMap();
-        tempChild2.put("value", "depart" + classId);
+        tempChild2.put("value", 88888888);
         tempChild2.put("label", className);
         List<Map> res = new ArrayList<>();
         tempChild2.put("children", res);

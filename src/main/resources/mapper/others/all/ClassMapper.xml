@@ -61,7 +61,7 @@
         select
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,
         classPlace,classLength,classModuleNum,m.modelsName as modelsName,teacherInfo,courseInfo,
-        a.departId,classSemester,classGradePoint,endWeek,startWeek,schoolDistrictId,
+        a.departId,classSemester,classGradePoint,endWeek,startWeek,
         classEncode,classTime,mainLecturer,b.departName as departName
 <!--        course.User.department as dpt -->
         from
@@ -331,7 +331,10 @@
         select *
         from course.Course
         where  teaId=#{teacherId}
+        and classSemester like "%"#{academicYear}"%"
     </select>
+
+
 
     <select id="findClassInfo" resultType="Map">
         select *
@@ -343,4 +346,183 @@
         update Course set isGrade=1
         where classId=#{classId}
     </update>
+
+    <update id="updateKnskGradeFlag">
+        update course.v_t_xk_by_yjsrw set isGrade=1
+        where JXBID=#{JXBID}
+    </update>
+
+    <select id="findClassId" resultType="Map">
+        select c.classId,c.isGrade
+        from course.Course c
+        join course.ClassAll  b
+        on  b.id=c.classAllId
+        where b.courseId=#{courseId}
+        and c.classNum=#{classNum}
+    </select>
+
+    <select id="findAllDepartment" resultType="Map">
+        select *
+        from course.Department
+    </select>
+
+    <select id="findIsGrade" resultType="int">
+        select c.isGrade
+        from course.Course c
+        where c.classId=#{classId}
+    </select>
+
+    <update id="updateIsGrade">
+        update Course set isGrade=1
+        where classId=#{classId}
+    </update>
+
+    <update id="updateXbsjScore">
+        update course.Course_choose set course.Course_choose.xbsjGrade=#{xbsjGrade}
+        where classId=#{classId} and stuId=#{stuId}
+    </update>
+
+    <select id="findTeachCourse2" resultType="Map">
+        select *
+        from course.v_t_xk_by_yjsrw
+        where  (SKJS=#{teacherId})
+        and (KCH='121066' OR KCH='121067' OR KCH='122036')
+        and XNXQDM like "%"#{academicYear}"%"
+    </select>
+
+    <select id="findClassIds" resultType="Map">
+        select c.classId
+        from course.Course c
+    </select>
+
+
+    <select id="findKnskStudents" resultType="map" useCache="false">
+        select DISTINCT
+        a.XH as stuId,a.knskGrade,a.isChecked,b.username as stuName,b.speciality,b.dep as departName
+        from course.KnskGrade a
+        left join course.XjtuUserInfo b
+        on a.XH = b.userno
+        <where>
+            <if test="JXBID!='88888888'">
+                a.JXBID = #{JXBID}
+            </if>
+        </where>
+    </select>
+
+    <select id="findKnskIsGrade" resultType="int">
+        select c.isGrade
+        from course.v_t_xk_by_yjsrw c
+        where c.JXBID=#{JXBID}
+    </select>
+
+    <select id="findStudentsList" resultType="Map">
+        select DISTINCT
+        c.JXBID,c.XH,c.KCH
+        from course.v_t_xk_by_yjsyxkb c
+        where c.KCH='121066' OR c.KCH='121067' or c.KCH='122036'
+    </select>
+
+    <select id="findKnskClassById" resultType="Map">
+        select a.*,b.username as teaName
+        from course.v_t_xk_by_yjsrw  a
+        left join course.XjtuUserInfo b
+        on a.SKJS=b.userno
+        where JXBID = #{JXBID}
+    </select>
+
+    <select id="findAlldepartment" resultType="Map">
+        select a.departCode as depId,a.departName
+        from course.Department a
+    </select>
+
+
+    <select id="findAllXbsjCourse" resultType="Map">
+        select a.classId,b.className as classNum,a.teaName,a.className,a.isGrade as isSubmit,c.departName,b.courseId,a.classSemester as semesterName,a.classChooseNum as chooseNum,c.departName
+        from course.Course a
+        left join course.ClassAll b
+        on a.classAllId=b.id
+        left join course.Department c
+        on b.departId=c.departId
+        <where>
+            <if test="academicYear!=null">
+                and a.classSemester=#{academicYear}
+            </if>
+            <if test="departId!=null">
+                and b.departId= #{departId}
+            </if>
+            <if test="teaName!= '88888888' and teaName!=null ">
+                and a.teaName= #{teaName}
+            </if>
+            <if test="courseId!= '88888888' and courseId!=null ">
+                and b.courseId like "%"#{courseId}"%"
+            </if>
+            <if test="className!= '88888888' and className!=null ">
+                and a.className like "%"#{className}"%"
+            </if>
+            <if test="classNum!= '88888888' and classNum!=null ">
+                and b.className like "%"#{classNum}"%"
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllKnskCourse" resultType="Map">
+        select a.JXBID as classId,a.XKZRS as chooseNum,a.JXBMC as classNum,b.username as teaName,a.KCH as courseId,a.isGrade as isSubmit,a.XNXQDM as semesterName
+        from course.v_t_xk_by_yjsrw a
+        left join course.XjtuUserInfo b
+        on a.SKJS=b.userno
+        <where>
+
+            <if test="academicYear!=null">
+                and a.XNXQDM=#{academicYear} and (a.KCH='121066' OR a.KCH='121067' OR a.KCH='122036')
+            </if>
+            <if test="teaName!= '88888888' and teaName!=null ">
+                and b.username= #{teaName}
+            </if>
+            <if test="courseId!= '88888888' and courseId!=null ">
+                and a.JXBID like "%"#{courseId}"%"
+            </if>
+            <if test="classNum!= '88888888' and classNum!=null ">
+                and a.JXBMC like "%"#{classNum}"%"
+            </if>
+            <if test="className == '学术英语(一)'">
+                and a.KCH='121066'
+            </if>
+            <if test="className == '学术英语(二)' ">
+                and a.KCH='121067'
+            </if>
+            <if test="className == '学术英语写作'">
+                and a.KCH='122036'
+            </if>
+        </where>
+    </select>
+
+    <update id="updateXbsjChecked">
+      update course.Course_choose set course.Course_choose.isChecked=0
+      where course.Course_choose.classId=#{classId} and course.Course_choose.stuId=#{stuId}
+     </update>
+
+    <update id="updateKnskChecked">
+      update course.KnskGrade set course.KnskGrade.isChecked=0
+      where course.KnskGrade.JXBID=#{classId} and course.KnskGrade.XH=#{stuId}
+     </update>
+
+
+    <select id="findStuXbsjClass" resultType="Map">
+        select a.stuId,a.xbsjGrade,b.classTime
+        from course.Course_choose a
+        left join course.Course b
+        on a.classId=b.classId
+        where a.stuId=#{stuId}
+    </select>
+
+    <select id="findCourseById" resultType="Map">
+        select b.courseId,c.departName
+        from course.Course a
+        left join course.ClassAll b
+        on a.classAllId=b.id
+        left join course.Department c
+        on a.departId=c.departId
+        where a.classId=#{classId}
+    </select>
+
 </mapper>

@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 获取本科空闲教室
- * http://219.245.47.20/jwbiz/sys/emapWS/ws/classroomResource.read.do?wsdl
+ * 仅适用于本科
  */
 @Service
 public class GetUndergradFreeClassroomInfo {
@@ -72,7 +71,7 @@ public class GetUndergradFreeClassroomInfo {
     public static void main(String[] args) {
         GetUndergradFreeClassroomInfo getUndergradFreeClassroomInfo = new GetUndergradFreeClassroomInfo();
 
-        SpareClassRoom classRoom1 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019","春季", 9,16, 1, 3, 4);
+        SpareClassRoom classRoom1 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019","春季", 1,8, 1, 1, 2);
         SpareClassRoom classRoom2 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019","秋季", 1, 8, 3, 1, 1);
         SpareClassRoom[] classRooms = {classRoom1};
 
@@ -80,4 +79,5 @@ public class GetUndergradFreeClassroomInfo {
         System.out.println(res);
 
     }
+
 }

@@ -30,7 +30,7 @@
     </select>
 
     <select id="getModelGrade" resultType="map">
-        select a.xbsjGrade, a.stuId, a.classId, b.classSemester, b.className, b.classTime,c.knskGrade,c.wlzzxxGrade,c.gradeAll
+        select a.xbsjGrade, a.stuId, a.classId, b.classSemester, b.className, b.classTime,c.knskGrade,c.wlzzGrade,c.gradeAll
         from Course_choose a
         left join Course b
         on a.classId = b.classId
@@ -43,4 +43,203 @@
       where classId=#{classId}
       and stuId=#{stuId}
      </update>
+
+    <update id="updateKnskGrade">
+      update course.KnskGrade set course.KnskGrade.knskGrade=#{grade}
+      where JXBID=#{JXBID}
+      and XH=#{stuId}
+     </update>
+
+    <select id="findAllStudent" resultType="map">
+        select a.*,b.username as XM,b.tutoremployeeid,b.speciality,b.dep as departName
+        from course.OtherGrade a
+        LEFT join course.XjtuUserInfo b
+        on a.XH=b.userno
+        left join  course.Department c
+        on b.depid=c.departCode
+        <where>
+            <if test="depId!=88888888 and depId!=null">
+                and c.departId= #{depId}
+            </if>
+            <if test="stuId!= '88888888' and stuId!=null ">
+                and a.XH= #{stuId}
+            </if>
+            <if test="academicYear!=null">
+                and a.academicYear = #{academicYear}
+            </if>
+        </where>
+    </select>
+
+    <select id="findStuById" resultType="map">
+        select a.*,b.username as XM,b.tutoremployeeid,b.speciality,b.dep as departName
+        from course.OtherGrade a
+        LEFT join course.XjtuUserInfo b
+        on a.XH=b.userno
+        where a.XH = #{stuId}
+    </select>
+
+    <update id="updateWlzzScore">
+      update course.OtherGrade set course.OtherGrade.wlzzGrade=#{grade}
+      where course.OtherGrade.XH=#{stuId}
+     </update>
+
+    <update id="updateDektScore">
+      update course.OtherGrade set course.OtherGrade.dektGrade=#{grade}
+      where course.OtherGrade.XH=#{stuId}
+     </update>
+
+    <update id="updateNlcsScore">
+      update course.OtherGrade set course.OtherGrade.nlcsGrade=#{grade}
+      where course.OtherGrade.XH=#{stuId}
+     </update>
+
+    <insert id="insertStu" >
+    INSERT INTO course.OtherGrade
+        (XH,academicYear) VALUES (#{stuId}, #{academicYear})
+    </insert>
+
+    <select id="findWlzzIsGrade" resultType="map">
+        select *
+        from course.OtherGrade a
+        where a.wlzzIsSubmit = 0
+    </select>
+
+    <select id="findDektIsGrade" resultType="map">
+        select *
+        from course.OtherGrade a
+        where a.dektIsSubmit = 0
+    </select>
+
+    <select id="findNlcsIsGrade" resultType="map">
+        select *
+        from course.OtherGrade a
+        where a.nlcsIsSubmit = 0
+    </select>
+
+    <select id="findXbsjStudents" resultType="map">
+        select a.xbsjGrade as grade, a.stuId, a.isChecked as status,b.username as stuName,b.dep,b.speciality
+        from Course_choose a
+        left join course.XjtuUserInfo b
+        on a.stuId=b.userno
+        where a.classId = #{classId}
+    </select>
+
+    <select id="findKnskStudents" resultType="map">
+        select a.knskGrade as grade, a.XH as stuId, a.isChecked as status,c.username as stuName,c.dep,c.speciality
+        from course.KnskGrade a
+        left join course.XjtuUserInfo c
+        on a.XH=c.userno
+        where a.JXBID = #{classId}
+    </select>
+
+    <update id="updateXbsjChecked">
+      update course.Course_choose set course.Course_choose.isChecked=#{isChecked}
+      where course.Course_choose.stuId=#{stuId} and course.Course_choose.classId=#{classId}
+     </update>
+
+    <update id="updateKnskChecked">
+      update course.KnskGrade set course.KnskGrade.isChecked=#{isChecked}
+      where course.KnskGrade.XH=#{stuId} and course.KnskGrade.JXBID=#{classId}
+     </update>
+
+
+    <update id="updateKnskSubmit">
+      update course.v_t_xk_by_yjsrw set course.v_t_xk_by_yjsrw.isGrade=0
+      where course.v_t_xk_by_yjsrw.JXBID=#{classId}
+     </update>
+
+    <update id="updateXbsjSubmit">
+      update course.Course set course.Course.isGrade=0
+      where course.Course.classId=#{classId}
+     </update>
+
+    <select id="findAllScore" resultType="map">
+        select a.stuId,a.xbsjGrade,a.knskGrade,a.wlzzGrade,a.dektGrade,a.nlcsGrade,b.dep as departName,b.speciality,b.username as stuName
+        from course.GradeAll a
+        left join course.XjtuUserInfo b
+        on a.stuId=b.userno
+        left join course.Department c
+        on b.depid=c.departCode
+        <where>
+            <if test="departId!=88888888">
+                and c.departId=#{departId}
+            </if>
+            <if test="stuId!='88888888'">
+                and a.stuId=#{stuId}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="uploadAllGradeKnsk">
+      update course.GradeAll set course.GradeAll.knskGrade=#{grade}
+      where course.GradeAll.stuId=#{stuId}
+     </update>
+
+    <update id="uploadAllGradeXbsj">
+      update course.GradeAll set course.GradeAll.xbsjGrade=#{grade}
+      where course.GradeAll.stuId=#{stuId}
+     </update>
+
+    <update id="uploadAllGradeOther">
+      update course.GradeAll
+      <set>
+          <if test="moduleId==1">
+              course.GradeAll.wlzzGrade=#{grade},
+          </if>
+          <if test="moduleId==2">
+              course.GradeAll.dektGrade=#{grade},
+          </if>
+          <if test="moduleId==3">
+              course.GradeAll.nlcsGrade=#{grade},
+          </if>
+      </set>
+      where course.GradeAll.stuId=#{stuId}
+     </update>
+
+
+
+    <select id="findXbsjPercent" resultType="int">
+        select gradePercentage
+        from course.gradePercent
+        where modelEng='xbsjGrade'
+    </select>
+
+    <select id="findKnskPercent" resultType="int">
+        select gradePercentage
+        from course.gradePercent
+        where modelEng='knskGrade'
+    </select>
+
+    <select id="findWlzzPercent" resultType="int">
+        select gradePercentage
+        from course.gradePercent
+        where modelEng='wlzzGrade'
+    </select>
+
+    <select id="findDektPercent" resultType="int">
+        select gradePercentage
+        from course.gradePercent
+        where modelEng='dektGrade'
+    </select>
+
+    <select id="findNlcsPercent" resultType="int">
+        select gradePercentage
+        from course.gradePercent
+        where modelEng='nlcsGrade'
+    </select>
+
+    <update id="updateWlzzIsSubmit">
+      update course.OtherGrade set course.OtherGrade.wlzzIsSubmit=1
+     </update>
+
+    <update id="updateDektIsSubmit">
+      update course.OtherGrade set course.OtherGrade.dektIsSubmit=1
+     </update>
+
+    <update id="updateNlcsIsSubmit">
+      update course.OtherGrade set course.OtherGrade.nlcsIsSubmit=1
+     </update>
+
+
 </mapper>
