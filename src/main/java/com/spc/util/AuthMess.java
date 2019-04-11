@@ -49,6 +49,4 @@ public class AuthMess {
         System.out.println("AuthMess-userDepartid:"+depid);
         return depid;
     }
-
-
 }

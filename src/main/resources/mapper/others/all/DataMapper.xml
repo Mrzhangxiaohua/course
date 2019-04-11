@@ -28,14 +28,5 @@
         from
         XuanKeStu
     </select>
-    <select id="findDepartId" resultType="int">
-        select departId
-        from course.Department
-        where 1=1
-        <if test="#{departCode!=null}">
-        and departCode=#{departCode}
-        </if>
-
-    </select>
 
 </mapper>

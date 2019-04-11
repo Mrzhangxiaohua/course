@@ -272,7 +272,6 @@ public class ClassAllController extends Base {
         classAll.setOperatorId(operatorId);
         classAll.setOperatorName(operatorName);
         logger.info("scheduleClass: " + classAll.toString());
-
         return classAllService.scheduleClass(classAll);
     }
 
@@ -483,7 +482,7 @@ public class ClassAllController extends Base {
     @RequestMapping("/getTeacherOccupyTime")
     @ResponseBody
 //    classWeeks是0101的串
-    public Map getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, HttpServletRequest request) {
+    public boolean[][] getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
         String operatorId = httpSession.getAttribute("userId").toString();
         String operatorName = httpSession.getAttribute("username").toString();
@@ -539,7 +538,7 @@ public class ClassAllController extends Base {
                 String weekTime=(String)tab.get("classDateDescription");
                 String [] weekTimes1=weekTime.split(",");
                 String[] weekdays={"  星期一  ","  星期二  ","  星期三  ","  星期四  ","  星期五  ","  星期六  ","  星期日  "};
-                String[] courseTime={"上1","上2","上3","上4","下5","下6","下7","下8","晚9","晚10","晚11"};
+                String[] courseTime={"上1","上2","上3","上4","N1","N2","下5","下6","下7","下8","晚9","晚10","晚11"};
                 for(int i=0;i<weekTimes1.length;i++)
                 {
                     String [] weekTimes=weekTimes1[i].split(":");
@@ -606,7 +605,7 @@ public class ClassAllController extends Base {
     }
 
     /**
-     * 一键获取所有学院的上课的一维课表 excel格式
+     * 一键获取所有教室的上课的一维课表 excel格式
      *
      * @param classSemester 春、秋、departId
      * @return
@@ -729,5 +728,18 @@ public class ClassAllController extends Base {
         response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName,"utf-8"));
         response.flushBuffer();
         workbook.write(response.getOutputStream());
+    }
+
+    /**
+     * 修改选课人数上限
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping("/updata/stuNumUpperLimit")
+    @ResponseBody
+    public void updateStuNumUpperLimit(@RequestParam int id,@RequestParam int stuNumUpperLimit) {
+        int classAllId=id;
+        classAllService.updateStuNumUpperLimit(classAllId,stuNumUpperLimit);
     }
 }

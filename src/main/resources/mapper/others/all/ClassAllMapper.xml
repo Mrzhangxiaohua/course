@@ -221,7 +221,7 @@
 
 
     <select id="selectOneDimClassAll" resultType="map">
-        select  a.departId,a.courseId,a.courseNameCHS,a.classHour,a.className,b.teaName,b.classChooseNum,b.classPlace,b.startWeek,b.endWeek,b.classDateDescription,c.name
+        select  a.departId,a.courseId,a.courseNameCHS,a.classHour,a.className,b.teaName,b.classChooseNum,b.classPlace,b.startWeek,b.endWeek,b.classDateDescription,b.classNum,c.name
         from course.ClassAll  a
         join course.Course b
         on a.id=b.classAllId
@@ -295,11 +295,23 @@
     </select>
 
     <insert id="addFirstClass" useGeneratedKeys="true" keyProperty="id" flushCache="true"
-            parameterType="com.spc.model.CourseAll">
-      insert into course.ClassAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,teachingTeamIds,teachingTeamNames)
-      values(#{departId},#{courseId},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},#{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames})
+            parameterType="com.spc.model.ClassAll">
+      insert into course.ClassAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,className)
+      values(#{departId},#{courseId},#{courseNameCHS},null,#{classModuleNum},null,null,#{classTime},null,#{teaId},#{teaName},#{className})
     </insert>
+    <update id="updateStuNumUpperLimit" flushCache="true">
+        update course.ClassAll a
+        left join course.Course b
+        on a.id=b.classAllId
+        set a.stuNumUpperLimit  = #{stuNumUpperLimit},b.classUpperLimit = #{stuNumUpperLimit}
+        where a.id = #{classAllId}
+    </update>
 
-
+    <select id="getKnskCourse" resultType="Map">
+        select *
+        from course.v_t_xk_by_yjsrw
+        where (KCH='121066' OR KCH='121067' OR KCH='122036')
+        and XNXQDM like "%"#{academicYear}"%"
+    </select>
 
 </mapper>

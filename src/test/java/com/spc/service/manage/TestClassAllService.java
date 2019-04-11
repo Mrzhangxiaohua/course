@@ -6,8 +6,6 @@ import com.spc.service.manage.stuAdjust.StuAdjustService;
 import com.spc.service.student.StudentService;
 import com.spc.service.student.studentEvaluate.StudentEvaluateService;
 import com.spc.service.teacher.TeacherService;
-import com.spc.service.wsdl.TeachersOccupyTimeWebservice.TeacherCurriculumInfo;
-import com.spc.service.wsdl.TeachersOccupyTimeWebservice.TeacherOccupyTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,11 +35,6 @@ public class TestClassAllService {
 
     @Autowired
     public StuAdjustService stuAdjustService;
-
-    @Autowired
-    ClassroomInfoService classroomInfoService;
-    @Autowired
-    TeacherCurriculumInfo teacherCurriculumInfo;
 
     @Test
     public void testScheduleClass(){
@@ -118,5 +111,4 @@ public class TestClassAllService {
     public void testSelectList(){
         studentEvaluateService.selectList("3118305556");
     }
-
 }
