@@ -56,5 +56,7 @@ public interface StudentDao {
     public List<Map<String, Object>> selectList1(@Param("stuId") String stuId);
 
     public List<Map<String, Object>> showCommentList(@Param("stuId") String stuId, @Param("classId") String classId);
+    
+    int finSchoolDistrict(@Param("stuId") String stuId);
 
 }
