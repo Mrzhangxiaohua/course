@@ -865,6 +865,11 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     }
 
     @Override
+    public List<ClassAll> getClassAllDepart(int departId, String academicYear, String classSemester, String courseId, String courseName, String teacherName) {
+        return classAllDao.selectClassAllDepart(departId, academicYear, classSemester, courseId, courseName, teacherName);
+    }
+
+    @Override
     public List<Map<String, Object>> findRoomList(String academicYear, String classSemester) {
         List<Map<String,Object>> roomList=classAllDao.selectAllRoom(academicYear,classSemester);
 

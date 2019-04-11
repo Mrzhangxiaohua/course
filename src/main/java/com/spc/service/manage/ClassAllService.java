@@ -43,4 +43,5 @@ public interface ClassAllService {
 
     List<Map<String, Object>> getOneDimRoomTimeTable(String roomName, String academicYear, String classSemester);
 
+    List<ClassAll> getClassAllDepart(int departId, String academicYear, String classSemester, String courseId, String courseName, String teacherName);
 }
