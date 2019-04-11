@@ -1432,6 +1432,7 @@ public class ManageController extends Base {
         }
     }
 
+    
     /**
      * 学院管理员端：审核成绩
      * 一键审核整个班级
