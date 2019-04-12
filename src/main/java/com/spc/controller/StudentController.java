@@ -42,6 +42,8 @@ public class StudentController extends Base{
 
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private ManageService manageService;
 
     @Autowired
     private GradeService gradeService;
@@ -527,7 +529,6 @@ public class StudentController extends Base{
     public Map<String,Object>  findStatus( HttpSession session,@RequestParam int id){
         String stuId= (String) session.getAttribute("userId");
         return studentService.findWaitStatus(id);
-    }*/
     }
 
     /**
@@ -540,9 +541,6 @@ public class StudentController extends Base{
         List<Map<String,Object>> stu=manageService.findAllScore(88888888,stuId);
         return stu;
     }
-
-
-
 
 }
 
