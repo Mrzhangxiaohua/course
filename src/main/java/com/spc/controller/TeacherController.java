@@ -1464,12 +1464,19 @@ public class TeacherController extends Base {
                 classService.updateXbsjScore(classId,stuId,Float.parseFloat(xbsjGrade));
                 stuXbsjClass=classService.findStuXbsjClass(stuId);
                 float grade=0;
+                int classTime=0;
                 for(Map course:stuXbsjClass){
-                    if((float)course.get("xbsjGrade")!=0)
-                        grade=grade+(float)course.get("xbsjGrade")*((int)course.get("classTime")/(float)32);
-                    else{
-                        grade=0;
-                        break;
+                    classTime=classTime+(int)course.get("classTime");
+
+                }
+                if(classTime==32) {
+                    for (Map course : stuXbsjClass) {
+                        if ((float) course.get("xbsjGrade") != 0)
+                            grade = grade + (float) course.get("xbsjGrade") * ((int) course.get("classTime") / (float) 32);
+                        else {
+                            grade = 0;
+                            break;
+                        }
                     }
                 }
                 if(grade!=0){
