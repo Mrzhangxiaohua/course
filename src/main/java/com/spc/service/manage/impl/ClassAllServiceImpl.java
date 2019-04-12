@@ -865,13 +865,31 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     }
 
     @Override
-    public void updateStuNumUpperLimit(int classAllId, int stuNumUpperLimit) {
+    public List<ClassAll> getClassAllDepart(int departId, String academicYear, String classSemester, String courseId, String courseName, String teacherName) {
+        return classAllDao.selectClassAllDepart(departId, academicYear, classSemester, courseId, courseName, teacherName);
+    }
 
+    @Override
+    public void updateStuNumUpperLimit(int classAllId,int stuNumUpperLimit) {
+        classAllDao.updateStuNumUpperLimit(classAllId,stuNumUpperLimit);
     }
 
     @Override
     public List<Map<String, Object>> getKnskCourse(String academicYear) {
-        return null;
+        List<Map<String, Object>> classes = classAllDao.getKnskCourse(academicYear);
+
+        for(Map cl:classes){
+            if(cl.get("KCH").equals("121066")) {
+                cl.put("KCM","学术英语(一)");
+            }
+            if(cl.get("KCH").equals("121067")) {
+                cl.put("KCM","学术英语(二)");
+            }
+            if(cl.get("KCH").equals("122036")) {
+                cl.put("KCM","学术英语写作");
+            }
+        }
+        return classes;
     }
 
     @Override

@@ -72,7 +72,7 @@ public class ClassAllController extends Base {
     private GetUndergradFreeClassroomInfo freeClassroomService;
 
     /**
-     * 获取课程列表
+     * 获取课程列表--超管
      *
      * @param currentPage
      * @param pageSize
@@ -82,7 +82,7 @@ public class ClassAllController extends Base {
      * @param classSemester
      * @return
      */
-    @RequestMapping("/getClassAll")
+      @RequestMapping("/getClassAll")
     @ResponseBody
     public Map<String, Object> getClassAll(@RequestParam(required = false, defaultValue = "1") int currentPage,
                                            @RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -98,7 +98,7 @@ public class ClassAllController extends Base {
         // get user's departId
         HttpSession httpSession = request.getSession();
         Object departIdObject = httpSession.getAttribute("departId");
-        if (null == departIdObject) {
+        if (null == departIdObject||departIdObject.equals("0")) {
             return null;
         }
 
@@ -108,6 +108,38 @@ public class ClassAllController extends Base {
         PageHelper.startPage(currentPage, pageSize);
         List<ClassAll> courses = classAllService.getClassAll(departId, academicYear, classSemester, courseId,
                 courseName, teacherId, teacherName, classPlaceId, selectDepartId);
+
+        Map<String, Object> res = new HashMap<>();
+        res.put("status", "SUCCESS");
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("total", ((Page) courses).getTotal());
+        data.put("pageSize", pageSize);
+        data.put("currentPage", currentPage);
+        data.put("list", courses);
+        res.put("data", data);
+        return res;
+    }
+    /*
+    * 院管课程列表
+    * */
+    @RequestMapping("/getClassAllDepart")
+    @ResponseBody
+    public Map<String, Object> getClassAllDepart(@RequestParam(required = false, defaultValue = "1") int currentPage,
+                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                           @RequestParam(required = false) String academicYear,
+                                           @RequestParam(required = false) String classSemester,
+                                           @RequestParam(required = false) String courseId,
+                                           @RequestParam(required = false) String courseName,
+                                           @RequestParam(required = false) String teacherName,
+                                           @SessionAttribute("departId") Object departIdStr) {
+        if (null == departIdStr||departIdStr.equals("0")) {
+            return null;
+        }
+
+        int departId = Integer.parseInt(departIdStr.toString());
+        PageHelper.startPage(currentPage, pageSize);
+        List<ClassAll> courses = classAllService.getClassAllDepart(departId, academicYear, classSemester, courseId, courseName,  teacherName);
 
         Map<String, Object> res = new HashMap<>();
         res.put("status", "SUCCESS");
@@ -269,11 +301,16 @@ public class ClassAllController extends Base {
      */
     @RequestMapping("/getDepartTimeTable")
     @ResponseBody
-    public String[][] getDepartTimeTable(@RequestParam String academicYear, @RequestParam String classSemester,@RequestParam("departmentId") String depId,HttpSession session) {
-       if (depId==null|| depId.equals("")){
+    public String[][] getDepartTimeTable(@RequestParam String academicYear, @RequestParam String classSemester,
+                                         @RequestParam(value="departmentId",required = false,defaultValue = "88888") String depId,HttpSession session) {
+        if(depId.equals("0")){
+            return null;
+        }
+        if ( depId.equals("88888")){
            depId = session.getAttribute("departId").toString();
        }
         int departId = Integer.parseInt(depId);
+        System.out.println(departId);
         return classAllService.getDepartTimeTable(departId, academicYear, classSemester);
     }
 

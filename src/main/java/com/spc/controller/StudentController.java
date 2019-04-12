@@ -42,8 +42,6 @@ public class StudentController extends Base{
 
     @Autowired
     private StudentService studentService;
-    @Autowired
-    private ManageService manageService;
 
     @Autowired
     private GradeService gradeService;
@@ -294,17 +292,16 @@ public class StudentController extends Base{
         try {
             JSONObject obj = new JSONObject(json);
             Integer classId = obj.getInt("classId");
-            List<Map<String,Object>> waitingList=studentService.findWaiting(classId);
             studentService.deleteCourse(classId, (String) request.getSession().getAttribute("userId"));
-            if(waitingList.size()!=0) {
-                String stuId= (String) waitingList.get(0).get("stuId");
-                int id= (int) waitingList.get(0).get("id");
-                studentService.addyuanzi(classId,stuId);
-                studentService.updateWaitingFlag(id);
+//            List<Map<String,Object>> waitingList=studentService.findWaiting(classId);
+//            if(waitingList.size()!=0) {
+//                String stuId= (String) waitingList.get(0).get("stuId");
+//                int id= (int) waitingList.get(0).get("id");
+//                studentService.addyuanzi(classId,stuId);
+//                studentService.updateWaitingFlag(id);
                 return 1;
             }
-
-        } catch (Exception e) {
+         catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
@@ -500,21 +497,21 @@ public class StudentController extends Base{
         return res;
     }
 
-    @RequestMapping("waiting/apply")
+/*    @RequestMapping("waiting/apply")
     @ResponseBody
     public int waitingApply( HttpSession session, @RequestParam int classId){
         String stuId= (String) session.getAttribute("userId");
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date=sdf.format(new Date());
         return studentService.addWaiting(stuId,classId,1,date);
-    }
+    }*/
 
-    @RequestMapping("waiting/delete")
+/*    @RequestMapping("waiting/delete")
     @ResponseBody
     public int waitingDelete( HttpSession session, @RequestParam int id){
 
         return studentService.deleteWaiting(id);
-    }
+    }*/
 
 /*
     @RequestMapping("waiting/lookUp")
@@ -525,11 +522,12 @@ public class StudentController extends Base{
     }
 */
 
-    @RequestMapping("waiting/findStatus")
+  /*  @RequestMapping("waiting/findStatus")
     @ResponseBody
     public Map<String,Object>  findStatus( HttpSession session,@RequestParam int id){
         String stuId= (String) session.getAttribute("userId");
         return studentService.findWaitStatus(id);
+    }*/
     }
 
     /**
