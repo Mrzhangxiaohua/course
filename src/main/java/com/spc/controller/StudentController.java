@@ -7,6 +7,7 @@ import com.spc.model.ClassDomain;
 import com.spc.model.CourseTableExcelDomain;
 import com.spc.model.GradeDomain;
 import com.spc.service.grade.GradeService;
+import com.spc.service.manage.ManageService;
 import com.spc.service.student.StudentService;
 import com.spc.service.user.UserService;
 import com.spc.util.CalculateWeekth;
@@ -41,6 +42,8 @@ public class StudentController extends Base{
 
     @Autowired
     private StudentService studentService;
+    @Autowired
+    private ManageService manageService;
 
     @Autowired
     private GradeService gradeService;
@@ -526,6 +529,18 @@ public class StudentController extends Base{
     public Map<String,Object>  findStatus( HttpSession session,@RequestParam int id){
         String stuId= (String) session.getAttribute("userId");
         return studentService.findWaitStatus(id);
-    }*/
+    }
+
+    /**
+     * 学生查询总成绩
+     */
+    @RequestMapping("/stuFindScore")
+    @ResponseBody
+    public List<Map<String,Object>>  findScore( HttpSession session){
+        String stuId= (String) session.getAttribute("userId");
+        List<Map<String,Object>> stu=manageService.findAllScore(88888888,stuId);
+        return stu;
+    }
+
 }
 

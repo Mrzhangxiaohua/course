@@ -4,6 +4,7 @@ import com.spc.model.ClassAll;
 import com.spc.model.CourseAll;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,8 @@ public interface ClassAllDao {
                                   @Param("classPlaceId") String classPlaceId,
                                   @Param("selectDepartId") String selectDepartId);
 
+    void updateStuNumUpperLimit(@Param("classAllId") int classAllId, @Param("stuNumUpperLimit") int stuNumUpperLimit);
+
     int addFirstClass(CourseAll courseAll);
 
     List<ClassAll> selectClassAllDepart(@Param("departId") Integer departId,
@@ -82,4 +85,5 @@ public interface ClassAllDao {
                                         @Param("courseId") String courseId,
                                         @Param("courseName") String courseName,
                                         @Param("teacherName") String teacherName);
+    List<Map<String, Object>> getKnskCourse(@Param("academicYear") String academicYear);
 }

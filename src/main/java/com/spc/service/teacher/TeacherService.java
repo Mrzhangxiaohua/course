@@ -40,5 +40,16 @@ public interface TeacherService {
 
     int uploadFile(MultipartFile file, String userId, String dep, int type, String filePath);
 
-    int insertGradeExcel(int classId, int fileInfoId);
+    int insertGradeExcel(int status,int classId, int fileInfoId);
+
+    int insertKnskGradeExcel(int status,String JXBID,int fileInfoId);
+
+    void updateKnskScore(String JXBID,String stuId,float grade);
+
+    List<Map<String, Object>> showGradeExcel(int fileInfoId);
+
+    List<Map<String, Object>> showKnskGradeExcel(int fileInfoId);
+
+
+
 }

@@ -272,7 +272,6 @@ public class ClassAllController extends Base {
         classAll.setOperatorId(operatorId);
         classAll.setOperatorName(operatorName);
         logger.info("scheduleClass: " + classAll.toString());
-
         return classAllService.scheduleClass(classAll);
     }
 
@@ -483,7 +482,7 @@ public class ClassAllController extends Base {
     @RequestMapping("/getTeacherOccupyTime")
     @ResponseBody
 //    classWeeks是0101的串
-    public Map getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, HttpServletRequest request) {
+    public boolean[][] getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
         String operatorId = httpSession.getAttribute("userId").toString();
         String operatorName = httpSession.getAttribute("username").toString();
@@ -729,5 +728,18 @@ public class ClassAllController extends Base {
         response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName,"utf-8"));
         response.flushBuffer();
         workbook.write(response.getOutputStream());
+    }
+
+    /**
+     * 修改选课人数上限
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping("/updata/stuNumUpperLimit")
+    @ResponseBody
+    public void updateStuNumUpperLimit(@RequestParam int id,@RequestParam int stuNumUpperLimit) {
+        int classAllId=id;
+        classAllService.updateStuNumUpperLimit(classAllId,stuNumUpperLimit);
     }
 }

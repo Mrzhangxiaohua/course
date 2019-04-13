@@ -240,15 +240,15 @@ public class TeacherServiceImpl extends Base implements TeacherService {
     }
 
     @Override
-    public int insertGradeExcel(int classId, int fileInfoId) {
-        Map<String, Object> fileInfo= (Map<String, Object>) fileInfoDao.selectGradeExcel(fileInfoId).get(0);
-        String fileName=(String)fileInfo.get("fileName");
-        String path=(String)fileInfo.get("path");
-        File file=new File(path+fileName);
-        if(file==null){
+    public int insertGradeExcel(int status, int classId, int fileInfoId) {
+        Map<String, Object> fileInfo = (Map<String, Object>) fileInfoDao.selectGradeExcel(fileInfoId).get(0);
+        String fileName = (String) fileInfo.get("fileName");
+        String path = (String) fileInfo.get("path");
+        File file = new File(path + fileName);
+        if (file == null) {
             return 0;
         }
-        Workbook workbook=null;
+        Workbook workbook = null;
         try (FileInputStream is = new FileInputStream(file)) {
             if (file.getName().endsWith(".xls")) {
                 workbook = new HSSFWorkbook(is);
@@ -258,29 +258,182 @@ public class TeacherServiceImpl extends Base implements TeacherService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(workbook!=null){
-            int sheetNum=workbook.getNumberOfSheets();
-            for(int i=0;i<sheetNum;i++){
-                Sheet sheet=workbook.getSheetAt(i);
-                for(int j=1;j<sheet.getLastRowNum();j++){
-                    Row row=sheet.getRow(j);
-                    if(row ==null){
+        if (workbook != null) {
+            int sheetNum = workbook.getNumberOfSheets();
+            for (int i = 0; i < sheetNum; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                for (int j = 1; j < sheet.getLastRowNum(); j++) {
+                    Row row = sheet.getRow(j);
+                    if (row == null) {
                         continue;
                     }
 
-                    String stuId=row.getCell(1).getStringCellValue();
-                    String grade= row.getCell(3).getStringCellValue();
-                    if(grade!=null && grade.equals("")){
-                        gradeDao.updateGrade(classId,stuId,Float.parseFloat(grade));
+                    String stuId = row.getCell(1).getStringCellValue();
+                    String grade = row.getCell(4).getStringCellValue();
+                    if (grade != null && grade.equals("")) {
+                        gradeDao.updateGrade(classId, stuId, Float.parseFloat(grade));
                     }
 
                 }
-                classDao.updateGradeFlag(classId);
+                if (status == 1)
+                    classDao.updateGradeFlag(classId);
             }
             return 1;
         }
 
 
         return 0;
+    }
+
+    @Override
+    public int insertKnskGradeExcel(int status, String JXBID, int fileInfoId) {
+        Map<String, Object> fileInfo = (Map<String, Object>) fileInfoDao.selectGradeExcel(fileInfoId).get(0);
+        String fileName = (String) fileInfo.get("fileName");
+        String path = (String) fileInfo.get("path");
+        File file = new File(path + fileName);
+        if (file == null) {
+            return 0;
+        }
+        Workbook workbook = null;
+        try (FileInputStream is = new FileInputStream(file)) {
+            if (file.getName().endsWith(".xls")) {
+                workbook = new HSSFWorkbook(is);
+            } else if (file.getName().endsWith(".xlsx")) {
+                workbook = new XSSFWorkbook(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (workbook != null) {
+            int sheetNum = workbook.getNumberOfSheets();
+            for (int i = 0; i < sheetNum; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                for (int j = 1; j < sheet.getLastRowNum(); j++) {
+                    Row row = sheet.getRow(j);
+                    if (row == null) {
+                        continue;
+                    }
+
+                    String stuId = row.getCell(1).getStringCellValue();
+                    String grade = row.getCell(4).getStringCellValue();
+                    if (grade != null && grade.equals("")) {
+                        gradeDao.updateKnskGrade(JXBID, stuId, Float.parseFloat(grade));
+                    }
+
+                }
+                if (status == 1)
+                    classDao.updateKnskGradeFlag(JXBID);
+            }
+            return 1;
+        }
+
+
+        return 0;
+    }
+
+    @Override
+    public void updateKnskScore(String JXBID, String stuId, float grade) {
+        gradeDao.updateKnskGrade(JXBID, stuId, grade);
+    }
+
+    @Override
+    public List<Map<String, Object>> showGradeExcel(int fileInfoId) {
+        List<Map<String, Object>> students = new ArrayList<>();
+        System.out.println(111112);
+        Map<String, Object> fileInfo = teacherDao.selectGradeExcel(fileInfoId);
+        String fileName = (String) fileInfo.get("fileName");
+        String path = (String) fileInfo.get("path");
+        System.out.println(fileName);
+        File file = new File(path );
+        if (file == null) {
+            return null;
+        }
+        Workbook workbook = null;
+        try (FileInputStream is = new FileInputStream(file)) {
+            if (file.getName().endsWith(".xls")) {
+                workbook = new HSSFWorkbook(is);
+            } else if (file.getName().endsWith(".xlsx")) {
+                workbook = new XSSFWorkbook(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (workbook != null) {
+            int sheetNum = workbook.getNumberOfSheets();
+            for (int i = 0; i < sheetNum; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                System.out.println(sheet.getLastRowNum());
+                for (int j = 1; j <=sheet.getLastRowNum(); j++) {
+                    Row row = sheet.getRow(j);
+                    if (row == null) {
+                        continue;
+                    }
+                    Map<String, Object> stu = new HashMap<>();
+                    String stuName = row.getCell(0).getStringCellValue();
+                    String stuId = row.getCell(1).getStringCellValue();
+                    String departName = row.getCell(2).getStringCellValue();
+                    String speciality = row.getCell(3).getStringCellValue();
+                    String grade = String.valueOf(row.getCell(4).getNumericCellValue());
+                    stu.put("stuName", stuName);
+                    stu.put("stuId", stuId);
+                    stu.put("departName", departName);
+                    stu.put("speciality", speciality);
+                    stu.put("xbsjGrade", Float.parseFloat(grade));
+                    System.out.println("学生信息："+String.valueOf(stu));
+                    students.add(stu);
+                }
+            }
+        }
+
+
+        return students;
+    }
+
+    @Override
+    public List<Map<String, Object>> showKnskGradeExcel(int fileInfoId) {
+        List<Map<String, Object>> students = new ArrayList<>();
+        Map<String, Object> fileInfo = teacherDao.selectGradeExcel(fileInfoId);
+        String fileName = (String) fileInfo.get("fileName");
+        String path = (String) fileInfo.get("path");
+        File file = new File(path );
+        if (file == null) {
+            return null;
+        }
+        Workbook workbook = null;
+        try (FileInputStream is = new FileInputStream(file)) {
+            if (file.getName().endsWith(".xls")) {
+                workbook = new HSSFWorkbook(is);
+            } else if (file.getName().endsWith(".xlsx")) {
+                workbook = new XSSFWorkbook(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (workbook != null) {
+            int sheetNum = workbook.getNumberOfSheets();
+            for (int i = 0; i < sheetNum; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                System.out.println(sheet.getLastRowNum());
+                for (int j = 1; j <=sheet.getLastRowNum(); j++) {
+                    Row row = sheet.getRow(j);
+                    if (row == null) {
+                        continue;
+                    }
+                    Map<String, Object> stu = new HashMap<>();
+                    String stuName = row.getCell(0).getStringCellValue();
+                    String stuId = row.getCell(1).getStringCellValue();
+                    String departName = row.getCell(2).getStringCellValue();
+                    String speciality = row.getCell(3).getStringCellValue();
+                    String grade = String.valueOf(row.getCell(4).getNumericCellValue());
+                    stu.put("stuName", stuName);
+                    stu.put("stuId", stuId);
+                    stu.put("departName", departName);
+                    stu.put("speciality", speciality);
+                    stu.put("knskGrade", Float.parseFloat(grade));
+                    students.add(stu);
+                }
+            }
+        }
+        return students;
     }
 }

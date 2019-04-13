@@ -11,6 +11,7 @@ public class CourseApplication {
     private int id;
     private int departId;
     private String departName;
+    private String courseId;
     private String courseNameCHS;
     private String courseNameEN;
     private int moduleId;
@@ -69,6 +70,14 @@ public class CourseApplication {
 
     public void setDepartId(int departId) {
         this.departId = departId;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     public String getCourseNameCHS() {

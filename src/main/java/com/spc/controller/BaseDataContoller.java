@@ -25,7 +25,7 @@ public class BaseDataContoller extends Base {
 
     /**
      * 数据：获得基础的院系信息
-     *
+     *select/classes
      * @return list(map)
      */
 
