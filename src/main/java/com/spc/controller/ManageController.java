@@ -16,7 +16,6 @@ import com.spc.service.teacher.TeacherService;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
 import com.spc.view.*;
-import com.sun.deploy.net.URLEncoder;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -40,6 +39,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.net.URLEncoder;
 
 /**
  * 这个类提供管理端的路由。
