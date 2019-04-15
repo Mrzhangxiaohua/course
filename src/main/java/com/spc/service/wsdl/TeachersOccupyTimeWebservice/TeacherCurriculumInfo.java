@@ -96,8 +96,9 @@ public class TeacherCurriculumInfo extends Base {
                 // 返回周次，000000001000000000000000000000，表示在第九周有一节课
                 String skzc = kzJskbs[i].getSKZC();
                 // 返回教室代码
-                String jasdm = kzJskbs[i].getJASDM();
-                res.add(new TeacherOccupyTime(jasdm, skzc, skxq - 1, getClassHourIndex(ksjc), getClassHourIndex(jsjc)));
+                String XXXQDM = kzJskbs[i].getXXXQDM();
+
+                res.add(new TeacherOccupyTime(XXXQDM, skzc, skxq - 1, getClassHourIndex(ksjc), getClassHourIndex(jsjc)));
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -124,10 +125,10 @@ public class TeacherCurriculumInfo extends Base {
         int[][] schoolDistrict = new int[CLASS_HOURS_PER_DAY][CLASS_HOURS_PER_DAY];
         for (TeacherOccupyTime teacherOccupyTime : teacherOccupyTimes) {
             // TODO fix
-            String x = teacherOccupyTime.getJasdm();
-
-            int y = classroomInfoService.getClassRoomToSchoolDistrict(x);
-            System.out.println(y);
+//            String x = teacherOccupyTime.getJasdm();
+            System.out.println("=============================" + "进行检测");
+//            int y = classroomInfoService.getClassRoomToSchoolDistrict(x);
+//            System.out.println(y); // 1020544
             String weeks = "00000011110000000000001110";
             for (int i = 0; i < weeks.length() && i < teacherOccupyTime.getWeeks().length(); i++) {
                 if (weeks.charAt(i) == '1' && teacherOccupyTime.getWeeks().charAt(i) == '1'){
@@ -135,7 +136,7 @@ public class TeacherCurriculumInfo extends Base {
                         // true 表示有占用
                         res[j][teacherOccupyTime.getDayIndex()] = true;
                         // 写入schoolDistrict
-                        schoolDistrict[j][teacherOccupyTime.getDayIndex()] = y;
+                        schoolDistrict[j][teacherOccupyTime.getDayIndex()] = Integer.parseInt(teacherOccupyTime.getXXXQDM());
                     }
                     break;
                 }

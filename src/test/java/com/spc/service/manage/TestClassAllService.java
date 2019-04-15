@@ -119,4 +119,14 @@ public class TestClassAllService {
         studentEvaluateService.selectList("3118305556");
     }
 
+//    @Test
+//    public void testClassroomInfoService(){
+//        String teacherId="SZB2013032";
+//        String academicYear="2018-2019";
+//        String classSemester = "春季";
+//        String classWeeks="11111111000000000000000000";
+//        int startWeek = 1;
+//        int endWeek=8;
+//        teacherCurriculumInfo.queryTeacherOccupyTime("3118105316","张发",teacherId,academicYear,classSemester);
+//    }
 }
