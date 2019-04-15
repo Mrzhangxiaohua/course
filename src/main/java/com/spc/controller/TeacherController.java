@@ -1468,7 +1468,6 @@ public class TeacherController extends Base {
                 String stuId= (String) stu.get("stuId");
                 String xbsjGrade= String.valueOf(stu.get("xbsjGrade"));
                 int isChecked=stu.getInt("isChecked");
-                System.out.println("----------isChecked----------"+isChecked);
                 List<Map<String,Object>> stuXbsjClass=new ArrayList<>();
                 classService.updateXbsjScore(classId,stuId,Float.parseFloat(xbsjGrade));
                 stuXbsjClass=classService.findStuXbsjClass(stuId);

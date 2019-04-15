@@ -541,6 +541,5 @@ public class StudentController extends Base{
         List<Map<String,Object>> stu=manageService.findAllScore(88888888,stuId);
         return stu;
     }
-
 }
 

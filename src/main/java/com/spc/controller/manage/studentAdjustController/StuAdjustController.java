@@ -29,24 +29,30 @@ public class StuAdjustController extends Base {
     @Autowired
     StuAdjustService stuAdjustService;
 
-    // 获取所有开课季节的课程
-
+    /**
+     * 获取所有开课季节的课程
+     * @param departId
+     * @return 当前季节的课程结果
+     */
     @RequestMapping("/getAllCourse")
     @ResponseBody
     public List<Map<String, Object>> getAllCourse(@RequestParam(required = false, defaultValue = "") String departId){
         return stuAdjustService.getAllCourse(Base.CURRENTSEMESTER, departId);
     }
 
-    // 根据学生Id替换班级
+    /**
+     * 根据学生Id替换班级
+     * @param request
+     * @return 失败返回0 ，成功返回1
+     */
     @RequestMapping(value = "/moveStudent", method = RequestMethod.POST)
     @ResponseBody
     public int moveStudent(HttpServletRequest request){
         try {
             JSONObject obj = new JSONObject(RequestPayload.getRequestPayload(request));
-            logger.info("接收到的对象信息为："+obj);
+//            logger.info("接收到的对象信息为："+obj);
             // 1. 需要获取到学生ID，目前的班级classId，要调整到的班级classId
             JSONArray stuId = obj.getJSONArray("stuList");
-            logger.info("解析到的学号信息为："+stuId);
             Integer oldClassId = obj.getInt("oldClassId");
             Integer newClassId = obj.getInt("newClassId");
             // 2. 根据获得的信息进行调整班级
