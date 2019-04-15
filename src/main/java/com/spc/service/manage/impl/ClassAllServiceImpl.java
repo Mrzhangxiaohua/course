@@ -71,9 +71,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     private SynchroTable synchroTableService;
 
     @Override
-    public List<ClassAll> getClassAll(Integer departId, String academicYear, String classSemester, String courseId,
+    public List<Map<String, Object>> getClassAll(Integer departId, String academicYear, String classSemester, String courseId,
                                       String courseName, String teacherId, String teacherName, String classPlaceId, String selectDepartId) {
-        return classAllDao.selectClassAll(departId, academicYear, classSemester, courseId, courseName, teacherId, teacherName, classPlaceId, selectDepartId);
+        return classAllDao.selectClassAllChoose(departId, academicYear, classSemester, courseId, courseName, teacherId, teacherName, classPlaceId, selectDepartId);
     }
 
 
@@ -865,7 +865,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     }
 
     @Override
-    public List<ClassAll> getClassAllDepart(int departId, String academicYear, String classSemester, String courseId, String courseName, String teacherName) {
+    public List<Map<String, Object>> getClassAllDepart(int departId, String academicYear, String classSemester, String courseId, String courseName, String teacherName) {
         return classAllDao.selectClassAllDepart(departId, academicYear, classSemester, courseId, courseName, teacherName);
     }
 
