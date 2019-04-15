@@ -12,7 +12,7 @@ select a.classEncode  as KCBH, -- 课程编号
        null           as XDND  -- 学年年度
 from Course a
        left join
-       (select courseNameCHS,courseNameEN from ClassAll group by courseNameCHS,courseNameEN) as b
+       mid as b
        on a.className = b.courseNameCHS
        left join Department as c on c.departId = a.departId;
 
