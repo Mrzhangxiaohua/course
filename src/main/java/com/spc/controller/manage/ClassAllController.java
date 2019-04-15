@@ -539,7 +539,7 @@ public class ClassAllController extends Base {
                 String weekTime=(String)tab.get("classDateDescription");
                 String [] weekTimes1=weekTime.split(",");
                 String[] weekdays={"  星期一  ","  星期二  ","  星期三  ","  星期四  ","  星期五  ","  星期六  ","  星期日  "};
-                String[] courseTime={"上1","上2","上3","上4","下5","下6","下7","下8","晚9","晚10","晚11"};
+                String[] courseTime={"上1","上2","上3","上4","","","下5","下6","下7","下8","晚9","晚10","晚11"};
                 for(int i=0;i<weekTimes1.length;i++)
                 {
                     String [] weekTimes=weekTimes1[i].split(":");
@@ -567,7 +567,7 @@ public class ClassAllController extends Base {
     }
 
     /**
-     * 一键获取某个学院的上课课表 pdf格式
+     * 一键获取某个学院的一维上课课表 pdf格式
      *
      * @param classSemester 春、秋、departId
      * @return
@@ -575,16 +575,16 @@ public class ClassAllController extends Base {
     @RequestMapping("/getOneDepartTimeTablePdf")
     @ResponseBody
     public ModelAndView getOneDepartTimeTablePdf(@RequestParam String academicYear, @RequestParam String classSemester,
-                                                 @RequestParam int departId,
+                                                 @RequestParam int depId,
                                                  HttpSession session, HttpServletResponse response) {
         List<Map<String,Object>> departList=classAllService.findDepartList(academicYear,classSemester);
         String departName="";
         for(Map<String,Object> depart:departList){
-            if((int) depart.get("departId")==departId)
+            if((int) depart.get("departId")==depId)
                 departName=(String) depart.get("departName");
         }
         response = ResponseWrap.setName(response, "全学院总课表", "pdf");
-        List<Map<String,Object>> tables = classAllService.getOneDimDepartTimeTable(departId, academicYear, classSemester);
+        List<Map<String,Object>> tables = classAllService.getOneDimDepartTimeTable(depId, academicYear, classSemester);
         for( Map<String,Object> tab:tables) {
             String classTime = "";
             String week = "";

@@ -508,7 +508,7 @@
 
 
     <select id="findStuXbsjClass" resultType="Map">
-        select a.stuId,a.xbsjGrade,b.classTime
+        select a.stuId,a.xbsjGrade,b.classTime,b.classId
         from course.Course_choose a
         left join course.Course b
         on a.classId=b.classId
