@@ -97,7 +97,7 @@ public class ClassAllController extends Base {
                                            @RequestParam(required = false) String selectDepartId) {
 
         PageHelper.startPage(currentPage, pageSize);
-        List<ClassAll> courses = classAllService.getClassAll(0, academicYear, classSemester, courseId,
+        List<Map<String,Object>> courses = classAllService.getClassAll(0, academicYear, classSemester, courseId,
                 courseName, teacherId, teacherName, classPlaceId, selectDepartId);
 
         Map<String, Object> res = new HashMap<>();
@@ -130,7 +130,7 @@ public class ClassAllController extends Base {
 
         int departId = Integer.parseInt(departIdStr.toString());
         PageHelper.startPage(currentPage, pageSize);
-        List<ClassAll> courses = classAllService.getClassAllDepart(departId, academicYear, classSemester, courseId, courseName,  teacherName);
+        List<Map<String, Object>> courses = classAllService.getClassAllDepart(departId, academicYear, classSemester, courseId, courseName,  teacherName);
 
         Map<String, Object> res = new HashMap<>();
         res.put("status", "SUCCESS");

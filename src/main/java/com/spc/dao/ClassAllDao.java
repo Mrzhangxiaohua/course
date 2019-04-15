@@ -17,6 +17,15 @@ import java.util.Map;
  **/
 @Repository
 public interface ClassAllDao {
+    List<Map<String,Object>> selectClassAllChoose(@Param("departId") Integer departId,
+                                  @Param("academicYear") String academicYear,
+                                  @Param("classSemester") String classSemester,
+                                  @Param("courseId") String courseId,
+                                  @Param("courseName") String courseName,
+                                  @Param("teacherId") String teacherId,
+                                  @Param("teacherName") String teacherName,
+                                  @Param("classPlaceId") String classPlaceId,
+                                  @Param("selectDepartId") String selectDepartId);
     List<ClassAll> selectClassAll(@Param("departId") Integer departId,
                                   @Param("academicYear") String academicYear,
                                   @Param("classSemester") String classSemester,
@@ -79,7 +88,7 @@ public interface ClassAllDao {
 
     int addFirstClass(CourseAll courseAll);
 
-    List<ClassAll> selectClassAllDepart(@Param("departId") Integer departId,
+    List<Map<String, Object>> selectClassAllDepart(@Param("departId") Integer departId,
                                         @Param("academicYear") String academicYear,
                                         @Param("classSemester") String classSemester,
                                         @Param("courseId") String courseId,

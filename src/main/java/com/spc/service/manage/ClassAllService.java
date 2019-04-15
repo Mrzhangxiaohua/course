@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface ClassAllService {
 
-    List<ClassAll> getClassAll(Integer departId,
+    List<Map<String,Object>> getClassAll(Integer departId,
                                String academicYear,
                                String classSemester,
                                String courseId,
@@ -43,7 +43,7 @@ public interface ClassAllService {
 
     List<Map<String, Object>> getOneDimRoomTimeTable(String roomName, String academicYear, String classSemester);
 
-    List<ClassAll> getClassAllDepart(int departId, String academicYear, String classSemester, String courseId, String courseName, String teacherName);
+    List<Map<String, Object>> getClassAllDepart(int departId, String academicYear, String classSemester, String courseId, String courseName, String teacherName);
     void updateStuNumUpperLimit(int classAllId,int stuNumUpperLimit);
 
     List<Map<String,Object>>  getKnskCourse(String academicYear);
