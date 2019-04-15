@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Controller
 public class MainController extends Base {
-    
+
     @Autowired
     DataService dataService;
     @Autowired
@@ -130,5 +130,4 @@ public class MainController extends Base {
         logger.info("{}退出了", request.getSession().getAttribute("username"));
         return "/psc/logout";
     }
-
 }

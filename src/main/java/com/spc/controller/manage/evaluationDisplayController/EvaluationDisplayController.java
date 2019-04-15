@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Description:
+ * @Description: 对应学生端评价的页面
  * @Author: zf
  * @Date: 2019/4/7 18:25
  */
@@ -29,9 +29,9 @@ public class EvaluationDisplayController extends Base {
     private EvaluationDisplayService evaluationDisplayService;
 
     /**
-     * 返回学生评价的信息
+     * 返获取学生评价的信息
      * @param request
-     * @return
+     * @return 学生的评价
      */
     @RequestMapping(value = "/evaluationDisplay",method = RequestMethod.POST)
     @ResponseBody
@@ -49,18 +49,8 @@ public class EvaluationDisplayController extends Base {
     }
 
     /**
-     * 获取已做评价的班级信息
-     * @return
-     */
-    @RequestMapping(value = "/getExistInformation")
-    @ResponseBody
-    public List<Map<String, Object>> getExistInformation(){
-        return evaluationDisplayService.getExistInformation();
-    }
-
-    /**
-     * 获取级联信息，方便检索
-     * @return
+     * 获取级联信息
+     * @return 学院 - 课程名 - 班级号
      */
     @RequestMapping(value = "/getCascade")
     @ResponseBody

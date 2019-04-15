@@ -30,12 +30,6 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
     }
 
     @Override
-    public List<Map<String, Object>> getExistInformation() {
-        List<Map<String, Object>> info = evaluationDisplayDao.getExistInformation();
-        return info;
-    }
-
-    @Override
     public List<Map> getCascade() {
         List<ClassDomain> classes = evaluationDisplayDao.getAllClasses();
         List<Map> res = new ArrayList<>();
@@ -117,7 +111,7 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
 
     public Map creatClassOrDepartMap(String className, int classId) {
         Map tempChild2 = new HashMap();
-        tempChild2.put("value", 88888888);
+        tempChild2.put("value", "departId" + classId);
         tempChild2.put("label", className);
         List<Map> res = new ArrayList<>();
         tempChild2.put("children", res);
@@ -193,7 +187,7 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
         score.put("score3",list2);
 
         res.put("data", score);
-        logger.info(String.valueOf(res));
+//        logger.info(String.valueOf(res));
         return res;
     }
 

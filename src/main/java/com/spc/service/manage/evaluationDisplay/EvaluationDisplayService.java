@@ -12,7 +12,5 @@ public interface EvaluationDisplayService {
 
     Map<String, Object> getAllClassEvaluation(String classId);
 
-    List<Map<String, Object>> getExistInformation();
-
     List<Map> getCascade();
 }

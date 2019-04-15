@@ -12,12 +12,6 @@
         WHERE classId = #{classId}
     </select>
 
-    <select id="getExistInformation" resultType="Map">
-        select * from course.Course a
-        right join (select distinct classId from studentComment) b
-        on b.classId= a.classId
-    </select>
-
     <select id="getAllClasses" resultType="com.spc.model.ClassDomain" useCache="false">
         select
         classId,className,classNum,teaId,teaName,classChooseNum,classUpperLimit,classDateDescription,

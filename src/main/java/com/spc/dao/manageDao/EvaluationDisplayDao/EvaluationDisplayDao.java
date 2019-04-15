@@ -12,7 +12,5 @@ public interface EvaluationDisplayDao {
 
     List<Map<String, Object>> getAllClassEvaluation(@Param("classId") String classId);
 
-    List<Map<String, Object>> getExistInformation();
-
     List<ClassDomain> getAllClasses();
 }
