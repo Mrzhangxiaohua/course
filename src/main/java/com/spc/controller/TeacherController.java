@@ -1103,7 +1103,6 @@ public class TeacherController extends Base {
     @RequestMapping("teach/findCourse")
     @ResponseBody
     public Map findTeachCourse(
-            @RequestParam("classSemester") String academicYear,
             @RequestParam(required = false, defaultValue = "1") int currentPage,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             HttpSession session
@@ -1113,7 +1112,19 @@ public class TeacherController extends Base {
         Map<String,Object> res=new HashMap<>();
 //        PageHelper.startPage(currentPage, pageSize);
         Page page=PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,academicYear);
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,CURRENTSEMESTER);
+        for(Map<String,Object> c:classes){
+            StringBuilder str=new StringBuilder();
+            String[] all=( (String) c.get("classDateDescription")).split(",");
+            for(String one:all){
+                String[] des=one.split(":");
+                String[] weekdays={"周一","周二","周三","周四","周五","周六","周日"};
+                str.append(weekdays[Integer.parseInt(des[0])-1]+"第"+des[1]+"-"+(Integer.parseInt(des[1])+Integer.parseInt(des[2])-1)+"节");
+                str.append(",");
+            }
+            str.deleteCharAt(str.length()-1);
+            c.put("classDateDescription",str);
+        }
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
 //        res.put("total",page.getTotal());
         List<Map<String,Object>> pageList=pageInfo.getList();
