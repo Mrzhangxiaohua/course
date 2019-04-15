@@ -7,7 +7,7 @@
         select * from course.ClassAll
         <where>
 
-            <if test="departId != null or departId!='' or departId != '0'.toString() or departId != '99'.toString()">
+            <if test="departId !=0 and departId != null and departId!='' and departId != '0'.toString() and departId != '99'.toString() ">
                 and departId=#{departId}
             </if>
 

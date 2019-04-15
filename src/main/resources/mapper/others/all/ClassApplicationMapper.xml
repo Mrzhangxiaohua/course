@@ -66,11 +66,10 @@
     </select>
 
     <select id="findByTeaId" resultType="map">
-        select a.checkStr,c.className
-        from course.ClassApplication c
-        left join Application_Check a
-        on  c.checked = a.id
-        where c.shenQingRenId= #{teaId}
+        select *
+        from course.courseApplication
+        where operatorId=#{teaId}
+
     </select>
 
 

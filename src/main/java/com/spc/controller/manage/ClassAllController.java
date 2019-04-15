@@ -94,20 +94,10 @@ public class ClassAllController extends Base {
                                            @RequestParam(required = false) String teacherId,
                                            @RequestParam(required = false) String teacherName,
                                            @RequestParam(required = false) String classPlaceId,
-                                           @RequestParam(required = false) String selectDepartId,
-                                           HttpServletRequest request) {
-        // get user's departId
-        HttpSession httpSession = request.getSession();
-        Object departIdObject = httpSession.getAttribute("departId");
-        if (null == departIdObject||departIdObject.equals("0")) {
-            return null;
-        }
-
-        int departId = Integer.parseInt(departIdObject.toString());
-//        int departId = 8;
+                                           @RequestParam(required = false) String selectDepartId) {
 
         PageHelper.startPage(currentPage, pageSize);
-        List<ClassAll> courses = classAllService.getClassAll(departId, academicYear, classSemester, courseId,
+        List<ClassAll> courses = classAllService.getClassAll(0, academicYear, classSemester, courseId,
                 courseName, teacherId, teacherName, classPlaceId, selectDepartId);
 
         Map<String, Object> res = new HashMap<>();
