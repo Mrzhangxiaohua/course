@@ -46,39 +46,39 @@
         </where>
         order by id asc
     </select>
-    <select id="selectClassAllDepart" resultType="com.spc.model.ClassAll" useCache="false">
-        select *
-        from course.ClassAll
-        <where>
+    <!--<select id="selectClassAllDepart" resultType="com.spc.model.ClassAll" useCache="false">-->
+        <!--select *-->
+        <!--from course.ClassAll-->
+        <!--<where>-->
 
-            <if test="departId != null or departId!='' or departId != '0'.toString() or departId != '99'.toString()">
-                and departId = #{departId}
-            </if>
+            <!--<if test="departId != null or departId!='' or departId != '0'.toString() or departId != '99'.toString()">-->
+                <!--and departId = #{departId}-->
+            <!--</if>-->
 
 
-            <if test="academicYear != null and academicYear !=''">
-                and academicYear = #{academicYear}
-            </if>
-            <if test="classSemester != null and classSemester !=''">
-                <bind name="classSemesterLike" value="'%'+ classSemester +'%'"/>
-                and classSemester like #{classSemesterLike}
-            </if>
+            <!--<if test="academicYear != null and academicYear !=''">-->
+                <!--and academicYear = #{academicYear}-->
+            <!--</if>-->
+            <!--<if test="classSemester != null and classSemester !=''">-->
+                <!--<bind name="classSemesterLike" value="'%'+ classSemester +'%'"/>-->
+                <!--and classSemester like #{classSemesterLike}-->
+            <!--</if>-->
 
-            <if test="courseId != null and courseId !=''">
-                and courseId = #{courseId}
-            </if>
-            <if test="courseName != null and courseName !=''">
-                <bind name="pattern" value="'%'+ courseName +'%'"/>
-                and (courseNameCHS like #{pattern} or courseNameEN like #{pattern})
-            </if>
-            <if test="teacherName != null and teacherName !=''">
-                <bind name="teacherNameLike" value="'%'+ teacherName +'%'"/>
-                and teacherName like #{teacherNameLike}
-            </if>
+            <!--<if test="courseId != null and courseId !=''">-->
+                <!--and courseId = #{courseId}-->
+            <!--</if>-->
+            <!--<if test="courseName != null and courseName !=''">-->
+                <!--<bind name="pattern" value="'%'+ courseName +'%'"/>-->
+                <!--and (courseNameCHS like #{pattern} or courseNameEN like #{pattern})-->
+            <!--</if>-->
+            <!--<if test="teacherName != null and teacherName !=''">-->
+                <!--<bind name="teacherNameLike" value="'%'+ teacherName +'%'"/>-->
+                <!--and teacherName like #{teacherNameLike}-->
+            <!--</if>-->
 
-        </where>
-        order by id asc
-    </select>
+        <!--</where>-->
+        <!--order by id asc-->
+    <!--</select>-->
     <select id="selectClassAllChoose" resultType="Map" useCache="false">
         select a.* ,b.classChooseNum
         from course.ClassAll a
@@ -87,7 +87,7 @@
         <where>
 
             <if test="departId !=0 and departId != null and departId!='' and departId != '0'.toString() and departId != '99'.toString() ">
-                and departId=#{departId}
+                and a.departId=#{departId}
             </if>
 
             <!--<if test="departId != null and departId !=0 and departId !=99">-->
@@ -123,7 +123,7 @@
         </where>
         order by id asc
     </select>
-    <select id="selectClassAllDepartChoose" resultType="Map" useCache="false">
+    <select id="selectClassAllDepart" resultType="Map" useCache="false">
         select a.* ,b.classChooseNum
         from course.ClassAll a
         left join course.Course b
@@ -131,7 +131,7 @@
         <where>
 
             <if test="departId != null or departId!='' or departId != '0'.toString() or departId != '99'.toString()">
-                and departId = #{departId}
+                and a.departId = #{departId}
             </if>
 
 
