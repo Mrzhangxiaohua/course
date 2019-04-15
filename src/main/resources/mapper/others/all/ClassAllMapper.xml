@@ -228,7 +228,7 @@
         join course.SchoolDistrict c
         on a.schoolDistrictId=c.id
         where a.departId = #{departId} and  a.academicYear = #{academicYear}
-        and  a.classSemester like #{classSemester}
+        and  a.classSemester like "%"#{classSemester}"%"
     </select>
 
     <select id="selectAllRoom" resultType="map" useCache="false">
