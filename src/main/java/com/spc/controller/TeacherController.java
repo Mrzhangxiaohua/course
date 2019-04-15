@@ -1118,6 +1118,9 @@ public class TeacherController extends Base {
             String[] all=( (String) c.get("classDateDescription")).split(",");
             for(String one:all){
                 String[] des=one.split(":");
+                if(Integer.parseInt(des[1])>=5){
+                    des[1]=Integer.toString(Integer.parseInt(des[1])-2);
+                }
                 String[] weekdays={"周一","周二","周三","周四","周五","周六","周日"};
                 str.append(weekdays[Integer.parseInt(des[0])-1]+"第"+des[1]+"-"+(Integer.parseInt(des[1])+Integer.parseInt(des[2])-1)+"节");
                 str.append(",");
