@@ -126,7 +126,7 @@ public class TeacherCurriculumInfo extends Base {
         for (TeacherOccupyTime teacherOccupyTime : teacherOccupyTimes) {
             // TODO fix
 //            String x = teacherOccupyTime.getJasdm();
-            System.out.println("=============================" + "进行检测");
+//            System.out.println("=============================" + "进行检测");
 //            int y = classroomInfoService.getClassRoomToSchoolDistrict(x);
 //            System.out.println(y); // 1020544
             String weeks = "00000011110000000000001110";
