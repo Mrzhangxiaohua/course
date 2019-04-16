@@ -94,34 +94,34 @@
             <!--and departId = #{departId}-->
             <!--</if>-->
             <if test="academicYear != null and academicYear !=''">
-                and academicYear = #{academicYear}
+                and a.academicYear = #{academicYear}
             </if>
             <if test="classSemester != null and classSemester !=''">
                 <bind name="classSemesterLike" value="'%'+ classSemester +'%'"/>
-                and classSemester like #{classSemesterLike}
+                and a.classSemester like #{classSemesterLike}
             </if>
             <if test="teacherId != null and teacherId !=''">
-                and teacherId = #{teacherId}
+                and a.teacherId = #{teacherId}
             </if>
             <if test="classPlaceId != null and classPlaceId !=''">
-                and classPlaceId = #{classPlaceId}
+                and a.classPlaceId = #{classPlaceId}
             </if>
             <if test="courseId != null and courseId !=''">
-                and courseId = #{courseId}
+                and a.courseId = #{courseId}
             </if>
             <if test="courseName != null and courseName !=''">
                 <bind name="pattern" value="'%'+ courseName +'%'"/>
-                and (courseNameCHS like #{pattern} or courseNameEN like #{pattern})
+                and (a.courseNameCHS like #{pattern} or a.courseNameEN like #{pattern})
             </if>
             <if test="teacherName != null and teacherName !=''">
                 <bind name="teacherNameLike" value="'%'+ teacherName +'%'"/>
-                and teacherName like #{teacherNameLike}
+                and a.teacherName like #{teacherNameLike}
             </if>
             <if test="selectDepartId != null and selectDepartId !=''">
-                and departId = #{selectDepartId}
+                and a.departId = #{selectDepartId}
             </if>
         </where>
-        order by id asc
+        order by a.id asc
     </select>
     <select id="selectClassAllDepart" resultType="Map" useCache="false">
         select a.* ,b.classChooseNum
@@ -136,27 +136,27 @@
 
 
             <if test="academicYear != null and academicYear !=''">
-                and academicYear = #{academicYear}
+                and a.academicYear = #{academicYear}
             </if>
             <if test="classSemester != null and classSemester !=''">
                 <bind name="classSemesterLike" value="'%'+ classSemester +'%'"/>
-                and classSemester like #{classSemesterLike}
+                and a.classSemester like #{classSemesterLike}
             </if>
 
             <if test="courseId != null and courseId !=''">
-                and courseId = #{courseId}
+                and a.courseId = #{courseId}
             </if>
             <if test="courseName != null and courseName !=''">
                 <bind name="pattern" value="'%'+ courseName +'%'"/>
-                and (courseNameCHS like #{pattern} or courseNameEN like #{pattern})
+                and (a.courseNameCHS like #{pattern} or a.courseNameEN like #{pattern})
             </if>
             <if test="teacherName != null and teacherName !=''">
                 <bind name="teacherNameLike" value="'%'+ teacherName +'%'"/>
-                and teacherName like #{teacherNameLike}
+                and a.teacherName like #{teacherNameLike}
             </if>
 
         </where>
-        order by id asc
+        order by a.id asc
     </select>
     <select id="selectClassAllExcludeId" resultType="com.spc.model.ClassAll" useCache="false">
         select * from course.ClassAll
