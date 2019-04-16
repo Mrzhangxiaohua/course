@@ -89,7 +89,6 @@ public class MainController extends Base {
     }
 
     private HttpSession putInfo(HttpSession session) {
-
         //首先获得用户信息
         BaseInfo baseInfo = new BaseInfo();
         //将用户信息放置于session 中
