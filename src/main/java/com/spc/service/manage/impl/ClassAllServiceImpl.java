@@ -151,7 +151,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         String[] classDates = c.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
         int[] rows = new int[classDates.length];
         int[] cols = new int[classDates.length];
-        boolean[][] timetableTFT = new boolean[CLASS_HOURS_PER_DAY][CLASS_DAYS_PER_WEEK];
+        boolean[][] timetableTFT = new boolean[13][CLASS_DAYS_PER_WEEK];
         for (int i = 0; i < classDates.length; i++) {
             String[] temp = classDates[i].split(INDEX_SPLIT_CHAR);
             int rowIndex = Integer.parseInt(temp[0]);
