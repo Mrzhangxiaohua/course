@@ -51,29 +51,29 @@ public class TestClassAllService {
 
         c.setAcademicYear("2018-2019");
         c.setStuChooseNum(20);
-        c.setClassDateDesc("0-5,1-5,2-5,3-5,");
+        c.setClassDateDesc("0-6,1-6,2-6,3-6,");
         c.setClassHour(16);
-        c.setClassName("13班");
-        c.setClassPlaceId("2027437");
-        c.setClassPlaceName("综合楼-304");
+        c.setClassName("5班");
+        c.setClassPlaceId("2027433");
+        c.setClassPlaceName("综合楼-404");
         c.setClassSemester("春季");
-        c.setClassWeeks("00000000011111110000000000");
+        c.setClassWeeks("00000000011111111000000000");
         c.setConflictDesc("");
         c.setCourseId("WS19015001");
         c.setCourseNameCHS("高级医学研究英语实践");
         c.setCourseNameEN("Advanced Medical Research Initiation");
         c.setDepartId(15);
         c.setEndWeek(17);
-        c.setId(1667);
-        c.setInstructorId("1100002879");
-        c.setInstructorName("吴开杰");
+        c.setId(1992);
+        c.setInstructorId("SZB2013115");
+        c.setInstructorName("韩晶");
         c.setIsModify(true);
         c.setModuleId("4");
 
         c.setOperatorId("0002017115");
         c.setOperatorName("董博");
         c.setScheduled(1);
-        c.setSchoolDistrictId(1);
+        c.setSchoolDistrictId(2);
         c.setStartWeek(10);
         c.setStuChooseNum(0);
         c.setStuNumUpperLimit(22);

@@ -165,7 +165,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         if (c.getIsModify()){
             // 清空原有占用信息
             ClassAll oldClass = classAllDao.selectClassAllById(c.getId());
-//            boolean freeFlag = freeClassroomAndTeacher(oldClass, res);
+            boolean freeFlag = freeClassroomAndTeacher(oldClass, res);
             logger.info("修改之前的============\n" + c);
             // 修改记录
             int count = classAllDao.updateClass(c);
@@ -767,9 +767,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     }
 
     private boolean freeClassroomAndTeacher(ClassAll c, Map<String, String> res) {
-//        if (c.getScheduled() == 0) {
-//            return true;
-//        }
+        if (c.getScheduled() == 0) {
+            return true;
+        }
         // 释放教室和老师的时间占用
         String[] classDates = c.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
         int[] rows = new int[classDates.length];
@@ -790,6 +790,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 int rowIndex = rows[i];
                 int colIndex = cols[i];
                 int classHour = getClassHour(rowIndex);
+//                ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(c.getAcademicYear(), c.getClassSemester(), c.getSchoolDistrictId().toString(),
+//                        c.getStartWeek(), c.getEndWeek(), colIndex + 1, classHour, classHour,
+//                        c.getClassPlaceId(), c.getId().toString(), c.getId().toString());
                 ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(c.getAcademicYear(), c.getClassSemester(), c.getSchoolDistrictId().toString(),
                         c.getStartWeek(), c.getEndWeek(), colIndex + 1, classHour, classHour,
                         c.getClassPlaceId(), c.getId().toString(), c.getId().toString());
