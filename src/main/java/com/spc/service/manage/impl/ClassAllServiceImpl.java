@@ -165,21 +165,25 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         if (c.getIsModify()){
             // 清空原有占用信息
             ClassAll oldClass = classAllDao.selectClassAllById(c.getId());
-            boolean freeFlag = freeClassroomAndTeacher(oldClass, res);
-            logger.info("free true or false???" + freeFlag);
+//            boolean freeFlag = freeClassroomAndTeacher(oldClass, res);
+            logger.info("修改之前的============\n" + c);
             // 修改记录
             int count = classAllDao.updateClass(c);
             // TODO CHECK
             synchroTableService.updateRecord(c);
+
             // 重新教室占用
             if (useClassroom(c, res, rows, cols, false)) {
+                logger.info("重新占用教室会被调用？？？？？？？？\n" + c);
                 return res;
             }
             // 重新教师时间占用
             String[] instructorIds = c.getInstructorId().split(ARRAY_SPLIT_CHAR);
             if (useTeacherTime(c, res, rows, cols, instructorIds, false)) {
+                logger.info("重新占用教师时间会被占用？？？？？\n" + c);
                 return res;
             }
+            logger.info("前面都没有执行则res============\n" + c);
             res.put("status", "success");
             res.put("msg", "提交成功！");
             return res;
@@ -763,9 +767,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     }
 
     private boolean freeClassroomAndTeacher(ClassAll c, Map<String, String> res) {
-        if (c.getScheduled() == 0) {
-            return true;
-        }
+//        if (c.getScheduled() == 0) {
+//            return true;
+//        }
         // 释放教室和老师的时间占用
         String[] classDates = c.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
         int[] rows = new int[classDates.length];

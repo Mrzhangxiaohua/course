@@ -85,11 +85,11 @@ public class ClassroomOccupy {
         ClassroomOccupy classroomOccupy = new ClassroomOccupy();
 
         ClassRoomUsed classRoomUsed = classroomOccupy.createClassRoomUsed("2018-2019","春季", null,
-                1, 8, 2, 7,8,"1002397", "1484","1484");
+                10, 17, 6, 1,4,"2027437", "","1667");
 
         ClassRoomUsed[] classRoomUseds = {classRoomUsed};
-        int flag = classroomOccupy.addUsedClassroom(classRoomUseds, "3118105316", "张发");
-//        int flag = classroomOccupy.delUsedClassroom(classRoomUseds, "3118105316", "张发");
+//        int flag = classroomOccupy.addUsedClassroom(classRoomUseds, "3118105316", "张发");
+        int flag = classroomOccupy.delUsedClassroom(classRoomUseds, "3118105316", "张发");
 
         System.out.println(flag);
     }

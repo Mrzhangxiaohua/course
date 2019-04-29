@@ -43,41 +43,44 @@ public class TestClassAllService {
     @Autowired
     TeacherCurriculumInfo teacherCurriculumInfo;
 
+    @Autowired
+    ManageService manageService;
     @Test
     public void testScheduleClass(){
         ClassAll c = new ClassAll();
 
         c.setAcademicYear("2018-2019");
-        c.setClassDateDesc("4-0,4-1,4-2,4-3,4-4,5-0,5-1,5-2,5-3,5-4,");
-        c.setClassHour(32);
-        c.setClassName("3班");
-        c.setClassPlaceId("4001529");
-        c.setClassPlaceName("公共学院5号楼-304");
+        c.setStuChooseNum(20);
+        c.setClassDateDesc("0-5,1-5,2-5,3-5,");
+        c.setClassHour(16);
+        c.setClassName("13班");
+        c.setClassPlaceId("2027437");
+        c.setClassPlaceName("综合楼-304");
         c.setClassSemester("春季");
-        c.setClassWeeks("11111111000000000000000000");
+        c.setClassWeeks("00000000011111110000000000");
         c.setConflictDesc("");
-        c.setCourseId("WS19005001");
-        c.setCourseNameCHS("电子与信息工程英语专业实践");
-        c.setCourseNameEN("English Practice for Electronic and Information Engineering");
-        c.setDepartId(5);
-        c.setEndWeek(8);
-        c.setId(2030);
-        c.setInstructorId("0002016056");
-        c.setInstructorName("李辰");
+        c.setCourseId("WS19015001");
+        c.setCourseNameCHS("高级医学研究英语实践");
+        c.setCourseNameEN("Advanced Medical Research Initiation");
+        c.setDepartId(15);
+        c.setEndWeek(17);
+        c.setId(1667);
+        c.setInstructorId("1100002879");
+        c.setInstructorName("吴开杰");
         c.setIsModify(true);
-        c.setModuleId("3");
+        c.setModuleId("4");
 
         c.setOperatorId("0002017115");
         c.setOperatorName("董博");
         c.setScheduled(1);
         c.setSchoolDistrictId(1);
-        c.setStartWeek(1);
+        c.setStartWeek(10);
         c.setStuChooseNum(0);
-        c.setStuNumUpperLimit(28);
-        c.setTeacherId("0002011042");
-        c.setTeacherName("杜清河");
-        c.setTeachingTeamIds("0002013070,0002017003,0002016056,0002017046,0002018035,0002001021,0002012002,SZB2014013,0002011065,0002012094,0002010100,SZB2013058,0002009260");
-        c.setTeachingTeamNames("刘明,陈晓明,李辰,李峰,蔡寅,易文辉,高贞贞,惠维,徐静,张洁,陈希,王熠晨,周迪");
+        c.setStuNumUpperLimit(22);
+        c.setTeacherId("0002004120");
+        c.setTeacherName("吕社民");
+        c.setTeachingTeamIds("1100000106,1200006045,0002008039,0000011377,0000010562");
+        c.setTeachingTeamNames("马清涌,王岗,吕海侠,方宇,孟列素");
 
         classAllService.scheduleClass(c);
         System.out.println("===jieshu");
@@ -119,14 +122,9 @@ public class TestClassAllService {
         studentEvaluateService.selectList("3118305556");
     }
 
-//    @Test
-//    public void testClassroomInfoService(){
-//        String teacherId="SZB2013032";
-//        String academicYear="2018-2019";
-//        String classSemester = "春季";
-//        String classWeeks="11111111000000000000000000";
-//        int startWeek = 1;
-//        int endWeek=8;
-//        teacherCurriculumInfo.queryTeacherOccupyTime("3118105316","张发",teacherId,academicYear,classSemester);
-//    }
+    @Test
+    public void testj(){
+        manageService.findStudentByStudentId(10, 1, "3118105316");
+        System.out.println("aaa");
+    }
 }
