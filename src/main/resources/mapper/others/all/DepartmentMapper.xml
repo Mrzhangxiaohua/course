@@ -8,4 +8,10 @@
         order by departId asc
     </select>
 
+    <select id="selectById">
+        select departName
+        from course.Department
+        where departId=#{departId}
+    </select>
+
 </mapper>

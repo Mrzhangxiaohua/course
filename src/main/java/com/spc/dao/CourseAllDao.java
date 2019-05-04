@@ -42,10 +42,12 @@ public interface CourseAllDao {
     List<Map<String, Object>> findAppByTeaId(@Param("userId") String teaId);
 
     List<CourseApplication> findAllAppByDate(@Param("operatorName")String operatorName,
-                                       @Param("operatorId")String operatorId,@Param("operateDate") String operateDate,@Param("tabKey") int tabKey);
+                                       @Param("operatorId")String operatorId,@Param("operateDate") String operateDate,@Param("tabKey") int tabKey,
+                                             @Param("departId") String departId,@Param("type") int type);
 
     List<CourseApplication> findAllApp(@Param("operatorName")String operatorName,
-                                       @Param("operatorId")String operatorId,@Param("tabKey")int tabKey);
+                                       @Param("operatorId")String operatorId,@Param("tabKey")int tabKey,
+                                       @Param("departId") String departId,@Param("type") int type);
 
     List<CourseApplication> findById(@Param("id")Integer id);
 
@@ -65,4 +67,5 @@ public interface CourseAllDao {
     int updateFlag(@Param("academicYear")String academicYear);
 
     List<CourseAll> findNotSure(@Param("academicYear")String academicYear);
+
 }
