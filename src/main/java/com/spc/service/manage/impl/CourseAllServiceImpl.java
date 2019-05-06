@@ -1,9 +1,6 @@
 package com.spc.service.manage.impl;
 
-import com.spc.dao.ClassAllDao;
-import com.spc.dao.CourseAllDao;
-import com.spc.dao.TeacherDao;
-import com.spc.dao.TeacherInfoDao;
+import com.spc.dao.*;
 import com.spc.model.CourseAll;
 import com.spc.model.CourseApplication;
 import com.spc.model.TeacherInfo;
@@ -32,6 +29,9 @@ public class CourseAllServiceImpl implements CourseAllService {
     @Autowired
     private ClassAllDao classAllDao;
 
+    @Autowired
+    private DepartmentDao departmentDao;
+
     @Override
     public List<TeacherInfo> getTeachersByCourse(String courseId, String academicYear, String classSemester) {
         CourseAll courseAll = courseAllDao.selectCourseAllWithParams(courseId, academicYear, classSemester);
@@ -55,35 +55,11 @@ public class CourseAllServiceImpl implements CourseAllService {
         return teacherInfoDao.selectByTeacherIds(teacherIds);
     }
 
-//    @Override
-//    public List<CourseAll> getCourseAllByYearAndDep(String year,int depId) {
-//        return courseAllDao.selectCourseAllByYearAndDep(year,depId);
-//    }
-
-//    @Override
-//    @Transactional
-//    public int addYearCourseAll(List<CourseAll> courseList, String userId, String username,String year) {
-//        int i=0;
-//        for(CourseAll courseAll:courseList){
-//            courseAll.setOperatorName("username");
-//            courseAll.setOperatorId("userId");
-//            courseAll.setOperateDate(new Date());
-//            int flag=courseAllDao.insertYearCourse(courseAll);
-//            //插入一个课程目录，同时在ClassAll中插入一个默认的一班
-//            classAllDao.addFirstClass(courseAll);
-//            if(flag==1){
-//                i++;
-//            }
-//        }
-//        if(i==courseList.size()){
-//            return 1;
-//        }
-//        return 0;
-//    }
 
     @Override
     public int addCourseApp(CourseApplication courseApp) {
-        courseApp.setIsChecked(0);
+        String departName=departmentDao.selectById(courseApp.getDepartId()).get(0);
+        courseApp.setDepartName(departName);
         return courseAllDao.insertCourseApp(courseApp);
 
     }
@@ -91,7 +67,7 @@ public class CourseAllServiceImpl implements CourseAllService {
 
     @Override
     @Transactional
-    public int checkCourseApp(List<Integer> idList, int result, int departId, String username, String userId) {
+    public int checkCourseApp(List<Integer> idList, int result,  String username, String userId) {
         //通过开课申请，自动生成课程编码
         String courseId = null;
         if (result == 1) {
@@ -102,42 +78,49 @@ public class CourseAllServiceImpl implements CourseAllService {
             //当前年份后两位
             String twoYear = currentYear.substring(currentYear.length() - 2);
             courseIdPre.append(twoYear);
-            //departId=0管理员？
-            /*if(departId==0){
-                return 0;
-            }*/
-            //三位departId
-            courseIdPre.append(String.format("%03d", departId));
-            //查询当年流水号
-            int count = courseAllDao.findCourseCount(twoYear + String.format("%03d", departId));
+
+
             //对每个记录根据流水号生成courseId，并修改isChecked标志位
             for (Integer id : idList) {
-                count++;
-                courseId = courseIdPre.toString() + String.format("%03d", count);
-                courseAllDao.updateCourseAppflag(id, result, courseId);
-                //通过的课插入CourseAll表，当年课程目录
                 CourseApplication courseApp = courseAllDao.findById(id).get(0);
-                CourseAll courseAll = new CourseAll();
-                courseAll.setDepartId(courseApp.getDepartId());
-                courseAll.setCourseId(courseId);
-                courseAll.setCourseNameCHS(courseApp.getCourseNameCHS());
-                courseAll.setCourseNameEN(courseApp.getCourseNameEN());
-                courseAll.setModuleId(Integer.toString(courseApp.getModuleId()));
-                courseAll.setAcademicYear(courseApp.getAcademicYear());
-                courseAll.setClassSemester(courseApp.getClassSemester());
-                courseAll.setClassHour(courseApp.getClassHour());
-                courseAll.setStuNumUpperLimit(courseApp.getStuNumUpperLimit());
-                courseAll.setTeacherId(courseApp.getTeacherId());
-                courseAll.setTeacherName(courseApp.getTeacherName());
-                courseAll.setTeachingTeamIds(courseApp.getTeachingTeamIds());
-                courseAll.setTeachingTeamNames(courseApp.getTeachingTeamNames());
-                courseAll.setCourseInfo(courseApp.getCourseInfo());
-                courseAll.setTeacherInfo(courseApp.getTeacherInfo());
-                courseAll.setOperateDate(new Date());
-                courseAll.setOperatorId(userId);
-                courseAll.setOperatorName(username);
-                courseAllDao.insertPassApp(courseAll);
 
+                int type=courseApp.getCategory();
+                //新增的课程需要自动生成courseId
+                if(type==2) {
+                    int departId = courseApp.getDepartId();
+                    //查询当年流水号
+                    int count = courseAllDao.findCourseCount(twoYear + String.format("%03d", departId));
+                    count++;
+                    courseId = courseIdPre.toString() + String.format("%03d", departId) + String.format("%03d", count);
+                    courseApp.setCourseId(courseId);
+                    courseAllDao.updateCourseAppflag(id, result, courseId);
+                }else if(type==1){
+                    courseId=courseApp.getCourseId();
+                    courseAllDao.updateCourseAppflag(id,result,null);
+                }
+
+                    //通过的课插入CourseAll表，当年课程目录
+                    CourseAll courseAll = new CourseAll();
+                    courseAll.setDepartId(courseApp.getDepartId());
+                    courseAll.setCourseId(courseApp.getCourseId());
+                    courseAll.setCourseNameCHS(courseApp.getCourseNameCHS());
+                    courseAll.setCourseNameEN(courseApp.getCourseNameEN());
+                    courseAll.setModuleId(Integer.toString(courseApp.getModuleId()));
+                    courseAll.setAcademicYear(courseApp.getAcademicYear());
+                    courseAll.setClassSemester(courseApp.getClassSemester());
+                    courseAll.setClassHour(courseApp.getClassHour());
+                    courseAll.setStuNumUpperLimit(courseApp.getStuNumUpperLimit());
+                    courseAll.setTeacherId(courseApp.getTeacherId());
+                    courseAll.setTeacherName(courseApp.getTeacherName());
+                    courseAll.setTeachingTeamIds(courseApp.getTeachingTeamIds());
+                    courseAll.setTeachingTeamNames(courseApp.getTeachingTeamNames());
+                    courseAll.setCourseInfo(courseApp.getCourseInfo());
+                    courseAll.setTeacherInfo(courseApp.getTeacherInfo());
+                    courseAll.setOperateDate(new Date());
+                    courseAll.setOperatorId(userId);
+                    courseAll.setOperatorName(username);
+                    courseAll.setCourseAppId(courseApp.getId());
+                    courseAllDao.insertPassApp(courseAll);
             }
         } else if (result == 2) {
             //2表示拒绝开课申请
@@ -150,14 +133,14 @@ public class CourseAllServiceImpl implements CourseAllService {
     }
 
     @Override
-    public List<CourseApplication> findAllCourseApp(String operatorId, String operatorName, String operateDate, int tabKey) {
-        return courseAllDao.findAllAppByDate(operatorName, operatorId, operateDate, tabKey);
+    public List<CourseApplication> findAllCourseApp(String operatorId, String operatorName, String operateDate, int tabKey,String departId, int type) {
+        return courseAllDao.findAllAppByDate(operatorName, operatorId, operateDate, tabKey,departId,type);
 
     }
 
     @Override
-    public List<CourseApplication> findAllCourseApp(String operatorId, String operatorName, int tabKey) {
-        return courseAllDao.findAllApp(operatorName, operatorId, tabKey);
+    public List<CourseApplication> findAllCourseApp(String operatorId, String operatorName, int tabKey,String departId,int type) {
+        return courseAllDao.findAllApp(operatorName, operatorId, tabKey,departId,type);
 
     }
 
@@ -206,7 +189,59 @@ public class CourseAllServiceImpl implements CourseAllService {
     }
 
     @Override
-    public int ModifyCourseAll(CourseAll courseAll, String userId, String username) {
+    public int addDepartFormer(int id,String username,String userId) {
+        CourseAll courseAll = courseAllDao.findCourseAllById(id).get(0);
+        CourseApplication ca=new CourseApplication();
+        ca.setDepartId(courseAll.getDepartId());
+        ca.setDepartName(departmentDao.selectById(courseAll.getDepartId()).get(0));
+        ca.setCourseNameCHS(courseAll.getCourseNameCHS());
+        ca.setCourseNameEN(courseAll.getCourseNameEN());
+        ca.setModuleId(Integer.parseInt(courseAll.getModuleId()));
+        Calendar now = Calendar.getInstance();
+        int currentYear=now.get(Calendar.YEAR);
+        ca.setAcademicYear(currentYear+"-"+(currentYear+1));
+        ca.setClassSemester(courseAll.getClassSemester());
+        ca.setClassHour(courseAll.getClassHour());
+        ca.setStuNumUpperLimit(courseAll.getStuNumUpperLimit());
+        ca.setTeacherId(courseAll.getTeacherId());
+        ca.setTeacherName(courseAll.getTeacherName());
+        ca.setTeachingTeamIds(courseAll.getTeachingTeamIds());
+        ca.setTeachingTeamNames(courseAll.getTeachingTeamNames());
+        ca.setCourseInfo(courseAll.getCourseInfo());
+        ca.setTeacherInfo(courseAll.getTeacherInfo());
+        ca.setIsChecked(3);
+        ca.setCategory(1);
+        ca.setCourseId(courseAll.getCourseId());
+        ca.setOperatorId(userId);
+        ca.setOperatorName(username);
+        return courseAllDao.insertCourseApp(ca);
+    }
+
+    @Override
+    @Transactional
+    public int commitApp(String academicYear,int departId) {
+        List<CourseApplication> list=courseAllDao.findAppByYear(academicYear,departId);
+        for(CourseApplication ca:list) {
+            courseAllDao.updateCourseAppflag(ca.getId(), 0, null);
+        }
+        return 1;
+    }
+
+    @Override
+    public int modifyCourseApp(CourseApplication ca, String username, String userId) {
+        ca.setOperatorName(username);
+        ca.setOperatorId(userId);
+        //插入有id的记录是否就是更新原记录？
+        return courseAllDao.updateCourseApp(ca);
+    }
+
+    @Override
+    public List findDepartCourseApp(int departId, String academicYear, String courseId, String courseName) {
+        return courseAllDao.selectDepartCourseApp(departId,academicYear, courseId,courseName);
+    }
+
+    @Override
+    public int modifyCourseAll(CourseAll courseAll, String userId, String username) {
         courseAll.setOperatorId(userId);
         courseAll.setOperatorName(username);
         courseAll.setOperateDate(new Date());

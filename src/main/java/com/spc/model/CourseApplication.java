@@ -1,5 +1,7 @@
 package com.spc.model;
 
+import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
+
 import java.util.Date;
 
 /**
@@ -30,14 +32,14 @@ public class CourseApplication {
     private String operatorName;
     private Date operateDate;
     private int isChecked;
-    private int flag;
+    private int category;
 
-    public int getFlag() {
-        return flag;
+    public int getCategory() {
+        return category;
     }
 
-    public void setFlag(int flag) {
-        this.flag = flag;
+    public void setCategory(int category) {
+        this.category = category;
     }
 
     public String getDepartName() {

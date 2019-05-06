@@ -17,16 +17,16 @@ import java.util.Map;
 public interface CourseAllService {
     List<TeacherInfo> getTeachersByCourse(String courseId, String academicYear, String classSemester);
 
-    int ModifyCourseAll(CourseAll courseAll, String userId, String username);
+    int modifyCourseAll(CourseAll courseAll, String userId, String username);
 
 
     int addCourseApp(CourseApplication courseApp);
 
-    int checkCourseApp(List<Integer>idList, int result,int departId,String username, String userId);
+    int checkCourseApp(List<Integer>idList, int result,String username, String userId);
 
-    List<CourseApplication> findAllCourseApp(String operatorId,String operatorName,String operateDate,int tabKey);
+    List<CourseApplication> findAllCourseApp(String operatorId,String operatorName,String operateDate,int tabKey,String departId,int type);
 
-    List<CourseApplication> findAllCourseApp(String operatorId,String operatorName,int tabKey);
+    List<CourseApplication> findAllCourseApp(String operatorId,String operatorName,int tabKey,String departId, int type);
 
     int addCourseAll(CourseAll courseAll);
 
@@ -35,4 +35,12 @@ public interface CourseAllService {
     CourseAll findCourseAll(int id);
 
     int makeSureCourseAll(String academicYear);
+
+    int addDepartFormer(int id,String username,String userId);
+
+    int commitApp(String academicYear,int departId);
+
+    int modifyCourseApp(CourseApplication ca, String username, String userId);
+
+    List findDepartCourseApp(int departId, String academicYear, String courseId, String courseName);
 }

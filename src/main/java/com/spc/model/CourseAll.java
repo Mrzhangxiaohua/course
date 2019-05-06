@@ -41,6 +41,26 @@ public class CourseAll {
 
     private Date operateDate;
 
+    private int flag;
+
+    private int courseAppId;
+
+    public int getCourseAppId() {
+        return courseAppId;
+    }
+
+    public void setCourseAppId(int courseAppId) {
+        this.courseAppId = courseAppId;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
     public Integer getId() {
         return id;
     }
