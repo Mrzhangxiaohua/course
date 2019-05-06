@@ -149,7 +149,6 @@ public class ManageController extends Base {
         PageHelper.startPage(currentPage, pageSize);
         List<CourseApplication> result=null;
         if (!mydate.equals("")) {
-
             result = courseAllService.findAllCourseApp(operatorId, operatorName, mydate,tabKey,departId,type);
         }else{
             result= courseAllService.findAllCourseApp(operatorId, operatorName,tabKey,departId, type);
@@ -175,7 +174,6 @@ public class ManageController extends Base {
     public String checkCourseApp( HttpServletRequest request){
         String username= (String) request.getSession().getAttribute("username");
         String userId= (String) request.getSession().getAttribute("userId");
-//        int departId= (int) request.getSession().getAttribute("departId");
         String json = RequestPayload.getRequestPayload(request);
         try {
             JSONObject obj = new JSONObject(json);
@@ -584,23 +582,30 @@ public class ManageController extends Base {
 //        manageService.addCourse(cd);
 //        return 0;
 //    }
-    @RequestMapping(value = "/add/course", method = RequestMethod.POST)
-    @ResponseBody
-    public int addCourse(@RequestBody ClassDomainWithId cdwi) {
-        cdwi.setClassDateDescription(cdwi.getClassDateDescriptionA() + ":" + cdwi.getClassDateDescriptionB());
-        cdwi.setClassChooseNum(0);
-        int id = cdwi.getId();
-        if (id != 0) {
-            manageService.deleteApplication(id);
-        }
-        manageService.addCourse(cdwi);
-        return 0;
-    }
+//    @RequestMapping(value = "/add/course", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int addCourse(@RequestBody ClassDomainWithId cdwi) {
+//        cdwi.setClassDateDescription(cdwi.getClassDateDescriptionA() + ":" + cdwi.getClassDateDescriptionB());
+//        cdwi.setClassChooseNum(0);
+//        int id = cdwi.getId();
+//        if (id != 0) {
+//            manageService.deleteApplication(id);
+//        }
+//        manageService.addCourse(cdwi);
+//        return 0;
+//    }
 
     @RequestMapping(value = "/delete/course", method = RequestMethod.POST)
     @ResponseBody
     public int deleteCourse(@RequestBody CourseAll courseAll) {
         manageService.deleteCourseAll(courseAll.getId());
+        return 0;
+    }
+
+    @RequestMapping(value ="/delete/courseApp",method = RequestMethod.POST)
+    @ResponseBody
+    public int deleteCourseApp(@RequestBody CourseApplication courseApp){
+        manageService.deleteCourseApp(courseApp.getId());
         return 0;
     }
 
@@ -982,11 +987,41 @@ public class ManageController extends Base {
         return res;
 
     }
+
+    @RequestMapping(value="/courseApp")
+    @ResponseBody
+    public Map<String, Object> courseApp(HttpServletRequest request,
+                                                    @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                                    @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                                    @RequestParam(required = false, defaultValue="8888") String academicYear,
+                                                    @RequestParam(required = false, defaultValue = "8888") String courseId,
+                                                    @RequestParam(required = false,defaultValue = "8888") String courseName
+    ){
+        if(academicYear.equals("8888")) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+
+            Date date = new Date();
+            int year = Integer.parseInt(sdf.format(date));
+            academicYear = year + "-" + (year + 1);
+        }
+        int departId=  (int)request.getSession().getAttribute("departId");
+        PageHelper.startPage(currentPage, pageSize);
+        List courseAllList=courseAllService.findDepartCourseApp(departId,academicYear,courseId,courseName);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(courseAllList);
+        Map<String, Object> res = new HashMap<>();
+        res.put("total", pageInfo.getTotal());
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        res.put("pageSize", pageSize);
+        res.put("currentPage", currentPage);
+        res.put("list", pageList);
+        return res;
+    }
+
     /**
      * 学院管理员端：查看往年课程目录
      *
      */
-    @RequestMapping("/findCourseAll")
+    @RequestMapping("/findCourseAllDepart")
     @ResponseBody
     public Map<String,Object> findCourseAll(  @RequestParam(required = false, defaultValue = "1") int currentPage,
                                               @RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -1039,7 +1074,11 @@ public class ManageController extends Base {
         String username= (String) request.getSession().getAttribute("username");
         String json = RequestPayload.getRequestPayload(request);
         JSONObject obj = new JSONObject(json);
-        int departId=obj.getInt("departId");
+        int departId=obj.optInt("departId");
+        if(departId==0){
+            departId= (int) request.getSession().getAttribute("departId");
+        }
+        System.out.println(departId);
         String courseNameCHS=obj.getString("className");
         String courseNameEN=obj.getString("classNameEN");
         int moduleId=obj.getInt("classModuleNum");
@@ -1088,7 +1127,7 @@ public class ManageController extends Base {
         ca.setOperatorId(userId);
         ca.setOperateDate(new Date());
         ca.setIsChecked(3);
-        ca.setType(2);
+        ca.setCategory(2);
         courseAllService.addCourseApp(ca);
         return 1;
     }
@@ -1101,14 +1140,9 @@ public class ManageController extends Base {
      */
     @RequestMapping("/commitApp")
     @ResponseBody
-    public int commitApp(HttpServletRequest request) throws JSONException {
-        String json = RequestPayload.getRequestPayload(request);
-        JSONArray obj = new JSONArray(json);
-        List<Integer> idList=new ArrayList<>();
-        for(int i=0;i<obj.length();i++){
-            idList.add((Integer) obj.get(i));
-        }
-        return courseAllService.commitApp(idList);
+    public int commitApp(HttpServletRequest request,@RequestParam("academicYear") String academicYear){
+        int departId= (int) request.getSession().getAttribute("departId");
+        return courseAllService.commitApp(academicYear,departId);
     }
 
     /**

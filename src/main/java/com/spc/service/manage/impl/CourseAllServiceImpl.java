@@ -84,7 +84,7 @@ public class CourseAllServiceImpl implements CourseAllService {
             for (Integer id : idList) {
                 CourseApplication courseApp = courseAllDao.findById(id).get(0);
 
-                int type=courseApp.getType();
+                int type=courseApp.getCategory();
                 //新增的课程需要自动生成courseId
                 if(type==2) {
                     int departId = courseApp.getDepartId();
@@ -210,7 +210,7 @@ public class CourseAllServiceImpl implements CourseAllService {
         ca.setCourseInfo(courseAll.getCourseInfo());
         ca.setTeacherInfo(courseAll.getTeacherInfo());
         ca.setIsChecked(3);
-        ca.setType(1);
+        ca.setCategory(1);
         ca.setCourseId(courseAll.getCourseId());
         ca.setOperatorId(userId);
         ca.setOperatorName(username);
@@ -219,9 +219,10 @@ public class CourseAllServiceImpl implements CourseAllService {
 
     @Override
     @Transactional
-    public int commitApp(List<Integer> idList) {
-        for(int id:idList){
-            courseAllDao.updateCourseAppflag(id,0,null);
+    public int commitApp(String academicYear,int departId) {
+        List<CourseApplication> list=courseAllDao.findAppByYear(academicYear,departId);
+        for(CourseApplication ca:list) {
+            courseAllDao.updateCourseAppflag(ca.getId(), 0, null);
         }
         return 1;
     }
@@ -231,7 +232,12 @@ public class CourseAllServiceImpl implements CourseAllService {
         ca.setOperatorName(username);
         ca.setOperatorId(userId);
         //插入有id的记录是否就是更新原记录？
-        return courseAllDao.insertCourseApp(ca);
+        return courseAllDao.updateCourseApp(ca);
+    }
+
+    @Override
+    public List findDepartCourseApp(int departId, String academicYear, String courseId, String courseName) {
+        return courseAllDao.selectDepartCourseApp(departId,academicYear, courseId,courseName);
     }
 
     @Override

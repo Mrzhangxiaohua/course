@@ -32,14 +32,14 @@ public class CourseApplication {
     private String operatorName;
     private Date operateDate;
     private int isChecked;
-    private int type;
+    private int category;
 
-    public int getType() {
-        return type;
+    public int getCategory() {
+        return category;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setCategory(int category) {
+        this.category = category;
     }
 
     public String getDepartName() {

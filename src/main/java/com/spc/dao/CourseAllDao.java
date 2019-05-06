@@ -68,4 +68,12 @@ public interface CourseAllDao {
 
     List<CourseAll> findNotSure(@Param("academicYear")String academicYear);
 
+    List<CourseApplication> selectDepartCourseApp(@Param("departId") int departId,
+                                                  @Param("academicYear") String academicYear,@Param("courseId") String courseId,@Param("courseName") String courseName);
+
+    int deleteCourseApp(@Param("id")int id);
+
+    int updateCourseApp(CourseApplication ca);
+
+    List<CourseApplication> findAppByYear(@Param("academicYear")String academicYear,@Param("departId")int departId);
 }

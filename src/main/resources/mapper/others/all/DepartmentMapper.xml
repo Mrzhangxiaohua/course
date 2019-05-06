@@ -8,10 +8,10 @@
         order by departId asc
     </select>
 
-    <select id="selectById">
+    <select id="selectById" resultType="string">
         select departName
         from course.Department
-        where departId=#{departId}
+        where departId=#{id}
     </select>
 
 </mapper>

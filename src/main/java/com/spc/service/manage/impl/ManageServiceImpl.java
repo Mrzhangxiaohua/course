@@ -227,11 +227,11 @@ public class ManageServiceImpl extends Base implements ManageService {
         return (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
     }
 
-    @Override
-    public int deleteApplication(int id) {
-        classApplicationDao.deleteClassApp(id);
-        return 0;
-    }
+//    @Override
+//    public int deleteApplication(int id) {
+//        classApplicationDao.deleteClassApp(id);
+//        return 0;
+//    }
 
     @Override
     public List findStudentByClassnameAndNum(String classId, int pageSize, int currentPage) {
@@ -733,6 +733,11 @@ public class ManageServiceImpl extends Base implements ManageService {
             gradeDao.updateDektIsSubmit();
         if(moduleId==3)
             gradeDao.updateNlcsIsSubmit();
+    }
+
+    @Override
+    public int deleteCourseApp(int id) {
+        return courseAllDao.deleteCourseApp(id);
     }
 }
 

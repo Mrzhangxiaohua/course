@@ -8,8 +8,8 @@
     teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,operatorId,operatorName,operateDate
   </sql>
     <sql id="courseApplication_base">
-    id,departId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,fileInfoId,
-    teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,operatorId,operatorName
+    id,departId,departName,courseNameCHS,courseId,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,fileInfoId,
+    teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,isChecked,category,operatorId,operatorName
   </sql>
 
     <insert id="insertCourse"  useGeneratedKeys="true" keyProperty="fileInfoId" flushCache="true" >
@@ -74,9 +74,9 @@
 
     <insert id="insertCourseApp"  useGeneratedKeys="true" keyProperty="id" flushCache="true" >
       insert into courseApplication(id,departId,departName,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,
-    teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,fileInfoId,operatorId,operatorName,isChecked,type,courseId)
+    teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,fileInfoId,operatorId,operatorName,isChecked,category,courseId)
       values(#{id},#{departId},#{departName},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},
-    #{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames},#{courseInfo},#{teacherInfo},#{fileInfoId},#{operatorId},#{operatorName},,#{isChecked},#{type},#{courseId})
+    #{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames},#{courseInfo},#{teacherInfo},#{fileInfoId},#{operatorId},#{operatorName},#{isChecked},#{category},#{courseId})
     </insert>
 
     <select id="selectCourseApp" resultType="Map">
@@ -137,7 +137,7 @@
             and departId= #{departId}
         </if>
         <if test="type != 0">
-            and type=#{type}
+            and category=#{type}
         </if>
         <if test="operateDate != ''">
             and DATE_FORMAT(operateDate,'%Y-%m-%d') = #{operateDate}
@@ -169,7 +169,7 @@
             and departId= #{departId}
         </if>
         <if test="type != 0">
-            and type=#{type}
+            and  category=#{type}
         </if>
         <if test="tabKey !=0 and tabKey==1">
             and isChecked = 1
@@ -237,6 +237,45 @@
         from course.CourseAll
         where academicYear=#{academicYear}
         and flag=0;
+    </select>
+
+    <select id="selectDepartCourseApp" resultType="map">
+
+        select a.*,b.modelsName as modelName
+        from course.courseApplication a
+        join course.models b
+        on a.moduleId=b.modelsId
+        where a.departId=#{departId}
+        <if test="courseId != '8888' and courseId!=''">
+            and a.courseId = #{courseId}
+        </if>
+        <if test="courseName != '8888' and courseName!=''">
+            and a.courseNameCHS = #{courseName}
+        </if>
+        <if test="academicYear != '8888'and academicYear!=''">
+            and a.academicYear = #{academicYear}
+        </if>
+    </select>
+
+    <delete id="deleteCourseApp">
+        delete from course.courseApplication where id=#{id}
+    </delete>
+
+    <update id="updateCourseApp">
+        update course.courseApplication set courseNameCHS=#{courseNameCHS},courseNameEN=#{courseNameEN},
+        moduleId=#{moduleId},academicYear=#{academicYear},classSemester=#{classSemester},classHour=#{classHour},
+        stuNumUpperLimit=#{stuNumUpperLimit},teacherId=#{teacherId},course.courseApplication.teacherName=#{teacherName},
+        teachingTeamIds=#{teachingTeamIds},teachingTeamNames=#{teachingTeamNames},courseInfo=#{courseInfo},teacherInfo=#{teacherInfo},
+        operatorId=#{operatorId},operatorName=#{operatorName}
+        where id=#{id}
+    </update>
+
+    <select id="findAppByYear" resultType="com.spc.model.CourseApplication">
+        select *
+        from course.courseApplication
+        where academicYear=#{academicYear}
+        and departId=#{departId}
+        and isChecked=3
     </select>
 
 </mapper>

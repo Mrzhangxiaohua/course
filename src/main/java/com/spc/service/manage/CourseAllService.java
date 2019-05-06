@@ -38,7 +38,9 @@ public interface CourseAllService {
 
     int addDepartFormer(int id,String username,String userId);
 
-    int commitApp(List<Integer> idList);
+    int commitApp(String academicYear,int departId);
 
     int modifyCourseApp(CourseApplication ca, String username, String userId);
+
+    List findDepartCourseApp(int departId, String academicYear, String courseId, String courseName);
 }

@@ -38,7 +38,6 @@ public interface ManageService {
 
     int getClassId(String className,int classNum);
 
-    int deleteApplication(int id);
 
     List findStudentByClassnameAndNum(String classId,int pageSize,int currentPage);
 
@@ -93,5 +92,6 @@ public interface ManageService {
 
     void updateIsSubmit(int moduleId);
 
+    int deleteCourseApp(int id);
 }
 
