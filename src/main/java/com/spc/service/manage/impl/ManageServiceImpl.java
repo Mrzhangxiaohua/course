@@ -244,6 +244,8 @@ public class ManageServiceImpl extends Base implements ManageService {
     @Override
     public List findStudentByStudentId(int pageSize, int currentPage, String stuId) {
         PageHelper.startPage(currentPage, pageSize);
+        List a = studentDao.findStudentByStudentId(stuId);
+        System.out.println(a);
         return studentDao.findStudentByStudentId(stuId);
     }
 

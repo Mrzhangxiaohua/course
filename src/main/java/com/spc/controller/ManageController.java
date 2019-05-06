@@ -730,7 +730,7 @@ public class ManageController extends Base {
                 res.put("status", "SUCCESS");
 
                 Map<String, Object> data = new HashMap<>();
-                data.put("total", ((Page) students).getTotal());
+                data.put("total", 10);
                 data.put("pageSize", pageSize);
                 data.put("currentPage", currentPage);
                 data.put("list", newStus);
@@ -759,9 +759,9 @@ public class ManageController extends Base {
             String stuId = (String) li.get("stuId");
             int classNum = (int) li.get("classNum");
 
-            int xbsjGrade = (int) li.get("xbsjGrade");
-            int knskGrade = (int) li.get("knskGrade");
-            int wlzzxxGrade = (int) li.get("wlzzxxGrade");
+            double xbsjGrade = Double.valueOf(String.valueOf(li.get("xbsjGrade")));
+            double knskGrade = Double.valueOf(String.valueOf(li.get("knskGrade")));
+            double wlzzxxGrade = Double.valueOf(String.valueOf(li.get("wlzzxxGrade")));
 
             Map tempM = new HashMap();
             tempM.put("wlzzxxGrade", wlzzxxGrade);

@@ -1,6 +1,7 @@
 create
   view t_kc_byhx as
-select a.classEncode  as KCBH, -- 课程编号
+select
+       a.classEncode  as KCBH, -- 课程编号
        a.className    as KCMC,  -- 课程名称
        b.courseNameEN as KCYWMC,-- 课程英文名称
        c.departCode   as YXSH,-- 院系

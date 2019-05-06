@@ -121,8 +121,8 @@ public class TeacherCurriculumInfo extends Base {
     public Map getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, String operatorId, String operatorName) {
         List<TeacherOccupyTime> teacherOccupyTimes = this.queryTeacherOccupyTime(operatorId, operatorName, teacherId, academicYear,classSemester);
         Map map = new HashMap<>();
-        boolean[][] res = new boolean[CLASS_HOURS_PER_DAY][CLASS_DAYS_PER_WEEK];
-        int[][] schoolDistrict = new int[CLASS_HOURS_PER_DAY][CLASS_HOURS_PER_DAY];
+        boolean[][] res = new boolean[13][CLASS_DAYS_PER_WEEK];
+        int[][] schoolDistrict = new int[CLASS_HOURS_PER_DAY][CLASS_DAYS_PER_WEEK];
         for (TeacherOccupyTime teacherOccupyTime : teacherOccupyTimes) {
             // TODO fix
 //            String x = teacherOccupyTime.getJasdm();

@@ -68,7 +68,7 @@ public class ClassroomOccupy {
 
         classRoomUsed.setXNXQDM(WebServiceUtil.getXNXQDM(academicYear, classSemester));
         classRoomUsed.setXXXQDM(xxxqdm);
-        classRoomUsed.setZYLXDM("101");
+        classRoomUsed.setZYLXDM("10");
         classRoomUsed.setZC(WebServiceUtil.getZC(ksz, jsz));
         classRoomUsed.setXQ(xq);
         classRoomUsed.setKSJC(ksjc);
@@ -85,7 +85,7 @@ public class ClassroomOccupy {
         ClassroomOccupy classroomOccupy = new ClassroomOccupy();
 
         ClassRoomUsed classRoomUsed = classroomOccupy.createClassRoomUsed("2018-2019","春季", null,
-                1, 8, 2, 7,8,"1002397", "1484","1484");
+                10, 17, 7, 1,4,"2027433", "1992","1992");
 
         ClassRoomUsed[] classRoomUseds = {classRoomUsed};
         int flag = classroomOccupy.addUsedClassroom(classRoomUseds, "3118105316", "张发");
