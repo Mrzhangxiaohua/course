@@ -264,10 +264,17 @@
     <update id="updateCourseApp">
         update course.courseApplication set courseNameCHS=#{courseNameCHS},courseNameEN=#{courseNameEN},
         moduleId=#{moduleId},academicYear=#{academicYear},classSemester=#{classSemester},classHour=#{classHour},
-        stuNumUpperLimit=#{stuNumUpperLimit},teacherId=#{teacherId},course.courseApplication.teacherName=#{teacherName},
+        stuNumUpperLimit=#{stuNumUpperLimit},teacherId=#{teacherId},teacherName=#{teacherName},
         teachingTeamIds=#{teachingTeamIds},teachingTeamNames=#{teachingTeamNames},courseInfo=#{courseInfo},teacherInfo=#{teacherInfo},
         operatorId=#{operatorId},operatorName=#{operatorName}
         where id=#{id}
+    </update>
+
+    <update id="updateAppCheck">
+        update course.courseApplication
+        set isChecked=#{isChecked},courseId=#{courseId}
+        where id=#{id};
+
     </update>
 
     <select id="findAppByYear" resultType="com.spc.model.CourseApplication">
@@ -276,6 +283,36 @@
         where academicYear=#{academicYear}
         and departId=#{departId}
         and isChecked=3
+    </select>
+    <select id="selectFlag">
+        select flag
+        from courseAllSwitch
+    </select>
+
+    <update id="updateCourseAllFlag">
+        update courseAllSwitch set flag=#{flag}
+    </update>
+
+    <select id="selectAllDepart" resultType="map" >
+        select distinct (CourseAll.departId),Department.departName
+        from CourseAll
+        join Department
+        on CourseAll.departId=Department.departId
+        <where>
+            <if test="academicYear != null and academicYear !=''">
+                and academicYear = #{academicYear}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByYearAndDepart" resultType="map">
+        select a.*,b.modelsName as moduleName
+        from course.CourseAll a
+        join course.models b
+        on a.moduleId=b.modelsId
+        where a.academicYear=#{academicYear}
+        and a.departId=#{departId}
+        order by a.courseId asc
     </select>
 
 </mapper>

@@ -71,27 +71,29 @@ public class CourseAllServiceImpl implements CourseAllService {
         //通过开课申请，自动生成课程编码
         String courseId = null;
         if (result == 1) {
-            StringBuilder courseIdPre = new StringBuilder();
-            courseIdPre.append("WS");
-            Calendar now = Calendar.getInstance();
-            String currentYear = Integer.toString(now.get(Calendar.YEAR));
-            //当前年份后两位
-            String twoYear = currentYear.substring(currentYear.length() - 2);
-            courseIdPre.append(twoYear);
+
+            String courseIdPre = "WS";
+//            Calendar now = Calendar.getInstance();
+//            String currentYear = Integer.toString(now.get(Calendar.YEAR));
+//            //当前年份后两位
+//            String twoYear = currentYear.substring(currentYear.length() - 2);
+//            courseIdPre.append(twoYear);
 
 
             //对每个记录根据流水号生成courseId，并修改isChecked标志位
             for (Integer id : idList) {
+
                 CourseApplication courseApp = courseAllDao.findById(id).get(0);
 
                 int type=courseApp.getCategory();
                 //新增的课程需要自动生成courseId
                 if(type==2) {
+                    String twoYear=courseApp.getAcademicYear().substring(2,4);
                     int departId = courseApp.getDepartId();
                     //查询当年流水号
                     int count = courseAllDao.findCourseCount(twoYear + String.format("%03d", departId));
                     count++;
-                    courseId = courseIdPre.toString() + String.format("%03d", departId) + String.format("%03d", count);
+                    courseId = courseIdPre +twoYear+ String.format("%03d", departId) + String.format("%03d", count);
                     courseApp.setCourseId(courseId);
                     courseAllDao.updateCourseAppflag(id, result, courseId);
                 }else if(type==1){
@@ -101,6 +103,7 @@ public class CourseAllServiceImpl implements CourseAllService {
 
                     //通过的课插入CourseAll表，当年课程目录
                     CourseAll courseAll = new CourseAll();
+                    courseAll.setCourseAppId(id);
                     courseAll.setDepartId(courseApp.getDepartId());
                     courseAll.setCourseId(courseApp.getCourseId());
                     courseAll.setCourseNameCHS(courseApp.getCourseNameCHS());
@@ -120,6 +123,7 @@ public class CourseAllServiceImpl implements CourseAllService {
                     courseAll.setOperatorId(userId);
                     courseAll.setOperatorName(username);
                     courseAll.setCourseAppId(courseApp.getId());
+
                     courseAllDao.insertPassApp(courseAll);
             }
         } else if (result == 2) {
@@ -149,9 +153,8 @@ public class CourseAllServiceImpl implements CourseAllService {
         StringBuilder courseIdPre = new StringBuilder();
         courseIdPre.append("WS");
         Calendar now = Calendar.getInstance();
-        String currentYear = Integer.toString(now.get(Calendar.YEAR));
-        //当前年份后两位
-        String twoYear = currentYear.substring(currentYear.length() - 2);
+        //学年两位
+        String twoYear = courseAll.getAcademicYear().substring(2,4);
         courseIdPre.append(twoYear);
         //三位departId
         courseIdPre.append(String.format("%03d", courseAll.getDepartId()));
@@ -231,13 +234,54 @@ public class CourseAllServiceImpl implements CourseAllService {
     public int modifyCourseApp(CourseApplication ca, String username, String userId) {
         ca.setOperatorName(username);
         ca.setOperatorId(userId);
-        //插入有id的记录是否就是更新原记录？
+        if(ca.getCategory()==1){
+            ca.setCategory(3);
+        }
         return courseAllDao.updateCourseApp(ca);
     }
 
     @Override
     public List findDepartCourseApp(int departId, String academicYear, String courseId, String courseName) {
         return courseAllDao.selectDepartCourseApp(departId,academicYear, courseId,courseName);
+    }
+
+    @Override
+    public int findFlag() {
+        return courseAllDao.selectFlag();
+    }
+
+    @Override
+    public int updateFlag(int flag) {
+        return courseAllDao.updateCourseAllFlag(flag);
+    }
+
+    @Override
+    @Transactional
+    public int cancelCheck(List<Integer> idList) {
+        for(int id:idList){
+            int courseAppId=courseAllDao.findCourseAllById(id).get(0).getCourseAppId();
+            courseAllDao.delete(id);
+            CourseApplication ca = courseAllDao.findById(courseAppId).get(0);
+            if(ca.getCategory()==2 && ca.getIsChecked()==1){
+                ca.setCourseId(null);
+            }
+            ca.setIsChecked(3);
+            courseAllDao.updateAppCheck(ca);
+        }
+        return 0;
+    }
+
+    @Override
+    public List<Map<String, Object>> findCourseAllDepartList(String academicYear) {
+
+        List<Map<String,Object>> departList=courseAllDao.selectAllDepart(academicYear);
+
+        return departList;
+    }
+
+    @Override
+    public List<Map<String, Object>> findCourseAllByYearAndDepart(String academicYear, int departId) {
+        return  courseAllDao.findByYearAndDepart(academicYear,departId);
     }
 
     @Override

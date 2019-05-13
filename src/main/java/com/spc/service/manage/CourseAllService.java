@@ -43,4 +43,14 @@ public interface CourseAllService {
     int modifyCourseApp(CourseApplication ca, String username, String userId);
 
     List findDepartCourseApp(int departId, String academicYear, String courseId, String courseName);
+
+    int findFlag();
+
+    int updateFlag(int flag);
+
+    int cancelCheck(List<Integer> idList);
+
+    List<Map<String, Object>> findCourseAllDepartList(String academicYear);
+
+    List<Map<String, Object>> findCourseAllByYearAndDepart(String academicYear, int departId);
 }

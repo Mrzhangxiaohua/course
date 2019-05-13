@@ -22,6 +22,7 @@ public class OneDimDepTimeTablePdfView extends AbstractPdfView {
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
 
+
         List<Map> students = (List<Map>) map.get("data");
 
         PdfPTable table = new PdfPTable(7);

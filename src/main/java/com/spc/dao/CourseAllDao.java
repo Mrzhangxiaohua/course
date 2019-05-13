@@ -76,4 +76,14 @@ public interface CourseAllDao {
     int updateCourseApp(CourseApplication ca);
 
     List<CourseApplication> findAppByYear(@Param("academicYear")String academicYear,@Param("departId")int departId);
+
+    int selectFlag();
+
+    int updateCourseAllFlag(@Param("flag")int flag);
+
+    int updateAppCheck(CourseApplication ca);
+
+    List<Map<String, Object>> selectAllDepart(@Param("academicYear")String academicYear);
+
+    List<Map<String, Object>> findByYearAndDepart(@Param("academicYear")String academicYear,@Param("departId") int departId);
 }
