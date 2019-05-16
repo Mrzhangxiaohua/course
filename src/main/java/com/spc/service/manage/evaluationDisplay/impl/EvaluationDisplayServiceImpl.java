@@ -26,7 +26,7 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
         System.out.println(evaluationDisplayDao.getAllClassEvaluation(classId));
         List<Map<String, Object>> evaluationList = evaluationDisplayDao.getAllClassEvaluation(classId);
 
-        return evaluationListProcess(evaluationList);
+        return evaluationListProcess(evaluationList, classId);
     }
 
     @Override
@@ -131,13 +131,13 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
         return classMap;
     }
 
-    private Map<String, Object> evaluationListProcess(List<Map<String, Object>> evaluationList) {
-        Map<String, Object> list = getCountResults(evaluationList);
+    private Map<String, Object> evaluationListProcess(List<Map<String, Object>> evaluationList, String classId) {
+        Map<String, Object> list = getCountResults(evaluationList, classId);
         return list;
     }
 
     @NotNull
-    private Map<String, Object> getCountResults(List<Map<String, Object>> evaluationList) {
+    private Map<String, Object> getCountResults(List<Map<String, Object>> evaluationList, String classId) {
 
         List<Map<String, Object>> list = new LinkedList<>();
         List<Map<String, Object>> list1 = new LinkedList<>();
@@ -187,7 +187,13 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
         score.put("score3",list2);
 
         res.put("data", score);
-//        logger.info(String.valueOf(res));
+        // res还需要放置已评教人数核班级上线人数
+        int classUpperLimit = evaluationDisplayDao.classUpperLimit(classId);
+        List<Map> count = evaluationDisplayDao.evaluateCount(classId);
+        int evaluateCount = count.size();
+        res.put("classUpperLimit", classUpperLimit);
+        res.put("evaluateCount", evaluateCount);
+        logger.info(String.valueOf(res));
         return res;
     }
 
