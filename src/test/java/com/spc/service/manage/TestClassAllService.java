@@ -2,6 +2,7 @@ package com.spc.service.manage;
 
 import com.spc.model.ClassAll;
 import com.spc.service.classes.ClassService;
+import com.spc.service.manage.evaluationDisplay.EvaluationDisplayService;
 import com.spc.service.manage.stuAdjust.StuAdjustService;
 import com.spc.service.student.StudentService;
 import com.spc.service.student.studentEvaluate.StudentEvaluateService;
@@ -45,6 +46,10 @@ public class TestClassAllService {
 
     @Autowired
     ManageService manageService;
+
+    @Autowired
+    EvaluationDisplayService evaluationDisplayService;
+
     @Test
     public void testScheduleClass(){
         ClassAll c = new ClassAll();
@@ -123,8 +128,9 @@ public class TestClassAllService {
     }
 
     @Test
-    public void testj(){
-        manageService.findStudentByStudentId(10, 1, "3118105316");
-        System.out.println("aaa");
+    public void testEvaluationDisplayService(){
+        evaluationDisplayService.getAllClassEvaluation("91");
+        System.out.println(evaluationDisplayService.getAllClassEvaluation("91"));
+        System.out.println("-----");
     }
 }
