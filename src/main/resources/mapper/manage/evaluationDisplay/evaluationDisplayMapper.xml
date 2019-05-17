@@ -27,4 +27,11 @@
         on a.classModuleNum = m.modelsId
     </select>
 
+    <select id="evaluateCount" resultType="map">
+        SELECT * FROM studentComment WHERE classId = #{classId}
+    </select>
+
+    <select id="classUpperLimit" resultType="java.lang.Integer">
+        SELECT classUpperLimit FROM course.Course WHERE classId = #{classId}
+    </select>
 </mapper>

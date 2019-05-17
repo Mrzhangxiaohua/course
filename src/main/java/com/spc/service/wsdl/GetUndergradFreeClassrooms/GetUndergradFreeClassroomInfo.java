@@ -71,13 +71,11 @@ public class GetUndergradFreeClassroomInfo {
     public static void main(String[] args) {
         GetUndergradFreeClassroomInfo getUndergradFreeClassroomInfo = new GetUndergradFreeClassroomInfo();
 
-        SpareClassRoom classRoom1 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019","春季", 1,8, 1, 1, 2);
+        SpareClassRoom classRoom1 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019","春季", 10,17, 7, 1, 4);
         SpareClassRoom classRoom2 = getUndergradFreeClassroomInfo.createSparseClassRoom("2018-2019","秋季", 1, 8, 3, 1, 1);
         SpareClassRoom[] classRooms = {classRoom1};
 
         String res = getUndergradFreeClassroomInfo.getFreeClassrooms(classRooms, "3118105316", "张发");
         System.out.println(res);
-
     }
-
 }

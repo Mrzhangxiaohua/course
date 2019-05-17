@@ -7,7 +7,10 @@ package com.spc.service.wsdl.TeachersOccupyTimeWebservice;
  * @create 2018-12-31 14:49
  **/
 public class TeacherOccupyTime {
-
+    /**
+     *  教室代码
+     */
+    private String XXXQDM;
     /**
      * 上课周次字符串，1表示有课，下标表示（第几周 - 1），
      */
@@ -25,7 +28,8 @@ public class TeacherOccupyTime {
      */
     private int hourEndIndex;
 
-    public TeacherOccupyTime(String weeks, int dayIndex, int hourStartIndex, int hourEndIndex) {
+    public TeacherOccupyTime(String XXXQDM, String weeks, int dayIndex, int hourStartIndex, int hourEndIndex) {
+        this.XXXQDM = XXXQDM;
         this.weeks = weeks;
         this.dayIndex = dayIndex;
         this.hourStartIndex = hourStartIndex;
@@ -64,10 +68,19 @@ public class TeacherOccupyTime {
         this.hourEndIndex = hourEndIndex;
     }
 
+    public String getXXXQDM() {
+        return XXXQDM;
+    }
+
+    public void setXXXQDM(String XXXQDM) {
+        this.XXXQDM = XXXQDM;
+    }
+
     @Override
     public String toString() {
         return "TeacherOccupyTime{" +
-                "weeks='" + weeks + '\'' +
+                "XXXQDM=" + XXXQDM +
+                ", weeks='" + weeks + '\'' +
                 ", dayIndex=" + dayIndex +
                 ", hourStartIndex=" + hourStartIndex +
                 ", hourEndIndex=" + hourEndIndex +

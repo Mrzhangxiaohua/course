@@ -94,20 +94,10 @@ public class ClassAllController extends Base {
                                            @RequestParam(required = false) String teacherId,
                                            @RequestParam(required = false) String teacherName,
                                            @RequestParam(required = false) String classPlaceId,
-                                           @RequestParam(required = false) String selectDepartId,
-                                           HttpServletRequest request) {
-        // get user's departId
-        HttpSession httpSession = request.getSession();
-        Object departIdObject = httpSession.getAttribute("departId");
-        if (null == departIdObject||departIdObject.equals("0")) {
-            return null;
-        }
-
-        int departId = Integer.parseInt(departIdObject.toString());
-//        int departId = 8;
+                                           @RequestParam(required = false) String selectDepartId) {
 
         PageHelper.startPage(currentPage, pageSize);
-        List<ClassAll> courses = classAllService.getClassAll(departId, academicYear, classSemester, courseId,
+        List<Map<String,Object>> courses = classAllService.getClassAll(0, academicYear, classSemester, courseId,
                 courseName, teacherId, teacherName, classPlaceId, selectDepartId);
 
         Map<String, Object> res = new HashMap<>();
@@ -140,7 +130,7 @@ public class ClassAllController extends Base {
 
         int departId = Integer.parseInt(departIdStr.toString());
         PageHelper.startPage(currentPage, pageSize);
-        List<ClassAll> courses = classAllService.getClassAllDepart(departId, academicYear, classSemester, courseId, courseName,  teacherName);
+        List<Map<String, Object>> courses = classAllService.getClassAllDepart(departId, academicYear, classSemester, courseId, courseName,  teacherName);
 
         Map<String, Object> res = new HashMap<>();
         res.put("status", "SUCCESS");
@@ -483,7 +473,7 @@ public class ClassAllController extends Base {
     @RequestMapping("/getTeacherOccupyTime")
     @ResponseBody
 //    classWeeks是0101的串
-    public boolean[][] getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, HttpServletRequest request) {
+    public Map getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
         String operatorId = httpSession.getAttribute("userId").toString();
         String operatorName = httpSession.getAttribute("username").toString();

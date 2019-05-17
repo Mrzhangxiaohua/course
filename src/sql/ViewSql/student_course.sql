@@ -9,5 +9,6 @@ create view v_kb_xskb as
          a.teaId as jsbh,          -- 教师编号
          a.teaName as jsxm,        -- 教师姓名
          c.JASDM as jasdm,         -- 教室编号
-         b.stuId as xh
+         b.stuId as xh,
+         b.chooseId as ID
   from Course a left join Course_choose b on a.classId=b.classId left join ClassroomInfo c on c.JASMC=a.classPlace;

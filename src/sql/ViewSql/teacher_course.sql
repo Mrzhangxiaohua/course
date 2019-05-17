@@ -8,5 +8,6 @@ create view v_kb_jskb as
          a.classDateDescription as skxq_ksjc_jsjc, -- 上课星期_开始节次_结束节次
          a.teaId as jsbh,          -- 教师编号
          a.teaName as jsxm,        -- 教师姓名
-         c.JASDM as jasdm         -- 教室编号
+         c.JASDM as jasdm,        -- 教室编号
+         a.classId as ID
   from Course a left join TeacherInfo b on a.teaId = b.JSBH left join ClassroomInfo c on c.JASMC=a.classPlace;

@@ -331,7 +331,8 @@
         select *
         from course.Course
         where  teaId=#{teacherId}
-        and classSemester like "%"#{academicYear}"%"
+        and classSemester=#{academicYear}
+
     </select>
 
 

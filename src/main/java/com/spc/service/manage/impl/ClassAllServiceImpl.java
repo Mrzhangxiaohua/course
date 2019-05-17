@@ -71,9 +71,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     private SynchroTable synchroTableService;
 
     @Override
-    public List<ClassAll> getClassAll(Integer departId, String academicYear, String classSemester, String courseId,
+    public List<Map<String, Object>> getClassAll(Integer departId, String academicYear, String classSemester, String courseId,
                                       String courseName, String teacherId, String teacherName, String classPlaceId, String selectDepartId) {
-        return classAllDao.selectClassAll(departId, academicYear, classSemester, courseId, courseName, teacherId, teacherName, classPlaceId, selectDepartId);
+        return classAllDao.selectClassAllChoose(departId, academicYear, classSemester, courseId, courseName, teacherId, teacherName, classPlaceId, selectDepartId);
     }
 
 
@@ -151,7 +151,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         String[] classDates = c.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
         int[] rows = new int[classDates.length];
         int[] cols = new int[classDates.length];
-        boolean[][] timetableTFT = new boolean[CLASS_HOURS_PER_DAY][CLASS_DAYS_PER_WEEK];
+        boolean[][] timetableTFT = new boolean[13][CLASS_DAYS_PER_WEEK];
         for (int i = 0; i < classDates.length; i++) {
             String[] temp = classDates[i].split(INDEX_SPLIT_CHAR);
             int rowIndex = Integer.parseInt(temp[0]);
@@ -166,20 +166,24 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             // 清空原有占用信息
             ClassAll oldClass = classAllDao.selectClassAllById(c.getId());
             boolean freeFlag = freeClassroomAndTeacher(oldClass, res);
-            logger.info("free true or false???" + freeFlag);
+            logger.info("修改之前的============\n" + c);
             // 修改记录
             int count = classAllDao.updateClass(c);
             // TODO CHECK
             synchroTableService.updateRecord(c);
+
             // 重新教室占用
             if (useClassroom(c, res, rows, cols, false)) {
+                logger.info("重新占用教室会被调用？？？？？？？？\n" + c);
                 return res;
             }
             // 重新教师时间占用
             String[] instructorIds = c.getInstructorId().split(ARRAY_SPLIT_CHAR);
             if (useTeacherTime(c, res, rows, cols, instructorIds, false)) {
+                logger.info("重新占用教师时间会被占用？？？？？\n" + c);
                 return res;
             }
+            logger.info("前面都没有执行则res============\n" + c);
             res.put("status", "success");
             res.put("msg", "提交成功！");
             return res;
@@ -786,6 +790,9 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 int rowIndex = rows[i];
                 int colIndex = cols[i];
                 int classHour = getClassHour(rowIndex);
+//                ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(c.getAcademicYear(), c.getClassSemester(), c.getSchoolDistrictId().toString(),
+//                        c.getStartWeek(), c.getEndWeek(), colIndex + 1, classHour, classHour,
+//                        c.getClassPlaceId(), c.getId().toString(), c.getId().toString());
                 ClassRoomUsed classRoomUsed = classroomOccupyService.createClassRoomUsed(c.getAcademicYear(), c.getClassSemester(), c.getSchoolDistrictId().toString(),
                         c.getStartWeek(), c.getEndWeek(), colIndex + 1, classHour, classHour,
                         c.getClassPlaceId(), c.getId().toString(), c.getId().toString());
@@ -865,7 +872,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     }
 
     @Override
-    public List<ClassAll> getClassAllDepart(int departId, String academicYear, String classSemester, String courseId, String courseName, String teacherName) {
+    public List<Map<String, Object>> getClassAllDepart(int departId, String academicYear, String classSemester, String courseId, String courseName, String teacherName) {
         return classAllDao.selectClassAllDepart(departId, academicYear, classSemester, courseId, courseName, teacherName);
     }
 

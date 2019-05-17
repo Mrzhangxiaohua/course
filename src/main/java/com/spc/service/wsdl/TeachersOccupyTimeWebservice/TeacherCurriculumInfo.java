@@ -1,13 +1,17 @@
 package com.spc.service.wsdl.TeachersOccupyTimeWebservice;
 
 import com.spc.controller.Base;
+import com.spc.service.manage.ClassroomInfoService;
 import com.spc.service.wsdl.util.WebServiceUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.rpc.ServiceException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 仅适用于本科
@@ -15,6 +19,8 @@ import java.util.List;
 @Service
 public class TeacherCurriculumInfo extends Base {
 
+    @Autowired
+    ClassroomInfoService classroomInfoService;
     /**
      * 每天一共13个学时
      */
@@ -69,7 +75,7 @@ public class TeacherCurriculumInfo extends Base {
                 logger.error(kzJskbResult.getMsg());
                 return res;
             }
-
+            // 查询正常则输出查询结果
             KzJskb[] temp = kzJskbResult.getResult();
             for (int i = 0; i < temp.length; i++) {
                 System.out.println(temp[i].toString());
@@ -89,8 +95,10 @@ public class TeacherCurriculumInfo extends Base {
                 Integer jsjc = kzJskbs[i].getJSJC();
                 // 返回周次，000000001000000000000000000000，表示在第九周有一节课
                 String skzc = kzJskbs[i].getSKZC();
+                // 返回教室代码
+                String XXXQDM = kzJskbs[i].getXXXQDM();
 
-                res.add(new TeacherOccupyTime(skzc, skxq - 1, getClassHourIndex(ksjc), getClassHourIndex(jsjc)));
+                res.add(new TeacherOccupyTime(XXXQDM, skzc, skxq - 1, getClassHourIndex(ksjc), getClassHourIndex(jsjc)));
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -110,24 +118,34 @@ public class TeacherCurriculumInfo extends Base {
      * @param operatorName
      * @return
      */
-    public boolean[][] getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, String operatorId, String operatorName) {
+    public Map getTeacherOccupyTime(String teacherId, String academicYear, String classSemester, int startWeek, int endWeek, String classWeeks, String operatorId, String operatorName) {
         List<TeacherOccupyTime> teacherOccupyTimes = this.queryTeacherOccupyTime(operatorId, operatorName, teacherId, academicYear,classSemester);
-        boolean[][] res = new boolean[CLASS_HOURS_PER_DAY][CLASS_DAYS_PER_WEEK];
+        Map map = new HashMap<>();
+        boolean[][] res = new boolean[13][CLASS_DAYS_PER_WEEK];
+        int[][] schoolDistrict = new int[CLASS_HOURS_PER_DAY][CLASS_DAYS_PER_WEEK];
         for (TeacherOccupyTime teacherOccupyTime : teacherOccupyTimes) {
             // TODO fix
+//            String x = teacherOccupyTime.getJasdm();
+//            System.out.println("=============================" + "进行检测");
+//            int y = classroomInfoService.getClassRoomToSchoolDistrict(x);
+//            System.out.println(y); // 1020544
             String weeks = "00000011110000000000001110";
             for (int i = 0; i < weeks.length() && i < teacherOccupyTime.getWeeks().length(); i++) {
                 if (weeks.charAt(i) == '1' && teacherOccupyTime.getWeeks().charAt(i) == '1'){
                     for (int j = teacherOccupyTime.getHourStartIndex(); j <= teacherOccupyTime.getHourEndIndex(); j++) {
                         // true 表示有占用
                         res[j][teacherOccupyTime.getDayIndex()] = true;
+                        // 写入schoolDistrict
+                        schoolDistrict[j][teacherOccupyTime.getDayIndex()] = Integer.parseInt(teacherOccupyTime.getXXXQDM());
                     }
                     break;
                 }
             }
 
         }
-        return res;
+        map.put("time", res);
+        map.put("place",schoolDistrict);
+        return map;
     }
 
     private int getClassHourIndex(int classHour) {
@@ -142,14 +160,19 @@ public class TeacherCurriculumInfo extends Base {
 
     public static void main(String[] args) {
         TeacherCurriculumInfo aClass = new TeacherCurriculumInfo();
-        List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0002002065", "2018-2019", "春季");
-        boolean[][] occupyTimes = aClass.getTeacherOccupyTime("0002016056", "2018-2019", "春季", 1, 8, "", "3118105316", "张发");
+        List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0002016045", "2018-2019", "春季");
+
+
+        Map<String, Object[][]> occupyTimes = aClass.getTeacherOccupyTime("0002016045", "2018-2019", "春季", 9, 16, "", "3118105316", "张发");
         for (TeacherOccupyTime teacherOccupyTime : res) {
             System.out.println(teacherOccupyTime);
         }
+
         for (int i = 0; i < CLASS_HOURS_PER_DAY; i++) {
             for (int j = 0; j < CLASS_DAYS_PER_WEEK; j++) {
-                System.out.print(occupyTimes[i][j] + "\t");
+                Object[][] o = occupyTimes.get("time");
+                System.out.print(o[i][j] + "\t");
+
             }
             System.out.println();
         }

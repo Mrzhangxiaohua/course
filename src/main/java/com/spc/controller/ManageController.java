@@ -16,6 +16,7 @@ import com.spc.service.teacher.TeacherService;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
 import com.spc.view.*;
+import com.sun.org.apache.xpath.internal.operations.Lt;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -25,12 +26,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -124,7 +127,7 @@ public class ManageController extends Base {
     }
 
     /**
-     * 教师端：审核开课申请的信息。
+     * 超级管理员端：审核开课申请的信息。
      *
      * @param currentPage 当前页
      * @param pageSize    页面大小
@@ -139,15 +142,16 @@ public class ManageController extends Base {
             @RequestParam(required = false, defaultValue = "") String mydate,
             @RequestParam(required = false, defaultValue = "") String operatorId,
             @RequestParam(required = false, defaultValue = "") String operatorName,
-            @RequestParam(required = false, defaultValue ="0") int tabKey
+            @RequestParam(required = false, defaultValue = "") String departId,
+            @RequestParam(required = false, defaultValue = "0") int type,
+            @RequestParam(required = false, defaultValue = "0") int tabKey
     ) throws ParseException {
         PageHelper.startPage(currentPage, pageSize);
-        List<CourseApplication> result=new ArrayList<>();
+        List<CourseApplication> result=null;
         if (!mydate.equals("")) {
-
-            result = courseAllService.findAllCourseApp(operatorId, operatorName, mydate,tabKey);
+            result = courseAllService.findAllCourseApp(operatorId, operatorName, mydate,tabKey,departId,type);
         }else{
-            result= courseAllService.findAllCourseApp(operatorId, operatorName,tabKey);
+            result= courseAllService.findAllCourseApp(operatorId, operatorName,tabKey,departId, type);
         }
         Map<String, Object> res = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
@@ -159,7 +163,7 @@ public class ManageController extends Base {
         return res;
     }
     /**
-     * 管理员端：审核开课申请。
+     * 超级管理员端：审核开课申请。
      * post:
      *  ids  idList
      * result   审核结果，1代表通过，2代表拒绝
@@ -170,22 +174,16 @@ public class ManageController extends Base {
     public String checkCourseApp( HttpServletRequest request){
         String username= (String) request.getSession().getAttribute("username");
         String userId= (String) request.getSession().getAttribute("userId");
-        int departId= (int) request.getSession().getAttribute("departId");
         String json = RequestPayload.getRequestPayload(request);
-        System.out.println(json);
         try {
             JSONObject obj = new JSONObject(json);
             int result=obj.getInt("result");
-            System.out.println("result:"+result);
             JSONArray idArray=obj.getJSONArray("ids");
-            System.out.println(idArray);
             List<Integer> idList=new ArrayList();
             for(int i=0;i<idArray.length();i++){
                 idList.add((Integer) idArray.get(i));
             }
-            System.out.println("before");
-            courseAllService.checkCourseApp(idList,result,departId,username,userId);
-            System.out.println("after");
+            courseAllService.checkCourseApp(idList,result,username,userId);
         } catch (Exception e) {
             e.printStackTrace();
             return "审核失败！";
@@ -584,23 +582,30 @@ public class ManageController extends Base {
 //        manageService.addCourse(cd);
 //        return 0;
 //    }
-    @RequestMapping(value = "/add/course", method = RequestMethod.POST)
-    @ResponseBody
-    public int addCourse(@RequestBody ClassDomainWithId cdwi) {
-        cdwi.setClassDateDescription(cdwi.getClassDateDescriptionA() + ":" + cdwi.getClassDateDescriptionB());
-        cdwi.setClassChooseNum(0);
-        int id = cdwi.getId();
-        if (id != 0) {
-            manageService.deleteApplication(id);
-        }
-        manageService.addCourse(cdwi);
-        return 0;
-    }
+//    @RequestMapping(value = "/add/course", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int addCourse(@RequestBody ClassDomainWithId cdwi) {
+//        cdwi.setClassDateDescription(cdwi.getClassDateDescriptionA() + ":" + cdwi.getClassDateDescriptionB());
+//        cdwi.setClassChooseNum(0);
+//        int id = cdwi.getId();
+//        if (id != 0) {
+//            manageService.deleteApplication(id);
+//        }
+//        manageService.addCourse(cdwi);
+//        return 0;
+//    }
 
     @RequestMapping(value = "/delete/course", method = RequestMethod.POST)
     @ResponseBody
     public int deleteCourse(@RequestBody CourseAll courseAll) {
         manageService.deleteCourseAll(courseAll.getId());
+        return 0;
+    }
+
+    @RequestMapping(value ="/delete/courseApp",method = RequestMethod.POST)
+    @ResponseBody
+    public int deleteCourseApp(@RequestBody CourseApplication courseApp){
+        manageService.deleteCourseApp(courseApp.getId());
         return 0;
     }
 
@@ -725,7 +730,7 @@ public class ManageController extends Base {
                 res.put("status", "SUCCESS");
 
                 Map<String, Object> data = new HashMap<>();
-                data.put("total", ((Page) students).getTotal());
+                data.put("total", 10);
                 data.put("pageSize", pageSize);
                 data.put("currentPage", currentPage);
                 data.put("list", newStus);
@@ -754,9 +759,9 @@ public class ManageController extends Base {
             String stuId = (String) li.get("stuId");
             int classNum = (int) li.get("classNum");
 
-            int xbsjGrade = (int) li.get("xbsjGrade");
-            int knskGrade = (int) li.get("knskGrade");
-            int wlzzxxGrade = (int) li.get("wlzzxxGrade");
+            double xbsjGrade = Double.valueOf(String.valueOf(li.get("xbsjGrade")));
+            double knskGrade = Double.valueOf(String.valueOf(li.get("knskGrade")));
+            double wlzzxxGrade = Double.valueOf(String.valueOf(li.get("wlzzxxGrade")));
 
             Map tempM = new HashMap();
             tempM.put("wlzzxxGrade", wlzzxxGrade);
@@ -955,9 +960,11 @@ public class ManageController extends Base {
         return "设置失败";
     }
 
-    /*
-     *超级管理员查看往年课程目录
+    /**
+     * 超级管理员端：查看往年课程目录
      *
+     *
+     * @return
      */
     @RequestMapping("/findCourseAll")
     @ResponseBody
@@ -981,47 +988,210 @@ public class ManageController extends Base {
 
     }
 
+    @RequestMapping(value="/courseApp")
+    @ResponseBody
+    public Map<String, Object> courseApp(HttpServletRequest request,
+                                                    @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                                    @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                                    @RequestParam(required = false, defaultValue="8888") String academicYear,
+                                                    @RequestParam(required = false, defaultValue = "8888") String courseId,
+                                                    @RequestParam(required = false,defaultValue = "8888") String courseName
+    ){
+        if(academicYear.equals("8888")) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 
-    /*
-     *超级管理员修改当年课程目录
+            Date date = new Date();
+            int year = Integer.parseInt(sdf.format(date));
+            academicYear = year + "-" + (year + 1);
+        }
+        int departId=  (int)request.getSession().getAttribute("departId");
+        PageHelper.startPage(currentPage, pageSize);
+        List courseAllList=courseAllService.findDepartCourseApp(departId,academicYear,courseId,courseName);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(courseAllList);
+        Map<String, Object> res = new HashMap<>();
+        res.put("total", pageInfo.getTotal());
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        res.put("pageSize", pageSize);
+        res.put("currentPage", currentPage);
+        res.put("list", pageList);
+        return res;
+    }
+
+    /**
+     * 学院管理员端：查看往年课程目录
+     *
+     */
+    @RequestMapping("/findCourseAllDepart")
+    @ResponseBody
+    public Map<String,Object> findCourseAll(  @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                              @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                              @RequestParam(required = false, defaultValue="8888") String academicYear,
+                                              @RequestParam(required = false, defaultValue = "8888") String courseId,
+                                              @RequestParam(required = false,defaultValue = "8888") String courseName,
+                                              HttpSession session
+    ){
+        int departId = (int) session.getAttribute("departId");
+        Map<String,Object> res=new HashMap<>();
+        PageHelper.startPage(currentPage, pageSize);
+        List courseAllList=courseAllService.findCourseAll(academicYear,courseId,courseName,departId);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(courseAllList);
+        res.put("total", pageInfo.getTotal());
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        res.put("pageSize", pageSize);
+        res.put("currentPage", currentPage);
+        res.put("list", pageList);
+        return res;
+
+    }
+    /**
+     * 学院管理员端:导入往年课程
+     *
+     */
+    @RequestMapping("/departAddFormerCourse")
+    @ResponseBody
+    public int departAddFormerCourseAll(HttpServletRequest request) throws JSONException {
+        String username= (String) request.getSession().getAttribute("username");
+        String userId= (String) request.getSession().getAttribute("userId");
+        String json = RequestPayload.getRequestPayload(request);
+        JSONArray obj = new JSONArray(json);
+        for(int i=0;i<obj.length();i++){
+            int id= (int) obj.get(i);
+            courseAllService.addDepartFormer(id,username,userId);
+        }
+        return 0;
+    }
+
+    /**
+     * 学院管理员新增课程
+     * @param request
+     * @return
+     * @throws JSONException
+     */
+    @RequestMapping(value="/addCourseApp",method=RequestMethod.POST)
+    @ResponseBody
+    public int addCourseApp(HttpServletRequest request) throws JSONException {
+        String userId= (String) request.getSession().getAttribute("userId");
+        String username= (String) request.getSession().getAttribute("username");
+        String json = RequestPayload.getRequestPayload(request);
+        JSONObject obj = new JSONObject(json);
+        int departId=obj.optInt("departId");
+        if(departId==0){
+            departId= (int) request.getSession().getAttribute("departId");
+        }
+        System.out.println(departId);
+        String courseNameCHS=obj.getString("className");
+        String courseNameEN=obj.getString("classNameEN");
+        int moduleId=obj.getInt("classModuleNum");
+        String academicYear=obj.getString("classYear");
+        int classSemesterInt=obj.getInt("classSemester");
+
+        int classHour=obj.getInt("classHour");
+        int stuNumUpperLimit=obj.getInt("stuNumUpperLimit");
+        String teacherName=obj.getString("mainLecturer");
+        String teacherId=obj.getString("mainLecturerId");
+        JSONArray teacherArray= (JSONArray) obj.get("teacherList");
+        String courseInfo=obj.getString("courseInfo");
+        String teacherInfo=obj.getString("teacherInfo");
+        CourseApplication ca=new CourseApplication();
+        ca.setDepartId(departId);
+        ca.setCourseNameEN(courseNameEN);
+        ca.setCourseNameCHS(courseNameCHS);
+        ca.setModuleId(moduleId);
+        ca.setAcademicYear(academicYear);
+        if(classSemesterInt==1){
+            ca.setClassSemester("春季");
+        }else if(classSemesterInt==2){
+            ca.setClassSemester("秋季");
+        }else if(classSemesterInt==3){
+            ca.setClassSemester("春秋季");
+        }
+        ca.setClassHour(classHour);
+        ca.setStuNumUpperLimit(stuNumUpperLimit);
+        ca.setTeacherId(teacherId);
+        ca.setTeacherName(teacherName);
+        StringBuilder teachingTeamIds=new StringBuilder();
+        StringBuilder teachingTeamNames=new StringBuilder();
+        for(int i=0;i<teacherArray.length();i++){
+            JSONObject jsonObject= (JSONObject) teacherArray.get(i);
+            teachingTeamIds.append(jsonObject.getString("teaId"));
+            teachingTeamIds.append(",");
+            teachingTeamNames.append(jsonObject.getString("teaName"));
+            teachingTeamNames.append(",");
+        }
+        teachingTeamIds.deleteCharAt(teachingTeamIds.length()-1);
+        teachingTeamNames.deleteCharAt(teachingTeamNames.length()-1);
+        ca.setTeachingTeamIds(teachingTeamIds.toString());
+        ca.setTeachingTeamNames(teachingTeamNames.toString());
+        ca.setCourseInfo(courseInfo);
+        ca.setTeacherInfo(teacherInfo);
+        ca.setOperatorId(userId);
+        ca.setOperateDate(new Date());
+        ca.setIsChecked(3);
+        ca.setCategory(2);
+        courseAllService.addCourseApp(ca);
+        return 1;
+    }
+
+    /**
+     * 学院管理员提交课程目录审核
+     * @param request
+     * @return
+     * @throws JSONException
+     */
+    @RequestMapping("/commitApp")
+    @ResponseBody
+    public int commitApp(HttpServletRequest request,@RequestParam("academicYear") String academicYear){
+        int departId= (int) request.getSession().getAttribute("departId");
+        return courseAllService.commitApp(academicYear,departId);
+    }
+
+    /**
+     * 学院管理员修改未经审核的课程目录
+     * @param ca
+     * @param request
+     * @return
+     */
+    @RequestMapping("/modifyCourseApp")
+    @ResponseBody
+    public int modifyCourseApp(@RequestBody CourseApplication ca, HttpServletRequest request){
+        String username= (String) request.getSession().getAttribute("username");
+        String userId= (String) request.getSession().getAttribute("userId");
+        if(ca.getIsChecked()!=3){
+            return 0;
+        }
+        //测试的时候看下
+        courseAllService.modifyCourseApp(ca,username,userId);
+        return 1;
+    }
+
+    /**
+     * 超级管理员修改课程目录
+     * @param courseAll
+     * @param request
+     * @return
      */
     @RequestMapping("/modifyCourseAll")
     @ResponseBody
     public  String modifyCourseAll(@RequestBody CourseAll courseAll,HttpServletRequest request){
         String userId= (String) request.getSession().getAttribute("userId");
         String username= (String) request.getSession().getAttribute("username");
-        int flag=courseAllService.ModifyCourseAll(courseAll,userId,username);
+        int flag=courseAllService.modifyCourseAll(courseAll,userId,username);
         if(flag!=0){
             return "修改成功!";
         }
         return "修改失败！";
     }
-    /*
-     *超级管理员修订学年课程目录
-     */
-//    @RequestMapping("/addYearCourseAll")
-//    @ResponseBody
-//    public String addYearCourseAll(HttpServletRequest request){
-//        String userId= (String) request.getSession().getAttribute("userId");
-//        String username= (String) request.getSession().getAttribute("username");
-//        String jsonString = RequestPayload.getRequestPayload(request);
-//        JSONObject json= null;
-//        try {
-//            json = new JSONObject(jsonString);
-//            System.out.println("json"+json);
-//            List<CourseAll> courseList= (List<CourseAll>) json.get("courseList");
-//            String year= (String) json.get("year");
-//            int flag=courseAllService.addYearCourseAll(courseList,userId,username,year);
-//            if(flag!=0){
-//                return "新增成功！";
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return "新增失败！";
-//    }
-    /*
-     *超级管理员：当年课程目录
+
+    /**
+     * 超级管理员：查看课程目录
+     * @param request
+     * @param currentPage
+     * @param pageSize
+     * @param academicYear
+     * @param courseId
+     * @param courseName
+     * @param departId
+     * @return
      */
     @RequestMapping(value="/findCourseApplication")
     @ResponseBody
@@ -1052,8 +1222,12 @@ public class ManageController extends Base {
         res.put("list", pageList);
         return res;
     }
-    /*
-     *超级管理员直接新增课程
+
+    /**
+     * 超级管理员直接新增课程
+     * @param request
+     * @return
+     * @throws JSONException
      */
     @RequestMapping(value = "/addCourseAll", method = RequestMethod.POST)
     @ResponseBody
@@ -1111,8 +1285,10 @@ public class ManageController extends Base {
     }
 
     /**
-     *
-     * 管理员修订当年课程目录时导入往年课程
+     * 超级管理员修订当年课程目录时导入往年课程
+     * @param request
+     * @return
+     * @throws JSONException
      */
 
     @RequestMapping(value = "addFormerCourseAll")
@@ -1739,7 +1915,6 @@ public class ManageController extends Base {
         model.put("style", "higher");
         return new ModelAndView(new StudentsAllScoreListPdfView(), model);
     }
-
 
 
 }

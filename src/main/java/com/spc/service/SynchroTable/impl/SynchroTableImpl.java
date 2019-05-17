@@ -114,6 +114,7 @@ public class SynchroTableImpl extends Base implements SynchroTable {
     public int updateRecord(ClassAll classAll) {
         // 不要偷懒，做真正的update(by zhangfa)
         //说的对(by xiaomi)
+        logger.info("取出要更新的数据为：" + classAll);
         Map map = classDao.getClassId(classAll.getId());
         Integer classID = (Integer) map.get("classId");
         //logger.info("准备要删除的在course中的classId为：" + classID + "====================");

@@ -1,6 +1,7 @@
 create
   view t_kc_byhx as
-select a.classEncode  as KCBH, -- 课程编号
+select
+       a.classEncode  as KCBH, -- 课程编号
        a.className    as KCMC,  -- 课程名称
        b.courseNameEN as KCYWMC,-- 课程英文名称
        c.departCode   as YXSH,-- 院系
@@ -12,7 +13,7 @@ select a.classEncode  as KCBH, -- 课程编号
        null           as XDND  -- 学年年度
 from Course a
        left join
-       (select courseNameCHS,courseNameEN from ClassAll group by courseNameCHS,courseNameEN) as b
+       mid as b
        on a.className = b.courseNameCHS
        left join Department as c on c.departId = a.departId;
 

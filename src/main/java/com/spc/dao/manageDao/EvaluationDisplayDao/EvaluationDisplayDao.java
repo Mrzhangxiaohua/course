@@ -13,4 +13,8 @@ public interface EvaluationDisplayDao {
     List<Map<String, Object>> getAllClassEvaluation(@Param("classId") String classId);
 
     List<ClassDomain> getAllClasses();
+
+    List<Map> evaluateCount(@Param("classId") String classId);
+
+    int classUpperLimit(@Param("classId") String classId);
 }

@@ -1,6 +1,7 @@
 package com.spc.dao;
 
 import com.spc.model.Department;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +15,5 @@ import java.util.List;
 @Repository
 public interface DepartmentDao {
     List<Department> selectAll();
+    List<String> selectById( @Param("id") int id);
 }

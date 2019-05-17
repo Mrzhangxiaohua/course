@@ -42,7 +42,7 @@ public class CourseDateTrans {
         }
         return strs;
     }
-
+    //5:3:4
     public static StringBuilder bToString(Integer b, Integer c) {
         StringBuilder strs = new StringBuilder("");
         if (c == 1) {
@@ -65,7 +65,8 @@ public class CourseDateTrans {
         if (index <= 4) {
             res += index;
         } else if (index >= 5 && index <= 6) {
-            res += ("N" + (index - 4));
+//            res += ("N" + (index - 4));
+            res += index;
         } else {
             res += (index - 2);
         }
