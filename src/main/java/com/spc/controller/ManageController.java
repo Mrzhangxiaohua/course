@@ -1005,7 +1005,6 @@ public class ManageController extends Base {
         PageInfo<Map<String,Object>> pageInfo = new PageInfo<>();
         if(flag!=0) {
 
-
             if (academicYear.equals("8888")) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 
@@ -1220,6 +1219,7 @@ public class ManageController extends Base {
             int year = Integer.parseInt(sdf.format(date));
             academicYear = year + "-" + (year + 1);
         }
+        int flag=courseAllService.findFlag();
         PageHelper.startPage(currentPage, pageSize);
         List courseAllList=courseAllService.findCourseAll(academicYear,courseId,courseName,departId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(courseAllList);
@@ -1230,6 +1230,7 @@ public class ManageController extends Base {
         res.put("pageSize", pageSize);
         res.put("currentPage", currentPage);
         res.put("list", pageList);
+        res.put("flag",flag);
         return res;
     }
 
@@ -1310,6 +1311,7 @@ public class ManageController extends Base {
             int id= (int) obj.get(i);
             CourseAll courseAll=courseAllService.findCourseAll(id);
             courseAll.setId(null);
+            courseAll.setCourseAppId(null);
             Calendar now = Calendar.getInstance();
             int currentYear=now.get(Calendar.YEAR);
             courseAll.setAcademicYear(currentYear+"-"+(currentYear+1));
@@ -1928,12 +1930,14 @@ public class ManageController extends Base {
 
     /**
      * 超级管理员端：课程目录修订开关
-     * @param flag 1表示打开，0表示关闭
      * @return
      */
     @RequestMapping("/courseAllSwitch")
     @ResponseBody
-    public int courseAllSwitch(@RequestBody int flag){
+    public int courseAllSwitch(HttpServletRequest request) throws JSONException {
+        String json = RequestPayload.getRequestPayload(request);
+        JSONObject obj = new JSONObject(json);
+        int flag=obj.getInt("flag");
        return courseAllService.updateFlag(flag);
     }
 

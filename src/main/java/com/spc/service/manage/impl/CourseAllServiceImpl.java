@@ -5,6 +5,7 @@ import com.spc.model.CourseAll;
 import com.spc.model.CourseApplication;
 import com.spc.model.TeacherInfo;
 import com.spc.service.manage.CourseAllService;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,7 +97,7 @@ public class CourseAllServiceImpl implements CourseAllService {
                     courseId = courseIdPre +twoYear+ String.format("%03d", departId) + String.format("%03d", count);
                     courseApp.setCourseId(courseId);
                     courseAllDao.updateCourseAppflag(id, result, courseId);
-                }else if(type==1){
+                }else if(type==1||type==3){
                     courseId=courseApp.getCourseId();
                     courseAllDao.updateCourseAppflag(id,result,null);
                 }
@@ -122,8 +123,7 @@ public class CourseAllServiceImpl implements CourseAllService {
                     courseAll.setOperateDate(new Date());
                     courseAll.setOperatorId(userId);
                     courseAll.setOperatorName(username);
-                    courseAll.setCourseAppId(courseApp.getId());
-
+                    courseAll.setCourseAppId(new Integer(id));
                     courseAllDao.insertPassApp(courseAll);
             }
         } else if (result == 2) {
@@ -259,16 +259,23 @@ public class CourseAllServiceImpl implements CourseAllService {
     @Transactional
     public int cancelCheck(List<Integer> idList) {
         for(int id:idList){
-            int courseAppId=courseAllDao.findCourseAllById(id).get(0).getCourseAppId();
-            courseAllDao.delete(id);
-            CourseApplication ca = courseAllDao.findById(courseAppId).get(0);
-            if(ca.getCategory()==2 && ca.getIsChecked()==1){
+
+            CourseApplication ca = courseAllDao.findById(id).get(0);
+            if(ca.getIsChecked()==0){
+                return 0;
+            }
+
+            if(ca.getIsChecked()==1){
+                courseAllDao.deleteCourseAllByAppId(id);
+            }
+            if(ca.getCategory()==2){
                 ca.setCourseId(null);
             }
-            ca.setIsChecked(3);
+                ca.setIsChecked(3);
+
             courseAllDao.updateAppCheck(ca);
         }
-        return 0;
+        return 1;
     }
 
     @Override

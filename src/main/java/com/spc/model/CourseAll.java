@@ -43,13 +43,13 @@ public class CourseAll {
 
     private int flag;
 
-    private int courseAppId;
+    private Integer courseAppId;
 
-    public int getCourseAppId() {
+    public Integer getCourseAppId() {
         return courseAppId;
     }
 
-    public void setCourseAppId(int courseAppId) {
+    public void setCourseAppId(Integer courseAppId) {
         this.courseAppId = courseAppId;
     }
 

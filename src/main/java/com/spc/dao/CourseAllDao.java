@@ -86,4 +86,6 @@ public interface CourseAllDao {
     List<Map<String, Object>> selectAllDepart(@Param("academicYear")String academicYear);
 
     List<Map<String, Object>> findByYearAndDepart(@Param("academicYear")String academicYear,@Param("departId") int departId);
+
+    int deleteCourseAllByAppId(@Param("id") Integer id);
 }

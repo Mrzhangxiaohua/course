@@ -189,8 +189,8 @@
     </select>
 
     <insert id="insertPassApp" parameterType="com.spc.model.CourseAll">
-      insert into CourseAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo)
-      values(#{departId},#{courseId},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},#{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames},#{courseInfo},#{teacherInfo})
+      insert into CourseAll(departId,courseId,courseNameCHS,courseNameEN,moduleId,academicYear,classSemester,classHour,stuNumUpperLimit,teacherId,teacherName,teachingTeamIds,teachingTeamNames,courseInfo,teacherInfo,courseAppId)
+      values(#{departId},#{courseId},#{courseNameCHS},#{courseNameEN},#{moduleId},#{academicYear},#{classSemester},#{classHour},#{stuNumUpperLimit},#{teacherId},#{teacherName},#{teachingTeamIds},#{teachingTeamNames},#{courseInfo},#{teacherInfo},#{courseAppId})
     </insert>
     <select id="findCourseAll" resultType="map">
         select a.*,b.modelsName as modelName,c.departName
@@ -266,7 +266,7 @@
         moduleId=#{moduleId},academicYear=#{academicYear},classSemester=#{classSemester},classHour=#{classHour},
         stuNumUpperLimit=#{stuNumUpperLimit},teacherId=#{teacherId},teacherName=#{teacherName},
         teachingTeamIds=#{teachingTeamIds},teachingTeamNames=#{teachingTeamNames},courseInfo=#{courseInfo},teacherInfo=#{teacherInfo},
-        operatorId=#{operatorId},operatorName=#{operatorName}
+        operatorId=#{operatorId},operatorName=#{operatorName},category=#{category}
         where id=#{id}
     </update>
 
@@ -284,7 +284,7 @@
         and departId=#{departId}
         and isChecked=3
     </select>
-    <select id="selectFlag">
+    <select id="selectFlag" resultType="int">
         select flag
         from courseAllSwitch
     </select>
@@ -314,5 +314,10 @@
         and a.departId=#{departId}
         order by a.courseId asc
     </select>
+
+    <delete id="deleteCourseAllByAppId" >
+       delete from CourseAll
+       where courseAppId=#{id}
+    </delete>
 
 </mapper>
