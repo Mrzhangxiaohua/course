@@ -53,7 +53,9 @@ public interface ManageService {
 
     int addTemplateFileInfo(String teaId, String fileName, String path,int type,String dep, String date,int flag);
 
-    int addGradePercent(int knsk, int xbsj, int zzxx, String userId, String date);
+    Map getGradePercent();
+
+    int addGradePercent(int knsk, int xbsj, int zzxx, int dekt, int qmnl,String userId, String date);
 
     FileInfo findAppFile(int fileInfoId);
 

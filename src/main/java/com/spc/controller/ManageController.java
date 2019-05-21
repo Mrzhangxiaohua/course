@@ -937,6 +937,19 @@ public class ManageController extends Base {
         }
         return "下载失败";
     }
+
+    /**
+     * 查看成绩模快比例
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/getGradePercent")
+    public Map getGradePercent(){
+        return manageService.getGradePercent();
+    }
+
+
     /*
     * 超级管理员设置成绩比例
     * */
@@ -948,13 +961,15 @@ public class ManageController extends Base {
         try {
             JSONObject json=new JSONObject(jsonString);
             System.out.println("json"+json);
-            JSONObject valuejson = json.getJSONObject("value");
-            int XBSJ= (int) valuejson.get("XBSJ");
-            int ZZXX= (int) valuejson.get("ZZXX");
-            int KNSK= (int) valuejson.get("KNSK");
+//            JSONObject valuejson = json.getJSONObject("value");
+            int XBSJ= (int) json.get("XBSJ");
+            int ZZXX= (int) json.get("ZZXX");
+            int KNSK= (int) json.get("KNSK");
+            int DEKT = (int) json.get("DEKT");
+            int QMNL = (int) json.get("QMNL");
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            manageService.addGradePercent(KNSK,XBSJ,ZZXX,userId,date);
+            manageService.addGradePercent(KNSK,XBSJ,ZZXX,DEKT,QMNL,userId,date);
         return "设置成功";
         } catch (JSONException e) {
             e.printStackTrace();
