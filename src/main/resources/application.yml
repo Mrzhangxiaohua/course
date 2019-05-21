@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8080
 
 spring:
   datasource:
@@ -92,8 +92,8 @@ app:
   server:
     host:
 #      url: http://58.206.125.53:8080/psc
-#      url: http://localhost:80/psc
-      url: http://202.117.17.21:80/psc
+      url: http://localhost:8080/psc
+#      url: http://202.117.17.21:80/psc
 #      url: http://202.117.16.167:8080/psc
 
   login:
