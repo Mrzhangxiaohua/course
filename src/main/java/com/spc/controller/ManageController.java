@@ -3,6 +3,7 @@ package com.spc.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -16,7 +17,8 @@ import com.spc.service.teacher.TeacherService;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
 import com.spc.view.*;
-//import com.sun.org.apache.xpath.internal.operations.Lt;
+import com.sun.org.apache.xpath.internal.operations.Lt;
+import com.sun.xml.rpc.processor.model.soap.SOAPUnorderedStructureType;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -1012,20 +1014,27 @@ public class ManageController extends Base {
                                                     @RequestParam(required = false, defaultValue = "8888") String courseId,
                                                     @RequestParam(required = false,defaultValue = "8888") String courseName
     ){
-        if(academicYear.equals("8888")) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-
-            Date date = new Date();
-            int year = Integer.parseInt(sdf.format(date));
-            academicYear = year + "-" + (year + 1);
-        }
-        int departId=  (int)request.getSession().getAttribute("departId");
-        PageHelper.startPage(currentPage, pageSize);
-        List courseAllList=courseAllService.findDepartCourseApp(departId,academicYear,courseId,courseName);
-        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(courseAllList);
         Map<String, Object> res = new HashMap<>();
+        int flag=courseAllService.findFlag();
+        List<Map<String,Object>> pageList=new ArrayList<>();
+        PageInfo<Map<String,Object>> pageInfo = new PageInfo<>();
+        if(flag!=0) {
+
+            if (academicYear.equals("8888")) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+
+                Date date = new Date();
+                int year = Integer.parseInt(sdf.format(date));
+                academicYear = year + "-" + (year + 1);
+            }
+            int departId = (int) request.getSession().getAttribute("departId");
+            PageHelper.startPage(currentPage, pageSize);
+            List courseAllList = courseAllService.findDepartCourseApp(departId, academicYear, courseId, courseName);
+            pageInfo = new PageInfo<>(courseAllList);
+        }
         res.put("total", pageInfo.getTotal());
-        List<Map<String,Object>> pageList=pageInfo.getList();
+        res.put("flag",flag);
+        pageList=pageInfo.getList();
         res.put("pageSize", pageSize);
         res.put("currentPage", currentPage);
         res.put("list", pageList);
@@ -1225,6 +1234,7 @@ public class ManageController extends Base {
             int year = Integer.parseInt(sdf.format(date));
             academicYear = year + "-" + (year + 1);
         }
+        int flag=courseAllService.findFlag();
         PageHelper.startPage(currentPage, pageSize);
         List courseAllList=courseAllService.findCourseAll(academicYear,courseId,courseName,departId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(courseAllList);
@@ -1235,6 +1245,7 @@ public class ManageController extends Base {
         res.put("pageSize", pageSize);
         res.put("currentPage", currentPage);
         res.put("list", pageList);
+        res.put("flag",flag);
         return res;
     }
 
@@ -1315,6 +1326,7 @@ public class ManageController extends Base {
             int id= (int) obj.get(i);
             CourseAll courseAll=courseAllService.findCourseAll(id);
             courseAll.setId(null);
+            courseAll.setCourseAppId(null);
             Calendar now = Calendar.getInstance();
             int currentYear=now.get(Calendar.YEAR);
             courseAll.setAcademicYear(currentYear+"-"+(currentYear+1));
@@ -1931,7 +1943,110 @@ public class ManageController extends Base {
         return new ModelAndView(new StudentsAllScoreListPdfView(), model);
     }
 
+    /**
+     * 超级管理员端：课程目录修订开关
+     * @return
+     */
+    @RequestMapping("/courseAllSwitch")
+    @ResponseBody
+    public int courseAllSwitch(HttpServletRequest request) throws JSONException {
+        String json = RequestPayload.getRequestPayload(request);
+        JSONObject obj = new JSONObject(json);
+        int flag=obj.getInt("flag");
+       return courseAllService.updateFlag(flag);
+    }
 
+    /**
+     * 超级管理员端：撤销课程目录的审核
+     * @param request
+     * @return
+     * @throws JSONException
+     */
+    @RequestMapping("/cancelCheckCourseApp")
+    @ResponseBody
+    public int cancelCheckCourseApp(HttpServletRequest request) throws JSONException {
+        String json = RequestPayload.getRequestPayload(request);
+
+        JSONObject obj = new JSONObject(json);
+        JSONArray idArray = obj.getJSONArray("ids");
+        List<Integer> idList = new ArrayList();
+        for (int i = 0; i < idArray.length(); i++) {
+            idList.add((Integer) idArray.get(i));
+        }
+      return  courseAllService.cancelCheck(idList);
+
+    }
+
+    /**
+     * 超级管理员端：导出课程目录Pdf
+     * @param academicYear
+     * @param response
+     * @return
+     */
+    @RequestMapping("/getCourseAllTablePdf")
+    @ResponseBody
+    public ModelAndView getCourseAllTable(@RequestParam(required = false, defaultValue = "88888888") String academicYear,
+                                          HttpServletResponse response) {
+        if(academicYear.equals("88888888")){
+            Calendar now = Calendar.getInstance();
+            String currentYear = now.get(Calendar.YEAR)+"";
+            academicYear=currentYear+"-"+(currentYear+1);
+        }
+        response = ResponseWrap.setName(response, "小班实践课程目录", "pdf");
+        List<Map<String,Object>> departList=courseAllService.findCourseAllDepartList(academicYear);
+        Map<String, List<Map<String, Object>>> courseAllMap= new HashMap<>();
+        for(Map<String,Object> depart:departList){
+            int departId= (int) depart.get("departId");
+            String departName= (String) depart.get("departName");
+            List<Map<String, Object>> departCourseAllList=courseAllService.findCourseAllByYearAndDepart(academicYear,departId);
+            courseAllMap.put(departName,departCourseAllList);
+        }
+        Map res = new HashMap();
+        res.put("data",courseAllMap);
+        res.put("academicYear",academicYear);
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+        return new ModelAndView(new CourseAllTablePdfView(), model);
+    }
+//    @RequestMapping("/getCourseAllTableExcel")
+//    @ResponseBody
+//    public void getCourseAllTableExcel(@RequestParam(required = false, defaultValue = "88888888") String academicYear,
+//                                       HttpServletResponse response) {
+//
+//        if (academicYear.equals("88888888")) {
+//            Calendar now = Calendar.getInstance();
+//            String currentYear = now.get(Calendar.YEAR) + "";
+//            academicYear = currentYear + "-" + (currentYear + 1);
+//        }
+//        List<Map<String, Object>> departList = courseAllService.findCourseAllDepartList(academicYear);
+//        Map<String, List<Map<String, Object>>> courseAllMap = new HashMap<>();
+//        List<Map<String, Object>> list = new ArrayList<>();
+//        for (Map<String, Object> depart : departList) {
+//            int departId = (int) depart.get("departId");
+//            String departName = (String) depart.get("departName");
+//            List<Map<String, Object>> departCourseAllList = courseAllService.findCourseAllByYearAndDepart(academicYear, departId);
+//
+//            Map<String, Object> map = new HashMap<>();
+//            ExportParams params = new ExportParams();
+//            params.setTitle("西安交通大学"+academicYear+"学年"+departName + "研究生小班实践课程目录");
+//            params.setSheetName(departName);
+//            map.put("title", params);
+//            map.put("data", departCourseAllList);
+//            map.put("entity", Map.class);
+//            list.add(map);
+//        }
+//
+//        response = ResponseWrap.setName(response, "小班实践课程目录", "xls");
+//
+//        Workbook workbook = ExcelExportUtil.exportExcel(list, ExcelType.HSSF);
+//        try {
+//            workbook.write(response.getOutputStream());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
 
 

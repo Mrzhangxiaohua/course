@@ -450,7 +450,6 @@ public class ClassAllController extends Base {
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "higher");
-        System.out.println("after");
         return new ModelAndView(new ManageTablePdfView(), model);
     }
 
