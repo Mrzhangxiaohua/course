@@ -87,55 +87,55 @@ public class ManageController extends Base {
         return res;
     }
 
-    /**
-     * 查询学生提交的改课申请
-     *
-     * @param tabKey：所要查询的申请的状态
-     * @param currentPage       ：当前页码
-     * @param pageSize          ： 页面大小
-     * @return Map<String   ,       Object>
-     */
-    @RequestMapping("/checked/message")
-    @ResponseBody
-    public Map<String, Object> checkedMessage(
-            @RequestParam(required = false, defaultValue = "88888888") int tabKey,
-            @RequestParam(required = false, defaultValue = "1") int currentPage,
-            @RequestParam(required = false, defaultValue = "10") int pageSize,
-            @RequestParam(required = false, defaultValue = "") String stuId,
-            @RequestParam(required = false, defaultValue = "") String mydate
-    ) {
-        PageHelper.startPage(currentPage, pageSize);
-        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-        List<StudentApplicationDomain> result = new ArrayList<>();
-        if (!mydate.equals("")) {
-            try {
-                Date date = new Date();
-                date = fmt.parse(mydate);
-                result = manageService.checkedMessageAndDate(tabKey, stuId, date);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        } else {
-            result = manageService.checkedMessage(tabKey, stuId);
-        }
-        Map<String, Object> res = new HashMap<>();
-        Map<String, Object> map = new HashMap<>();
-        map.put(Integer.toString(tabKey), result);
-        map.put("total", ((Page) result).getTotal());
-        map.put("pageSize", pageSize);
-        map.put("currentPage", currentPage);
-        res.put("data", map);
-        return res;
-    }
+//    /**
+//     * 查询学生提交的改课申请
+//     *
+//     * @param tabKey：所要查询的申请的状态
+//     * @param currentPage       ：当前页码
+//     * @param pageSize          ： 页面大小
+//     * @return Map<String   ,       Object>
+//     */
+//    @RequestMapping("/checked/message")
+//    @ResponseBody
+//    public Map<String, Object> checkedMessage(
+//            @RequestParam(required = false, defaultValue = "88888888") int tabKey,
+//            @RequestParam(required = false, defaultValue = "1") int currentPage,
+//            @RequestParam(required = false, defaultValue = "10") int pageSize,
+//            @RequestParam(required = false, defaultValue = "") String stuId,
+//            @RequestParam(required = false, defaultValue = "") String mydate
+//    ) {
+//        PageHelper.startPage(currentPage, pageSize);
+//        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+//        List<StudentApplicationDomain> result = new ArrayList<>();
+//        if (!mydate.equals("")) {
+//            try {
+//                Date date = new Date();
+//                date = fmt.parse(mydate);
+//                result = manageService.checkedMessageAndDate(tabKey, stuId, date);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            result = manageService.checkedMessage(tabKey, stuId);
+//        }
+//        Map<String, Object> res = new HashMap<>();
+//        Map<String, Object> map = new HashMap<>();
+//        map.put(Integer.toString(tabKey), result);
+//        map.put("total", ((Page) result).getTotal());
+//        map.put("pageSize", pageSize);
+//        map.put("currentPage", currentPage);
+//        res.put("data", map);
+//        return res;
+//    }
 
-    /**
-     * 超级管理员端：审核开课申请的信息。
-     *
-     * @param currentPage 当前页
-     * @param pageSize    页面大小
-     * @param mydate      日期
-     * @return 查询结果
-     */
+//    /**
+//     * 超级管理员端：审核开课申请的信息。
+//     *
+//     * @param currentPage 当前页
+//     * @param pageSize    页面大小
+//     * @param mydate      日期
+//     * @return 查询结果
+//     */
     @RequestMapping("/checked/classAppMessage")
     @ResponseBody
     public Map<String, Object> checkedClassAppMessage(
@@ -232,27 +232,27 @@ public class ManageController extends Base {
 //        return res;
 //    }
 
-    /**
-     * 管理端：审核通过学生的改课申请
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/makeSure/application", method = RequestMethod.POST)
-    @ResponseBody
-    public int convertStatus(HttpServletRequest request) {
-        String json = RequestPayload.getRequestPayload(request);
-        JSONObject obj = null;
-        try {
-            obj = new JSONObject(json);
-            Integer id = obj.getInt("id");
-            String className = obj.getString("className");
-            return manageService.makeSure(id, className);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
+//    /**
+//     * 管理端：审核通过学生的改课申请
+//     *
+//     * @param request
+//     * @return
+//     */
+//    @RequestMapping(value = "/makeSure/application", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int convertStatus(HttpServletRequest request) {
+//        String json = RequestPayload.getRequestPayload(request);
+//        JSONObject obj = null;
+//        try {
+//            obj = new JSONObject(json);
+//            Integer id = obj.getInt("id");
+//            String className = obj.getString("className");
+//            return manageService.makeSure(id, className);
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return 0;
+//    }
 
 //    /**
 //     * 确认了老师开课申请
@@ -281,74 +281,74 @@ public class ManageController extends Base {
 //        return 0;
 //    }
 
-    @RequestMapping(value = "/makeSure/applications", method = RequestMethod.POST)
-    @ResponseBody
-    public int convertS(HttpServletRequest request) {
-        String json = RequestPayload.getRequestPayload(request);
-        JSONObject obj = null;
-        try {
-            JSONArray Jarray = new JSONArray(json);
-            for (int i = 0; i < Jarray.length(); i++) {
-                obj = Jarray.getJSONObject(i);
-                Integer id = obj.getInt("id");
-                String className = obj.getString("className");
-                manageService.makeSure(id, className);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
+//    @RequestMapping(value = "/makeSure/applications", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int convertS(HttpServletRequest request) {
+//        String json = RequestPayload.getRequestPayload(request);
+//        JSONObject obj = null;
+//        try {
+//            JSONArray Jarray = new JSONArray(json);
+//            for (int i = 0; i < Jarray.length(); i++) {
+//                obj = Jarray.getJSONObject(i);
+//                Integer id = obj.getInt("id");
+//                String className = obj.getString("className");
+//                manageService.makeSure(id, className);
+//            }
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return 0;
+//    }
 
-    /*一键审核*/
-    @RequestMapping(value = "/makeSure/classApplications", method = RequestMethod.POST)
-    @ResponseBody
-    public int convertClassApplications(HttpServletRequest request) {
-        String json = RequestPayload.getRequestPayload(request);
-        int departId= Integer.parseInt((String) request.getSession().getAttribute("departId"));
-        JSONObject obj = null;
-        try {
-            JSONArray Jarray = new JSONArray(json);
-            for (int i = 0; i < Jarray.length(); i++) {
-                obj = Jarray.getJSONObject(i);
-                System.out.println("提交的实体是" + obj);
-                Integer id = obj.getInt("id");
-                String courseId=obj.getString("courseId");
-                manageService.makeSureClassApplication(id,courseId,departId);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
+//    /*一键审核*/
+//    @RequestMapping(value = "/makeSure/classApplications", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int convertClassApplications(HttpServletRequest request) {
+//        String json = RequestPayload.getRequestPayload(request);
+//        int departId= Integer.parseInt((String) request.getSession().getAttribute("departId"));
+//        JSONObject obj = null;
+//        try {
+//            JSONArray Jarray = new JSONArray(json);
+//            for (int i = 0; i < Jarray.length(); i++) {
+//                obj = Jarray.getJSONObject(i);
+//                System.out.println("提交的实体是" + obj);
+//                Integer id = obj.getInt("id");
+//                String courseId=obj.getString("courseId");
+//                manageService.makeSureClassApplication(id,courseId,departId);
+//            }
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return 0;
+//    }
 
-    /**
-     * 拒绝学生改课申请
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/reject/application", method = RequestMethod.POST)
-    @ResponseBody
-    public int rejectStatus(HttpServletRequest request) {
-        String json = RequestPayload.getRequestPayload(request);
-        JSONObject obj = null;
-        try {
-            obj = new JSONObject(json);
-            Integer id = obj.getInt("id");
-            return manageService.reject(id);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
+//    /**
+//     * 拒绝学生改课申请
+//     *
+//     * @param request
+//     * @return
+//     */
+//    @RequestMapping(value = "/reject/application", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int rejectStatus(HttpServletRequest request) {
+//        String json = RequestPayload.getRequestPayload(request);
+//        JSONObject obj = null;
+//        try {
+//            obj = new JSONObject(json);
+//            Integer id = obj.getInt("id");
+//            return manageService.reject(id);
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return 0;
+//    }
 
-    /**
-     * 拒绝老师开课申请
-     *
-     * @param request
-     * @return
-     */
+//    /**
+//     * 拒绝老师开课申请
+//     *
+//     * @param request
+//     * @return
+//     */
 //    @RequestMapping(value = "/reject/classApplication", method = RequestMethod.POST)
 //    @ResponseBody
 //    public int rejectClassStatus(HttpServletRequest request) {
@@ -364,24 +364,24 @@ public class ManageController extends Base {
 //        return 0;
 //    }
 
-    @RequestMapping(value = "/reject/classApplications", method = RequestMethod.POST)
-    @ResponseBody
-    public int rejectClasses(HttpServletRequest request) {
-        String json = RequestPayload.getRequestPayload(request);
-        JSONObject obj = null;
-        try {
-            JSONArray Jarray = new JSONArray(json);
-            for (int i = 0; i < Jarray.length(); i++) {
-                obj = Jarray.getJSONObject(i);
-                System.out.println("提交的实体是" + obj);
-                Integer id = obj.getInt("id");
-                manageService.rejectClassApplication(id);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
+//    @RequestMapping(value = "/reject/classApplications", method = RequestMethod.POST)
+//        @ResponseBody
+//        public int rejectClasses(HttpServletRequest request) {
+//            String json = RequestPayload.getRequestPayload(request);
+//            JSONObject obj = null;
+//            try {
+//                JSONArray Jarray = new JSONArray(json);
+//                for (int i = 0; i < Jarray.length(); i++) {
+//                    obj = Jarray.getJSONObject(i);
+//                    System.out.println("提交的实体是" + obj);
+//                    Integer id = obj.getInt("id");
+//                    manageService.rejectClassApplication(id);
+//                }
+//            } catch (Exception e) {
+//                System.out.println(e);
+//            }
+//            return 0;
+//    }
 
     /**
      * 管理员端查询课程
@@ -669,7 +669,6 @@ public class ManageController extends Base {
             String stuId = obj.getString("stuId");
             String classStr = obj.getString("classStr");
             String classId = obj.getString("classId");
-            System.out.println(stuId + classStr + classId);
             manageService.deleteCourseStudent(stuId, classId);
         } catch (Exception e) {
             System.out.println(e);
@@ -832,9 +831,6 @@ public class ManageController extends Base {
             semesterMap.put("spring","春");
             semesterMap.put("autumn","秋");
             String semester=year+semesterMap.get(jsonObject.getString("semester"));
-            System.out.println(year);
-            System.out.println(firstWeek);
-            System.out.println(semester);
             manageService.addSchoolCalendar(year,firstWeek,semester);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -848,95 +844,95 @@ public class ManageController extends Base {
         return manageService.jilianSelect();
     }
 
-    @RequestMapping(value="/uploadTemplate")
-    @ResponseBody
-    public String uploadTemplate(HttpServletRequest request, @RequestParam("file") MultipartFile file){
-        String teaId=(String)request.getSession().getAttribute("userId");
-        String dep=(String)request.getSession().getAttribute("dep");
-        System.out.println(file);
-
-        try {
-            if (file.isEmpty()) {
-                return "文件为空";
-            }
-            // 获取文件名
-            String fileName = file.getOriginalFilename();
-            logger.info("上传的文件名为：" + fileName);
-            // 获取文件的后缀名
-            String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            logger.info("文件的后缀名为：" + suffixName);
-            // 设置文件存储路径
-            String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
-            SimpleDateFormat sdf2=new SimpleDateFormat("yyMMddHHmmss");
-            String str=sdf2.format(new Date());
-            //文件路径+原文件名+时间戳+随机数防止重名文件覆盖，下载文件时按照该路径下载;
-            String pathName = filePath+fileName+str+(new Random().nextInt(100));
-            File dest = new File(pathName);
-            // 检测是否存在目录
-            if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();// 新建文件夹
-            }
-            file.transferTo(dest);// 文件写入
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date=sdf.format(new Date());
-            manageService.addTemplateFileInfo(teaId,fileName,pathName,1,dep,date,1);
-            return "上传成功";
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "上传失败";
-    }
-    @RequestMapping(value="/downloadAppFile")
-    @ResponseBody
-    public String downloadAppFile(HttpServletResponse response, @RequestParam("fileInfoId") int fileInfoId){
-        FileInfo fileInfo=manageService.findAppFile(fileInfoId);
-        String fileName=fileInfo.getFileName();
-        String path=fileInfo.getPath();
-        File file=new File(path);
-        if(file.exists()){
-            response.setContentType("application/force-download");
-            try {
-                response.addHeader("Content-Disposition","attachment;fileName="+ URLEncoder.encode(fileName,"utf-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            byte[] buffer=new byte[1024];
-            FileInputStream fis=null;
-            BufferedInputStream bis=null;
-            try{
-                fis=new FileInputStream(file);
-                bis=new BufferedInputStream(fis);
-                OutputStream os=response.getOutputStream();
-                int i=bis.read(buffer);
-                while(i!=-1){
-                    os.write(buffer,0,i);
-                    i=bis.read(buffer);
-                }
-                return "下载成功";
-            }catch(Exception e){
-                e.printStackTrace();
-                System.out.println(e);
-            }finally {
-                if (bis != null) {
-                    try {
-                        bis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return "下载失败";
-    }
+//    @RequestMapping(value="/uploadTemplate")
+//    @ResponseBody
+//    public String uploadTemplate(HttpServletRequest request, @RequestParam("file") MultipartFile file){
+//        String teaId=(String)request.getSession().getAttribute("userId");
+//        String dep=(String)request.getSession().getAttribute("dep");
+//        System.out.println(file);
+//
+//        try {
+//            if (file.isEmpty()) {
+//                return "文件为空";
+//            }
+//            // 获取文件名
+//            String fileName = file.getOriginalFilename();
+//            logger.info("上传的文件名为：" + fileName);
+//            // 获取文件的后缀名
+//            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+//            logger.info("文件的后缀名为：" + suffixName);
+//            // 设置文件存储路径
+//            String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
+//            SimpleDateFormat sdf2=new SimpleDateFormat("yyMMddHHmmss");
+//            String str=sdf2.format(new Date());
+//            //文件路径+原文件名+时间戳+随机数防止重名文件覆盖，下载文件时按照该路径下载;
+//            String pathName = filePath+fileName+str+(new Random().nextInt(100));
+//            File dest = new File(pathName);
+//            // 检测是否存在目录
+//            if (!dest.getParentFile().exists()) {
+//                dest.getParentFile().mkdirs();// 新建文件夹
+//            }
+//            file.transferTo(dest);// 文件写入
+//            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            String date=sdf.format(new Date());
+//            manageService.addTemplateFileInfo(teaId,fileName,pathName,1,dep,date,1);
+//            return "上传成功";
+//        } catch (IllegalStateException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return "上传失败";
+//    }
+//    @RequestMapping(value="/downloadAppFile")
+//    @ResponseBody
+//    public String downloadAppFile(HttpServletResponse response, @RequestParam("fileInfoId") int fileInfoId){
+//        FileInfo fileInfo=manageService.findAppFile(fileInfoId);
+//        String fileName=fileInfo.getFileName();
+//        String path=fileInfo.getPath();
+//        File file=new File(path);
+//        if(file.exists()){
+//            response.setContentType("application/force-download");
+//            try {
+//                response.addHeader("Content-Disposition","attachment;fileName="+ URLEncoder.encode(fileName,"utf-8"));
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+//            byte[] buffer=new byte[1024];
+//            FileInputStream fis=null;
+//            BufferedInputStream bis=null;
+//            try{
+//                fis=new FileInputStream(file);
+//                bis=new BufferedInputStream(fis);
+//                OutputStream os=response.getOutputStream();
+//                int i=bis.read(buffer);
+//                while(i!=-1){
+//                    os.write(buffer,0,i);
+//                    i=bis.read(buffer);
+//                }
+//                return "下载成功";
+//            }catch(Exception e){
+//                e.printStackTrace();
+//                System.out.println(e);
+//            }finally {
+//                if (bis != null) {
+//                    try {
+//                        bis.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                if (fis != null) {
+//                    try {
+//                        fis.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//        return "下载失败";
+//    }
     /*
     * 超级管理员设置成绩比例
     * */
@@ -947,7 +943,6 @@ public class ManageController extends Base {
         String jsonString = RequestPayload.getRequestPayload(request);
         try {
             JSONObject json=new JSONObject(jsonString);
-            System.out.println("json"+json);
             JSONObject valuejson = json.getJSONObject("value");
             int XBSJ= (int) valuejson.get("XBSJ");
             int ZZXX= (int) valuejson.get("ZZXX");
@@ -989,6 +984,17 @@ public class ManageController extends Base {
         return res;
 
     }
+
+    /**
+     * 超级管理员获取根据条件筛选的课程目录修订申请
+     * @param request
+     * @param currentPage
+     * @param pageSize
+     * @param academicYear
+     * @param courseId
+     * @param courseName
+     * @return
+     */
 
     @RequestMapping(value="/courseApp")
     @ResponseBody
@@ -1087,7 +1093,6 @@ public class ManageController extends Base {
         if(departId==0){
             departId= (int) request.getSession().getAttribute("departId");
         }
-        System.out.println(departId);
         String courseNameCHS=obj.getString("className");
         String courseNameEN=obj.getString("classNameEN");
         int moduleId=obj.getInt("classModuleNum");
@@ -1192,7 +1197,7 @@ public class ManageController extends Base {
     }
 
     /**
-     * 超级管理员：查看课程目录
+     * 超级管理员获取课程目录申请
      * @param request
      * @param currentPage
      * @param pageSize
@@ -1235,7 +1240,7 @@ public class ManageController extends Base {
     }
 
     /**
-     * 超级管理员直接新增课程
+     * 超级管理员直接新增课程目录
      * @param request
      * @return
      * @throws JSONException
@@ -1320,6 +1325,12 @@ public class ManageController extends Base {
         return 0;
     }
 
+    /**
+     * 超级管理员发布课程目录
+     * @param request
+     * @param academicYear
+     * @return
+     */
     @RequestMapping(value = "/makeSureCourseAll")
     @ResponseBody
     public String findCourseYear(HttpServletRequest request,@RequestParam("academicYear") String academicYear){
@@ -1332,7 +1343,7 @@ public class ManageController extends Base {
         return "修订成功！";
     }
     /**
-     * 教师端：根据课程编码和班级号导出学生列表PDF
+     * 根据课程编码和班级号导出学生列表PDF
      * @param
      * @param
      * @return
@@ -1363,11 +1374,7 @@ public class ManageController extends Base {
     }
 
 
-    /**
-     * 管理员端通过学院和班级下载成绩单
-     *
-     * @return
-     */
+
     @RequestMapping("/find/department")
     @ResponseBody
     public List<Map> getAllDepartment() {
@@ -1660,7 +1667,7 @@ public class ManageController extends Base {
     }
 
     /**
-     * 学院管理员审核成绩
+     *
      * 学院管理员端：获取本学院课程
      * @param
      * @param
@@ -1731,7 +1738,6 @@ public class ManageController extends Base {
     }
 
     /**
-     * 学院管理员端：审核成绩
      * 获取班级学生审核情况
      * @param
      * @param
@@ -1740,8 +1746,7 @@ public class ManageController extends Base {
     @RequestMapping("/findStudentStatus")
     @ResponseBody
     public Map findStudentStatus(@RequestParam("moduleId") int moduleId,
-                                 @RequestParam("classId") String id,
-                                 HttpSession session){
+                                 @RequestParam("classId") String id){
 
         Map<String,Object> res=new HashMap<>();
         List<Map<String,Object>> students=new ArrayList<>();
@@ -1760,7 +1765,6 @@ public class ManageController extends Base {
     }
     /**
      * 学院管理员端：审核成绩
-     * 返回班级学生审核情况
      * @param
      * @param
      * @return
@@ -1875,8 +1879,7 @@ public class ManageController extends Base {
     public void  ForcedEntryScore(@RequestParam("stuId") String stuId,
                              @RequestParam("moduleId") int moduleId,
                              @RequestParam("classId") String classId,
-                             @RequestParam("grade") float grade,
-                             HttpSession session){
+                             @RequestParam("grade") float grade){
         if(moduleId==0){
             List<Map<String,Object>> stuXbsjClass=new ArrayList<>();
             classService.updateXbsjScore(Integer.parseInt(classId),stuId,grade);
@@ -1917,7 +1920,7 @@ public class ManageController extends Base {
     @ResponseBody
     public ModelAndView downloadScorePdf(@RequestParam(required = false, defaultValue = "88888888") int departId,
                                          @RequestParam(required = false, defaultValue = "88888888") String stuId,
-                                         HttpSession session,HttpServletResponse response){
+                                                     HttpServletResponse response){
         List<Map<String,Object>> students = manageService.findAllScore(departId,stuId);
         response = ResponseWrap.setName(response, "2018-2019学年英语总成绩单", "pdf");
         Map res = new HashMap();

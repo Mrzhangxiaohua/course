@@ -239,7 +239,7 @@ public class TeacherController extends Base {
     }
 
     /**
-     * 教师端：添加课程
+     * re's'p
      *
      * @param request
      * @return
@@ -288,140 +288,140 @@ public class TeacherController extends Base {
         return 0;
     }
 
-    /**
-     * 教师端 更新模块一的分数
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/update/score1", method = RequestMethod.POST)
-    @ResponseBody
-    public int updateScore(HttpServletRequest request) {
-
-        //首先获得session 里面的map
-        Map scoreMap = new HashMap();
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            scoreMap = (Map) session.getAttribute("updatescore");
-        }
-        //解析post 请求，得到请求的信息
-        String className = null;
-        String stuId = null;
-        int classNum = 0;
-        int wlzzxxGrade = 0;
-        int knskGrade = 0;
-
-        JSONObject obj = null;
-
-        String json = RequestPayload.getRequestPayload(request);
-
-        try {
-            obj = new JSONObject(json);
-            className = obj.getString("className");
-            stuId = obj.getString("stuId");
-            classNum = obj.getInt("classNum");
-            wlzzxxGrade = obj.getInt("wlzzxxGrade");
-            knskGrade = obj.getInt("knskGrade");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //存储请求的信息
-        Map map= (Map) scoreMap.get(className + ":" + classNum + ":" + stuId);
-        map.put("wlzzxxGrade", wlzzxxGrade);
-        map.put("knskGrade", knskGrade);
-//        System.out.println(request.getSession().getAttribute("updatescore1"));
-
-        return 0;
-    }
-
-    /**
-     * 教师端 更新模块2的分数
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/update/score2", method = RequestMethod.POST)
-    @ResponseBody
-    public int updateScore2(HttpServletRequest request) {
-
-        //首先获得session 里面的map
-        Map scoreMap = new HashMap();
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            scoreMap = (Map) session.getAttribute("updatescore");
-        }
-        //解析post 请求，得到请求的信息
-        String className = null;
-        String stuId = null;
-        int classNum = 0;
-        int xbsjGrade = 0;
-
-
-        JSONObject obj = null;
-
-        String json = RequestPayload.getRequestPayload(request);
-
-        try {
-            obj = new JSONObject(json);
-            className = obj.getString("className");
-            stuId = obj.getString("stuId");
-            classNum = obj.getInt("classNum");
-            xbsjGrade = obj.getInt("xbsjGrade");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //存储请求的信息
-        Map map= (Map) scoreMap.get(className + ":" + classNum + ":" + stuId);
-        map.put("xbsjGrade", xbsjGrade);
-        return 0;
-    }
-
-    /**
-     * 这个主要是供管理端使用的
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/update/score3", method = RequestMethod.POST)
-    @ResponseBody
-    public int updateScore3(HttpServletRequest request) {
-        //首先获得session 里面的map
-        Map scoreMap = new HashMap();
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            scoreMap = (Map) session.getAttribute("updatescore");
-        }
-        //解析post 请求，得到请求的信息
-        String className = null;
-        String stuId = null;
-        int classNum = 0;
-        int xbsjGrade = 0;
-        int wlzzxxGrade = 0;
-        int knskGrade = 0;
-
-        JSONObject obj = null;
-
-        String json = RequestPayload.getRequestPayload(request);
-
-        try {
-            obj = new JSONObject(json);
-            className = obj.getString("className");
-            stuId = obj.getString("stuId");
-            classNum = obj.getInt("classNum");
-            xbsjGrade = obj.getInt("xbsjGrade");
-            wlzzxxGrade = obj.getInt("wlzzxxGrade");
-            knskGrade = obj.getInt("knskGrade");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        //存储请求的信息
-        //存储请求的信息
-        Map map= (Map) scoreMap.get(className + ":" + classNum + ":" + stuId);
-        map.put("xbsjGrade", xbsjGrade);
-        map.put("wlzzxxGrade", wlzzxxGrade);
-        map.put("knskGrade", knskGrade);
-        return 0;
-    }
+//    /**
+//     * 教师端 更新模块一的分数
+//     *
+//     * @param request
+//     * @return
+//     */
+//    @RequestMapping(value = "/update/score1", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int updateScore(HttpServletRequest request) {
+//
+//        //首先获得session 里面的map
+//        Map scoreMap = new HashMap();
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            scoreMap = (Map) session.getAttribute("updatescore");
+//        }
+//        //解析post 请求，得到请求的信息
+//        String className = null;
+//        String stuId = null;
+//        int classNum = 0;
+//        int wlzzxxGrade = 0;
+//        int knskGrade = 0;
+//
+//        JSONObject obj = null;
+//
+//        String json = RequestPayload.getRequestPayload(request);
+//
+//        try {
+//            obj = new JSONObject(json);
+//            className = obj.getString("className");
+//            stuId = obj.getString("stuId");
+//            classNum = obj.getInt("classNum");
+//            wlzzxxGrade = obj.getInt("wlzzxxGrade");
+//            knskGrade = obj.getInt("knskGrade");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        //存储请求的信息
+//        Map map= (Map) scoreMap.get(className + ":" + classNum + ":" + stuId);
+//        map.put("wlzzxxGrade", wlzzxxGrade);
+//        map.put("knskGrade", knskGrade);
+////        System.out.println(request.getSession().getAttribute("updatescore1"));
+//
+//        return 0;
+//    }
+//
+//    /**
+//     * 教师端 更新模块2的分数
+//     *
+//     * @param request
+//     * @return
+//     */
+//    @RequestMapping(value = "/update/score2", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int updateScore2(HttpServletRequest request) {
+//
+//        //首先获得session 里面的map
+//        Map scoreMap = new HashMap();
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            scoreMap = (Map) session.getAttribute("updatescore");
+//        }
+//        //解析post 请求，得到请求的信息
+//        String className = null;
+//        String stuId = null;
+//        int classNum = 0;
+//        int xbsjGrade = 0;
+//
+//
+//        JSONObject obj = null;
+//
+//        String json = RequestPayload.getRequestPayload(request);
+//
+//        try {
+//            obj = new JSONObject(json);
+//            className = obj.getString("className");
+//            stuId = obj.getString("stuId");
+//            classNum = obj.getInt("classNum");
+//            xbsjGrade = obj.getInt("xbsjGrade");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        //存储请求的信息
+//        Map map= (Map) scoreMap.get(className + ":" + classNum + ":" + stuId);
+//        map.put("xbsjGrade", xbsjGrade);
+//        return 0;
+//    }
+//
+//    /**
+//     * 这个主要是供管理端使用的
+//     *
+//     * @param request
+//     * @return
+//     */
+//    @RequestMapping(value = "/update/score3", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int updateScore3(HttpServletRequest request) {
+//        //首先获得session 里面的map
+//        Map scoreMap = new HashMap();
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            scoreMap = (Map) session.getAttribute("updatescore");
+//        }
+//        //解析post 请求，得到请求的信息
+//        String className = null;
+//        String stuId = null;
+//        int classNum = 0;
+//        int xbsjGrade = 0;
+//        int wlzzxxGrade = 0;
+//        int knskGrade = 0;
+//
+//        JSONObject obj = null;
+//
+//        String json = RequestPayload.getRequestPayload(request);
+//
+//        try {
+//            obj = new JSONObject(json);
+//            className = obj.getString("className");
+//            stuId = obj.getString("stuId");
+//            classNum = obj.getInt("classNum");
+//            xbsjGrade = obj.getInt("xbsjGrade");
+//            wlzzxxGrade = obj.getInt("wlzzxxGrade");
+//            knskGrade = obj.getInt("knskGrade");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        //存储请求的信息
+//        //存储请求的信息
+//        Map map= (Map) scoreMap.get(className + ":" + classNum + ":" + stuId);
+//        map.put("xbsjGrade", xbsjGrade);
+//        map.put("wlzzxxGrade", wlzzxxGrade);
+//        map.put("knskGrade", knskGrade);
+//        return 0;
+//    }
 
     /**
      * 教师端：根据教师工号下载课表
@@ -477,341 +477,341 @@ public class TeacherController extends Base {
         }
     }
 
-    @RequestMapping(value = "/add/classApplication", method = RequestMethod.POST)
-    @ResponseBody
-    public int addClassApplication(HttpServletRequest request) throws JSONException  {
-        String userId= (String) request.getSession().getAttribute("userId");
-        String username= (String) request.getSession().getAttribute("username");
-        int departId= (int) request.getSession().getAttribute("departId");
-        String departName=(String) request.getSession().getAttribute("dep");
-        String json = RequestPayload.getRequestPayload(request);
-        JSONObject obj = new JSONObject(json);
-        String courseNameCHS=obj.getString("className");
-        String courseNameEN=obj.getString("classNameEN");
-        int moduleId=obj.getInt("classModuleNum");
-        String academicYear=obj.getString("classYear");
-        int classSemesterInt=obj.getInt("classSemester");
-        int classHour=obj.getInt("classTime");
-        int stuNumUpperLimit=obj.getInt("limitPerson");
-        String teacherName=obj.getString("mainLecturer");
-        String teacherId=obj.getString("mainLecturerId");
-        JSONArray teacherArray= (JSONArray) obj.get("teacherList");
+//    @RequestMapping(value = "/add/classApplication", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int addClassApplication(HttpServletRequest request) throws JSONException  {
+//        String userId= (String) request.getSession().getAttribute("userId");
+//        String username= (String) request.getSession().getAttribute("username");
+//        int departId= (int) request.getSession().getAttribute("departId");
+//        String departName=(String) request.getSession().getAttribute("dep");
+//        String json = RequestPayload.getRequestPayload(request);
+//        JSONObject obj = new JSONObject(json);
+//        String courseNameCHS=obj.getString("className");
+//        String courseNameEN=obj.getString("classNameEN");
+//        int moduleId=obj.getInt("classModuleNum");
+//        String academicYear=obj.getString("classYear");
+//        int classSemesterInt=obj.getInt("classSemester");
+//        int classHour=obj.getInt("classTime");
+//        int stuNumUpperLimit=obj.getInt("limitPerson");
+//        String teacherName=obj.getString("mainLecturer");
+//        String teacherId=obj.getString("mainLecturerId");
+//        JSONArray teacherArray= (JSONArray) obj.get("teacherList");
+//
+//        String courseInfo=obj.getString("courseInfo");
+//        String teacherInfo=obj.getString("teacherInfo");
+//        int fileInfoId=obj.getInt("fileInfoId");
+//
+//        CourseApplication courseApp=new CourseApplication();
+//        courseApp.setDepartId(departId);
+//        courseApp.setDepartName(departName);
+//        courseApp.setCourseNameEN(courseNameEN);
+//        courseApp.setCourseNameCHS(courseNameCHS);
+//        courseApp.setModuleId(moduleId);
+//        courseApp.setAcademicYear(academicYear);
+//        if(classSemesterInt==1){
+//            courseApp.setClassSemester("春季");
+//        }else if(classSemesterInt==2){
+//            courseApp.setClassSemester("秋季");
+//        }else if(classSemesterInt==3){
+//            courseApp.setClassSemester("春秋季");
+//        }
+//        courseApp.setClassHour(classHour);
+//        courseApp.setStuNumUpperLimit(stuNumUpperLimit);
+//        courseApp.setTeacherId(teacherId);
+//        courseApp.setTeacherName(teacherName);
+//        StringBuilder teachingTeamIds=new StringBuilder();
+//        StringBuilder teachingTeamNames=new StringBuilder();
+//        for(int i=0;i<teacherArray.length();i++){
+//            JSONObject jsonObject= (JSONObject) teacherArray.get(i);
+//            teachingTeamIds.append(jsonObject.getString("teaId"));
+//            teachingTeamIds.append(",");
+//            teachingTeamNames.append(jsonObject.getString("teaName"));
+//            teachingTeamNames.append(",");
+//        }
+//        teachingTeamIds.deleteCharAt(teachingTeamIds.length()-1);
+//        teachingTeamNames.deleteCharAt(teachingTeamNames.length()-1);
+//        courseApp.setTeachingTeamIds(teachingTeamIds.toString());
+//        courseApp.setTeachingTeamNames(teachingTeamNames.toString());
+//        courseApp.setCourseInfo(courseInfo);
+//        courseApp.setTeacherInfo(teacherInfo);
+//        courseApp.setFileInfoId(fileInfoId);
+//        courseApp.setOperatorId(userId);
+//        courseApp.setOperatorName(username);
+//        courseApp.setOperateDate(new Date());
+//        return courseAllService.addCourseApp(courseApp);
+//    }
 
-        String courseInfo=obj.getString("courseInfo");
-        String teacherInfo=obj.getString("teacherInfo");
-        int fileInfoId=obj.getInt("fileInfoId");
-
-        CourseApplication courseApp=new CourseApplication();
-        courseApp.setDepartId(departId);
-        courseApp.setDepartName(departName);
-        courseApp.setCourseNameEN(courseNameEN);
-        courseApp.setCourseNameCHS(courseNameCHS);
-        courseApp.setModuleId(moduleId);
-        courseApp.setAcademicYear(academicYear);
-        if(classSemesterInt==1){
-            courseApp.setClassSemester("春季");
-        }else if(classSemesterInt==2){
-            courseApp.setClassSemester("秋季");
-        }else if(classSemesterInt==3){
-            courseApp.setClassSemester("春秋季");
-        }
-        courseApp.setClassHour(classHour);
-        courseApp.setStuNumUpperLimit(stuNumUpperLimit);
-        courseApp.setTeacherId(teacherId);
-        courseApp.setTeacherName(teacherName);
-        StringBuilder teachingTeamIds=new StringBuilder();
-        StringBuilder teachingTeamNames=new StringBuilder();
-        for(int i=0;i<teacherArray.length();i++){
-            JSONObject jsonObject= (JSONObject) teacherArray.get(i);
-            teachingTeamIds.append(jsonObject.getString("teaId"));
-            teachingTeamIds.append(",");
-            teachingTeamNames.append(jsonObject.getString("teaName"));
-            teachingTeamNames.append(",");
-        }
-        teachingTeamIds.deleteCharAt(teachingTeamIds.length()-1);
-        teachingTeamNames.deleteCharAt(teachingTeamNames.length()-1);
-        courseApp.setTeachingTeamIds(teachingTeamIds.toString());
-        courseApp.setTeachingTeamNames(teachingTeamNames.toString());
-        courseApp.setCourseInfo(courseInfo);
-        courseApp.setTeacherInfo(teacherInfo);
-        courseApp.setFileInfoId(fileInfoId);
-        courseApp.setOperatorId(userId);
-        courseApp.setOperatorName(username);
-        courseApp.setOperateDate(new Date());
-        return courseAllService.addCourseApp(courseApp);
-    }
-
-    @RequestMapping("/find/application")
-    @ResponseBody
-    public Map<String, Object> findApplication(
-            @RequestParam(required = false, defaultValue = "1") int currentPage,
-            @RequestParam(required = false, defaultValue = "10") int pageSize,
-            HttpSession session
-    ) {
-        PageHelper.startPage(currentPage, pageSize);
-
-        List<Map<String, Object>> list = teacherService.findApplication((String) session.getAttribute("userId"));
-
-        Map<String, Object> res = new HashMap<>();
-        res.put("status", "SUCCESS");
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("total", ((Page) list).getTotal());
-        System.out.printf("total = %s\n", ((Page) list).getTotal());
-        data.put("pageSize", pageSize);
-        data.put("currentPage", currentPage);
-        data.put("list", list);
-        res.put("data", data);
-        return res;
-    }
+//    @RequestMapping("/find/application")
+//    @ResponseBody
+//    public Map<String, Object> findApplication(
+//            @RequestParam(required = false, defaultValue = "1") int currentPage,
+//            @RequestParam(required = false, defaultValue = "10") int pageSize,
+//            HttpSession session
+//    ) {
+//        PageHelper.startPage(currentPage, pageSize);
+//
+//        List<Map<String, Object>> list = teacherService.findApplication((String) session.getAttribute("userId"));
+//
+//        Map<String, Object> res = new HashMap<>();
+//        res.put("status", "SUCCESS");
+//
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("total", ((Page) list).getTotal());
+//        System.out.printf("total = %s\n", ((Page) list).getTotal());
+//        data.put("pageSize", pageSize);
+//        data.put("currentPage", currentPage);
+//        data.put("list", list);
+//        res.put("data", data);
+//        return res;
+//    }
 
 //存储分数
-    @RequestMapping(value = "/store/score1", method = RequestMethod.POST)
-    @ResponseBody
-    public int storeGrade1(HttpServletRequest request) {
-        tianjiaMap(request);
-        Map map = (Map) request.getSession(false).getAttribute("updatescore");
-        for (Object i : map.keySet()) {
-            if (!i.toString().equals("operator")) {
-                String[] strs = i.toString().split(":");
-                String className = strs[0];
-                String classNum = strs[1];
-                String stuId = strs[2];
-                Map scoreMap = (Map) map.get(i);
-                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
-                int knskGrade = (int) scoreMap.get("knskGrade");
-
-                classService.updateScore3(className, Integer.parseInt(classNum), stuId,88888888, wlzzxxGrade, knskGrade);
-            }
-        }
-        return 0;
-    }
-
-    @RequestMapping(value = "/store/score2", method = RequestMethod.POST)
-    @ResponseBody
-    public int storeGrade2(HttpServletRequest request) {
-        tianjiaMap(request);
-        Map map = (Map) request.getSession(false).getAttribute("updatescore");
-        for (Object i : map.keySet()) {
-            if (!i.toString().equals("operator")) {
-                String[] strs = i.toString().split(":");
-                String className = strs[0];
-                String classNum = strs[1];
-                String stuId = strs[2];
-                Map scoreMap = (Map) map.get(i);
-                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
-
-                classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade,88888888,88888888);
-            }
-        }
-        return 0;
-    }
-
-    @RequestMapping(value = "/store/score3", method = RequestMethod.POST)
-    @ResponseBody
-    public int storeGrade3(HttpServletRequest request) {
-        tianjiaMap(request);
-        Map map = (Map) request.getSession(false).getAttribute("updatescore");
-        for (Object i : map.keySet()) {
-            if (!i.toString().equals("operator")) {
-                String[] strs = i.toString().split(":");
-                String className = strs[0];
-                String classNum = strs[1];
-                String stuId = strs[2];
-                Map scoreMap = (Map) map.get(i);
-                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
-                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
-                int knskGrade = (int) scoreMap.get("knskGrade");
-                classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade,wlzzxxGrade,knskGrade);
-            }
-        }
-        return 0;
-    }
-
-    //发布模块一的成绩
-    @RequestMapping(value = "/issue/grade1", method = RequestMethod.POST)
-    @ResponseBody
-    public int issueGrade1(HttpServletRequest request) {
-        Map map = (Map) request.getSession(false).getAttribute("updatescore");
-
-        //读取设置的成绩设置的百分比，并转化成小数
-        Map<String, Object> m = teacherService.findGradePercent();
-        float KNSKPercent = Float.valueOf(String.valueOf(m.get("KNSK"))) / 100;     //课内授课百分比
-        float XBSJercent = Float.valueOf(String.valueOf(m.get("XBSJ"))) / 100;      //小班实践百分比
-        float ZZXXPercent = Float.valueOf(String.valueOf(m.get("ZZXX"))) / 100;     //在线学习百分比
-        System.out.println(KNSKPercent + "---" + XBSJercent + "---" + ZZXXPercent);
-
-        // 不能出现空的分数
-        for (Object i : map.keySet()) {
-            if (!i.toString().equals("operator")) {
-                //获取到学生的班级名称，班级号，学生学号
-                String[] strs = i.toString().split(":");
-                String className = strs[0];
-                String classNum = strs[1];
-                String stuId = strs[2];
-                Map scoreMap = (Map) map.get(i);        // 获得每一条数据
-                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
-                int knskGrade = (int) scoreMap.get("knskGrade");
-                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
-
-                // 获取选修的该门课程，判断对应的学时，并进行填写成绩，若为16学时，小班实践成绩百分比为50%*XBSJercent，若为32学时，为XBSJercent
-                Map<String, Object> l = teacherService.findCourseClassTime(classNum, stuId);
-                int xueshi = (int) l.get("classTime");
-                int flag = 0;
-                zuizhongchengji(xueshi,XBSJercent,ZZXXPercent,KNSKPercent,wlzzxxGrade, knskGrade,xbsjGrade,className,
-                        classNum,stuId,flag);
-            }
-        }
-        //保存模块一的成绩
-        storeGrade1(request);
-        String json = RequestPayload.getRequestPayload(request);
-        System.out.println(json);
-        try {
-            JSONObject obj = new JSONObject(json);
-            int classId = obj.getInt("classId");
-            return teacherService.issueGrade(classId,1,0);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
-
-    public void zuizhongchengji(int xueshi,float XBSJercent, float ZZXXPercent, float KNSKPercent, int wlzzxxGrade,
-                                int knskGrade, int xbsjGrade, String className, String classNum, String stuId, int flag){
-        if (xueshi == 16) {
-            // 小班实践比例减半
-            float pe = (float) (XBSJercent / 2.0);
-            //计算总成绩
-            System.out.println("-------------------------------" + pe + " ------------" + xbsjGrade * pe);
-            int zzGrade = (int) ((wlzzxxGrade * ZZXXPercent) + (knskGrade * KNSKPercent) + (xbsjGrade * pe));
-            classService.zzGrade(className, Integer.parseInt(classNum), stuId, zzGrade, flag);
-        }else if(xueshi == 32){
-            float pe = (float) (XBSJercent / 2.0);
-            flag = 1;
-            int zzGrade = (int) ((wlzzxxGrade * ZZXXPercent) + (knskGrade * KNSKPercent) + (xbsjGrade * pe));
-            classService.zzGrade(className, Integer.parseInt(classNum), stuId, zzGrade, flag);
-        }
-    }
-
-    @RequestMapping(value = "/issue/grade2", method = RequestMethod.POST)
-    @ResponseBody
-    public int issueGrade2(HttpServletRequest request) {
-        String json = RequestPayload.getRequestPayload(request);
-
-        Map map = (Map) request.getSession(false).getAttribute("updatescore");
-        //读取设置的成绩设置的百分比，并转化成小数
-        Map<String, Object> m = teacherService.findGradePercent();
-        float KNSKPercent = Float.valueOf(String.valueOf(m.get("KNSK"))) / 100;     //课内授课百分比
-        float XBSJercent = Float.valueOf(String.valueOf(m.get("XBSJ"))) / 100;      //小班实践百分比
-        float ZZXXPercent = Float.valueOf(String.valueOf(m.get("ZZXX"))) / 100;     //在线学习百分比
-        for (Object i : map.keySet()) {
-            if (!i.toString().equals("operator")) {
-                String[] strs = i.toString().split(":");
-                String className = strs[0];
-                String classNum = strs[1];
-                String stuId = strs[2];
-                Map scoreMap = (Map) map.get(i);
-                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
-                int knskGrade = (int) scoreMap.get("knskGrade");
-                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
-                Map<String, Object> l = teacherService.findCourseClassTime(classNum, stuId);
-                int xueshi = (int) l.get("classTime");
-                int flag = 0;
-                zuizhongchengji(xueshi,XBSJercent,ZZXXPercent,KNSKPercent,wlzzxxGrade, knskGrade,xbsjGrade,className,
-                        classNum,stuId,flag);
-                classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade,88888888,88888888);
-            }
-        }
-
-        System.out.println(json);
-        try {
-            JSONObject obj = new JSONObject(json);
-            int classId = obj.getInt("classId");
-            return teacherService.issueGrade(classId,0,1);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
-    @RequestMapping(value = "/issue/grade3", method = RequestMethod.POST)
-    @ResponseBody
-    public int issueGrade3(HttpServletRequest request) {
-        Map map = (Map) request.getSession(false).getAttribute("updatescore");
-        //读取设置的成绩设置的百分比，并转化成小数
-        Map<String, Object> m = teacherService.findGradePercent();
-        float KNSKPercent = Float.valueOf(String.valueOf(m.get("KNSK"))) / 100;     //课内授课百分比
-        float XBSJercent = Float.valueOf(String.valueOf(m.get("XBSJ"))) / 100;      //小班实践百分比
-        float ZZXXPercent = Float.valueOf(String.valueOf(m.get("ZZXX"))) / 100;     //在线学习百分比
-
-        for (Object i : map.keySet()) {
-            if (!i.toString().equals("operator")) {
-                String[] strs = i.toString().split(":");
-                String className = strs[0];
-                String classNum = strs[1];
-                String stuId = strs[2];
-                Map scoreMap = (Map) map.get(i);
-                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
-                int knskGrade = (int) scoreMap.get("knskGrade");
-                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
-                Map<String, Object> l = teacherService.findCourseClassTime(classNum, stuId);
-                int xueshi = (int) l.get("classTime");
-                int flag = 0;
-                zuizhongchengji(xueshi,XBSJercent,ZZXXPercent,KNSKPercent,wlzzxxGrade, knskGrade,xbsjGrade,className,
-                        classNum,stuId,flag);
-                classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade, wlzzxxGrade, knskGrade);
-            }
-        }
-
-        String json = RequestPayload.getRequestPayload(request);
-        System.out.println(json);
-        try {
-            JSONObject obj = new JSONObject(json);
-            int classId = obj.getInt("classId");
-            return teacherService.issueGrade(classId,1,1);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return 0;
-    }
-
-    void tianjiaMap(HttpServletRequest request) {
-        if (request.getSession().getAttribute("updatescore1") == null ||
-                request.getSession().getAttribute("updatescore2") == null) {
-            Map updateScore = new HashMap<>();
-            updateScore.put("operator", request.getSession().getAttribute("username"));
-            HttpSession httpSession = request.getSession();
-
-            httpSession.setAttribute("updatescore1", updateScore);
-            httpSession.setAttribute("updatescore2", updateScore);
-        }
-    }
-    /*
-    * 教师端对某学生添加评价
-    * */
-    @RequestMapping(value = "/addComment", method = RequestMethod.POST)
-    @ResponseBody
-    public int addComment(HttpServletRequest request) {
-        String teaId = (String) request.getSession().getAttribute("userId");
-        String jsonString = RequestPayload.getRequestPayload(request);
-        try {
-            JSONObject json=new JSONObject(jsonString);
-            System.out.println("json"+json);
-            JSONObject valuejson = json.getJSONObject("value");
-            String stuId=valuejson.getString("stuId");
-            String classId=valuejson.getString("classId");
-            String suggestion=valuejson.getString("evaluation");
-            List<String> scores=new ArrayList<>();
-            for(int i=0;i<5;i++){
-                scores.add(valuejson.getString("value"+Integer.toString(i+1)));
-            }
-
-
-           return teacherService.addComment(classId,suggestion,teaId,scores,stuId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
+//    @RequestMapping(value = "/store/score1", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int storeGrade1(HttpServletRequest request) {
+//        tianjiaMap(request);
+//        Map map = (Map) request.getSession(false).getAttribute("updatescore");
+//        for (Object i : map.keySet()) {
+//            if (!i.toString().equals("operator")) {
+//                String[] strs = i.toString().split(":");
+//                String className = strs[0];
+//                String classNum = strs[1];
+//                String stuId = strs[2];
+//                Map scoreMap = (Map) map.get(i);
+//                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
+//                int knskGrade = (int) scoreMap.get("knskGrade");
+//
+//                classService.updateScore3(className, Integer.parseInt(classNum), stuId,88888888, wlzzxxGrade, knskGrade);
+//            }
+//        }
+//        return 0;
+//    }
+//
+//    @RequestMapping(value = "/store/score2", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int storeGrade2(HttpServletRequest request) {
+//        tianjiaMap(request);
+//        Map map = (Map) request.getSession(false).getAttribute("updatescore");
+//        for (Object i : map.keySet()) {
+//            if (!i.toString().equals("operator")) {
+//                String[] strs = i.toString().split(":");
+//                String className = strs[0];
+//                String classNum = strs[1];
+//                String stuId = strs[2];
+//                Map scoreMap = (Map) map.get(i);
+//                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
+//
+//                classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade,88888888,88888888);
+//            }
+//        }
+//        return 0;
+//    }
+//
+//    @RequestMapping(value = "/store/score3", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int storeGrade3(HttpServletRequest request) {
+//        tianjiaMap(request);
+//        Map map = (Map) request.getSession(false).getAttribute("updatescore");
+//        for (Object i : map.keySet()) {
+//            if (!i.toString().equals("operator")) {
+//                String[] strs = i.toString().split(":");
+//                String className = strs[0];
+//                String classNum = strs[1];
+//                String stuId = strs[2];
+//                Map scoreMap = (Map) map.get(i);
+//                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
+//                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
+//                int knskGrade = (int) scoreMap.get("knskGrade");
+//                classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade,wlzzxxGrade,knskGrade);
+//            }
+//        }
+//        return 0;
+//    }
+//
+//    //发布模块一的成绩
+//    @RequestMapping(value = "/issue/grade1", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int issueGrade1(HttpServletRequest request) {
+//        Map map = (Map) request.getSession(false).getAttribute("updatescore");
+//
+//        //读取设置的成绩设置的百分比，并转化成小数
+//        Map<String, Object> m = teacherService.findGradePercent();
+//        float KNSKPercent = Float.valueOf(String.valueOf(m.get("KNSK"))) / 100;     //课内授课百分比
+//        float XBSJercent = Float.valueOf(String.valueOf(m.get("XBSJ"))) / 100;      //小班实践百分比
+//        float ZZXXPercent = Float.valueOf(String.valueOf(m.get("ZZXX"))) / 100;     //在线学习百分比
+//        System.out.println(KNSKPercent + "---" + XBSJercent + "---" + ZZXXPercent);
+//
+//        // 不能出现空的分数
+//        for (Object i : map.keySet()) {
+//            if (!i.toString().equals("operator")) {
+//                //获取到学生的班级名称，班级号，学生学号
+//                String[] strs = i.toString().split(":");
+//                String className = strs[0];
+//                String classNum = strs[1];
+//                String stuId = strs[2];
+//                Map scoreMap = (Map) map.get(i);        // 获得每一条数据
+//                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
+//                int knskGrade = (int) scoreMap.get("knskGrade");
+//                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
+//
+//                // 获取选修的该门课程，判断对应的学时，并进行填写成绩，若为16学时，小班实践成绩百分比为50%*XBSJercent，若为32学时，为XBSJercent
+//                Map<String, Object> l = teacherService.findCourseClassTime(classNum, stuId);
+//                int xueshi = (int) l.get("classTime");
+//                int flag = 0;
+//                zuizhongchengji(xueshi,XBSJercent,ZZXXPercent,KNSKPercent,wlzzxxGrade, knskGrade,xbsjGrade,className,
+//                        classNum,stuId,flag);
+//            }
+//        }
+//        //保存模块一的成绩
+//        storeGrade1(request);
+//        String json = RequestPayload.getRequestPayload(request);
+//        System.out.println(json);
+//        try {
+//            JSONObject obj = new JSONObject(json);
+//            int classId = obj.getInt("classId");
+//            return teacherService.issueGrade(classId,1,0);
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return 0;
+//    }
+//
+//    public void zuizhongchengji(int xueshi,float XBSJercent, float ZZXXPercent, float KNSKPercent, int wlzzxxGrade,
+//                                int knskGrade, int xbsjGrade, String className, String classNum, String stuId, int flag){
+//        if (xueshi == 16) {
+//            // 小班实践比例减半
+//            float pe = (float) (XBSJercent / 2.0);
+//            //计算总成绩
+//            System.out.println("-------------------------------" + pe + " ------------" + xbsjGrade * pe);
+//            int zzGrade = (int) ((wlzzxxGrade * ZZXXPercent) + (knskGrade * KNSKPercent) + (xbsjGrade * pe));
+//            classService.zzGrade(className, Integer.parseInt(classNum), stuId, zzGrade, flag);
+//        }else if(xueshi == 32){
+//            float pe = (float) (XBSJercent / 2.0);
+//            flag = 1;
+//            int zzGrade = (int) ((wlzzxxGrade * ZZXXPercent) + (knskGrade * KNSKPercent) + (xbsjGrade * pe));
+//            classService.zzGrade(className, Integer.parseInt(classNum), stuId, zzGrade, flag);
+//        }
+//    }
+//
+//    @RequestMapping(value = "/issue/grade2", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int issueGrade2(HttpServletRequest request) {
+//        String json = RequestPayload.getRequestPayload(request);
+//
+//        Map map = (Map) request.getSession(false).getAttribute("updatescore");
+//        //读取设置的成绩设置的百分比，并转化成小数
+//        Map<String, Object> m = teacherService.findGradePercent();
+//        float KNSKPercent = Float.valueOf(String.valueOf(m.get("KNSK"))) / 100;     //课内授课百分比
+//        float XBSJercent = Float.valueOf(String.valueOf(m.get("XBSJ"))) / 100;      //小班实践百分比
+//        float ZZXXPercent = Float.valueOf(String.valueOf(m.get("ZZXX"))) / 100;     //在线学习百分比
+//        for (Object i : map.keySet()) {
+//            if (!i.toString().equals("operator")) {
+//                String[] strs = i.toString().split(":");
+//                String className = strs[0];
+//                String classNum = strs[1];
+//                String stuId = strs[2];
+//                Map scoreMap = (Map) map.get(i);
+//                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
+//                int knskGrade = (int) scoreMap.get("knskGrade");
+//                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
+//                Map<String, Object> l = teacherService.findCourseClassTime(classNum, stuId);
+//                int xueshi = (int) l.get("classTime");
+//                int flag = 0;
+//                zuizhongchengji(xueshi,XBSJercent,ZZXXPercent,KNSKPercent,wlzzxxGrade, knskGrade,xbsjGrade,className,
+//                        classNum,stuId,flag);
+//                classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade,88888888,88888888);
+//            }
+//        }
+//
+//        System.out.println(json);
+//        try {
+//            JSONObject obj = new JSONObject(json);
+//            int classId = obj.getInt("classId");
+//            return teacherService.issueGrade(classId,0,1);
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return 0;
+//    }
+//    @RequestMapping(value = "/issue/grade3", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int issueGrade3(HttpServletRequest request) {
+//        Map map = (Map) request.getSession(false).getAttribute("updatescore");
+//        //读取设置的成绩设置的百分比，并转化成小数
+//        Map<String, Object> m = teacherService.findGradePercent();
+//        float KNSKPercent = Float.valueOf(String.valueOf(m.get("KNSK"))) / 100;     //课内授课百分比
+//        float XBSJercent = Float.valueOf(String.valueOf(m.get("XBSJ"))) / 100;      //小班实践百分比
+//        float ZZXXPercent = Float.valueOf(String.valueOf(m.get("ZZXX"))) / 100;     //在线学习百分比
+//
+//        for (Object i : map.keySet()) {
+//            if (!i.toString().equals("operator")) {
+//                String[] strs = i.toString().split(":");
+//                String className = strs[0];
+//                String classNum = strs[1];
+//                String stuId = strs[2];
+//                Map scoreMap = (Map) map.get(i);
+//                int wlzzxxGrade = (int) scoreMap.get("wlzzxxGrade");
+//                int knskGrade = (int) scoreMap.get("knskGrade");
+//                int xbsjGrade = (int) scoreMap.get("xbsjGrade");
+//                Map<String, Object> l = teacherService.findCourseClassTime(classNum, stuId);
+//                int xueshi = (int) l.get("classTime");
+//                int flag = 0;
+//                zuizhongchengji(xueshi,XBSJercent,ZZXXPercent,KNSKPercent,wlzzxxGrade, knskGrade,xbsjGrade,className,
+//                        classNum,stuId,flag);
+//                classService.updateScore3(className, Integer.parseInt(classNum), stuId, xbsjGrade, wlzzxxGrade, knskGrade);
+//            }
+//        }
+//
+//        String json = RequestPayload.getRequestPayload(request);
+//        System.out.println(json);
+//        try {
+//            JSONObject obj = new JSONObject(json);
+//            int classId = obj.getInt("classId");
+//            return teacherService.issueGrade(classId,1,1);
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//        return 0;
+//    }
+//
+//    void tianjiaMap(HttpServletRequest request) {
+//        if (request.getSession().getAttribute("updatescore1") == null ||
+//                request.getSession().getAttribute("updatescore2") == null) {
+//            Map updateScore = new HashMap<>();
+//            updateScore.put("operator", request.getSession().getAttribute("username"));
+//            HttpSession httpSession = request.getSession();
+//
+//            httpSession.setAttribute("updatescore1", updateScore);
+//            httpSession.setAttribute("updatescore2", updateScore);
+//        }
+//    }
+//    /*
+//    * 教师端对某学生添加评价
+//    * */
+//    @RequestMapping(value = "/addComment", method = RequestMethod.POST)
+//    @ResponseBody
+//    public int addComment(HttpServletRequest request) {
+//        String teaId = (String) request.getSession().getAttribute("userId");
+//        String jsonString = RequestPayload.getRequestPayload(request);
+//        try {
+//            JSONObject json=new JSONObject(jsonString);
+//            System.out.println("json"+json);
+//            JSONObject valuejson = json.getJSONObject("value");
+//            String stuId=valuejson.getString("stuId");
+//            String classId=valuejson.getString("classId");
+//            String suggestion=valuejson.getString("evaluation");
+//            List<String> scores=new ArrayList<>();
+//            for(int i=0;i<5;i++){
+//                scores.add(valuejson.getString("value"+Integer.toString(i+1)));
+//            }
+//
+//
+//           return teacherService.addComment(classId,suggestion,teaId,scores,stuId);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return 0;
+//    }
   /*
   * 教师开课课程
   * */
@@ -819,8 +819,6 @@ public class TeacherController extends Base {
     @ResponseBody
     public Map<String, Object> courseList(HttpSession session){
         String teaId = (String)session.getAttribute("userId");
-        teaId="0002017115";
-        System.out.println(teaId);
         Map<String, Object> res = new HashMap<>();
         List<Map<String,Object>> courses = classService.findClass(88888888, "", "0002017115", 88888888, 88888888);
         String[] weekDays={"周一","周二","周三","周四","周五","周六","周日"};
@@ -845,255 +843,255 @@ public class TeacherController extends Base {
         return res;
     }
 
-    /*
-    * 课程学生翻页
-    * */
-    @RequestMapping(value="/comment/pageStudent")
-    @ResponseBody
-    public Map<String, Object> pageStudent(HttpServletRequest request,
-                                           @RequestParam(required = false, defaultValue = "1") int currentPage,
-                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                           @RequestParam(required = false, defaultValue = "88888888") int classId){
+//    /*
+//    * 课程学生翻页
+//    * */
+//    @RequestMapping(value="/comment/pageStudent")
+//    @ResponseBody
+//    public Map<String, Object> pageStudent(HttpServletRequest request,
+//                                           @RequestParam(required = false, defaultValue = "1") int currentPage,
+//                                           @RequestParam(required = false, defaultValue = "10") int pageSize,
+//                                           @RequestParam(required = false, defaultValue = "88888888") int classId){
+//
+//        String teaId = (String) request.getSession().getAttribute("userId");
+//      /*  String jsonString = RequestPayload.getRequestPayload(request);
+//        System.out.println(jsonString);*/
+//        System.out.println(currentPage+"\n"+classId);
+//       if(classId==88888888){
+//           List<Map<String,Object>> courses = classService.findClass(88888888, "", teaId, 88888888, 88888888);
+//           classId= (int) courses.get(0).get("classId");
+//       }
+//        Map<String,Object> res=new HashMap<>();
+//        Page page=PageHelper.startPage(currentPage, pageSize);
+//        List students = teacherService.findStudentAndStatus(classId,teaId);
+//        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+//        res.put("total",page.getTotal());
+//        List<Map<String,Object>> pageList=pageInfo.getList();
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("students",pageList);
+//        res.put("currentPage",currentPage);
+//        res.put("data", data);
+//        res.put("status", "SUCCESS");
+//        return res;
+//
+//    }
+///*
+//* 查看某个学生已评价的信息
+//* */
+//    @RequestMapping("/comment/info")
+//    @ResponseBody
+//    public Map<String, Object> commentInfo(HttpSession session,
+//                                           @RequestParam(required = true) int classId,
+//                                           @RequestParam(required = true) int stuId
+//    ){
+//       // String teaId = (String)session.getAttribute("userId");
+//        Map<String, Object> res = new HashMap<>();
+//        Map<String, Object> comment = teacherService.findCommentByClassIdAndStuId(classId, stuId);
+//        res.put("comment",comment);
+//        return res;
+//    }
+//    /*currentWeek*/
+//    @RequestMapping("/currentWeek")
+//    @ResponseBody
+//    public Map<String,Object> currentWeek(HttpServletRequest request){
+//        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
+//        int weekth= CalculateWeekth.weekth(firstWeek);
+//        Map<String,Object> res=new HashMap<>();
+//        res.put("weekth",weekth);
+//        return res;
+//    }
+//    /*weekCourse*/
+//    @RequestMapping("/weekCourses")
+//    @ResponseBody
+//    public Map<String, Object> weekCourse(HttpServletRequest request,
+//                                          @RequestParam(required = true) int weekth){
+//        String teaId = (String)request.getSession().getAttribute("userId");
+////        teaId="0002017115";
+//        String jsonString = RequestPayload.getRequestPayload(request);
+//        System.out.println(jsonString);
+//        System.out.println("weekth："+weekth);
+//        String semester=(String) teacherService.findCurrentCalendar().get("semester");
+//        List<Map<String,Object>> courses = classService.findWeekCourses(teaId,semester,weekth);
+//        String[] weekDays={"周一","周二","周三","周四","周五","周六","周日"};
+//        for(Map<String,Object> course:courses){
+//            String classInfo="";
+//            String[] classDate = ((String) course.get("classDateDescription")).split(":");
+//            classInfo+=weekDays[Integer.parseInt(classDate[0])-1]+"第"+classDate[1]+"-"+(Integer.parseInt(classDate[1])+Integer.parseInt(classDate[2])-1)+"节";
+//            course.put("classInfo",classInfo);
+//        }
+//        Map<String, Object> res = new HashMap<>();
+//        res.put("courses",courses);
+//        res.put("courseSize",courses.size());
+//        res.put("weekth",weekth);
+//        res.put("status", "success");
+//        return res;
+//    }
+//
+//    @RequestMapping("/weekCourseStudent")
+//    @ResponseBody
+//    public Map<String, Object> weekCourseStudent(HttpSession session,
+//                                                 @RequestParam(required = true) String classId,
+//                                                 @RequestParam(required = true) int week){
+//        String teaId = (String)session.getAttribute("userId");
+//        List<Map<String,Object>> students=classService.findStudent(Integer.parseInt(classId));
+//
+//        for(Map<String,Object>student:students){
+//           List comments=classService.findWeekComment((String) student.get("stuId"),week,classId);
+//           if(comments.size()==0){
+//               for(int i=0;i<4;i++){
+//                   student.put("score"+(i+1),0);
+//               }
+//               student.put("comment","0");
+//           }else if(comments.size()>0){
+//               Map<String,Object> comment= (Map<String, Object>) comments.get(0);
+//               for(int i=0;i<4;i++){
+//                   student.put("score"+(i+1),comment.get("score"+(i+1)));
+//               }
+//               student.put("comment",comment.get("suggestion"));
+//
+//           }
+//        }
+//        System.out.println(students);
+//        Map<String, Object> res = new HashMap<>();
+//        res.put("students",students);
+//        res.put("status", "success");
+//        return res;
+//    }
+//    @RequestMapping(value="/addWeekComment",method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String,Object> addWeekComment(HttpServletRequest request) throws JSONException {
+//        String jsonString= RequestPayload.getRequestPayload(request);
+//        JSONArray jsonArray=new JSONArray(jsonString);
+//        JSONObject json=jsonArray.getJSONObject(0);
+//        int weekth = (int) json.get("weekth");
+//        int classId = Integer.parseInt((String) json.get("classId"));
+//        JSONArray studentjsonArray=json.getJSONArray("students");
+//        List<Map<String,Object>> commentList =new ArrayList<>();
+//        for (int i=0; i<studentjsonArray.length(); i++){
+//            JSONObject studentJson=studentjsonArray.getJSONObject(i);
+//            Map<String,Object> studentMap=new HashMap<>();
+//            studentMap.put("stuId",studentJson.getString("stuId"));
+//            for(int j=0;j<4;j++){
+//                studentMap.put("score"+(j+1),studentJson.getString("score"+(j+1)));
+//            }
+//            studentMap.put("suggestion",studentJson.getString("comment"));
+//            commentList.add(studentMap);
+//        }
+//
+//        String teaId= (String) request.getSession().getAttribute("userId");
+//        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
+//        int currentWeekth= CalculateWeekth.weekth(firstWeek);
+//        Map<String,Object> res=new HashMap<>();
+//        String status="";
+//        if((currentWeekth-weekth)>1){
+//            res.put("status","超过评价时间");
+//            return res;
+//        }
+//        if(currentWeekth<weekth){
+//            res.put("status","未到评价时间");
+//            return res;
+//        }
+//        int  flag=teacherService.addWeekComment(classId,teaId,weekth,commentList);
+//
+//        if(flag==1){
+//           status="success";
+//        }
+//        res.put("status",status);
+//        return res;
+//
+//    }
 
-        String teaId = (String) request.getSession().getAttribute("userId");
-      /*  String jsonString = RequestPayload.getRequestPayload(request);
-        System.out.println(jsonString);*/
-        System.out.println(currentPage+"\n"+classId);
-       if(classId==88888888){
-           List<Map<String,Object>> courses = classService.findClass(88888888, "", teaId, 88888888, 88888888);
-           classId= (int) courses.get(0).get("classId");
-       }
-        Map<String,Object> res=new HashMap<>();
-        Page page=PageHelper.startPage(currentPage, pageSize);
-        List students = teacherService.findStudentAndStatus(classId,teaId);
-        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
-        res.put("total",page.getTotal());
-        List<Map<String,Object>> pageList=pageInfo.getList();
-        Map<String, Object> data = new HashMap<>();
-        data.put("students",pageList);
-        res.put("currentPage",currentPage);
-        res.put("data", data);
-        res.put("status", "SUCCESS");
-        return res;
+//    @RequestMapping("/downloadTemplate")
+//    @ResponseBody
+//    public String downloadTemplate(HttpServletRequest request,HttpServletResponse response) {
+//        Map<String, Object> fileInfo=teacherService.findTemplateFile();
+//        String fileName=(String)fileInfo.get("fileName");
+//        String path=(String)fileInfo.get("path");
+//        File file=new File(path);
+//        if(file.exists()){
+//            response.setContentType("application/force-download");
+//            try {
+//                response.addHeader("Content-Disposition","attachment;fileName="+ URLEncoder.encode(fileName,"utf-8"));
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+//            byte[] buffer=new byte[1024];
+//            FileInputStream fis=null;
+//            BufferedInputStream bis=null;
+//            try{
+//                fis=new FileInputStream(file);
+//                bis=new BufferedInputStream(fis);
+//                OutputStream os=response.getOutputStream();
+//                int i=bis.read(buffer);
+//                while(i!=-1){
+//                    os.write(buffer,0,i);
+//                    i=bis.read(buffer);
+//                }
+//                return "下载成功";
+//            }catch(Exception e){
+//                e.printStackTrace();
+//                System.out.println(e);
+//            }finally {
+//                if (bis != null) {
+//                    try {
+//                        bis.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                if (fis != null) {
+//                    try {
+//                        fis.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//        return "下载失败";
+//    }
 
-    }
-/*
-* 查看某个学生已评价的信息
-* */
-    @RequestMapping("/comment/info")
-    @ResponseBody
-    public Map<String, Object> commentInfo(HttpSession session,
-                                           @RequestParam(required = true) int classId,
-                                           @RequestParam(required = true) int stuId
-    ){
-       // String teaId = (String)session.getAttribute("userId");
-        Map<String, Object> res = new HashMap<>();
-        Map<String, Object> comment = teacherService.findCommentByClassIdAndStuId(classId, stuId);
-        res.put("comment",comment);
-        return res;
-    }
-    /*currentWeek*/
-    @RequestMapping("/currentWeek")
-    @ResponseBody
-    public Map<String,Object> currentWeek(HttpServletRequest request){
-        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
-        int weekth= CalculateWeekth.weekth(firstWeek);
-        Map<String,Object> res=new HashMap<>();
-        res.put("weekth",weekth);
-        return res;
-    }
-    /*weekCourse*/
-    @RequestMapping("/weekCourses")
-    @ResponseBody
-    public Map<String, Object> weekCourse(HttpServletRequest request,
-                                          @RequestParam(required = true) int weekth){
-        String teaId = (String)request.getSession().getAttribute("userId");
-//        teaId="0002017115";
-        String jsonString = RequestPayload.getRequestPayload(request);
-        System.out.println(jsonString);
-        System.out.println("weekth："+weekth);
-        String semester=(String) teacherService.findCurrentCalendar().get("semester");
-        List<Map<String,Object>> courses = classService.findWeekCourses(teaId,semester,weekth);
-        String[] weekDays={"周一","周二","周三","周四","周五","周六","周日"};
-        for(Map<String,Object> course:courses){
-            String classInfo="";
-            String[] classDate = ((String) course.get("classDateDescription")).split(":");
-            classInfo+=weekDays[Integer.parseInt(classDate[0])-1]+"第"+classDate[1]+"-"+(Integer.parseInt(classDate[1])+Integer.parseInt(classDate[2])-1)+"节";
-            course.put("classInfo",classInfo);
-        }
-        Map<String, Object> res = new HashMap<>();
-        res.put("courses",courses);
-        res.put("courseSize",courses.size());
-        res.put("weekth",weekth);
-        res.put("status", "success");
-        return res;
-    }
-
-    @RequestMapping("/weekCourseStudent")
-    @ResponseBody
-    public Map<String, Object> weekCourseStudent(HttpSession session,
-                                                 @RequestParam(required = true) String classId,
-                                                 @RequestParam(required = true) int week){
-        String teaId = (String)session.getAttribute("userId");
-        List<Map<String,Object>> students=classService.findStudent(Integer.parseInt(classId));
-
-        for(Map<String,Object>student:students){
-           List comments=classService.findWeekComment((String) student.get("stuId"),week,classId);
-           if(comments.size()==0){
-               for(int i=0;i<4;i++){
-                   student.put("score"+(i+1),0);
-               }
-               student.put("comment","0");
-           }else if(comments.size()>0){
-               Map<String,Object> comment= (Map<String, Object>) comments.get(0);
-               for(int i=0;i<4;i++){
-                   student.put("score"+(i+1),comment.get("score"+(i+1)));
-               }
-               student.put("comment",comment.get("suggestion"));
-
-           }
-        }
-        System.out.println(students);
-        Map<String, Object> res = new HashMap<>();
-        res.put("students",students);
-        res.put("status", "success");
-        return res;
-    }
-    @RequestMapping(value="/addWeekComment",method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String,Object> addWeekComment(HttpServletRequest request) throws JSONException {
-        String jsonString= RequestPayload.getRequestPayload(request);
-        JSONArray jsonArray=new JSONArray(jsonString);
-        JSONObject json=jsonArray.getJSONObject(0);
-        int weekth = (int) json.get("weekth");
-        int classId = Integer.parseInt((String) json.get("classId"));
-        JSONArray studentjsonArray=json.getJSONArray("students");
-        List<Map<String,Object>> commentList =new ArrayList<>();
-        for (int i=0; i<studentjsonArray.length(); i++){
-            JSONObject studentJson=studentjsonArray.getJSONObject(i);
-            Map<String,Object> studentMap=new HashMap<>();
-            studentMap.put("stuId",studentJson.getString("stuId"));
-            for(int j=0;j<4;j++){
-                studentMap.put("score"+(j+1),studentJson.getString("score"+(j+1)));
-            }
-            studentMap.put("suggestion",studentJson.getString("comment"));
-            commentList.add(studentMap);
-        }
-
-        String teaId= (String) request.getSession().getAttribute("userId");
-        String firstWeek= (String) teacherService.findCurrentCalendar().get("firstWeek");
-        int currentWeekth= CalculateWeekth.weekth(firstWeek);
-        Map<String,Object> res=new HashMap<>();
-        String status="";
-        if((currentWeekth-weekth)>1){
-            res.put("status","超过评价时间");
-            return res;
-        }
-        if(currentWeekth<weekth){
-            res.put("status","未到评价时间");
-            return res;
-        }
-        int  flag=teacherService.addWeekComment(classId,teaId,weekth,commentList);
-
-        if(flag==1){
-           status="success";
-        }
-        res.put("status",status);
-        return res;
-
-    }
-
-    @RequestMapping("/downloadTemplate")
-    @ResponseBody
-    public String downloadTemplate(HttpServletRequest request,HttpServletResponse response) {
-        Map<String, Object> fileInfo=teacherService.findTemplateFile();
-        String fileName=(String)fileInfo.get("fileName");
-        String path=(String)fileInfo.get("path");
-        File file=new File(path);
-        if(file.exists()){
-            response.setContentType("application/force-download");
-            try {
-                response.addHeader("Content-Disposition","attachment;fileName="+ URLEncoder.encode(fileName,"utf-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            byte[] buffer=new byte[1024];
-            FileInputStream fis=null;
-            BufferedInputStream bis=null;
-            try{
-                fis=new FileInputStream(file);
-                bis=new BufferedInputStream(fis);
-                OutputStream os=response.getOutputStream();
-                int i=bis.read(buffer);
-                while(i!=-1){
-                    os.write(buffer,0,i);
-                    i=bis.read(buffer);
-                }
-                return "下载成功";
-            }catch(Exception e){
-                e.printStackTrace();
-                System.out.println(e);
-            }finally {
-                if (bis != null) {
-                    try {
-                        bis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return "下载失败";
-    }
-
-    @RequestMapping("/upload")
-    @ResponseBody
-    public Map<String, Object> uploadPlan(@RequestParam("file") MultipartFile file,HttpServletRequest request){
-        String teaId=(String)request.getSession().getAttribute("userId");
-        String dep=(String) request.getSession().getAttribute("dep");
-        Map<String,Object> res=new HashMap<>();
-        try {
-            if (file.isEmpty()) {
-                res.put("status","文件为空");
-                return res;
-            }
-            // 获取文件名
-            String fileName = file.getOriginalFilename();
-            logger.info("上传的文件名为：" + fileName);
-
-            // 设置文件存储路径
-            String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
-            SimpleDateFormat sdf2=new SimpleDateFormat("yyMMddHHmmss");
-            String str=sdf2.format(new Date());
-            //文件路径+原文件名+时间戳+随机数防止重名文件覆盖，下载文件时按照该路径下载;
-            String pathName = filePath+fileName+str+(new Random().nextInt(100));
-            File dest = new File(pathName);
-            // 检测是否存在目录
-            if (!dest.getParentFile().exists()) {
-                dest.getParentFile().mkdirs();// 新建文件夹
-            }
-            file.transferTo(dest);// 文件写入
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date=sdf.format(new Date());
-            int fileInfoId=teacherService.addFileInfo(teaId,fileName,pathName,2,dep,date,1);
-            res.put("status","上传成功");
-            res.put("fileInfoId",fileInfoId);
-            return res;
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
-
-    }
+//    @RequestMapping("/upload")
+//    @ResponseBody
+//    public Map<String, Object> uploadPlan(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+//        String teaId=(String)request.getSession().getAttribute("userId");
+//        String dep=(String) request.getSession().getAttribute("dep");
+//        Map<String,Object> res=new HashMap<>();
+//        try {
+//            if (file.isEmpty()) {
+//                res.put("status","文件为空");
+//                return res;
+//            }
+//            // 获取文件名
+//            String fileName = file.getOriginalFilename();
+//            logger.info("上传的文件名为：" + fileName);
+//
+//            // 设置文件存储路径
+//            String filePath=request.getSession().getServletContext().getRealPath(File.separator)+"/file/";
+//            SimpleDateFormat sdf2=new SimpleDateFormat("yyMMddHHmmss");
+//            String str=sdf2.format(new Date());
+//            //文件路径+原文件名+时间戳+随机数防止重名文件覆盖，下载文件时按照该路径下载;
+//            String pathName = filePath+fileName+str+(new Random().nextInt(100));
+//            File dest = new File(pathName);
+//            // 检测是否存在目录
+//            if (!dest.getParentFile().exists()) {
+//                dest.getParentFile().mkdirs();// 新建文件夹
+//            }
+//            file.transferTo(dest);// 文件写入
+//            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            String date=sdf.format(new Date());
+//            int fileInfoId=teacherService.addFileInfo(teaId,fileName,pathName,2,dep,date,1);
+//            res.put("status","上传成功");
+//            res.put("fileInfoId",fileInfoId);
+//            return res;
+//        } catch (IllegalStateException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return res;
+//
+//    }
     /**
      * 教师端：根据教师Id查询教师课程
      * @param session
@@ -1193,12 +1191,6 @@ public class TeacherController extends Base {
     public ModelAndView downloadStudentsPdf(@RequestParam("classId") int classId ,
             @RequestParam("className") String className ,@RequestParam("classNum") int classNum ,
                                             HttpSession session, HttpServletResponse response) {
-//        int classId=501;
-//        String className="英语";
-//        int classNum=1;
-        System.out.print(classId);
-        System.out.print(className);
-        System.out.print(classNum);
 
         response = ResponseWrap.setName(response, className+classNum + "班选课名单", "pdf");
         List<Map<String,Object>> students = classService.findStudent(classId);
@@ -1241,6 +1233,13 @@ public class TeacherController extends Base {
         res.put("status", "SUCCESS");
         return res;
     }
+
+    /**
+     * 教师端：下载班级成绩录入Excel模板
+     * @param response
+     * @param classId
+     * @throws IOException
+     */
     @RequestMapping("/downloadExcel")
     @ResponseBody
     public void downloadExcel(HttpServletResponse response,@RequestParam("classId") int classId) throws IOException {
@@ -1275,6 +1274,13 @@ public class TeacherController extends Base {
         workbook.write(response.getOutputStream());
 
     }
+
+    /**
+     * 教师端：上传班级成绩Excel
+     * @param file
+     * @param request
+     * @return
+     */
     @RequestMapping("/uploadGradeExcel")
     @ResponseBody
     public Map<String, Object> uploadGradeExcel(@RequestParam("file") MultipartFile file,
@@ -1316,12 +1322,12 @@ public class TeacherController extends Base {
     }
 
     /**
-     * 教师端：根据班级Id导出学生成绩单PDF
-     * @param
-     * @param
+     * 教师端：读取小班实践成绩excel的信息
+     * @param fileInfoId
+     * @param currentPage
+     * @param pageSize
      * @return
      */
-
     @RequestMapping("/showGradeExcel")
     @ResponseBody
     public Map<String,Object> showGradeExcel(@RequestParam("fileInfoId") int fileInfoId,
@@ -1330,9 +1336,7 @@ public class TeacherController extends Base {
 
         Map<String,Object> res=new HashMap<>();
         Page page=PageHelper.startPage(currentPage, pageSize);
-        System.out.println(11);
         List<Map<String,Object>> students = teacherService.showGradeExcel(fileInfoId);
-        System.out.println(22);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
         List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
@@ -1345,6 +1349,13 @@ public class TeacherController extends Base {
         return res;
     }
 
+    /**
+     * 教师端：读取课内授课成绩excel的信息
+     * @param fileInfoId
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
     @RequestMapping("/showKnskGradeExcel")
     @ResponseBody
     public Map<String,Object> showKnskGradeExcel(@RequestParam("fileInfoId") int fileInfoId,
@@ -1511,10 +1522,6 @@ public class TeacherController extends Base {
 
 
     /**
-     * 教师端：该部分由于课内授课成绩管理
-     */
-
-    /**
      * 教师端：根据教师Id查询课内授课课程
      * @param session
      * @param
@@ -1659,8 +1666,7 @@ public class TeacherController extends Base {
      */
     @RequestMapping("/updateStudentsKnskScore")
     @ResponseBody
-    public String updateStudentsKnskScore(HttpServletRequest request,
-                                    HttpSession session) {
+    public String updateStudentsKnskScore(HttpServletRequest request) {
         String json=RequestPayload.getRequestPayload(request);
         try {
             JSONObject obj= new JSONObject(json);
@@ -1704,8 +1710,7 @@ public class TeacherController extends Base {
      */
     @RequestMapping("/downloadStudentsKnskScorePdf")
     @ResponseBody
-    public ModelAndView downloadStudentsPdf(@RequestParam("classId")String JXBID,
-                                            HttpSession session, HttpServletResponse response) {
+    public ModelAndView downloadStudentsPdf(@RequestParam("classId")String JXBID,HttpServletResponse response) {
 
         Map res = new HashMap();
         int isGrade=classService.findKnskIsGrade(JXBID);
