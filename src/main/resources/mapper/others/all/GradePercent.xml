@@ -3,16 +3,24 @@
 
 <mapper namespace="com.spc.dao.GradePercentDao">
 
-    <insert id="insertGradePercent" useGeneratedKeys="true" keyProperty="gradePercentId" flushCache="true">
-        insert into gradePercent(KNSK, XBSJ, ZZXX, userId,time,flag )
-        values(#{knsk},#{xbsj},#{zzxx},#{userId},#{date},1)
-    </insert>
+    <update id="insertGradePercent">
+        update course.gradePercent set course.gradePercent.gradePercentage=#{knsk},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
+        where course.gradePercent.id=2;
+        update course.gradePercent set course.gradePercent.gradePercentage=#{xbsj},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
+        where course.gradePercent.id=1;
+        update course.gradePercent set course.gradePercent.gradePercentage=#{zzxx},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
+        where course.gradePercent.id=3;
+        update course.gradePercent set course.gradePercent.gradePercentage=#{dekt},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
+        where course.gradePercent.id=4;
+        update course.gradePercent set course.gradePercent.gradePercentage=#{qmnl},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
+        where course.gradePercent.id=5;
+    </update>
 
     <update id="updateFlagZero">
        update course.gradePercent set flag=0
     </update>
 
-    <select id="getGradePercent" resultType="com.spc.model.GradePercent" >
+    <select id="getGradePercent" resultType="map" >
         SELECT * FROM course.gradePercent
     </select>
 </mapper>
