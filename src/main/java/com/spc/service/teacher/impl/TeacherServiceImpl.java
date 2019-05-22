@@ -339,11 +339,9 @@ public class TeacherServiceImpl extends Base implements TeacherService {
     @Override
     public List<Map<String, Object>> showGradeExcel(int fileInfoId) {
         List<Map<String, Object>> students = new ArrayList<>();
-        System.out.println(111112);
         Map<String, Object> fileInfo = teacherDao.selectGradeExcel(fileInfoId);
         String fileName = (String) fileInfo.get("fileName");
         String path = (String) fileInfo.get("path");
-        System.out.println(fileName);
         File file = new File(path );
         if (file == null) {
             return null;
@@ -379,7 +377,6 @@ public class TeacherServiceImpl extends Base implements TeacherService {
                     stu.put("departName", departName);
                     stu.put("speciality", speciality);
                     stu.put("xbsjGrade", Float.parseFloat(grade));
-                    System.out.println("学生信息："+String.valueOf(stu));
                     students.add(stu);
                 }
             }
