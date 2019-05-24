@@ -192,32 +192,46 @@ public class CourseAllServiceImpl implements CourseAllService {
     }
 
     @Override
-    public int addDepartFormer(int id,String username,String userId) {
+    public String addDepartFormer(List<Integer> ids,String username,String userId) {
+        int flag=0;
+        StringBuilder sb=new StringBuilder();
+        for(int id:ids){
         CourseAll courseAll = courseAllDao.findCourseAllById(id).get(0);
-        CourseApplication ca=new CourseApplication();
-        ca.setDepartId(courseAll.getDepartId());
-        ca.setDepartName(departmentDao.selectById(courseAll.getDepartId()).get(0));
-        ca.setCourseNameCHS(courseAll.getCourseNameCHS());
-        ca.setCourseNameEN(courseAll.getCourseNameEN());
-        ca.setModuleId(Integer.parseInt(courseAll.getModuleId()));
-        Calendar now = Calendar.getInstance();
-        int currentYear=now.get(Calendar.YEAR);
-        ca.setAcademicYear(currentYear+"-"+(currentYear+1));
-        ca.setClassSemester(courseAll.getClassSemester());
-        ca.setClassHour(courseAll.getClassHour());
-        ca.setStuNumUpperLimit(courseAll.getStuNumUpperLimit());
-        ca.setTeacherId(courseAll.getTeacherId());
-        ca.setTeacherName(courseAll.getTeacherName());
-        ca.setTeachingTeamIds(courseAll.getTeachingTeamIds());
-        ca.setTeachingTeamNames(courseAll.getTeachingTeamNames());
-        ca.setCourseInfo(courseAll.getCourseInfo());
-        ca.setTeacherInfo(courseAll.getTeacherInfo());
-        ca.setIsChecked(3);
-        ca.setCategory(1);
-        ca.setCourseId(courseAll.getCourseId());
-        ca.setOperatorId(userId);
-        ca.setOperatorName(username);
-        return courseAllDao.insertCourseApp(ca);
+        int count= courseAllDao.findCourseAppCount(courseAll.getCourseId(),courseAll.getAcademicYear());
+            if(count==0) {
+                CourseApplication ca = new CourseApplication();
+                ca.setDepartId(courseAll.getDepartId());
+                ca.setDepartName(departmentDao.selectById(courseAll.getDepartId()).get(0));
+                ca.setCourseNameCHS(courseAll.getCourseNameCHS());
+                ca.setCourseNameEN(courseAll.getCourseNameEN());
+                ca.setModuleId(Integer.parseInt(courseAll.getModuleId()));
+                Calendar now = Calendar.getInstance();
+                int currentYear = now.get(Calendar.YEAR);
+                ca.setAcademicYear(currentYear + "-" + (currentYear + 1));
+                ca.setClassSemester(courseAll.getClassSemester());
+                ca.setClassHour(courseAll.getClassHour());
+                ca.setStuNumUpperLimit(courseAll.getStuNumUpperLimit());
+                ca.setTeacherId(courseAll.getTeacherId());
+                ca.setTeacherName(courseAll.getTeacherName());
+                ca.setTeachingTeamIds(courseAll.getTeachingTeamIds());
+                ca.setTeachingTeamNames(courseAll.getTeachingTeamNames());
+                ca.setCourseInfo(courseAll.getCourseInfo());
+                ca.setTeacherInfo(courseAll.getTeacherInfo());
+                ca.setIsChecked(3);
+                ca.setCategory(1);
+                ca.setCourseId(courseAll.getCourseId());
+                ca.setOperatorId(userId);
+                ca.setOperatorName(username);
+                courseAllDao.insertCourseApp(ca);
+            }else{
+                sb.append(courseAll.getCourseNameCHS()+",");
+                flag=1;
+            }
+        }
+        if(flag==1){
+            return sb.deleteCharAt(sb.length()-1)+"已存在";
+        }
+        return "导入成功！";
     }
 
     @Override
@@ -292,7 +306,7 @@ public class CourseAllServiceImpl implements CourseAllService {
     }
 
     @Override
-    public int ExistCourseAll(CourseAll courseAll) {
+    public int existCourseAll(CourseAll courseAll) {
        return courseAllDao.findCourseAllCount(courseAll);
     }
 

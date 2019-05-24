@@ -36,7 +36,7 @@ public interface CourseAllService {
 
     int makeSureCourseAll(String academicYear);
 
-    int addDepartFormer(int id,String username,String userId);
+    String addDepartFormer(List<Integer> ids,String username,String userId);
 
     int commitApp(String academicYear,int departId);
 
@@ -54,5 +54,7 @@ public interface CourseAllService {
 
     List<Map<String, Object>> findCourseAllByYearAndDepart(String academicYear, int departId);
 
-    int ExistCourseAll(CourseAll courseAll);
+    int existCourseAll(CourseAll courseAll);
+
+
 }
