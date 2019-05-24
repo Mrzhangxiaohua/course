@@ -17,7 +17,7 @@ import com.spc.service.teacher.TeacherService;
 import com.spc.util.RequestPayload;
 import com.spc.util.ResponseWrap;
 import com.spc.view.*;
-import com.sun.org.apache.xpath.internal.operations.Lt;
+//import com.sun.org.apache.xpath.internal.operations.Lt;
 import com.sun.xml.rpc.processor.model.soap.SOAPUnorderedStructureType;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Row;
@@ -943,13 +943,16 @@ public class ManageController extends Base {
         String jsonString = RequestPayload.getRequestPayload(request);
         try {
             JSONObject json=new JSONObject(jsonString);
-            JSONObject valuejson = json.getJSONObject("value");
-            int XBSJ= (int) valuejson.get("XBSJ");
-            int ZZXX= (int) valuejson.get("ZZXX");
-            int KNSK= (int) valuejson.get("KNSK");
+            System.out.println("json"+json);
+//            JSONObject valuejson = json.getJSONObject("value");
+            int XBSJ= (int) json.get("XBSJ");
+            int ZZXX= (int) json.get("ZZXX");
+            int KNSK= (int) json.get("KNSK");
+            int DEKT = (int) json.get("DEKT");
+            int QMNL = (int) json.get("QMNL");
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date=sdf.format(new Date());
-            manageService.addGradePercent(KNSK,XBSJ,ZZXX,userId,date);
+            manageService.addGradePercent(KNSK,XBSJ,ZZXX,DEKT,QMNL,userId,date);
         return "设置成功";
         } catch (JSONException e) {
             e.printStackTrace();

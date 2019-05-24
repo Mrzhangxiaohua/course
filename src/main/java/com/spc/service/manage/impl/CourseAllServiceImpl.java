@@ -5,7 +5,7 @@ import com.spc.model.CourseAll;
 import com.spc.model.CourseApplication;
 import com.spc.model.TeacherInfo;
 import com.spc.service.manage.CourseAllService;
-import com.sun.xml.internal.bind.v2.model.core.ID;
+//import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
