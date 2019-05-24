@@ -88,4 +88,8 @@ public interface CourseAllDao {
     List<Map<String, Object>> findByYearAndDepart(@Param("academicYear")String academicYear,@Param("departId") int departId);
 
     int deleteCourseAllByAppId(@Param("id") Integer id);
+
+    int findCourseAllCount(CourseAll courseAll);
+
+    int findCourseAppCount(@Param("courseId")String courseId, @Param("academicYear")String academicYear);
 }

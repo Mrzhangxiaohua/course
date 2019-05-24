@@ -962,10 +962,15 @@ public class ManageController extends Base {
 
     /**
      * 超级管理员端：查看往年课程目录
-     *
-     *
+     * @param currentPage
+     * @param pageSize
+     * @param academicYear
+     * @param courseId
+     * @param courseName
+     * @param departId
      * @return
      */
+
     @RequestMapping("/findCourseAll")
     @ResponseBody
     public Map<String,Object> findCourseAll(  @RequestParam(required = false, defaultValue = "1") int currentPage,
@@ -1067,16 +1072,17 @@ public class ManageController extends Base {
      */
     @RequestMapping("/departAddFormerCourse")
     @ResponseBody
-    public int departAddFormerCourseAll(HttpServletRequest request) throws JSONException {
+    public String departAddFormerCourseAll(HttpServletRequest request) throws JSONException {
         String username= (String) request.getSession().getAttribute("username");
         String userId= (String) request.getSession().getAttribute("userId");
         String json = RequestPayload.getRequestPayload(request);
+        List<Integer> ids=new ArrayList<Integer>();
         JSONArray obj = new JSONArray(json);
         for(int i=0;i<obj.length();i++){
             int id= (int) obj.get(i);
-            courseAllService.addDepartFormer(id,username,userId);
+            ids.add(id);
         }
-        return 0;
+        return courseAllService.addDepartFormer(ids,username,userId);
     }
 
     /**
@@ -1312,9 +1318,11 @@ public class ManageController extends Base {
 
     @RequestMapping(value = "addFormerCourseAll")
     @ResponseBody
-    public int addFormerCourseAll(HttpServletRequest request) throws JSONException {
+    public String addFormerCourseAll(HttpServletRequest request) throws JSONException {
         String json = RequestPayload.getRequestPayload(request);
         JSONArray obj = new JSONArray(json);
+        int flag=0;
+        StringBuilder sb=new StringBuilder();
         for(int i=0;i<obj.length();i++){
             int id= (int) obj.get(i);
             CourseAll courseAll=courseAllService.findCourseAll(id);
@@ -1323,9 +1331,18 @@ public class ManageController extends Base {
             Calendar now = Calendar.getInstance();
             int currentYear=now.get(Calendar.YEAR);
             courseAll.setAcademicYear(currentYear+"-"+(currentYear+1));
-            courseAllService.addCourseAll(courseAll);
+            int count= courseAllService.existCourseAll(courseAll);
+            if (count==0){
+                courseAllService.addCourseAll(courseAll);
+            }else{
+                sb.append(courseAll.getCourseNameCHS()+",");
+                flag=1;
+            }
         }
-        return 0;
+        if(flag==1){
+            return sb.deleteCharAt(sb.length()-1).toString()+"已存在";
+        }
+        return "导入成功";
     }
 
     /**

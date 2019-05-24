@@ -319,5 +319,19 @@
        delete from CourseAll
        where courseAppId=#{id}
     </delete>
+    <select id="findCourseAllCount" resultType="int">
+        select count(*)
+        from course.CourseAll
+        where courseId=#{courseId}
+        and academicYear=#{academicYear}
+    </select>
+
+    <select id="findCourseAppCount" resultType="int">
+        select count(*)
+        from course.courseApplication
+        where courseId=#{courseId}
+        and academicYear=#{academicYear}
+        and isChecked != 2
+    </select>
 
 </mapper>
