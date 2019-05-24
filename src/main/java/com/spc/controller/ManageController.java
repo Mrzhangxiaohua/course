@@ -959,10 +959,15 @@ public class ManageController extends Base {
 
     /**
      * 超级管理员端：查看往年课程目录
-     *
-     *
+     * @param currentPage
+     * @param pageSize
+     * @param academicYear
+     * @param courseId
+     * @param courseName
+     * @param departId
      * @return
      */
+
     @RequestMapping("/findCourseAll")
     @ResponseBody
     public Map<String,Object> findCourseAll(  @RequestParam(required = false, defaultValue = "1") int currentPage,
@@ -1312,6 +1317,7 @@ public class ManageController extends Base {
     public int addFormerCourseAll(HttpServletRequest request) throws JSONException {
         String json = RequestPayload.getRequestPayload(request);
         JSONArray obj = new JSONArray(json);
+        int flag=0;
         for(int i=0;i<obj.length();i++){
             int id= (int) obj.get(i);
             CourseAll courseAll=courseAllService.findCourseAll(id);
@@ -1320,6 +1326,7 @@ public class ManageController extends Base {
             Calendar now = Calendar.getInstance();
             int currentYear=now.get(Calendar.YEAR);
             courseAll.setAcademicYear(currentYear+"-"+(currentYear+1));
+            courseAllService.ExistCourseAll(courseAll);
             courseAllService.addCourseAll(courseAll);
         }
         return 0;

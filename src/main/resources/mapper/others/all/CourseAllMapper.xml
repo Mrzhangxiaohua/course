@@ -319,5 +319,11 @@
        delete from CourseAll
        where courseAppId=#{id}
     </delete>
+    <select id="findCourseAllCount" resultMap="int">
+        select count(*)
+        from course.CourseAll
+        where courseId=#{courseId}
+        and academicYear=#{academicYear}
+    </select>
 
 </mapper>

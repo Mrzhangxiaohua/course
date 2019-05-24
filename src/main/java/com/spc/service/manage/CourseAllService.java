@@ -53,4 +53,6 @@ public interface CourseAllService {
     List<Map<String, Object>> findCourseAllDepartList(String academicYear);
 
     List<Map<String, Object>> findCourseAllByYearAndDepart(String academicYear, int departId);
+
+    int ExistCourseAll(CourseAll courseAll);
 }

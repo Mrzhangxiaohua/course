@@ -292,6 +292,11 @@ public class CourseAllServiceImpl implements CourseAllService {
     }
 
     @Override
+    public int ExistCourseAll(CourseAll courseAll) {
+       return courseAllDao.findCourseAllCount(courseAll);
+    }
+
+    @Override
     public int modifyCourseAll(CourseAll courseAll, String userId, String username) {
         courseAll.setOperatorId(userId);
         courseAll.setOperatorName(username);

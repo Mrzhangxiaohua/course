@@ -241,8 +241,6 @@ public class ManageServiceImpl extends Base implements ManageService {
     @Override
     public List findStudentByStudentId(int pageSize, int currentPage, String stuId) {
         PageHelper.startPage(currentPage, pageSize);
-        List a = studentDao.findStudentByStudentId(stuId);
-        System.out.println(a);
         return studentDao.findStudentByStudentId(stuId);
     }
 
@@ -407,6 +405,7 @@ public class ManageServiceImpl extends Base implements ManageService {
         gradePercentDao.updateFlagZero();
         return gradePercentDao.insertGradePercent(knsk,xbsj,zzxx,dekt,qmnl,userId,date);
     }
+
 
     @Override
     public FileInfo findAppFile(int fileInfoId) {
