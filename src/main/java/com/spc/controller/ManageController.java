@@ -1333,7 +1333,7 @@ public class ManageController extends Base {
             courseAll.setAcademicYear(currentYear+"-"+(currentYear+1));
             int count= courseAllService.existCourseAll(courseAll);
             if (count==0){
-                courseAllService.addCourseAll(courseAll);
+                courseAllService.addFormerCourseAll(courseAll);
             }else{
                 sb.append(courseAll.getCourseNameCHS()+",");
                 flag=1;

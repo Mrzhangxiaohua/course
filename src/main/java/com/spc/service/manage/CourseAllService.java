@@ -56,5 +56,5 @@ public interface CourseAllService {
 
     int existCourseAll(CourseAll courseAll);
 
-
+    int addFormerCourseAll(CourseAll courseAll);
 }

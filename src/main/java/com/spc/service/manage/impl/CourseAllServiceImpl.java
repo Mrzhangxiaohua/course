@@ -167,6 +167,7 @@ public class CourseAllServiceImpl implements CourseAllService {
         return 0;
     }
 
+
     @Override
     public List<Map<String, Object>> findCourseAll(String academicYear, String courseId, String courseName, int departId) {
         List<Map<String, Object>> list = courseAllDao.findCourseAll(academicYear, courseId, courseName, departId);
@@ -308,6 +309,11 @@ public class CourseAllServiceImpl implements CourseAllService {
     @Override
     public int existCourseAll(CourseAll courseAll) {
        return courseAllDao.findCourseAllCount(courseAll);
+    }
+
+    @Override
+    public int addFormerCourseAll(CourseAll courseAll) {
+        return courseAllDao.insertPassApp(courseAll);
     }
 
     @Override
