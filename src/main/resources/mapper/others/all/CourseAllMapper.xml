@@ -212,6 +212,7 @@
         <if test="academicYear != '8888'and academicYear!=''">
             and a.academicYear = #{academicYear}
         </if>
+        order by a.courseId
     </select>
     <select id="selectCourseYear" resultType="string">
         select distinct academicYear
