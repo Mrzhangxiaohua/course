@@ -3,6 +3,7 @@ package com.spc.service.wsdl.TeachersOccupyTimeWebservice;
 import com.spc.controller.Base;
 import com.spc.service.manage.ClassroomInfoService;
 import com.spc.service.wsdl.util.WebServiceUtil;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -136,7 +137,8 @@ public class TeacherCurriculumInfo extends Base {
                         // true 表示有占用
                         res[j][teacherOccupyTime.getDayIndex()] = true;
                         // 写入schoolDistrict
-                        schoolDistrict[j][teacherOccupyTime.getDayIndex()] = Integer.parseInt(teacherOccupyTime.getXXXQDM());
+                        schoolDistrict[j][teacherOccupyTime.getDayIndex()] = teacherOccupyTime.getXXXQDM()!= null?
+                        Integer.parseInt(teacherOccupyTime.getXXXQDM()):1;
                     }
                     break;
                 }
@@ -163,16 +165,14 @@ public class TeacherCurriculumInfo extends Base {
         List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0002016045", "2018-2019", "春季");
 
 
-        Map<String, Object[][]> occupyTimes = aClass.getTeacherOccupyTime("0002016045", "2018-2019", "春季", 9, 16, "", "3118105316", "张发");
-        for (TeacherOccupyTime teacherOccupyTime : res) {
-            System.out.println(teacherOccupyTime);
-        }
+        Map<String, Object[][]> occupyTimes = aClass.getTeacherOccupyTime("0002016056", "2018-2019", "春季", 1, 9, "11111111000000000000000000", "3118105316", "张发");
+//        for (TeacherOccupyTime teacherOccupyTime : res) {
+//            System.out.println(teacherOccupyTime);
+//        }
 
         for (int i = 0; i < CLASS_HOURS_PER_DAY; i++) {
             for (int j = 0; j < CLASS_DAYS_PER_WEEK; j++) {
-                Object[][] o = occupyTimes.get("time");
-                System.out.print(o[i][j] + "\t");
-
+                occupyTimes.get("place");
             }
             System.out.println();
         }
