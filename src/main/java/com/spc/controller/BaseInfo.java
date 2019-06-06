@@ -56,6 +56,7 @@ public class BaseInfo {
     }
 
     public String getDepid() { return depid; }
+
     public void setDepid(String depid) {
         this.depid = depid;
     }

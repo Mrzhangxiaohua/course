@@ -37,6 +37,8 @@ public class ManageTablePdfView extends AbstractPdfView {
         cb.rectangle(rect);
 
     }
+
+
     protected PdfPTable buildOneDepartTable(Map<String,Object> tableInfo) throws Exception {
        String[][] tables= (String[][]) tableInfo.get("table");
        String departName= (String) tableInfo.get("departName");
@@ -155,6 +157,4 @@ public class ManageTablePdfView extends AbstractPdfView {
         return table;
     }
 
-
-
-    }
+}

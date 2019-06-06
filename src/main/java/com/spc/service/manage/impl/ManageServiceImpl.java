@@ -4,10 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.controller.Base;
 import com.spc.dao.*;
-import com.spc.model.ClassApplicationDomain;
-import com.spc.model.ClassDomain;
-import com.spc.model.FileInfo;
-import com.spc.model.StudentApplicationDomain;
+import com.spc.model.*;
 import com.spc.service.manage.ManageService;
 import com.spc.util.MakeTimeTable;
 import com.sun.xml.rpc.processor.model.soap.SOAPUnorderedStructureType;
@@ -244,8 +241,6 @@ public class ManageServiceImpl extends Base implements ManageService {
     @Override
     public List findStudentByStudentId(int pageSize, int currentPage, String stuId) {
         PageHelper.startPage(currentPage, pageSize);
-        List a = studentDao.findStudentByStudentId(stuId);
-        System.out.println(a);
         return studentDao.findStudentByStudentId(stuId);
     }
 
@@ -380,10 +375,37 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public int addGradePercent(int knsk, int xbsj, int zzxx, String userId, String date) {
-        gradePercentDao.updateFlagZero();
-        return gradePercentDao.insertGradePercent(knsk,xbsj,zzxx,userId,date);
+    public Map getGradePercent() {
+        List<Map<String,Object>> list = gradePercentDao.getGradePercent();
+        Map<String,Object> res = new HashMap<>();
+        for(Map li : list) {
+            System.out.println(String.valueOf(li));
+            if ((int) li.get("id") == 1) {
+                res.put("XBSJ", li.get("gradePercentage"));
+            }
+            if ((int) li.get("id") == 2) {
+                res.put("KNSK", li.get("gradePercentage"));
+            }
+            if ((int) li.get("id") == 3) {
+                res.put("ZZXX", li.get("gradePercentage"));
+            }
+            if ((int) li.get("id") == 4) {
+                res.put("DEKT", li.get("gradePercentage"));
+            }
+            if ((int) li.get("id") == 5) {
+                res.put("QMNL", li.get("gradePercentage"));
+            }
+        }
+        return res;
+
     }
+
+    @Override
+    public int addGradePercent(int knsk, int xbsj, int zzxx, int dekt, int qmnl,String userId, String date) {
+        gradePercentDao.updateFlagZero();
+        return gradePercentDao.insertGradePercent(knsk,xbsj,zzxx,dekt,qmnl,userId,date);
+    }
+
 
     @Override
     public FileInfo findAppFile(int fileInfoId) {

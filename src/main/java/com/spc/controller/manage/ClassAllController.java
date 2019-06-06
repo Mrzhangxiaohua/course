@@ -161,8 +161,8 @@ public class ClassAllController extends Base {
      *
      * @return
      */
-    @RequestMapping("/getSchoolDistricts")
     @ResponseBody
+    @RequestMapping("/getSchoolDistricts")
     public List<IceSelectDataSource> getSchoolDistricts() {
         return schoolDistrictService.getAllSchoolDistricts();
     }
@@ -420,7 +420,7 @@ public class ClassAllController extends Base {
     }
 
     /**
-     * 一键获取某个学院的上课课表 pdf格式
+     * 一键获取全学院的上课课表 pdf格式
      *
      * @param classSemester 春、秋、departId
      * @return
@@ -428,7 +428,7 @@ public class ClassAllController extends Base {
     @RequestMapping("/getAllDepartTimeTablePdf")
     @ResponseBody
     public ModelAndView getAllDepartTimeTablePdf(@RequestParam String academicYear, @RequestParam String classSemester,
-                                                  HttpSession session, HttpServletResponse response) {
+                                                 HttpServletResponse response) {
 
 
         response = ResponseWrap.setName(response, "全学院总课表", "pdf");
@@ -450,7 +450,6 @@ public class ClassAllController extends Base {
         Map<String, Object> model = new HashMap<>();
         model.put("res", res);
         model.put("style", "higher");
-        System.out.println("after");
         return new ModelAndView(new ManageTablePdfView(), model);
     }
 
@@ -565,8 +564,7 @@ public class ClassAllController extends Base {
     @RequestMapping("/getOneDepartTimeTablePdf")
     @ResponseBody
     public ModelAndView getOneDepartTimeTablePdf(@RequestParam String academicYear, @RequestParam String classSemester,
-                                                 @RequestParam int depId,
-                                                 HttpSession session, HttpServletResponse response) {
+                                                 @RequestParam int depId, HttpServletResponse response) {
         List<Map<String,Object>> departList=classAllService.findDepartList(academicYear,classSemester);
         String departName="";
         for(Map<String,Object> depart:departList){

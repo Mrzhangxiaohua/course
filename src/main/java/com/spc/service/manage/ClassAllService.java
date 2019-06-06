@@ -47,4 +47,6 @@ public interface ClassAllService {
     void updateStuNumUpperLimit(int classAllId,int stuNumUpperLimit);
 
     List<Map<String,Object>>  getKnskCourse(String academicYear);
+
+
 }
