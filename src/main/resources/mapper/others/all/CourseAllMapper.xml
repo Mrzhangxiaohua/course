@@ -21,7 +21,7 @@
         select
         <include refid="Base_Column_List" />
         from CourseAll
-        where courseId = #{courseId}
+        where courseId = #{courseId} and academicYear = #{academicYear}
     </select>
 
 
