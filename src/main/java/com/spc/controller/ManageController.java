@@ -1199,6 +1199,7 @@ public class ManageController extends Base {
         String userId= (String) request.getSession().getAttribute("userId");
         String username= (String) request.getSession().getAttribute("username");
         int flag=courseAllService.modifyCourseAll(courseAll,userId,username);
+        System.out.println(courseAll);
         if(flag!=0){
             return "修改成功!";
         }
@@ -1221,7 +1222,7 @@ public class ManageController extends Base {
     public Map<String, Object> findCurrentCourseAll(HttpServletRequest request,
                                                     @RequestParam(required = false, defaultValue = "1") int currentPage,
                                                     @RequestParam(required = false, defaultValue = "10") int pageSize,
-                                                    @RequestParam(required = false, defaultValue="8888",value="academicYear") String academicYear,
+                                                    @RequestParam(required = false, defaultValue="8888") String academicYear,
                                                     @RequestParam(required = false, defaultValue = "8888") String courseId,
                                                     @RequestParam(required = false,defaultValue = "8888") String courseName,
                                                     @RequestParam(required = false,defaultValue = "8888") int departId
