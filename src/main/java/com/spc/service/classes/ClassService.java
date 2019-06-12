@@ -74,4 +74,8 @@ public interface ClassService {
     List<Map<String, Object>> findStuXbsjClass(String stuId);
 
     Map<String,Object> findCourseById(int classId);
+
+    int findStudentIsChecked(int classId,String stuId);
+
+    int findStudentKnskIsChecked(String JXBID,String stuId);
 }

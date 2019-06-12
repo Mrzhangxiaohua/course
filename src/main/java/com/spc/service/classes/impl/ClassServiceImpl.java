@@ -336,6 +336,17 @@ public class ClassServiceImpl implements ClassService {
         return classDao.findCourseById(classId);
     }
 
+    @Override
+    public int findStudentIsChecked(int classId, String stuId) {
+
+        return classDao.findStudentIsChecked( classId, stuId);
+    }
+
+    @Override
+    public int findStudentKnskIsChecked(String JXBID, String stuId) {
+        return classDao.findStudentKnskIsChecked(JXBID,stuId);
+    }
+
 
 }
 

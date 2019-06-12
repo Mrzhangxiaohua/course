@@ -526,4 +526,17 @@
         where a.classId=#{classId}
     </select>
 
+
+    <select id="findStudentIsChecked" resultType="int">
+        select c.isChecked
+        from course.Course_choose c
+        where c.classId=#{classId} and c.stuId=#{stuId}
+    </select>
+
+    <select id="findStudentKnskIsChecked" resultType="int">
+        select c.isChecked
+        from course.KnskGrade c
+        where c.JXBID=#{JXBID} and c.stuId=#{stuId}
+    </select>
+
 </mapper>

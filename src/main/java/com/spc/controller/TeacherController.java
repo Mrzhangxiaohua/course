@@ -1481,7 +1481,8 @@ public class TeacherController extends Base {
                 JSONObject stu=stuList.getJSONObject(i);
                 String stuId= (String) stu.get("stuId");
                 String xbsjGrade= String.valueOf(stu.get("xbsjGrade"));
-                int isChecked=stu.getInt("isChecked");
+//                int isChecked=stu.getInt("isChecked");
+                int isChecked=classService.findStudentIsChecked(classId,stuId);
                 List<Map<String,Object>> stuXbsjClass=new ArrayList<>();
                 classService.updateXbsjScore(classId,stuId,Float.parseFloat(xbsjGrade));
                 stuXbsjClass=classService.findStuXbsjClass(stuId);
@@ -1682,7 +1683,8 @@ public class TeacherController extends Base {
                 JSONObject stu=stuList.getJSONObject(i);
                 String stuId= (String) stu.get("stuId");
                 String knskGrade= String.valueOf(stu.get("knskGrade"));
-                int isChecked=stu.getInt("isChecked");
+//                int isChecked=stu.getInt("isChecked");
+                int isChecked=classService.findStudentKnskIsChecked(JXBID,stuId);
                 teacherService.updateKnskScore(JXBID,stuId,Float.parseFloat(knskGrade));
                 gradeService.uploadAllGradeKnsk(stuId,Float.parseFloat(knskGrade));
                 if(isChecked==2)

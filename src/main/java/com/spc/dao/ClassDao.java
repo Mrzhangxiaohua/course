@@ -121,4 +121,8 @@ public interface ClassDao {
     List<Map<String, Object>> findStuXbsjClass(@Param("stuId")String stuId);
 
     Map<String, Object> findCourseById(@Param("classId") int classId);
+
+    int findStudentIsChecked(@Param("classId") int classId, @Param("stuId")String stuId);
+
+    int findStudentKnskIsChecked(@Param("JXBID") String JXBID, @Param("stuId")String stuId);
 }
