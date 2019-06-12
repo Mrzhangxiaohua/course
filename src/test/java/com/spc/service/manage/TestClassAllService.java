@@ -54,38 +54,38 @@ public class TestClassAllService {
     public void testScheduleClass(){
         ClassAll c = new ClassAll();
 
-        c.setAcademicYear("2018-2019");
+        c.setAcademicYear("2019-2020");
         c.setStuChooseNum(20);
-        c.setClassDateDesc("0-6,1-6,2-6,3-6,");
+        c.setClassDateDesc("10-6,11-6,");
         c.setClassHour(16);
-        c.setClassName("5班");
-        c.setClassPlaceId("2027433");
-        c.setClassPlaceName("综合楼-404");
+        c.setClassName("1班");
+        c.setClassPlaceId("1001381");
+        c.setClassPlaceName("主楼A-405");
         c.setClassSemester("春季");
-        c.setClassWeeks("00000000011111111000000000");
+        c.setClassWeeks("11111111000000000000000000");
         c.setConflictDesc("");
         c.setCourseId("WS19015001");
-        c.setCourseNameCHS("高级医学研究英语实践");
-        c.setCourseNameEN("Advanced Medical Research Initiation");
-        c.setDepartId(15);
-        c.setEndWeek(17);
-        c.setId(1992);
-        c.setInstructorId("SZB2013115");
-        c.setInstructorName("韩晶");
-        c.setIsModify(true);
-        c.setModuleId("4");
+        c.setCourseNameCHS("英语实用口语实践");
+        c.setCourseNameEN("Practical Oral English");
+        c.setDepartId(12);
+        c.setEndWeek(8);
+        c.setId(null);
+        c.setInstructorId("0000011423");
+        c.setInstructorName("冯广宜");
+        c.setIsModify(false);
+        c.setModuleId("1");
 
         c.setOperatorId("0002017115");
         c.setOperatorName("董博");
-        c.setScheduled(1);
-        c.setSchoolDistrictId(2);
-        c.setStartWeek(10);
+        c.setScheduled(0);
+        c.setSchoolDistrictId(1);
+        c.setStartWeek(1);
         c.setStuChooseNum(0);
-        c.setStuNumUpperLimit(22);
-        c.setTeacherId("0002004120");
-        c.setTeacherName("吕社民");
-        c.setTeachingTeamIds("1100000106,1200006045,0002008039,0000011377,0000010562");
-        c.setTeachingTeamNames("马清涌,王岗,吕海侠,方宇,孟列素");
+        c.setStuNumUpperLimit(20);
+        c.setTeacherId("0000011423");
+        c.setTeacherName("冯广宜");
+        c.setTeachingTeamIds("0192018007,0192017003,0192018011,0192018008,0192018012,0192018013");
+        c.setTeachingTeamNames("Erica,June,Amy,Reine,Raechel,Julian");
 
         classAllService.scheduleClass(c);
         System.out.println("===jieshu");
@@ -135,6 +135,7 @@ public class TestClassAllService {
     }
 
     @Test
-    public void testTeacherOccupyTime(){
+    public void testFreeTeacherTimeAndPlace(){
+
     }
 }

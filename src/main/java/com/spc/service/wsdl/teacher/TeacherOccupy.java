@@ -96,7 +96,7 @@ public class TeacherOccupy {
 //        System.out.println(flag);
 
 //        KzJskb kzJskb = teacherOccupy.createKzJskb("2018-2019", "春季", "1", null, null, null, null, null, "0000000745", "1425", "1425");
-        KzJskb kzJskb = teacherOccupy.createKzJskb("2018-2019", "春季", null, null, null, null, null, null, "0002002065", null, null);
+        KzJskb kzJskb = teacherOccupy.createKzJskb("2019-2020", "春季", null, 1, 8, 7, 1, 2, "2421", "2421", null);
         int flag2 = teacherOccupy.deleteTeacherOccupyTime(kzJskb, "3118105316", "张发");
         System.out.println(kzJskb);
     }

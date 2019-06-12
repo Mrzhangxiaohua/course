@@ -30,7 +30,7 @@ public class SynchroTableImpl extends Base implements SynchroTable {
     @Override
     public int insertRecord(ClassAll classAll) {
 
-        CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId());
+        CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId(), classAll.getAcademicYear());
         logger.info(courseAll.toString());
         ClassDomain classDomain = new ClassDomain();
         classDomain.setClassAllId(classAll.getId());
@@ -67,7 +67,7 @@ public class SynchroTableImpl extends Base implements SynchroTable {
 
     @Override
     public int insertRecord1(ClassAll classAll,Integer classID) {
-        CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId());
+        CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId(), classAll.getAcademicYear());
         logger.info(courseAll.toString());
         ClassDomain classDomain = new ClassDomain();
         classDomain.setClassAllId(classAll.getId());
@@ -121,7 +121,7 @@ public class SynchroTableImpl extends Base implements SynchroTable {
         ClassDomain classDomain = new ClassDomain();
           removeRecord(classAll.getId());
         if (classAll.getClassDateDesc() != null) {
-            CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId());
+            CourseAll courseAll = courseAllDao.selectCourseAll(classAll.getCourseId(), classAll.getAcademicYear());
             logger.info(courseAll.toString());
 
             classDomain.setClassAllId(classAll.getId());
