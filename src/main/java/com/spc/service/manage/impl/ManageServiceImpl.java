@@ -733,12 +733,12 @@ public class ManageServiceImpl extends Base implements ManageService {
         int nlcsPercent=gradeDao.findNlcsPercent();
         for(Map stu:stuList)
         {
-            if((float)stu.get("xbsjGrade")!=0 && (float)stu.get("knskGrade")!=0 && (float)stu.get("wlzzGrade")!=0 && (float)stu.get("dektGrade")!=0 && (float)stu.get("nlcsGrade")!=0) {
+            if(stu.get("xbsjGrade")!=null && stu.get("knskGrade")!=null && stu.get("wlzzGrade")!=null && stu.get("dektGrade")!=null && stu.get("nlcsGrade")!=null) {
                 float grade=(float)stu.get("xbsjGrade")*(float)xbsjPercent/100 + (float)stu.get("knskGrade")*(float)knskPercent/100 + (float)stu.get("wlzzGrade")*(float)wlzzPercent/100 + (float)stu.get("dektGrade")*(float)dektPercent/100 + (float)stu.get("nlcsGrade")*(float)nlcsPercent/100;
                 stu.put("grade",grade);
             }
             else
-                stu.put("grade",(float)0);
+                stu.put("grade",null);
 
         }
         return stuList;
