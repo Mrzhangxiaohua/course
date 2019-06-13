@@ -33,11 +33,13 @@ public class CourseAllTablePdfView extends AbstractPdfView {
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
         Font headFont = new Font(baseFont1);
 
+        Font headFont2=new Font(baseFont1,Font.BOLD);
+
 
 
         for (Map.Entry<String, List<Map<String, Object>>> entry : courseAllMap.entrySet()) {
             String title="西安交通大学"+academicYear+"学年"+entry.getKey()+"研究生小班实践课程目录";
-            Paragraph paragraph1 = new Paragraph(title,headFont);
+            Paragraph paragraph1 = new Paragraph(title,headFont2);
             paragraph1.setSpacingAfter(20);
             paragraph1.setSpacingBefore(5);
             paragraph1.setAlignment(Element.ALIGN_CENTER);
@@ -49,37 +51,45 @@ public class CourseAllTablePdfView extends AbstractPdfView {
 //
 //            table.setWidthPercentage(80);
 //            table.setWidthPercentage(80);
-            table.setWidths(new int[]{1, 2, 2,5, 2, 1, 1,1});
+            table.setWidths(new int[]{1, 2, 2,5, 2, 1, 2,2});
             PdfPCell hcell;
             hcell = new PdfPCell(new Phrase("序号", textFont));
+            hcell.setBorder(1);
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             hcell.setFixedHeight(20f);
             table.addCell(hcell);
             hcell = new PdfPCell(new Phrase("课程编码", textFont));
+            hcell.setBorder(1);
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             hcell.setFixedHeight(20f);
             table.addCell(hcell);
             hcell = new PdfPCell(new Phrase("课程名称", textFont));
+            hcell.setBorder(1);
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             hcell.setFixedHeight(20f);
             table.addCell(hcell);
             hcell = new PdfPCell(new Phrase("任课教师", textFont));
+            hcell.setBorder(1);
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             hcell.setFixedHeight(20f);
             table.addCell(hcell);
             hcell = new PdfPCell(new Phrase("课程模块", textFont));
+            hcell.setBorder(1);
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             hcell.setFixedHeight(20f);
             table.addCell(hcell);
             hcell = new PdfPCell(new Phrase("学时", textFont));
+            hcell.setBorder(1);
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             hcell.setFixedHeight(20f);
             table.addCell(hcell);
             hcell = new PdfPCell(new Phrase("开课季节", textFont));
+            hcell.setBorder(1);
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             hcell.setFixedHeight(20f);
             table.addCell(hcell);
-            hcell = new PdfPCell(new Phrase("容量", textFont));
+            hcell = new PdfPCell(new Phrase("班级容量", textFont));
+            hcell.setBorder(1);
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             hcell.setFixedHeight(20f);
             table.addCell(hcell);
@@ -88,16 +98,19 @@ public class CourseAllTablePdfView extends AbstractPdfView {
                 PdfPCell cell;
                 Map<String,Object> courseAll=entry.getValue().get(i);
                 cell = new PdfPCell(new Phrase(i+1+"", textFont));
+                cell.setBorder(1);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setVerticalAlignment(Element.ALIGN_CENTER);
 //                cell.setFixedHeight(20f);
                 table.addCell(cell);
                 cell = new PdfPCell(new Phrase((String) courseAll.get("courseId"), textFont));
+                cell.setBorder(1);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setVerticalAlignment(Element.ALIGN_CENTER);
 //                cell.setFixedHeight(20f);
                 table.addCell(cell);
                 cell = new PdfPCell(new Phrase((String) courseAll.get("courseNameCHS"), textFont));
+                cell.setBorder(1);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setVerticalAlignment(Element.ALIGN_CENTER);
 //                cell.setFixedHeight(20f);
@@ -118,21 +131,25 @@ public class CourseAllTablePdfView extends AbstractPdfView {
 //                cell.setFixedHeight(100f);
                 table.addCell(cell);
                 cell = new PdfPCell(new Phrase((String) courseAll.get("moduleName"), textFont));
+                cell.setBorder(1);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setVerticalAlignment(Element.ALIGN_CENTER);
 //                cell.setFixedHeight(20f);
                 table.addCell(cell);
                 cell = new PdfPCell(new Phrase((String) courseAll.get("classSemester"), textFont));
+                cell.setBorder(1);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setVerticalAlignment(Element.ALIGN_CENTER);
 //                cell.setFixedHeight(20f);
                 table.addCell(cell);
                 cell = new PdfPCell(new Phrase(Integer.toString((int)courseAll.get("classHour")), textFont));
+                cell.setBorder(1);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setVerticalAlignment(Element.ALIGN_CENTER);
 //                cell.setFixedHeight(20f);
                 table.addCell(cell);
                 cell = new PdfPCell(new Phrase(Integer.toString((int)courseAll.get("stuNumUpperLimit")), textFont));
+                cell.setBorder(1);
                 cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell.setVerticalAlignment(Element.ALIGN_CENTER);
 //                cell.setFixedHeight(20f);
