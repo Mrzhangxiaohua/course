@@ -1101,16 +1101,16 @@ public class TeacherController extends Base {
     @RequestMapping("teach/findCourse")
     @ResponseBody
     public Map findTeachCourse(
-            @RequestParam(required = false, defaultValue = "1") int currentPage,
-            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam("classSemester") String academicYear,
             HttpSession session
     ) {
         String teacherId = (String) session.getAttribute("userId");
 //        String teacherId = "0000096131";
+        System.out.println("新的版本");
+        System.out.println("teacherId"+teacherId);
         Map<String,Object> res=new HashMap<>();
 //        PageHelper.startPage(currentPage, pageSize);
-        Page page=PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,CURRENTSEMESTER);
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,academicYear);
         for(Map<String,Object> c:classes){
             StringBuilder str=new StringBuilder();
             String[] all=( (String) c.get("classDateDescription")).split(",");
@@ -1126,18 +1126,55 @@ public class TeacherController extends Base {
             str.deleteCharAt(str.length()-1);
             c.put("classDateDescription",str);
         }
-        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
-//        res.put("total",page.getTotal());
-        List<Map<String,Object>> pageList=pageInfo.getList();
+//        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
+////        res.put("total",page.getTotal());
+//        List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
-        data.put("total",page.getTotal());
-        data.put("list",pageList);
-        data.put("currentPage",currentPage);
-        data.put("pageSize",pageSize);
+        data.put("list",classes);
         res.put("data", data);
         res.put("status", "SUCCESS");
         return res;
     }
+//    @RequestMapping("teach/findCourse")
+//    @ResponseBody
+//    public Map findTeachCourse(
+//            @RequestParam(required = false, defaultValue = "1") int currentPage,
+//            @RequestParam(required = false, defaultValue = "10") int pageSize,
+//            HttpSession session
+//    ) {
+//        String teacherId = (String) session.getAttribute("userId");
+////        String teacherId = "0000096131";
+//        Map<String,Object> res=new HashMap<>();
+////        PageHelper.startPage(currentPage, pageSize);
+//        Page page=PageHelper.startPage(currentPage, pageSize);
+//        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,CURRENTSEMESTER);
+//        for(Map<String,Object> c:classes){
+//            StringBuilder str=new StringBuilder();
+//            String[] all=( (String) c.get("classDateDescription")).split(",");
+//            for(String one:all){
+//                String[] des=one.split(":");
+//                if(Integer.parseInt(des[1])>=5){
+//                    des[1]=Integer.toString(Integer.parseInt(des[1])-2);
+//                }
+//                String[] weekdays={"周一","周二","周三","周四","周五","周六","周日"};
+//                str.append(weekdays[Integer.parseInt(des[0])-1]+"第"+des[1]+"-"+(Integer.parseInt(des[1])+Integer.parseInt(des[2])-1)+"节");
+//                str.append(",");
+//            }
+//            str.deleteCharAt(str.length()-1);
+//            c.put("classDateDescription",str);
+//        }
+//        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
+////        res.put("total",page.getTotal());
+//        List<Map<String,Object>> pageList=pageInfo.getList();
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("total",page.getTotal());
+//        data.put("list",pageList);
+//        data.put("currentPage",currentPage);
+//        data.put("pageSize",pageSize);
+//        res.put("data", data);
+//        res.put("status", "SUCCESS");
+//        return res;
+//    }
 
     /**
      * 教师端：根据班级Id导出选课学生名单Excel
