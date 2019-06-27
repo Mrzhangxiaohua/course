@@ -1292,12 +1292,14 @@ public class ManageController extends Base {
         courseAll.setTeacherName(teacherName);
         StringBuilder teachingTeamIds=new StringBuilder();
         StringBuilder teachingTeamNames=new StringBuilder();
-        for(int i=0;i<teacherArray.length();i++){
-            JSONObject jsonObject= (JSONObject) teacherArray.get(i);
-            teachingTeamIds.append(jsonObject.getString("teaId"));
-            teachingTeamIds.append(",");
-            teachingTeamNames.append(jsonObject.getString("teaName"));
-            teachingTeamNames.append(",");
+        if(teacherArray.length()>0) {
+            for (int i = 0; i < teacherArray.length(); i++) {
+                JSONObject jsonObject = (JSONObject) teacherArray.get(i);
+                teachingTeamIds.append(jsonObject.getString("teaId"));
+                teachingTeamIds.append(",");
+                teachingTeamNames.append(jsonObject.getString("teaName"));
+                teachingTeamNames.append(",");
+            }
         }
         teachingTeamIds.deleteCharAt(teachingTeamIds.length()-1);
         teachingTeamNames.deleteCharAt(teachingTeamNames.length()-1);
