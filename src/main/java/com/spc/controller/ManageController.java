@@ -1300,9 +1300,9 @@ public class ManageController extends Base {
                 teachingTeamNames.append(jsonObject.getString("teaName"));
                 teachingTeamNames.append(",");
             }
+            teachingTeamIds.deleteCharAt(teachingTeamIds.length() - 1);
+            teachingTeamNames.deleteCharAt(teachingTeamNames.length() - 1);
         }
-        teachingTeamIds.deleteCharAt(teachingTeamIds.length()-1);
-        teachingTeamNames.deleteCharAt(teachingTeamNames.length()-1);
         courseAll.setTeachingTeamIds(teachingTeamIds.toString());
         courseAll.setTeachingTeamNames(teachingTeamNames.toString());
         courseAll.setOperatorId(userId);
