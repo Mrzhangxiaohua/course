@@ -200,20 +200,17 @@
         join Department c
          on c.departId=a.departId
         where 1=1
-
         <if test="courseId != '8888' and courseId!=''">
             and a.courseId = #{courseId}
         </if>
         <if test="courseName != '8888' and courseName!=''">
-            <bind name="courseNameLike" value="'%'+ courseName +'%'"/>
-            and a.courseNameCHS like #{courseNameLike}
+            and a.courseNameCHS = #{courseName}
         </if>
         <if test="departId != '8888' and departId!=''">
             and a.departId = #{departId}
         </if>
         <if test="academicYear != '8888'and academicYear!=''">
-            <bind name="academicYearLike" value="'%'+academicYear+'%'"/>
-            and a.academicYear like #{academicYear}
+            and a.academicYear = #{academicYear}
         </if>
         order by a.courseId
     </select>
