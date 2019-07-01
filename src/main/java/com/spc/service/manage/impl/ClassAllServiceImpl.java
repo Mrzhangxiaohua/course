@@ -188,7 +188,8 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             res.put("msg", "提交成功！");
             return res;
 
-        }else {
+        }
+        else {
             // 1. 校验班级名称冲突
             if (checkClassName(c, res, msgBuilder)) {
                 return res;
@@ -222,6 +223,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             }
             // 冲突状态
             c.setConflictDesc(conflictDescBuilder.toString());
+            int tempScheduled=c.getScheduled();
             c.setScheduled(1);
 
             // 如果没有冲突，则保存对应的记录
@@ -236,7 +238,12 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 // 修改记录
                 int count = classAllDao.updateClass(c);
                 // TODO CHECK
-                synchroTableService.updateRecord(c);
+                if(tempScheduled==1) {
+                    synchroTableService.updateRecord(c);
+                }else{
+                    synchroTableService.insertRecord(c);
+                }
+
 
                 logger.info("updateClass: " + c.toString());
 

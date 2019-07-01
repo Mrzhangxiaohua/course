@@ -56,15 +56,15 @@ public class TestClassAllService {
 
         c.setAcademicYear("2019-2020");
         c.setStuChooseNum(20);
-        c.setClassDateDesc("10-6,11-6,");
+        c.setClassDateDesc("0-1,1-1,");
         c.setClassHour(16);
         c.setClassName("1班");
-        c.setClassPlaceId("1001381");
-        c.setClassPlaceName("主楼A-405");
-        c.setClassSemester("春季");
+        c.setClassPlaceId("1001374");
+        c.setClassPlaceName("主楼A-103");
+        c.setClassSemester("秋季");
         c.setClassWeeks("11111111000000000000000000");
         c.setConflictDesc("");
-        c.setCourseId("WS19015001");
+        c.setCourseId("WS19012001");
         c.setCourseNameCHS("英语实用口语实践");
         c.setCourseNameEN("Practical Oral English");
         c.setDepartId(12);
@@ -91,6 +91,11 @@ public class TestClassAllService {
         System.out.println("===jieshu");
     }
 
+    @Test
+    public void testDel(){
+        classAllService.delClass(2333,"0002017115", "0002017115");
+        System.out.println("成功");
+    }
     @Test
     public void testStuAdjustController(){
         String value = "{\"stuList\":[\"3118105307\",\"3118105217\"],\"newClassId\":468,\"oldClassId\":476}";

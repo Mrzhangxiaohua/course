@@ -262,6 +262,9 @@ public class ClassAllController extends Base {
 
         classAll.setOperatorId(operatorId);
         classAll.setOperatorName(operatorName);
+        if(classAll.getIsModify()&&classAll.getScheduled()==0){
+            classAll.setIsModify(false);
+        }
         logger.info("scheduleClass: " + classAll.toString());
         return classAllService.scheduleClass(classAll);
     }
