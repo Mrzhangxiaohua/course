@@ -152,6 +152,18 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         int[] rows = new int[classDates.length];
         int[] cols = new int[classDates.length];
         boolean[][] timetableTFT = new boolean[13][CLASS_DAYS_PER_WEEK];
+//        for (int i = 0; i < classDates.length; i++) {
+//            String[] temp = classDates[i].split(INDEX_SPLIT_CHAR);
+//            int jieci=Integer.parseInt(temp[0]);
+//            if(jieci>=4){
+//               jieci-=2;
+//            }
+//            int rowIndex = jieci;
+//            int colIndex = Integer.parseInt(temp[1]);
+//            rows[i] = rowIndex;
+//            cols[i] = colIndex;
+//            timetableTFT[rowIndex][colIndex] = true;
+//        }
         for (int i = 0; i < classDates.length; i++) {
             String[] temp = classDates[i].split(INDEX_SPLIT_CHAR);
             int rowIndex = Integer.parseInt(temp[0]);
@@ -462,28 +474,44 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
 //                if (currentClass.getEndWeek() < c.getStartWeek() || currentClass.getStartWeek() > c.getEndWeek()) {
 //                    continue;
 //                }
-                for (int j = 0; j < currentClass.getClassWeeks().length(); j++) { // 此处有26长度和10几周
-                    if(c.getClassWeeks().charAt(j) == currentClass.getClassWeeks().charAt(j)){
+                for (int t = 0; t < currentClass.getClassWeeks().length(); t++) { // 此处有26长度和10几周
+                    if(c.getClassWeeks().charAt(t) != 1 || currentClass.getClassWeeks().charAt(t) != 1){
                         continue;
+                    }
+                    // Step2: 上课时间冲突判断
+                    String[] currentClassDates = currentClass.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
+                    for (int j = 0; j < currentClassDates.length; j++) {
+                        String[] indexes = currentClassDates[j].split(INDEX_SPLIT_CHAR);
+                        int rowIndex = Integer.parseInt(indexes[0]);
+                        int colIndex = Integer.parseInt(indexes[1]);
+                        if (timetableTFT[rowIndex][colIndex]) {
+                            msgBuilder.append("该上课时间与").append(currentClass.getInstructorName()).append("老师的").
+                                    append((currentClass.getCourseNameCHS() != null ? currentClass.getCourseNameCHS() : currentClass.getCourseNameEN())).
+                                    append(currentClass.getClassName()).append("上课地点冲突！\n");
+                            conflictDescBuilder.append("p-").append("g").append("-").append(currentClass.getId()).append(ARRAY_SPLIT_CHAR);
+                            logger.info(msgBuilder.toString());
+                            logger.info(conflictDescBuilder.toString());
+                            break;
+                        }
                     }
                 }
 
-                // Step2: 上课时间冲突判断
-                String[] currentClassDates = currentClass.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
-                for (int j = 0; j < currentClassDates.length; j++) {
-                    String[] indexes = currentClassDates[j].split(INDEX_SPLIT_CHAR);
-                    int rowIndex = Integer.parseInt(indexes[0]);
-                    int colIndex = Integer.parseInt(indexes[1]);
-                    if (timetableTFT[rowIndex][colIndex]) {
-                        msgBuilder.append("该上课时间与").append(currentClass.getInstructorName()).append("老师的").
-                                append((currentClass.getCourseNameCHS() != null ? currentClass.getCourseNameCHS() : currentClass.getCourseNameEN())).
-                                append(currentClass.getClassName()).append("上课地点冲突！\n");
-                        conflictDescBuilder.append("p-").append("g").append("-").append(currentClass.getId()).append(ARRAY_SPLIT_CHAR);
-                        logger.info(msgBuilder.toString());
-                        logger.info(conflictDescBuilder.toString());
-                        break;
-                    }
-                }
+//                // Step2: 上课时间冲突判断
+//                String[] currentClassDates = currentClass.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
+//                for (int j = 0; j < currentClassDates.length; j++) {
+//                    String[] indexes = currentClassDates[j].split(INDEX_SPLIT_CHAR);
+//                    int rowIndex = Integer.parseInt(indexes[0]);
+//                    int colIndex = Integer.parseInt(indexes[1]);
+//                    if (timetableTFT[rowIndex][colIndex]) {
+//                        msgBuilder.append("该上课时间与").append(currentClass.getInstructorName()).append("老师的").
+//                                append((currentClass.getCourseNameCHS() != null ? currentClass.getCourseNameCHS() : currentClass.getCourseNameEN())).
+//                                append(currentClass.getClassName()).append("上课地点冲突！\n");
+//                        conflictDescBuilder.append("p-").append("g").append("-").append(currentClass.getId()).append(ARRAY_SPLIT_CHAR);
+//                        logger.info(msgBuilder.toString());
+//                        logger.info(conflictDescBuilder.toString());
+//                        break;
+//                    }
+//                }
             }
         }
         // ----------------------------------------------
@@ -573,32 +601,49 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
             if (!classAllList.isEmpty()) {
                 for (ClassAll currentClass : classAllList) {
                     // Step1: 周次重叠判断
-                    for (int j = 0; j < currentClass.getClassWeeks().length(); j++) { // 此处有26长度和10几周
-                        if(c.getClassWeeks().charAt(j) == currentClass.getClassWeeks().charAt(j)){
+                    for (int t = 0; t < currentClass.getClassWeeks().length(); t++) { // 此处有26长度和10几周
+                        if(c.getClassWeeks().charAt(t) !=1 || currentClass.getClassWeeks().charAt(t)!=1){
                             continue;
                         }
+                        String[] currentClassDates = currentClass.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
+                        for (int j = 0; j < currentClassDates.length; j++) {
+                            String[] indexes = currentClassDates[j].split(INDEX_SPLIT_CHAR);
+                            int rowIndex = Integer.parseInt(indexes[0]);
+                            int colIndex = Integer.parseInt(indexes[1]);
+                            if (timetableTFT[rowIndex][colIndex]) {
+                                msgBuilder.append("该上课时间与").append(instructorNames[i]).append("老师的").
+                                        append((currentClass.getCourseNameCHS() != null ? currentClass.getCourseNameCHS() : currentClass.getCourseNameEN())).
+                                        append(currentClass.getClassName()).append("授课时间冲突！\n");
+                                conflictDescBuilder.append("t-").append("g").append("-").append(currentClass.getInstructorId()).
+                                        append("-").append(currentClass.getInstructorName()).append("-").append(currentClass.getId()).append(ARRAY_SPLIT_CHAR);
+                                logger.info(msgBuilder.toString());
+                                logger.info(conflictDescBuilder.toString());
+                                break;
+                            }
+                        }
+
                     }
 //                    System.out.println(sb);
 //                    if (currentClass.getEndWeek() < c.getStartWeek() || currentClass.getStartWeek() > c.getEndWeek()) {
 //                        continue;
 //                    }
                     // Step2: 上课时间冲突判断
-                    String[] currentClassDates = currentClass.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
-                    for (int j = 0; j < currentClassDates.length; j++) {
-                        String[] indexes = currentClassDates[j].split(INDEX_SPLIT_CHAR);
-                        int rowIndex = Integer.parseInt(indexes[0]);
-                        int colIndex = Integer.parseInt(indexes[1]);
-                        if (timetableTFT[rowIndex][colIndex]) {
-                            msgBuilder.append("该上课时间与").append(instructorNames[i]).append("老师的").
-                                    append((currentClass.getCourseNameCHS() != null ? currentClass.getCourseNameCHS() : currentClass.getCourseNameEN())).
-                                    append(currentClass.getClassName()).append("授课时间冲突！\n");
-                            conflictDescBuilder.append("t-").append("g").append("-").append(currentClass.getInstructorId()).
-                                    append("-").append(currentClass.getInstructorName()).append("-").append(currentClass.getId()).append(ARRAY_SPLIT_CHAR);
-                            logger.info(msgBuilder.toString());
-                            logger.info(conflictDescBuilder.toString());
-                            break;
-                        }
-                    }
+//                    String[] currentClassDates = currentClass.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
+//                    for (int j = 0; j < currentClassDates.length; j++) {
+//                        String[] indexes = currentClassDates[j].split(INDEX_SPLIT_CHAR);
+//                        int rowIndex = Integer.parseInt(indexes[0]);
+//                        int colIndex = Integer.parseInt(indexes[1]);
+//                        if (timetableTFT[rowIndex][colIndex]) {
+//                            msgBuilder.append("该上课时间与").append(instructorNames[i]).append("老师的").
+//                                    append((currentClass.getCourseNameCHS() != null ? currentClass.getCourseNameCHS() : currentClass.getCourseNameEN())).
+//                                    append(currentClass.getClassName()).append("授课时间冲突！\n");
+//                            conflictDescBuilder.append("t-").append("g").append("-").append(currentClass.getInstructorId()).
+//                                    append("-").append(currentClass.getInstructorName()).append("-").append(currentClass.getId()).append(ARRAY_SPLIT_CHAR);
+//                            logger.info(msgBuilder.toString());
+//                            logger.info(conflictDescBuilder.toString());
+//                            break;
+//                        }
+//                    }
                 }
             }
         }
@@ -777,6 +822,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
         if (c.getScheduled() == 0) {
             return true;
         }
+
         // 释放教室和老师的时间占用
         String[] classDates = c.getClassDateDesc().split(ARRAY_SPLIT_CHAR);
         int[] rows = new int[classDates.length];

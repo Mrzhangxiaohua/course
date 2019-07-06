@@ -3,7 +3,6 @@ package com.spc.service.wsdl.TeachersOccupyTimeWebservice;
 import com.spc.controller.Base;
 import com.spc.service.manage.ClassroomInfoService;
 import com.spc.service.wsdl.util.WebServiceUtil;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -130,7 +129,7 @@ public class TeacherCurriculumInfo extends Base {
 //            System.out.println("=============================" + "进行检测");
 //            int y = classroomInfoService.getClassRoomToSchoolDistrict(x);
 //            System.out.println(y); // 1020544
-            String weeks = "00000011110000000000001110";
+            String weeks = classWeeks;
             for (int i = 0; i < weeks.length() && i < teacherOccupyTime.getWeeks().length(); i++) {
                 if (weeks.charAt(i) == '1' && teacherOccupyTime.getWeeks().charAt(i) == '1'){
                     for (int j = teacherOccupyTime.getHourStartIndex(); j <= teacherOccupyTime.getHourEndIndex(); j++) {
@@ -162,17 +161,17 @@ public class TeacherCurriculumInfo extends Base {
 
     public static void main(String[] args) {
         TeacherCurriculumInfo aClass = new TeacherCurriculumInfo();
-        List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0002016045", "2018-2019", "春季");
+//        List<TeacherOccupyTime> res = aClass.queryTeacherOccupyTime("3118105316", "张发", "0000011424", "2019-2020", "秋季");
 
 
-        Map<String, Object[][]> occupyTimes = aClass.getTeacherOccupyTime("0002016056", "2018-2019", "春季", 1, 9, "11111111000000000000000000", "3118105316", "张发");
+        Map<String, boolean[][]> occupyTimes = aClass.getTeacherOccupyTime("0000011424", "2019-2020", "秋季", 12, 19, "00000000000111111110000000", "3118105316", "张发");
 //        for (TeacherOccupyTime teacherOccupyTime : res) {
 //            System.out.println(teacherOccupyTime);
 //        }
-
+        boolean[][] temp = occupyTimes.get("time");
         for (int i = 0; i < CLASS_HOURS_PER_DAY; i++) {
             for (int j = 0; j < CLASS_DAYS_PER_WEEK; j++) {
-                occupyTimes.get("place");
+                System.out.print(temp[i][j] + "  ");
             }
             System.out.println();
         }
