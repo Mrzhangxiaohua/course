@@ -2,10 +2,7 @@ package com.spc.view;
 
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +18,7 @@ public class StudentsScoreListPdfView extends AbstractPdfView {
     protected void buildPdfDocument(Map<String, Object> model,
                                     Document document, PdfWriter writer, HttpServletRequest request,
                                     HttpServletResponse response) throws Exception {
+
 
         Map<String, Object> map = (Map<String, Object>) model.get("res");
 
@@ -188,6 +186,12 @@ public class StudentsScoreListPdfView extends AbstractPdfView {
         paragraph3.setSpacingBefore(5);
         paragraph3.setAlignment(Element.ALIGN_CENTER);
         document.add(paragraph3);
+        Rectangle pageRect =document.getPageSize();
+        System.out.println(pageRect);
+        Rectangle pageSize = new Rectangle(595F,842F);
+        document.setPageSize(pageSize);  // 设置页面大小
+        pageRect =document.getPageSize();
+        System.out.println(pageRect);
         document.close();
     }
 }

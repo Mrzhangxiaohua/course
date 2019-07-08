@@ -135,13 +135,15 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public List<Map<String, Object>> findTeachCourse2(String teacherId,String academicYear) {
         List<Map<String, Object>> classes = classDao.findTeachCourse2(teacherId,academicYear);
-
         for(Map cl:classes){
             if(cl.get("KCH").equals("121066")) {
                 cl.put("KCM","学术英语(一)");
             }
             if(cl.get("KCH").equals("121067")) {
                 cl.put("KCM","学术英语(二)");
+            }
+            if(cl.get("KCH").equals("121068")) {
+                cl.put("KCM","医学英语");
             }
             if(cl.get("KCH").equals("122036")) {
                 cl.put("KCM","学术英语写作");
@@ -206,6 +208,9 @@ public class ClassServiceImpl implements ClassService {
         }
         if(cl.get("KCH").equals("121067")) {
             cl.put("KCM","学术英语(二)");
+        }
+        if(cl.get("KCH").equals("121068")) {
+            cl.put("KCM","医学英语");
         }
         if(cl.get("KCH").equals("122036")) {
             cl.put("KCM","学术英语写作");

@@ -386,9 +386,9 @@
     <select id="findTeachCourse2" resultType="Map">
         select *
         from course.v_t_xk_by_yjsrw
-        where  (SKJS=#{teacherId})
-        and (KCH='121066' OR KCH='121067' OR KCH='122036')
-        and XNXQDM like "%"#{academicYear}"%"
+        where SKJS=#{teacherId}
+        and (KCH='121066' OR KCH='121067' OR KCH='121068' OR KCH='122036')
+        and XNXQDM=#{academicYear}
     </select>
 
     <select id="findClassIds" resultType="Map">
@@ -420,7 +420,7 @@
         select DISTINCT
         c.JXBID,c.XH,c.KCH
         from course.v_t_xk_by_yjsyxkb c
-        where c.KCH='121066' OR c.KCH='121067' or c.KCH='122036'
+        where c.KCH='121066' OR c.KCH='121067' OR c.KCH='121068' or c.KCH='122036'
     </select>
 
     <select id="findKnskClassById" resultType="Map">
@@ -491,6 +491,9 @@
             <if test="className == '学术英语(二)' ">
                 and a.KCH='121067'
             </if>
+            <if test="className == '医学英语'">
+                and a.KCH='121068'
+            </if>
             <if test="className == '学术英语写作'">
                 and a.KCH='122036'
             </if>
@@ -536,7 +539,7 @@
     <select id="findStudentKnskIsChecked" resultType="int">
         select c.isChecked
         from course.KnskGrade c
-        where c.JXBID=#{JXBID} and c.stuId=#{stuId}
+        where c.JXBID=#{JXBID} and c.XH=#{stuId}
     </select>
 
 </mapper>

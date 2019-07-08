@@ -130,5 +130,6 @@ public class StudentsOtherScoreListPdfView extends AbstractPdfView {
         paragraph3.setSpacingBefore(5);
         paragraph3.setAlignment(Element.ALIGN_CENTER);
         document.add(paragraph3);
+        document.close();
     }
 }

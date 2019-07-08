@@ -184,5 +184,8 @@ public class StudentsKnskScoreListPdfView extends AbstractPdfView {
         paragraph3.setSpacingBefore(5);
         paragraph3.setAlignment(Element.ALIGN_CENTER);
         document.add(paragraph3);
+        Rectangle pageSize = new Rectangle(595F,842F);
+        document.setPageSize(pageSize.rotate());// 设置页面大小
+        document.close();
     }
 }
