@@ -103,5 +103,6 @@ public class StudentsListPdfView extends AbstractPdfView {
             table.addCell(cell);
         }
         document.add(table);
+        document.close();
     }
 }

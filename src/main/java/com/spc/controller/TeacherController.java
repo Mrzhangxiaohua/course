@@ -1101,16 +1101,14 @@ public class TeacherController extends Base {
     @RequestMapping("teach/findCourse")
     @ResponseBody
     public Map findTeachCourse(
-            @RequestParam("classSemester") String academicYear,
+            @RequestParam(required = false, defaultValue = "1") int currentPage,
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
             HttpSession session
     ) {
         String teacherId = (String) session.getAttribute("userId");
-//        String teacherId = "0000096131";
-        System.out.println("新的版本");
-        System.out.println("teacherId"+teacherId);
         Map<String,Object> res=new HashMap<>();
-//        PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,academicYear);
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,CURRENTSEMESTER);
         for(Map<String,Object> c:classes){
             StringBuilder str=new StringBuilder();
             String[] all=( (String) c.get("classDateDescription")).split(",");
@@ -1126,55 +1124,39 @@ public class TeacherController extends Base {
             str.deleteCharAt(str.length()-1);
             c.put("classDateDescription",str);
         }
-//        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
-////        res.put("total",page.getTotal());
-//        List<Map<String,Object>> pageList=pageInfo.getList();
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    /**
+     * 教师端：录入成绩查询教师小班实践课程
+     * @param session
+     * @param
+     * @return
+     */
+    @RequestMapping("teach/findXbsjCourse")
+    @ResponseBody
+    public Map findXbsjCourse(
+            @RequestParam("classSemester") String academicYear,
+            HttpSession session
+    ) {
+        String teacherId = (String) session.getAttribute("userId");
+        Map<String,Object> res=new HashMap<>();
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,academicYear);
         Map<String, Object> data = new HashMap<>();
         data.put("list",classes);
         res.put("data", data);
         res.put("status", "SUCCESS");
         return res;
     }
-//    @RequestMapping("teach/findCourse")
-//    @ResponseBody
-//    public Map findTeachCourse(
-//            @RequestParam(required = false, defaultValue = "1") int currentPage,
-//            @RequestParam(required = false, defaultValue = "10") int pageSize,
-//            HttpSession session
-//    ) {
-//        String teacherId = (String) session.getAttribute("userId");
-////        String teacherId = "0000096131";
-//        Map<String,Object> res=new HashMap<>();
-////        PageHelper.startPage(currentPage, pageSize);
-//        Page page=PageHelper.startPage(currentPage, pageSize);
-//        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,CURRENTSEMESTER);
-//        for(Map<String,Object> c:classes){
-//            StringBuilder str=new StringBuilder();
-//            String[] all=( (String) c.get("classDateDescription")).split(",");
-//            for(String one:all){
-//                String[] des=one.split(":");
-//                if(Integer.parseInt(des[1])>=5){
-//                    des[1]=Integer.toString(Integer.parseInt(des[1])-2);
-//                }
-//                String[] weekdays={"周一","周二","周三","周四","周五","周六","周日"};
-//                str.append(weekdays[Integer.parseInt(des[0])-1]+"第"+des[1]+"-"+(Integer.parseInt(des[1])+Integer.parseInt(des[2])-1)+"节");
-//                str.append(",");
-//            }
-//            str.deleteCharAt(str.length()-1);
-//            c.put("classDateDescription",str);
-//        }
-//        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
-////        res.put("total",page.getTotal());
-//        List<Map<String,Object>> pageList=pageInfo.getList();
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("total",page.getTotal());
-//        data.put("list",pageList);
-//        data.put("currentPage",currentPage);
-//        data.put("pageSize",pageSize);
-//        res.put("data", data);
-//        res.put("status", "SUCCESS");
-//        return res;
-//    }
 
     /**
      * 教师端：根据班级Id导出选课学生名单Excel
@@ -1531,7 +1513,7 @@ public class TeacherController extends Base {
                 }
                 if(classTime==32) {
                     for (Map course : stuXbsjClass) {
-                        if ((float) course.get("xbsjGrade") != 0)
+                        if ( course.get("xbsjGrade") != null)
                             grade = grade + (float) course.get("xbsjGrade") * ((int) course.get("classTime") / (float) 32);
                         else {
                             grade = 0;
@@ -1569,27 +1551,17 @@ public class TeacherController extends Base {
     @ResponseBody
     public Map findTeachCourse2(
             @RequestParam("classSemester") String academicYear,
-            @RequestParam(required = false, defaultValue = "1") int currentPage,
-            @RequestParam(required = false, defaultValue = "10") int pageSize,
             HttpSession session
     ) {
         String teacherId = (String) session.getAttribute("userId");
-//        String academicYear="2018-2019";
-//        String teacherId = "0002001022";
         Map<String,Object> res=new HashMap<>();
         if(academicYear.indexOf("春季")!=-1)
             academicYear=academicYear.substring(0,9)+"-2";
         else
             academicYear=academicYear.substring(0,9)+"-1";
-        Page page=PageHelper.startPage(currentPage, pageSize);
         List<Map<String,Object>> classes = classService.findTeachCourse2(teacherId,academicYear);
-        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
-        List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
-        data.put("total",page.getTotal());
-        data.put("list",pageList);
-        data.put("currentPage",currentPage);
-        data.put("pageSize",pageSize);
+        data.put("list",classes);
         res.put("data", data);
         res.put("status", "SUCCESS");
         return res;
@@ -1676,20 +1648,12 @@ public class TeacherController extends Base {
     @RequestMapping("/findStudentsKnskScore")
     @ResponseBody
     public Map findStudentsKnskScore(@RequestParam("classId") String JXBID,
-                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
-                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
                                  HttpSession session) {
         int isGrade=classService.findKnskIsGrade(JXBID);
         Map<String,Object> res=new HashMap<>();
-        Page page=PageHelper.startPage(currentPage, pageSize);
         List<Map<String,Object>> students = classService.findKnskStudents(JXBID);
-        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
-        List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
-        data.put("total",page.getTotal());
-        data.put("list",pageList);
-        data.put("currentPage",currentPage);
-        data.put("pageSize",pageSize);
+        data.put("list",students);
         res.put("data", data);
         res.put("isGrade",isGrade);
         res.put("status", "SUCCESS");
@@ -1763,13 +1727,11 @@ public class TeacherController extends Base {
         String courseId= (String) classInfo.get("KCH");
         String teaName= (String) classInfo.get("teaName");
         String semesterName= (String) classInfo.get("XNXQDM");
-        System.out.println("---------------------------"+semesterName);
         if(semesterName.substring(9,11).equals("-1"))
             res.put("semesterName",semesterName.substring(0,9)+"秋季");
         else
             res.put("semesterName",semesterName.substring(0,9)+"春季");
         response = ResponseWrap.setName(response, KCM+ JXBMC + "学生成绩单", "pdf");
-        System.out.println("---------------1111--------------");
         List<Map<String,Object>> students = classService.findKnskStudents(JXBID);
         res.put("data", students);
         res.put("className",KCM);
