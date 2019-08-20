@@ -707,7 +707,7 @@ public class ManageController extends Base {
 
                 List newStus = zhuanhuan(students);
 
-                putSession(session,students);
+                //putSession(session,students);
 
                 logger.info("find student result:%s", newStus);
                 Map<String, Object> res = new HashMap<>();
@@ -725,7 +725,7 @@ public class ManageController extends Base {
                 String studentId = stuId;
                 students = manageService.findStudentByStudentId(pageSize, currentPage, stuId);
                 List newStus = zhuanhuan(students);/////
-                putSession(session,students);
+                //putSession(session,students);
 
                 Map<String, Object> res = new HashMap<>();
                 res.put("status", "SUCCESS");
