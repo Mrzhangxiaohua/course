@@ -1728,7 +1728,7 @@ public class TeacherController extends Base {
         String teaName= (String) classInfo.get("teaName");
         String semesterName= (String) classInfo.get("XNXQDM");
         if(semesterName.substring(9,11).equals("-1"))
-            res.put("semesterName",semesterNamesubst.ring(0,9)+"秋季");
+            res.put("semesterName",semesterName.substring(0,9)+"秋季");
         else
             res.put("semesterName",semesterName.substring(0,9)+"春季");
         response = ResponseWrap.setName(response, KCM+ JXBMC + "学生成绩单", "pdf");

@@ -1,35 +1,25 @@
 package com.spc.service.manage.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.spc.controller.Base;
 import com.spc.dao.*;
 import com.spc.model.*;
 import com.spc.service.manage.ManageService;
 import com.spc.util.MakeTimeTable;
-import com.sun.xml.rpc.processor.model.soap.SOAPUnorderedStructureType;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 
 @Service
@@ -427,7 +417,7 @@ public class ManageServiceImpl extends Base implements ManageService {
                 String XM=(String) stu.get("XM");
                 String departName=(String) stu.get("departName");
                 String speciality=(String)stu.get("speciality");
-                float grade= (float) stu.get("wlzzGrade");
+                Float grade= (Float) stu.get("wlzzGrade");
                 int isSubmit=(int) stu.get("wlzzIsSubmit");
 //                if(isSubmit!=submit)
 //                    continue;
@@ -493,7 +483,7 @@ public class ManageServiceImpl extends Base implements ManageService {
             Map<String, Object> student = new HashMap<>();
             if (moduleId == 1) {
                 String XM = (String) stu.get("XM");
-                float grade = (float) stu.get("wlzzGrade");
+                Float grade = (Float) stu.get("wlzzGrade");
                 int isSubmit = (int) stu.get("wlzzIsSubmit");
                 student.put("stuId", stuId);
                 student.put("stuName", XM);
@@ -502,7 +492,7 @@ public class ManageServiceImpl extends Base implements ManageService {
             }
             if (moduleId == 2) {
                 String XM = (String) stu.get("XM");
-                float grade = (float) stu.get("dektGrade");
+                Float grade = (Float) stu.get("dektGrade");
                 int isSubmit = (int) stu.get("dektIsSubmit");
                 student.put("stuId", stuId);
                 student.put("stuName", XM);
@@ -511,7 +501,7 @@ public class ManageServiceImpl extends Base implements ManageService {
             }
             if (moduleId == 3) {
                 String XM = (String) stu.get("XM");
-                float grade = (float) stu.get("nlcsGrade");
+                Float grade = (Float) stu.get("nlcsGrade");
                 int isSubmit = (int) stu.get("nlcsIsSubmit");
                 student.put("stuId", stuId);
                 student.put("stuName", XM);
@@ -525,7 +515,7 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public void updateScore(String stuId, float grade, int moduleId, int status) {
+    public void updateScore(String stuId, Float grade, int moduleId, int status) {
         if(moduleId==1){
             gradeDao.updateWlzzScore(stuId,grade,status);
         }
@@ -574,7 +564,6 @@ public class ManageServiceImpl extends Base implements ManageService {
         if (workbook != null) {
             int sheetNum = workbook.getNumberOfSheets();
             for (int i = 0; i < sheetNum; i++) {
-                System.out.println("进入第一个循环。。。");
                 Sheet sheet = workbook.getSheetAt(i);
                 for (int j = 1; j <= sheet.getLastRowNum(); j++) {
                     Row row = sheet.getRow(j);
@@ -582,7 +571,6 @@ public class ManageServiceImpl extends Base implements ManageService {
                         continue;
                     }
                     String stuName=row.getCell(0).getStringCellValue();
-                    System.out.println("姓名："+stuName);
                     String stuId= null;
                     switch (row.getCell(1).getCellType()) {
                         case Cell.CELL_TYPE_NUMERIC:
@@ -593,12 +581,6 @@ public class ManageServiceImpl extends Base implements ManageService {
                             stuId=row.getCell(1).getStringCellValue();
                             break;
                     }
-//                    DecimalFormat df = new DecimalFormat("0");
-//                    String stuId = df.format(row.getCell(1).getNumericCellValue());
-//                    if (stuId.indexOf(",") >= 0) {
-//                        stuId = stuId.replace(",", "");
-//                    }
-                    System.out.println("学号："+stuId);
                     List<Map<String, Object>> stu = gradeDao.findStuById(stuId);
                     if (stu.size() == 0) {
                         Map<String,Object> li=new HashMap<>();
@@ -609,16 +591,13 @@ public class ManageServiceImpl extends Base implements ManageService {
 
                 }
             }
-            System.out.println("检查完毕。。。");
             if(result.size()!=0){
                 res.put("list",result);
                 res.put("flag",0);
                 return  res;
             }
             for (int i = 0; i < sheetNum; i++) {
-                System.out.println("进入第二个循环。。。");
                 Sheet sheet = workbook.getSheetAt(i);
-                System.out.println(sheet.getLastRowNum());
                 for (int j = 1; j <= sheet.getLastRowNum(); j++) {
                     Row row = sheet.getRow(j);
                     if (row == null) {
@@ -634,15 +613,17 @@ public class ManageServiceImpl extends Base implements ManageService {
                             stuId=row.getCell(1).getStringCellValue();
                             break;
                     }
-//                    if()
-//                    DecimalFormat df = new DecimalFormat("0");
-//                    String stuId = df.format(row.getCell(1).getNumericCellValue());
-//                    String stuId = String.valueOf(row.getCell(1).getStringCellValue());
-                    String grade = String.valueOf(row.getCell(4).getNumericCellValue());
-                    System.out.println("成绩："+grade);
+                    String grade = null;
+                    if(row.getCell(4) == null) {
+                         grade = null;
+                    }
+                    else{
+                        grade = String.valueOf(row.getCell(4).getNumericCellValue());
+                    }
+                    if(grade == null || grade.equals("") || grade.equals("null")){
+                        grade = null;
+                    }
                     List<Map<String, Object>> stu = gradeDao.findStuById(stuId);
-                    System.out.println("数组大小："+stu.size());
-                    System.out.println("moduleId:"+moduleId);
                     if (stu.size() != 0) {
                         Map<String, Object> stu1 = stu.get(0);
                         if (moduleId == 1) {
@@ -661,13 +642,36 @@ public class ManageServiceImpl extends Base implements ManageService {
                                 continue;
                         }
                         if (moduleId == 1) {
-                            gradeDao.updateWlzzScore(stuId, Float.parseFloat(grade), status);
+                            if(grade == null){
+                                gradeDao.updateWlzzScore(stuId, null, status);
+                                gradeDao.uploadAllGradeOther1(stuId,null);
+                            }
+                            else{
+                                gradeDao.updateWlzzScore(stuId, Float.parseFloat(grade), status);
+                                gradeDao.uploadAllGradeOther1(stuId,Float.parseFloat(grade));
+                            }
                         }
                         if (moduleId == 2) {
-                            gradeDao.updateDektScore(stuId, Float.parseFloat(grade), status);
+                            if(grade == null) {
+                                gradeDao.updateDektScore(stuId,null, status);
+                                gradeDao.uploadAllGradeOther2(stuId,null);
+                            }
+                            else{
+                                gradeDao.updateDektScore(stuId, Float.parseFloat(grade), status);
+                                gradeDao.uploadAllGradeOther2(stuId,Float.parseFloat(grade));
+                            }
+
                         }
                         if (moduleId == 3) {
-                            gradeDao.updateNlcsScore(stuId, Float.parseFloat(grade), status);
+                            if(grade == null){
+                                gradeDao.updateNlcsScore(stuId, null, status);
+                                gradeDao.uploadAllGradeOther3(stuId,null);
+                            }
+                            else{
+                                gradeDao.updateNlcsScore(stuId, Float.parseFloat(grade), status);
+                                gradeDao.uploadAllGradeOther3(stuId,Float.parseFloat(grade));
+                            }
+
                         }
                     }
                 }
@@ -745,8 +749,16 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public void uploadAllGradeOther(String stuId, float grade, int moduleId) {
-        gradeDao.uploadAllGradeOther(stuId,grade,moduleId);
+    public void uploadAllGradeOther(String stuId, Float grade, int moduleId) {
+        if(moduleId == 1){
+            gradeDao.uploadAllGradeOther1(stuId,grade);
+        }
+        else if(moduleId == 2){
+            gradeDao.uploadAllGradeOther2(stuId,grade);
+        }
+        else
+            gradeDao.uploadAllGradeOther3(stuId,grade);
+        System.out.println("上传成功！");
     }
 
     @Override

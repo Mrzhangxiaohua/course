@@ -29,11 +29,11 @@ public interface GradeDao {
 
     List<Map<String, Object>> findStuById(@Param("stuId") String stuId);
 
-    void updateWlzzScore(@Param("stuId") String stuId,@Param("grade") float grade,@Param("status") int status);
+    void updateWlzzScore(@Param("stuId") String stuId,@Param("grade") Float grade,@Param("status") int status);
 
-    void updateDektScore(@Param("stuId") String stuId,@Param("grade") float grade,@Param("status") int status);
+    void updateDektScore(@Param("stuId") String stuId,@Param("grade") Float grade,@Param("status") int status);
 
-    void updateNlcsScore(@Param("stuId") String stuId,@Param("grade") float grade,@Param("status") int status);
+    void updateNlcsScore(@Param("stuId") String stuId,@Param("grade") Float grade,@Param("status") int status);
 
     void insertStu(@Param("stuId") String stuId,@Param("academicYear") String academicYear);
 
@@ -61,7 +61,11 @@ public interface GradeDao {
 
     void uploadAllGradeXbsj(@Param("stuId") String stuId,@Param("grade") float grade);
 
-    void uploadAllGradeOther(@Param("stuId") String stuId,@Param("grade") float grade,@Param("moduleId")int moduleId);
+    void uploadAllGradeOther1(@Param("stuId") String stuId,@Param("grade") Float grade);
+
+    void uploadAllGradeOther2(@Param("stuId") String stuId,@Param("grade") Float grade);
+
+    void uploadAllGradeOther3(@Param("stuId") String stuId,@Param("grade") Float grade);
 
    int  findXbsjPercent();
 

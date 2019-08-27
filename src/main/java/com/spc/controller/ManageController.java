@@ -1474,7 +1474,7 @@ public class ManageController extends Base {
                                  @RequestParam(required = false, defaultValue = "88888888") int depId,
                                  @RequestParam(required = false, defaultValue = "88888888") String stuId,
                                  @RequestParam(required = false, defaultValue = "1") int currentPage,
-                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
+                                 @RequestParam(required = false, defaultValue = "15") int pageSize,
                                  HttpSession session) {
         Map<String,Object> res=new HashMap<>();
         Page page=PageHelper.startPage(currentPage, pageSize);
@@ -1630,13 +1630,23 @@ public class ManageController extends Base {
                 JSONObject stu=stuList.getJSONObject(i);
                 String stuId= (String) stu.get("stuId");
                 String grade= String.valueOf(stu.get("grade"));
+                System.out.println("================"+grade);
+                if(grade == null || grade.equals("") || grade.equals("null")){
+                    grade = null;
+                }
                 List<Map<String,Object>> stuInfo=manageService.findStuById(stuId,moduleId);
                 if(stuInfo.size()==0)
                     manageService.insertStu(stuId,academicYear);
                 if(stuInfo.size() !=0 &&(int) stuInfo.get(0).get("isSubmit")==1)
                     continue;
-                manageService.updateScore(stuId,Float.parseFloat(grade),moduleId,status);
-                manageService.uploadAllGradeOther(stuId,Float.parseFloat(grade),moduleId);
+                if(grade==null){
+                    manageService.updateScore(stuId,null,moduleId,status);
+                    manageService.uploadAllGradeOther(stuId,null,moduleId);
+                }
+                else{
+                    manageService.updateScore(stuId,Float.parseFloat(grade),moduleId,status);
+                    manageService.uploadAllGradeOther(stuId,Float.parseFloat(grade),moduleId);
+                }
             }
             if(status==1){
                 res.put("status","成绩提交成功");
