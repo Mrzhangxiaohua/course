@@ -181,23 +181,20 @@
       where course.GradeAll.stuId=#{stuId}
      </update>
 
-    <update id="uploadAllGradeOther">
-      update course.GradeAll
-      <set>
-          <if test="moduleId==1">
-              course.GradeAll.wlzzGrade=#{grade},
-          </if>
-          <if test="moduleId==2">
-              course.GradeAll.dektGrade=#{grade},
-          </if>
-          <if test="moduleId==3">
-              course.GradeAll.nlcsGrade=#{grade},
-          </if>
-      </set>
+    <update id="uploadAllGradeOther1">
+      update course.GradeAll set course.GradeAll.wlzzGrade=#{grade}
       where course.GradeAll.stuId=#{stuId}
      </update>
 
+    <update id="uploadAllGradeOther2">
+      update course.GradeAll set course.GradeAll.dektGrade=#{grade}
+      where course.GradeAll.stuId=#{stuId}
+     </update>
 
+    <update id="uploadAllGradeOther3">
+      update course.GradeAll set course.GradeAll.nlcsGrade=#{grade}
+      where course.GradeAll.stuId=#{stuId}
+     </update>
 
     <select id="findXbsjPercent" resultType="int">
         select gradePercentage
