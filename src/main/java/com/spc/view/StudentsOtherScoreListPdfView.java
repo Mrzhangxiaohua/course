@@ -108,7 +108,12 @@ public class StudentsOtherScoreListPdfView extends AbstractPdfView {
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
             table.addCell(cell);
-            cell = new PdfPCell(new Phrase(String.valueOf((float) t.get("grade")), textFont));
+            if( t.get("grade") != null) {
+                cell = new PdfPCell(new Phrase(String.valueOf((float) t.get("grade")), textFont));
+            }
+            else {
+                cell = new PdfPCell(new Phrase("N/A", textFont));
+            }
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);

@@ -1,10 +1,8 @@
 package com.spc.service.manage;
 
-import com.spc.model.ClassApplicationDomain;
 import com.spc.model.ClassDomain;
 import com.spc.model.FileInfo;
 import com.spc.model.StudentApplicationDomain;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -66,7 +64,7 @@ public interface ManageService {
 
     List<Map<String,Object>> findStuById(String stuId,int modelId);
 
-    void updateScore(String stuId,float grade,int modelId,int status);
+    void updateScore(String stuId, Float grade, int modelId, int status);
 
     void insertStu(String stuId,String academicYear);
 
@@ -90,7 +88,7 @@ public interface ManageService {
 
     List<Map<String,Object>> findAllScore(int departId,String stuId);
 
-    void uploadAllGradeOther(String stuId,float grade,int moduleId);
+    void uploadAllGradeOther(String stuId, Float grade, int moduleId);
 
     void updateIsSubmit(int moduleId);
 
