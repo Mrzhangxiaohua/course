@@ -95,4 +95,9 @@ public interface ClassAllDao {
                                         @Param("courseName") String courseName,
                                         @Param("teacherName") String teacherName);
     List<Map<String, Object>> getKnskCourse(@Param("academicYear") String academicYear);
+
+    Map<String ,Object> selectCourse(@Param("classAllId")Integer classAllId);
+
+    int updateCourse(@Param("className")String courseNameCHS,@Param("classTime") Integer classHour,
+                     @Param("classSemester") String yearSemester,@Param("classAllId") Integer classAllId);
 }

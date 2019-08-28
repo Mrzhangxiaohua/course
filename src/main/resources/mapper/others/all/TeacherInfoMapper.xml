@@ -27,5 +27,10 @@
             #{JSBH}
         </foreach>
     </select>
+    <select id="selectTeaName" resultType="string">
+        select JSXM
+        from course.TeacherInfo
+        where JSBH =#{teaId}
+    </select>
 
 </mapper>
