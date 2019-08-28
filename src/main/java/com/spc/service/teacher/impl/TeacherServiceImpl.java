@@ -28,6 +28,9 @@ public class TeacherServiceImpl extends Base implements TeacherService {
     ClassApplicationDao classApplicationDao;
 
     @Autowired
+    TeacherInfoDao teacherInfoDao;
+
+    @Autowired
     ClassDao classDao;
     @Autowired
     StudentDao studentDao;
@@ -432,5 +435,8 @@ public class TeacherServiceImpl extends Base implements TeacherService {
             }
         }
         return students;
+    }
+    public String getTeaName(String teaId){
+        return teacherInfoDao.selectTeaName(teaId);
     }
 }

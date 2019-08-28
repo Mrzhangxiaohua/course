@@ -17,4 +17,6 @@ public interface TeacherInfoDao {
     List<TeacherInfo> selectAll(@Param("departId") Integer departId, @Param("teacherName") String teacherName);
 
     List<TeacherInfo> selectByTeacherIds(List<String> teacherIds);
+
+    String selectTeaName(@Param("teaId")String teaId);
 }
