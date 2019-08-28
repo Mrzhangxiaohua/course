@@ -51,9 +51,9 @@ public interface ManageService {
 
     int addTemplateFileInfo(String teaId, String fileName, String path,int type,String dep, String date,int flag);
 
-    Map getGradePercent();
+    Map<String,Object> getGradePercent();
 
-    int addGradePercent(int knsk, int xbsj, int zzxx, int dekt, int qmnl,String userId, String date);
+    int updateGradePercent(int knsk, int xbsj, int wlzz, int dekt, int nlcs,String userId, String date,int typeId);
 
     FileInfo findAppFile(int fileInfoId);
 
@@ -85,6 +85,10 @@ public interface ManageService {
    void  updateXbsjSubmit(int classId);
 
     void updateKnskSubmit(String classId);
+
+    void updateSumGrade();
+
+    List<Map<String,Object>> directFindAllScore(int departId,String stuId);
 
     List<Map<String,Object>> findAllScore(int departId,String stuId);
 

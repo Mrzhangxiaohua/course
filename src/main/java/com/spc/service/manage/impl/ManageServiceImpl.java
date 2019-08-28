@@ -365,25 +365,18 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public Map getGradePercent() {
+    public Map<String,Object> getGradePercent() {
         List<Map<String,Object>> list = gradePercentDao.getGradePercent();
         Map<String,Object> res = new HashMap<>();
-        for(Map li : list) {
-            System.out.println(String.valueOf(li));
-            if ((int) li.get("id") == 1) {
-                res.put("XBSJ", li.get("gradePercentage"));
+        for(Map li:list){
+            if((int)li.get("typeId") == 0) {
+                res.put("type1",li);
             }
-            if ((int) li.get("id") == 2) {
-                res.put("KNSK", li.get("gradePercentage"));
+            if((int)li.get("typeId") == 1) {
+                res.put("type2",li);
             }
-            if ((int) li.get("id") == 3) {
-                res.put("ZZXX", li.get("gradePercentage"));
-            }
-            if ((int) li.get("id") == 4) {
-                res.put("DEKT", li.get("gradePercentage"));
-            }
-            if ((int) li.get("id") == 5) {
-                res.put("QMNL", li.get("gradePercentage"));
+            if((int)li.get("typeId") == 2) {
+                res.put("type3",li);
             }
         }
         return res;
@@ -391,9 +384,9 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public int addGradePercent(int knsk, int xbsj, int zzxx, int dekt, int qmnl,String userId, String date) {
-        gradePercentDao.updateFlagZero();
-        return gradePercentDao.insertGradePercent(knsk,xbsj,zzxx,dekt,qmnl,userId,date);
+    public int updateGradePercent(int knsk, int xbsj, int wlzz, int dekt, int nlcs,String userId, String date , int typeId) {
+//        gradePercentDao.updateFlagZero();
+        return gradePercentDao.updateGradePercent(knsk,xbsj,wlzz,dekt,nlcs,userId,date,typeId);
     }
 
 
@@ -727,23 +720,78 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
+    public void updateSumGrade() {
+        List<Map<String,Object>> stuList= gradeDao.findAllScore(88888888,"88888888");
+        for(Map stu:stuList)
+        {
+            int stuType = gradeDao.findStuType((String) stu.get("stuId"));
+            Map<String,Object> percent = gradeDao.findGradePercent(stuType);
+            int xbsjPercent = (int) percent.get("xbsjGradePercent");
+            int knskPercent = (int) percent.get("knskGradePercent");
+            int wlzzPercent = (int) percent.get("wlzzGradePercent");
+            int nlcsPercent = (int) percent.get("nlcsGradePercent");
+            int dektPercent = (int) percent.get("dektGradePercent");
+            float grade = 0;
+            if( (xbsjPercent!=0 && stu.get("xbsjGrade")==null)||(knskPercent!=0 && stu.get("knskGrade")==null) || (wlzzPercent!=0 && stu.get("wlzzGrade")==null) || (nlcsPercent!=0 && stu.get("nlcsGrade")==null) || (dektPercent!=0 && stu.get("dektGrade")==null)){
+                stu.put("grade",null);
+            }
+            else{
+                if(xbsjPercent!=0)
+                    grade = grade + (float)stu.get("xbsjGrade")*(float)xbsjPercent/100;
+                if(knskPercent!=0)
+                    grade = grade + (float)stu.get("knskGrade")*(float)knskPercent/100;
+                if(wlzzPercent!=0)
+                    grade = grade + (float)stu.get("wlzzGrade")*(float)wlzzPercent/100;
+                if(nlcsPercent!=0)
+                    grade = grade + (float)stu.get("nlcsGrade")*(float)nlcsPercent/100;
+                if(dektPercent!=0)
+                    grade = grade + (float)stu.get("dektGrade")*(float)dektPercent/100;
+                stu.put("grade",grade);
+                gradeDao.updateSumGrade((String) stu.get("stuId"),grade);
+            }
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> directFindAllScore(int departId, String stuId) {
+        return gradeDao.findAllScore(departId,stuId);
+    }
+
+    @Override
     public List<Map<String, Object>> findAllScore(int departId, String stuId) {
         List<Map<String,Object>> stuList=new ArrayList<>();
         stuList=gradeDao.findAllScore(departId,stuId);
-        int xbsjPercent=gradeDao.findXbsjPercent();
-        int knskPercent=gradeDao.findKnskPercent();
-        int wlzzPercent=gradeDao.findWlzzPercent();
-        int dektPercent=gradeDao.findDektPercent();
-        int nlcsPercent=gradeDao.findNlcsPercent();
         for(Map stu:stuList)
         {
-            if(stu.get("xbsjGrade")!=null && stu.get("knskGrade")!=null && stu.get("wlzzGrade")!=null && stu.get("dektGrade")!=null && stu.get("nlcsGrade")!=null) {
-                float grade=(float)stu.get("xbsjGrade")*(float)xbsjPercent/100 + (float)stu.get("knskGrade")*(float)knskPercent/100 + (float)stu.get("wlzzGrade")*(float)wlzzPercent/100 + (float)stu.get("dektGrade")*(float)dektPercent/100 + (float)stu.get("nlcsGrade")*(float)nlcsPercent/100;
-                stu.put("grade",grade);
-            }
-            else
+            int stuType = gradeDao.findStuType((String) stu.get("stuId"));
+            System.out.println("学生类别"+stuType);
+            Map<String,Object> percent = gradeDao.findGradePercent(stuType);
+            System.out.println(percent);
+            int xbsjPercent = (int) percent.get("xbsjGradePercent");
+            int knskPercent = (int) percent.get("knskGradePercent");
+            int wlzzPercent = (int) percent.get("wlzzGradePercent");
+            int nlcsPercent = (int) percent.get("nlcsGradePercent");
+            int dektPercent = (int) percent.get("dektGradePercent");
+            System.out.println("第二课堂活动比例"+dektPercent);
+            float grade = 0;
+            if( (xbsjPercent!=0 && stu.get("xbsjGrade")==null)||(knskPercent!=0 && stu.get("knskGrade")==null) || (wlzzPercent!=0 && stu.get("wlzzGrade")==null) || (nlcsPercent!=0 && stu.get("nlcsGrade")==null) || (dektPercent!=0 && stu.get("dektGrade")==null)){
                 stu.put("grade",null);
-
+                System.out.println("返回为空");
+            }
+            else{
+                if(xbsjPercent!=0)
+                    grade = grade + (float)stu.get("xbsjGrade")*(float)xbsjPercent/100;
+                if(knskPercent!=0)
+                    grade = grade + (float)stu.get("knskGrade")*(float)knskPercent/100;
+                if(wlzzPercent!=0)
+                    grade = grade + (float)stu.get("wlzzGrade")*(float)wlzzPercent/100;
+                if(nlcsPercent!=0)
+                    grade = grade + (float)stu.get("nlcsGrade")*(float)nlcsPercent/100;
+                if(dektPercent!=0)
+                    grade = grade + (float)stu.get("dektGrade")*(float)dektPercent/100;
+                stu.put("grade",grade);
+                gradeDao.updateSumGrade((String) stu.get("stuId"),grade);
+            }
         }
         return stuList;
     }

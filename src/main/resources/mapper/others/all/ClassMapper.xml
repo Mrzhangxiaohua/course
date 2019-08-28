@@ -443,13 +443,13 @@
         left join course.ClassAll b
         on a.classAllId=b.id
         left join course.Department c
-        on b.departId=c.departId
+        on a.departId=c.departId
         <where>
             <if test="academicYear!=null">
                 and a.classSemester=#{academicYear}
             </if>
-            <if test="departId!=null">
-                and b.departId= #{departId}
+            <if test="departId!='88888888'">
+                and a.departId= #{departId}
             </if>
             <if test="teaName!= '88888888' and teaName!=null ">
                 and a.teaName= #{teaName}

@@ -940,24 +940,50 @@ public class ManageController extends Base {
     @ResponseBody
     public String setGradePercent(HttpServletRequest request){
         String userId= (String) request.getSession().getAttribute("userId");
-        String jsonString = RequestPayload.getRequestPayload(request);
+        String json = RequestPayload.getRequestPayload(request);
         try {
-            JSONObject json=new JSONObject(jsonString);
-            System.out.println("json"+json);
-//            JSONObject valuejson = json.getJSONObject("value");
-            int XBSJ= (int) json.get("XBSJ");
-            int ZZXX= (int) json.get("ZZXX");
-            int KNSK= (int) json.get("KNSK");
-            int DEKT = (int) json.get("DEKT");
-            int QMNL = (int) json.get("QMNL");
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date=sdf.format(new Date());
-            manageService.addGradePercent(KNSK,XBSJ,ZZXX,DEKT,QMNL,userId,date);
-        return "设置成功";
+            JSONObject obj= new JSONObject(json);
+            JSONObject type1 = obj.getJSONObject("type1");
+            JSONObject type2 = obj.getJSONObject("type2");
+            JSONObject type3 = obj.getJSONObject("type3");
+//            JSONArray typeList=  obj.getJSONArray("typeList");
+            int typeId = Integer.parseInt(String.valueOf(type1.get("typeId")));
+            int xbsj = Integer.parseInt(String.valueOf(type1.get("XBSJ")));
+            int wlzz = Integer.parseInt(String.valueOf( type1.get("ZZXX")));
+            int knsk = Integer.parseInt(String.valueOf(type1.get("KNSK")));
+            int dekt = Integer.parseInt(String.valueOf(type1.get("DEKT")));
+            int nlcs = Integer.parseInt(String.valueOf(type1.get("QMNL")));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = sdf.format(new Date());
+            manageService.updateGradePercent(knsk, xbsj, wlzz, dekt, nlcs, userId, date, typeId);
+            typeId = Integer.parseInt(String.valueOf(type2.get("typeId")));
+            xbsj = Integer.parseInt(String.valueOf(type2.get("XBSJ")));
+            wlzz = Integer.parseInt(String.valueOf(type2.get("ZZXX")));
+            knsk = Integer.parseInt(String.valueOf(type2.get("KNSK")));
+            dekt = Integer.parseInt(String.valueOf(type2.get("DEKT")));
+            nlcs = Integer.parseInt(String.valueOf(type2.get("QMNL")));
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            date = sdf.format(new Date());
+            manageService.updateGradePercent(knsk, xbsj, wlzz, dekt, nlcs, userId, date, typeId);
+            typeId = Integer.parseInt(String.valueOf( type3.get("typeId")));
+            xbsj = Integer.parseInt(String.valueOf(type3.get("XBSJ")));
+            wlzz = Integer.parseInt(String.valueOf(type3.get("ZZXX")));
+            knsk = Integer.parseInt(String.valueOf(type3.get("KNSK")));
+            dekt = Integer.parseInt(String.valueOf(type3.get("DEKT")));
+            nlcs = Integer.parseInt(String.valueOf(type3.get("QMNL")));
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            date = sdf.format(new Date());
+            manageService.updateGradePercent(knsk, xbsj, wlzz, dekt, nlcs, userId, date, typeId);
+            return "设置成功";
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return "设置失败";
+    }
+    @RequestMapping("/getGradePercent")
+    @ResponseBody
+    public Map<String,Object>  getGradePercent(HttpServletRequest request){
+        return manageService.getGradePercent();
     }
 
     /**
@@ -1585,6 +1611,14 @@ public class ManageController extends Base {
         return res;
     }
 
+    /**
+     * 管理员端：保存或提交免修学生成绩
+     * @param
+     * @param
+     * @return
+     */
+//
+
 
     /**
      * 管理员端：保存或提交学生成绩
@@ -1630,7 +1664,6 @@ public class ManageController extends Base {
                 JSONObject stu=stuList.getJSONObject(i);
                 String stuId= (String) stu.get("stuId");
                 String grade= String.valueOf(stu.get("grade"));
-                System.out.println("================"+grade);
                 if(grade == null || grade.equals("") || grade.equals("null")){
                     grade = null;
                 }
@@ -1697,6 +1730,75 @@ public class ManageController extends Base {
         model.put("style", "higher");
         logger.info(String.valueOf(model));
         return new ModelAndView(new StudentsOtherScoreListPdfView(), model);
+    }
+
+    /**
+     *
+     * 超级管理员端：获取所有学院课程
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/supFindAllCourse")
+    @ResponseBody
+    public Map supFindAllCourse(@RequestParam(required = false, defaultValue = "3") int moduleId,
+                             @RequestParam(required = false, defaultValue = "2018-2019春季") String academicYear,
+                             @RequestParam(required = false, defaultValue = "3") int curentTab,
+                             @RequestParam(required = false, defaultValue = "88888888") String courseId,
+                             @RequestParam(required = false, defaultValue = "88888888") String className,
+                             @RequestParam(required = false, defaultValue = "88888888") String classNum,
+                             @RequestParam(required = false, defaultValue = "88888888") String teaName,
+                             @RequestParam(required = false, defaultValue = "88888888") int  departId,
+                             @RequestParam(required = false, defaultValue = "1") int currentPage,
+                             @RequestParam(required = false, defaultValue = "10") int pageSize,
+                             HttpSession session){
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> courses=new ArrayList<>();
+        departId = 88888888;
+        if (moduleId == 0) {
+            courses=classService.findAllXbsjCourse(departId,academicYear,courseId,className,classNum,teaName,curentTab);
+        }
+        else if (moduleId==1)
+        {
+            if(departId!=12){ }
+            else if(academicYear.indexOf("春季")!=-1) {
+                academicYear = academicYear.substring(0, 9) + "-2";
+                courses=classService.findAllKnskCourse(academicYear,courseId,className,classNum,teaName,curentTab);
+            }
+            else {
+                academicYear=academicYear.substring(0,9)+"-1";
+                courses=classService.findAllKnskCourse(academicYear,courseId,className,classNum,teaName,curentTab);
+            }
+        }
+        else
+        {
+            List<Map<String,Object>> courses1=classService.findAllXbsjCourse(departId,academicYear,courseId,className,classNum,teaName,curentTab);
+            if(departId!=12){
+                courses=courses1;}
+            else if(academicYear.indexOf("春季")!=-1) {
+                academicYear = academicYear.substring(0, 9) + "-2";
+                List<Map<String, Object>> courses2=classService.findAllKnskCourse(academicYear,courseId,className,classNum,teaName,curentTab);
+                courses1.addAll(courses2);
+                courses=courses1;
+            }
+            else {
+                academicYear = academicYear.substring(0, 9) + "-1";
+                List<Map<String, Object>> courses2 = classService.findAllKnskCourse(academicYear, courseId, className, classNum, teaName, curentTab);
+                courses1.addAll(courses2);
+                courses=courses1;
+            }
+        }
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(courses);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
     }
 
     /**
@@ -1886,9 +1988,13 @@ public class ManageController extends Base {
                               @RequestParam(required = false, defaultValue = "1") int currentPage,
                               @RequestParam(required = false, defaultValue = "10") int pageSize,
                               HttpSession session){
+        //先更新总成绩
+        manageService.updateSumGrade();
+        System.out.println("更新完成");
+        //查询成绩
         Map<String,Object> res=new HashMap<>();
         Page page = PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> students = manageService.findAllScore(departId,stuId);
+        List<Map<String,Object>> students = manageService.directFindAllScore(departId,stuId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
         List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
