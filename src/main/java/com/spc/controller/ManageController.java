@@ -1349,6 +1349,68 @@ public class ManageController extends Base {
     }
 
     /**
+     * 超级管理员修订当年课程目录时导入往年全年课程
+     * @param year
+     * @return
+     */
+    @RequestMapping(value = "addFormerCourseAllByYear")
+    @ResponseBody
+    public String addFormerCourseAllByYear(@RequestParam String year) {
+       List<CourseAll> list= courseAllService.findCourseAll(year,"8888","8888",8888);
+        int flag=0;
+        StringBuilder sb=new StringBuilder();
+       for(CourseAll courseAll:list){
+           courseAll.setId(null);
+           courseAll.setCourseAppId(null);
+           Calendar now = Calendar.getInstance();
+           int currentYear=now.get(Calendar.YEAR);
+           courseAll.setAcademicYear(currentYear+"-"+(currentYear+1));
+           int count= courseAllService.existCourseAll(courseAll);
+           if (count==0){
+               courseAllService.addFormerCourseAll(courseAll);
+           }else{
+               sb.append(courseAll.getCourseNameCHS()+",");
+               flag=1;
+           }
+       }
+        if(flag==1){
+            return sb.deleteCharAt(sb.length()-1).toString()+"已存在";
+        }
+        return "导入成功";
+    }
+    /**
+     * 学院管理员修订当年课程目录时导入往年全年课程
+     * @param year
+     * @return
+     */
+    @RequestMapping(value = "addFormerCourseAllByYear2")
+    @ResponseBody
+    public String addFormerCourseAllByYear2(@RequestParam String year,HttpSession session) {
+        int departId = (Integer) session.getAttribute("departId");
+        List<CourseAll> list= courseAllService.findCourseAll(year,"8888","8888",departId);
+        int flag=0;
+        StringBuilder sb=new StringBuilder();
+        for(CourseAll courseAll:list){
+            courseAll.setId(null);
+            courseAll.setCourseAppId(null);
+            Calendar now = Calendar.getInstance();
+            int currentYear=now.get(Calendar.YEAR);
+            courseAll.setAcademicYear(currentYear+"-"+(currentYear+1));
+            int count= courseAllService.existCourseAll(courseAll);
+            if (count==0){
+                courseAllService.addFormerCourseAll(courseAll);
+            }else{
+                sb.append(courseAll.getCourseNameCHS()+",");
+                flag=1;
+            }
+        }
+        if(flag==1){
+            return sb.deleteCharAt(sb.length()-1).toString()+"已存在";
+        }
+        return "导入成功";
+    }
+
+    /**
      * 超级管理员发布课程目录
      * @param request
      * @param academicYear
