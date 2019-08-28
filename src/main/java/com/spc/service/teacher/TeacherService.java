@@ -50,6 +50,5 @@ public interface TeacherService {
 
     List<Map<String, Object>> showKnskGradeExcel(int fileInfoId);
 
-
-
+    String getTeaName(String teaId);
 }

@@ -1743,4 +1743,10 @@ public class TeacherController extends Base {
         model.put("style", "higher");
         return new ModelAndView(new StudentsKnskScoreListPdfView(), model);
     }
+    @RequestMapping("/getTeacherInfo")
+    @ResponseBody
+    public String getTeacherInfo(@RequestParam("teaId") String teaId){
+        return teacherService.getTeaName(teaId);
+    }
+
 }
