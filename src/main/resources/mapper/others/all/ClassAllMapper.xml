@@ -267,7 +267,7 @@
         limit 1
     </select>
 
-    <update id="'updateCourse" flushCache="false">
+    <update id="updateCourse" flushCache="false">
         update Course
         set className=#{className}, classTime=#{classTime}, classSemester=#{classSemester}
         where classAllId=#{classAllId}
