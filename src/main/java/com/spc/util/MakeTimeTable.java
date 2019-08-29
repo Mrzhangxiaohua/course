@@ -12,7 +12,8 @@ public class MakeTimeTable extends Base {
             String classPlace = (String) li.get("classPlace");
             String mainLecturer = (String) li.get("mainLecturer");
             String teacherName = (String) li.get("teaName");
-            System.out.println("================"+li.get("startWeek")+"===============");
+            int schoolDistrictId = (int) li.get("schoolDistrictId");
+
             String startWeek = Integer.toString((Integer) li.get("startWeek"));
             String endWeek = Integer.toString((Integer) li.get("endWeek"));
             String classNum = Integer.toString((Integer) li.get("classNum"));
@@ -29,7 +30,7 @@ public class MakeTimeTable extends Base {
                 Integer z = Integer.parseInt(ints[2]);//上几节课
 
                 int r = t;
-                String context =encode1(className,  classPlace,  teacherName, mainLecturer, startWeek,  endWeek,  classNum, student);
+                String context =encode1(className,  classPlace,  teacherName, mainLecturer, startWeek,  endWeek,  classNum, student, schoolDistrictId);
                 for (int i = 0; i< z; i++){
                     temp[l - 1 + i][r - 1] = temp[l - 1 + i][r - 1] != null ? temp[l - 1 + i][r - 1] + ','+ context : context;
                 }
@@ -40,9 +41,13 @@ public class MakeTimeTable extends Base {
 
 
 
-    public static  String encode1(String className, String classPlace, String teacherName,String mainLecturer, String startWeek, String endWeek, String classNum,int student) {
-        return "★课程：" + className + ',' + "教室：" + classPlace + ',' + "授课教师：" + teacherName + ','+ (student==1?"":("主讲教师：" + mainLecturer + ',')) + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
-
+    public static  String encode1(String className, String classPlace, String teacherName,String mainLecturer, String startWeek, String endWeek, String classNum,int student, int schoolDistrictId) {
+        String schoolDistrictName = "兴庆校区";
+        if (schoolDistrictId == 2) schoolDistrictName = "雁塔校区";
+        else if (schoolDistrictId == 3) schoolDistrictName = "曲江校区";
+        else if (schoolDistrictId == 4) schoolDistrictName = "苏州校区";
+        else if (schoolDistrictId == 5) schoolDistrictName = "创新港校区";
+        return "★课程：" + className + ',' + "教室：" + schoolDistrictName + ":" + classPlace + ',' + "授课教师：" + teacherName + ','+ (student==1?"":("主讲教师：" + mainLecturer + ',')) + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
     }
 
 

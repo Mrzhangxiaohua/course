@@ -24,7 +24,7 @@ public interface CourseAllDao {
                                         @Param("academicYear") String academicYear,
                                         @Param("classSemester") String classSemester);
 
-    List<CourseAll> selectCourseAllByYearAndDep(@Param("year") String year, @Param("depId")int depId);
+    List<CourseAll> selectCourseAllByYearAndDep(@Param("year") String year, @Param("depId")Integer depId);
 
     int updateCourseAll(CourseAll courseAll);
 
