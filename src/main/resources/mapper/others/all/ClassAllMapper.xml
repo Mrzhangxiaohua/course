@@ -255,7 +255,7 @@
             teacherId=#{classAll.teacherId},
             teacherName=#{classAll.teacherName},
             teachingTeamIds=#{classAll.teachingTeamIds},
-            teachingTeamNames=#{classAll.teachingTeamNames}
+            teachingTeamNamess=#{classAll.teachingTeamNames}
 
         </set>
         where id = #{classAll.id}
