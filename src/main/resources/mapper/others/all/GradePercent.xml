@@ -3,17 +3,10 @@
 
 <mapper namespace="com.spc.dao.GradePercentDao">
 
-    <update id="insertGradePercent">
-        update course.gradePercent set course.gradePercent.gradePercentage=#{knsk},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
-        where course.gradePercent.id=2;
-        update course.gradePercent set course.gradePercent.gradePercentage=#{xbsj},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
-        where course.gradePercent.id=1;
-        update course.gradePercent set course.gradePercent.gradePercentage=#{zzxx},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
-        where course.gradePercent.id=3;
-        update course.gradePercent set course.gradePercent.gradePercentage=#{dekt},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
-        where course.gradePercent.id=4;
-        update course.gradePercent set course.gradePercent.gradePercentage=#{qmnl},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
-        where course.gradePercent.id=5;
+    <update id="updateGradePercent">
+        update course.gradePercent
+        set course.gradePercent.xbsjGradePercent=#{xbsj},course.gradePercent.knskGradePercent=#{knsk},course.gradePercent.wlzzGradePercent=#{wlzz},course.gradePercent.dektGradePercent=#{dekt},course.gradePercent.nlcsGradePercent=#{nlcs},course.gradePercent.operator=#{userId},course.gradePercent.operateTime=#{date}
+        where course.gradePercent.typeId=#{typeId};
     </update>
 
     <update id="updateFlagZero">
@@ -21,6 +14,7 @@
     </update>
 
     <select id="getGradePercent" resultType="map" >
-        SELECT * FROM course.gradePercent
+        SELECT typeId , xbsjGradePercent as XBSJ ,knskGradePercent as KNSK, nlcsGradePercent as QMNL ,wlzzGradePercent as ZZXX ,dektGradePercent as DEKT
+        FROM course.gradePercent
     </select>
 </mapper>
