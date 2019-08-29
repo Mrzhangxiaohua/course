@@ -120,7 +120,6 @@ public class ClassServiceImpl implements ClassService {
     public int updateScore3(String className,int classNum, String stuId, int xbsjGrade,int wlzzxxGrade, int knskGrade) {
         return classDao.updateScore3(className,classNum, stuId, xbsjGrade, wlzzxxGrade,  knskGrade);
     }
-
     @Override
     public int zzGrade(String className, int classNum, String stuId, int zzGrade, int flag) {
         return classDao.zzGrade(className, classNum, stuId, zzGrade, flag);
@@ -128,12 +127,22 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public List<Map<String, Object>> findTeachCourse(String teacherId,String academicYear,int depId) {
-        return classDao.findTeachCourse(teacherId,academicYear,depId);
+        List<Map<String, Object>> res = classDao.findTeachCourse(teacherId,academicYear,depId);
+        for(Map course : res){
+            String className = (String) course.get("className");
+            if(course.get("schoolDistrictId")==null) continue;
+            if((Integer)course.get("schoolDistrictId") == 1)  course.put("className", className+"(兴庆)");
+            if((Integer)course.get("schoolDistrictId") == 2)  course.put("className", className+"(雁塔)");
+            if((Integer)course.get("schoolDistrictId") == 3)  course.put("className", className+"(曲江)");
+            if((Integer)course.get("schoolDistrictId") == 4)  course.put("className", className+"(苏州)");
+            if((Integer)course.get("schoolDistrictId") == 5)  course.put("className", className+"(创新港)");
+        }
+        return res;
     }
 
     @Override
-    public List<Map<String, Object>> findTeachCourse2(String teacherId,String academicYear,int depId) {
-        List<Map<String, Object>> classes = classDao.findTeachCourse2(teacherId,academicYear,depId);
+    public List<Map<String, Object>> findTeachCourse2(String teacherId,String academicYear) {
+        List<Map<String, Object>> classes = classDao.findTeachCourse2(teacherId,academicYear);
         for(Map cl:classes){
             if(cl.get("KCH").equals("121066")) {
                 cl.put("KCM","学术英语(一)");
@@ -225,6 +234,13 @@ public class ClassServiceImpl implements ClassService {
         if(courses.size()==0)
             return courses;
         for(Map course:courses) {
+            String cName = (String) course.get("className");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 1)  course.put("className", cName+"(兴庆)");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 2)  course.put("className", cName+"(雁塔)");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 3)  course.put("className", cName+"(曲江)");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 4)  course.put("className", cName+"(苏州)");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 5)  course.put("className", cName+"(创新港)");
+            course.put("classNum", course.get("classNum")+"班");
             int classId = (int) course.get("classId");
             List<Map<String, Object>> students = studentDao.findStudent(classId, "");
             int uncheckedNum = 0;

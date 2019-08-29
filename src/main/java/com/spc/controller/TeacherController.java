@@ -1443,23 +1443,15 @@ public class TeacherController extends Base {
     @RequestMapping("/findStudentsScore")
     @ResponseBody
     public Map findStudentsScore(@RequestParam("classId") int classId,
-                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
-                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
                                  HttpSession session) {
         int isGrade=classService.findIsGrade(classId);
         ClassDomain classes =  classService.findClassById(classId);
         String className=classes.getClassName();
         int classNum=classes.getClassNum();
         Map<String,Object> res=new HashMap<>();
-        Page page=PageHelper.startPage(currentPage, pageSize);
         List<Map<String,Object>> students = classService.findStudent(classId);
-        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
-        List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
-        data.put("total",page.getTotal());
-        data.put("list",pageList);
-        data.put("currentPage",currentPage);
-        data.put("pageSize",pageSize);
+        data.put("list",students);
         res.put("data", data);
         res.put("className",className);
         res.put("classNum",classNum);
@@ -1552,7 +1544,7 @@ public class TeacherController extends Base {
             academicYear=academicYear.substring(0,9)+"-2";
         else
             academicYear=academicYear.substring(0,9)+"-1";
-        List<Map<String,Object>> classes = classService.findTeachCourse2(teacherId,academicYear,88888888);
+        List<Map<String,Object>> classes = classService.findTeachCourse2(teacherId,academicYear);
         Map<String, Object> data = new HashMap<>();
         data.put("list",classes);
         res.put("data", data);
