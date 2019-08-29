@@ -247,14 +247,14 @@
             operatorId = #{classAll.operatorId},
             operatorName = #{classAll.operatorName},
             stuNumUpperLimit = #{classAll.stuNumUpperLimit},
-            classWeeks = #{classAll.classWeeks}
-            courseNameCHS=#{classAll.courseNameCHS}
-            courseNameEN=#{classAll.courseNameEN}
-            classSemester=#{classAll.classSemester}
-            classHour=#{classAll.classHour}
-            teacherId=#{classAll.teacherId}
-            teacherName=#{classAll.teacherName}
-            teachingTeamIds=#{classAll.teachingTeamIds}
+            classWeeks = #{classAll.classWeeks},
+            courseNameCHS=#{classAll.courseNameCHS},
+            courseNameEN=#{classAll.courseNameEN},
+            classSemester=#{classAll.classSemester},
+            classHour=#{classAll.classHour},
+            teacherId=#{classAll.teacherId},
+            teacherName=#{classAll.teacherName},
+            teachingTeamIds=#{classAll.teachingTeamIds},
             teachingTeamName=#{classAll.teachingTeamNames}
 
         </set>
