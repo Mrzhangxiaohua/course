@@ -38,9 +38,9 @@ public interface ClassService {
 
     int zzGrade(String className,int classNum, String stuId, int zzGrade, int flag);
 
-    List<Map<String,Object>>  findTeachCourse(String teacherId,String academicYear);
+    List<Map<String,Object>>  findTeachCourse(String teacherId,String academicYear,int depId);
 
-    List<Map<String,Object>>  findTeachCourse2(String teacherId,String academicYear);
+    List<Map<String,Object>>  findTeachCourse2(String teacherId,String academicYear,int depId);
 
     Map findClassInfo(String classStr);
 
@@ -78,4 +78,6 @@ public interface ClassService {
     int findStudentIsChecked(int classId,String stuId);
 
     int findStudentKnskIsChecked(String JXBID,String stuId);
+
+    int findDepId(String teacherId);
 }

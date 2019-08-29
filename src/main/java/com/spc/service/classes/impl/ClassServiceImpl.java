@@ -128,13 +128,13 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public List<Map<String, Object>> findTeachCourse(String teacherId,String academicYear) {
-        return classDao.findTeachCourse(teacherId,academicYear);
+    public List<Map<String, Object>> findTeachCourse(String teacherId,String academicYear,int depId) {
+        return classDao.findTeachCourse(teacherId,academicYear,depId);
     }
 
     @Override
-    public List<Map<String, Object>> findTeachCourse2(String teacherId,String academicYear) {
-        List<Map<String, Object>> classes = classDao.findTeachCourse2(teacherId,academicYear);
+    public List<Map<String, Object>> findTeachCourse2(String teacherId,String academicYear,int depId) {
+        List<Map<String, Object>> classes = classDao.findTeachCourse2(teacherId,academicYear,depId);
         for(Map cl:classes){
             if(cl.get("KCH").equals("121066")) {
                 cl.put("KCM","学术英语(一)");
@@ -350,6 +350,11 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public int findStudentKnskIsChecked(String JXBID, String stuId) {
         return classDao.findStudentKnskIsChecked(JXBID,stuId);
+    }
+
+    @Override
+    public int findDepId(String teacherId) {
+        return classDao.findDepId(teacherId);
     }
 
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,15 +38,19 @@ public class EvaluationDisplayController extends Base {
     @ResponseBody
     public Map<String, Object> evaluationDisplay(HttpServletRequest request){
         String json = RequestPayload.getRequestPayload(request);
+        Map<String,Object> map = new HashMap<>();
         try {
             JSONObject obj = new JSONObject(json);
             String classId = obj.getString("classId");
-            Map<String, Object> evaluationList = evaluationDisplayService.getAllClassEvaluation(classId);
-            return evaluationList;
+            map = evaluationDisplayService.getAllClassEvaluation(classId);
+//            return evaluationList;
         }catch (Exception e){
             e.printStackTrace();
+            String classId = "39";
+            map = evaluationDisplayService.getAllClassEvaluation(classId);
+//            return evaluationList;
         }
-        return null;
+        return map;
     }
 
     /**

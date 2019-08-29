@@ -1375,6 +1375,68 @@ public class ManageController extends Base {
     }
 
     /**
+     * 超级管理员修订当年课程目录时导入往年全年课程
+     * @param year
+     * @return
+     */
+    @RequestMapping(value = "addFormerCourseAllByYear")
+    @ResponseBody
+    public String addFormerCourseAllByYear(@RequestParam String year) {
+       List<CourseAll> list= courseAllService.findCourseAll(year,"8888","8888",8888);
+        int flag=0;
+        StringBuilder sb=new StringBuilder();
+       for(CourseAll courseAll:list){
+           courseAll.setId(null);
+           courseAll.setCourseAppId(null);
+           Calendar now = Calendar.getInstance();
+           int currentYear=now.get(Calendar.YEAR);
+           courseAll.setAcademicYear(currentYear+"-"+(currentYear+1));
+           int count= courseAllService.existCourseAll(courseAll);
+           if (count==0){
+               courseAllService.addFormerCourseAll(courseAll);
+           }else{
+               sb.append(courseAll.getCourseNameCHS()+",");
+               flag=1;
+           }
+       }
+        if(flag==1){
+            return sb.deleteCharAt(sb.length()-1).toString()+"已存在";
+        }
+        return "导入成功";
+    }
+    /**
+     * 学院管理员修订当年课程目录时导入往年全年课程
+     * @param year
+     * @return
+     */
+    @RequestMapping(value = "addFormerCourseAllByYear2")
+    @ResponseBody
+    public String addFormerCourseAllByYear2(@RequestParam String year,HttpSession session) {
+        int departId = (Integer) session.getAttribute("departId");
+        List<CourseAll> list= courseAllService.findCourseAll(year,"8888","8888",departId);
+        int flag=0;
+        StringBuilder sb=new StringBuilder();
+        for(CourseAll courseAll:list){
+            courseAll.setId(null);
+            courseAll.setCourseAppId(null);
+            Calendar now = Calendar.getInstance();
+            int currentYear=now.get(Calendar.YEAR);
+            courseAll.setAcademicYear(currentYear+"-"+(currentYear+1));
+            int count= courseAllService.existCourseAll(courseAll);
+            if (count==0){
+                courseAllService.addFormerCourseAll(courseAll);
+            }else{
+                sb.append(courseAll.getCourseNameCHS()+",");
+                flag=1;
+            }
+        }
+        if(flag==1){
+            return sb.deleteCharAt(sb.length()-1).toString()+"已存在";
+        }
+        return "导入成功";
+    }
+
+    /**
      * 超级管理员发布课程目录
      * @param request
      * @param academicYear
@@ -1612,7 +1674,7 @@ public class ManageController extends Base {
     }
 
     /**
-     * 管理员端：保存或提交免修学生成绩
+     * 超级管理员端：保存或提交免修学生成绩
      * @param
      * @param
      * @return
@@ -1621,7 +1683,7 @@ public class ManageController extends Base {
 
 
     /**
-     * 管理员端：保存或提交学生成绩
+     * 超级管理员端：保存或提交学生其他模块成绩
      * @param
      * @param
      * @return
@@ -1730,6 +1792,98 @@ public class ManageController extends Base {
         model.put("style", "higher");
         logger.info(String.valueOf(model));
         return new ModelAndView(new StudentsOtherScoreListPdfView(), model);
+    }
+
+    /**
+     * 学院管理员端：录入本学院小班实践和课内授课成绩
+     * @param
+     * @param
+     * @return
+     */
+
+    @RequestMapping("dmanage/findXbsjCourse")
+    @ResponseBody
+    public Map dmanageFindXbsjCourse(
+            @RequestParam("classSemester") String academicYear,
+            HttpSession session
+    ) {
+        String teacherId = (String) session.getAttribute("userId");
+        int depId = (int) classService.findDepId(teacherId);
+        System.out.println("学院Id"+depId);
+        Map<String,Object> res=new HashMap<>();
+        List<Map<String,Object>> classes = classService.findTeachCourse("88888888",academicYear,depId);
+        Map<String, Object> data = new HashMap<>();
+        data.put("list",classes);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    @RequestMapping("dmanage/findCourse2")
+    @ResponseBody
+    public Map dmanageFindTeachCourse2(
+            @RequestParam("classSemester") String academicYear,
+            HttpSession session
+    ) {
+        String teacherId = (String) session.getAttribute("userId");
+        int depId = (int) classService.findDepId(teacherId);
+        if(depId==12){
+            Map<String,Object> res=new HashMap<>();
+            if(academicYear.indexOf("春季")!=-1)
+                academicYear=academicYear.substring(0,9)+"-2";
+            else
+                academicYear=academicYear.substring(0,9)+"-1";
+            List<Map<String,Object>> classes = classService.findTeachCourse2("88888888",academicYear,depId);
+            Map<String, Object> data = new HashMap<>();
+            data.put("list",classes);
+            res.put("data", data);
+            res.put("status", "SUCCESS");
+            return res;
+        }
+        else
+            return null;
+
+    }
+    /**
+     * 超级管理员端：录入所有学院小班实践和课内授课成绩
+     * @param
+     * @param
+     * @return
+     */
+
+    @RequestMapping("smanage/findXbsjCourse")
+    @ResponseBody
+    public Map smanageFindXbsjCourse(
+            @RequestParam("classSemester") String academicYear,
+            HttpSession session
+    ) {
+        Map<String,Object> res=new HashMap<>();
+        List<Map<String,Object>> classes = classService.findTeachCourse("88888888",academicYear,88888888);
+        Map<String, Object> data = new HashMap<>();
+        data.put("list",classes);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    @RequestMapping("smanage/findCourse2")
+    @ResponseBody
+    public Map smanageFindTeachCourse2(
+            @RequestParam("classSemester") String academicYear,
+            HttpSession session
+    ) {
+        Map<String,Object> res=new HashMap<>();
+        if(academicYear.indexOf("春季")!=-1)
+            academicYear=academicYear.substring(0,9)+"-2";
+        else
+            academicYear=academicYear.substring(0,9)+"-1";
+        List<Map<String,Object>> classes = classService.findTeachCourse2("88888888",academicYear,88888888);
+        Map<String, Object> data = new HashMap<>();
+        data.put("list",classes);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+
     }
 
     /**
@@ -2137,6 +2291,236 @@ public class ManageController extends Base {
         model.put("style", "higher");
         return new ModelAndView(new CourseAllTablePdfView(), model);
     }
+
+    /**
+     * 超级管理员端：录入免修生的课内授课成绩
+     * @param
+     * @param
+     * @return
+     */
+    /**
+     查看所有免修学生信息及成绩
+     */
+    @RequestMapping("/findMianXiuStudents")
+    @ResponseBody
+    public Map findMianXiuStudents(
+                                @RequestParam(required = false, defaultValue = "88888888") int depId,
+                                @RequestParam(required = false, defaultValue = "88888888") String stuId,
+                                @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                @RequestParam(required = false, defaultValue = "15") int pageSize,
+                                HttpSession session) {
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> students = manageService.findStudentsType(1,depId,stuId);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    /**
+     更新免修学生成绩
+     */
+    @RequestMapping("/updateMianXiuScore")
+    @ResponseBody
+    public String updateMianXiuScore(HttpServletRequest request) {
+        String json=RequestPayload.getRequestPayload(request);
+        try {
+            JSONObject obj= new JSONObject(json);
+            JSONArray stuList=  obj.getJSONArray("stuList");
+            for(int i=0;i<stuList.length();i++){
+                JSONObject stu=stuList.getJSONObject(i);
+                String stuId= (String) stu.get("stuId");
+                String grade= String.valueOf(stu.get("grade"));
+                gradeService.uploadAllGradeKnsk(stuId,Float.parseFloat(grade));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     下载模板
+     */
+    @RequestMapping("/downloadMianXiuStudents")
+    @ResponseBody
+    public void downloadMianXiuStudents(
+                                      @RequestParam("academicYear") String academicYear,
+                                      @RequestParam(required = false, defaultValue = "88888888") int depId,
+                                      @RequestParam(required = false, defaultValue = "88888888") String stuId, HttpServletResponse response,
+                                      HttpSession session) throws IOException{
+        Map<String,Object> res=new HashMap<>();
+        List<Map<String,Object>> students = manageService.findStudentsType(1,depId,stuId);
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet(academicYear+"免修学生"+"成绩表");
+        String fileName = academicYear+"免修学生"+"成绩表"  + ".xls";//设置要导出的文件的名字
+        String[] headers={"姓名","学号","所属学院","所属专业","成绩"};
+        HSSFRow headerRow=sheet.createRow(0);
+        //添加表头
+        for(int i=0;i<headers.length;i++){
+            HSSFCell cell=headerRow.createCell(i);
+            HSSFRichTextString text=new HSSFRichTextString(headers[i]);
+            cell.setCellValue(text);
+        }
+        int rowNum=1;
+        for(Map<String,Object> stu:students){
+            HSSFRow row=sheet.createRow(rowNum);
+            row.createCell(0).setCellValue((String) stu.get("stuName"));
+            row.createCell(1).setCellValue((String) stu.get("stuId"));
+            row.createCell(2).setCellValue((String) stu.get("departName"));
+            row.createCell(3).setCellValue((String) stu.get("speciality"));
+            rowNum++;
+        }
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + new String( fileName.getBytes("gb2312"), "ISO8859-1" ));
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+    }
+
+    /**
+     上传免修生成绩文件 /uploadGradeExcel
+     */
+
+    /**
+     将名单插入数据库中
+     */
+
+    @RequestMapping("/insertMianXiuGradeExcel")
+    @ResponseBody
+    public Map<String,Object> insertMianXiuGradeExcel(
+                                              @RequestParam("fileInfoId") int fileInfoId){
+        Map<String,Object> res=manageService.insertMianXiuGradeExcel(fileInfoId);
+        if((int)res.get("flag") == 0){
+            res.put("status","上传成绩失败！");
+        }else{
+            res.put("status","上传成绩成功！");
+        }
+        return res;
+    }
+
+    /**
+     * 超级管理员端：更改学生类别
+     * @param
+     * @param
+     * @return
+     */
+    /**
+    查看所属学生类别
+     */
+    @RequestMapping("/findStudentsType")
+    @ResponseBody
+    public Map findStudentsType( @RequestParam(required = false, defaultValue = "88888888")  int typeId,
+                                 @RequestParam(required = false, defaultValue = "88888888") int depId,
+                                 @RequestParam(required = false, defaultValue = "88888888") String stuId,
+                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
+                                 @RequestParam(required = false, defaultValue = "15") int pageSize,
+                                 HttpSession session) {
+        Map<String,Object> res=new HashMap<>();
+        Page page=PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> students = manageService.findStudentsType(typeId,depId,stuId);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    /**
+     上传学生名单使用接口/uploadGradeExcel
+     */
+
+    /**
+     下载模板
+     */
+    @RequestMapping("/downloadExcelModule")
+    @ResponseBody
+    public void downloadExcelModule(@RequestParam("typeId") int typeId,
+            @RequestParam("academicYear") String academicYear,
+            @RequestParam(required = false, defaultValue = "88888888") int depId,
+            @RequestParam(required = false, defaultValue = "88888888") String stuId, HttpServletResponse response,
+            HttpSession session) throws IOException{
+        Map<String,Object> res=new HashMap<>();
+        String typeName=null;
+        if(typeId==0) {
+            typeName="全日制";
+        }
+        if(typeId==1){
+            typeName="免修";
+        }
+        if(typeId==2){
+            typeName="非全日制";
+        }
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet(academicYear+typeName+"学生名单");
+        String fileName = academicYear+typeName+"学生名单"  + ".xls";//设置要导出的文件的名字
+        String[] headers={"姓名","学号"};
+        HSSFRow headerRow=sheet.createRow(0);
+        //添加表头
+        for(int i=0;i<headers.length;i++){
+            HSSFCell cell=headerRow.createCell(i);
+            HSSFRichTextString text=new HSSFRichTextString(headers[i]);
+            cell.setCellValue(text);
+        }
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + new String( fileName.getBytes("gb2312"), "ISO8859-1" ));
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+    }
+
+    /**
+     将名单插入数据库中
+     */
+
+    @RequestMapping("/insertTypeExcel")
+    @ResponseBody
+    public Map<String,Object> insertTypeExcel(@RequestParam("typeId") int typeId,
+                                               @RequestParam("fileInfoId") int fileInfoId){
+        Map<String,Object> res=manageService.insertTypeExcel(typeId,fileInfoId);
+        if((int)res.get("flag") == 0){
+            res.put("status","上传成绩失败！");
+        }else{
+            res.put("status","上传成绩成功！");
+        }
+        return res;
+    }
+
+    /**
+     更新学生类别
+     */
+    @RequestMapping("/updateStuType")
+    @ResponseBody
+    public Map updateStuType(HttpServletRequest request,
+                           HttpSession session) {
+        Map<String,Object> res=new HashMap<>();
+        String json = RequestPayload.getRequestPayload(request);
+        try {
+            List<Map<String,Object>> li=new ArrayList<>();
+            JSONObject obj = new JSONObject(json);
+            int typeId=obj.getInt("typeId");
+            JSONArray stuList=  obj.getJSONArray("stuList");
+            for(int i=0;i<stuList.length();i++){
+                JSONObject stu=stuList.getJSONObject(i);
+                String stuId= (String) stu.get("stuId");
+                manageService.updateStuType(typeId,stuId);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 //    @RequestMapping("/getCourseAllTableExcel")
 //    @ResponseBody
 //    public void getCourseAllTableExcel(@RequestParam(required = false, defaultValue = "88888888") String academicYear,

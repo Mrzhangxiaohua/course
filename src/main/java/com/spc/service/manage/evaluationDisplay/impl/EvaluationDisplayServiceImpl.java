@@ -25,7 +25,6 @@ public class EvaluationDisplayServiceImpl extends Base implements EvaluationDisp
     public Map<String, Object> getAllClassEvaluation(String classId) {
         System.out.println(evaluationDisplayDao.getAllClassEvaluation(classId));
         List<Map<String, Object>> evaluationList = evaluationDisplayDao.getAllClassEvaluation(classId);
-
         return evaluationListProcess(evaluationList, classId);
     }
 

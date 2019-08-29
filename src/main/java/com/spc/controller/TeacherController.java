@@ -1108,7 +1108,7 @@ public class TeacherController extends Base {
         String teacherId = (String) session.getAttribute("userId");
         Map<String,Object> res=new HashMap<>();
         Page page=PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,CURRENTSEMESTER);
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,CURRENTSEMESTER,88888888);
         for(Map<String,Object> c:classes){
             StringBuilder str=new StringBuilder();
             String[] all=( (String) c.get("classDateDescription")).split(",");
@@ -1150,7 +1150,7 @@ public class TeacherController extends Base {
     ) {
         String teacherId = (String) session.getAttribute("userId");
         Map<String,Object> res=new HashMap<>();
-        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,academicYear);
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,academicYear,88888888);
         Map<String, Object> data = new HashMap<>();
         data.put("list",classes);
         res.put("data", data);
@@ -1559,7 +1559,7 @@ public class TeacherController extends Base {
             academicYear=academicYear.substring(0,9)+"-2";
         else
             academicYear=academicYear.substring(0,9)+"-1";
-        List<Map<String,Object>> classes = classService.findTeachCourse2(teacherId,academicYear);
+        List<Map<String,Object>> classes = classService.findTeachCourse2(teacherId,academicYear,88888888);
         Map<String, Object> data = new HashMap<>();
         data.put("list",classes);
         res.put("data", data);

@@ -675,6 +675,114 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
+    public Map insertTypeExcel(int typeId,int fileInfoId) {
+        Map<String,Object> res=new HashMap<>();
+        List<Map<String,Object>> result=new ArrayList<>();
+        Map<String, Object> fileInfo = teacherDao.selectGradeExcel(fileInfoId);
+        String fileName = (String) fileInfo.get("fileName");
+        String path = (String) fileInfo.get("path");
+        File file = new File(path);
+        if (file == null) {
+            res.put("flag",0);
+            return res;
+        }
+        Workbook workbook = null;
+        try (FileInputStream is = new FileInputStream(file)) {
+            if (file.getName().endsWith(".xls")) {
+                workbook = new HSSFWorkbook(is);
+            } else if (file.getName().endsWith(".xlsx")) {
+                workbook = new XSSFWorkbook(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (workbook != null) {
+            int sheetNum = workbook.getNumberOfSheets();
+            for (int i = 0; i < sheetNum; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                for (int j = 1; j <= sheet.getLastRowNum(); j++) {
+                    Row row = sheet.getRow(j);
+                    if (row == null) {
+                        continue;
+                    }
+                    String stuId= null;
+                    switch (row.getCell(1).getCellType()) {
+                        case Cell.CELL_TYPE_NUMERIC:
+                            DecimalFormat df = new DecimalFormat("0");
+                            stuId = df.format(row.getCell(1).getNumericCellValue());
+                            break;
+                        case Cell.CELL_TYPE_STRING:
+                            stuId=row.getCell(1).getStringCellValue();
+                            break;
+                    }
+                    studentDao.updateStuType(typeId, stuId);
+                }
+            }
+        }
+        res.put("flag",1);
+        return res;
+    }
+
+    @Override
+    public Map insertMianXiuGradeExcel(int fileInfoId) {
+        Map<String,Object> res=new HashMap<>();
+        List<Map<String,Object>> result=new ArrayList<>();
+        Map<String, Object> fileInfo = teacherDao.selectGradeExcel(fileInfoId);
+        String fileName = (String) fileInfo.get("fileName");
+        String path = (String) fileInfo.get("path");
+        File file = new File(path);
+        if (file == null) {
+            res.put("flag",0);
+            return res;
+        }
+        Workbook workbook = null;
+        try (FileInputStream is = new FileInputStream(file)) {
+            if (file.getName().endsWith(".xls")) {
+                workbook = new HSSFWorkbook(is);
+            } else if (file.getName().endsWith(".xlsx")) {
+                workbook = new XSSFWorkbook(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (workbook != null) {
+            int sheetNum = workbook.getNumberOfSheets();
+            for (int i = 0; i < sheetNum; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                for (int j = 1; j <= sheet.getLastRowNum(); j++) {
+                    Row row = sheet.getRow(j);
+                    if (row == null) {
+                        continue;
+                    }
+                    String stuId= null;
+                    switch (row.getCell(1).getCellType()) {
+                        case Cell.CELL_TYPE_NUMERIC:
+                            DecimalFormat df = new DecimalFormat("0");
+                            stuId = df.format(row.getCell(1).getNumericCellValue());
+                            break;
+                        case Cell.CELL_TYPE_STRING:
+                            stuId=row.getCell(1).getStringCellValue();
+                            break;
+                    }
+                    String grade = null;
+                    if(row.getCell(4) == null) {
+                        grade = null;
+                    }
+                    else{
+                        grade = String.valueOf(row.getCell(4).getNumericCellValue());
+                    }
+                    if(grade == null || grade.equals("") || grade.equals("null")){
+                        grade = null;
+                    }
+                    gradeDao.uploadAllGradeKnsk(stuId,Float.parseFloat(grade));
+                }
+            }
+        }
+        res.put("flag",1);
+        return res;
+    }
+
+    @Override
     public int findIsGrade(int moduleId, String academicYear) {
         List<Map<String,Object>> stu=new ArrayList<>();
         if(moduleId==1)
@@ -758,6 +866,11 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
+    public List<Map<String, Object>> findStudentsType(int typeId, int depId, String stuId) {
+        return studentDao.findStudentsType(typeId,depId,stuId);
+    }
+
+    @Override
     public List<Map<String, Object>> findAllScore(int departId, String stuId) {
         List<Map<String,Object>> stuList=new ArrayList<>();
         stuList=gradeDao.findAllScore(departId,stuId);
@@ -822,6 +935,11 @@ public class ManageServiceImpl extends Base implements ManageService {
     @Override
     public int deleteCourseApp(int id) {
         return courseAllDao.deleteCourseApp(id);
+    }
+
+    @Override
+    public void updateStuType(int typeId,String stuId ) {
+        studentDao.updateStuType(typeId, stuId);
     }
 }
 
