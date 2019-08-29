@@ -80,7 +80,7 @@
         <!--order by id asc-->
     <!--</select>-->
     <select id="selectClassAllChoose" resultType="Map" useCache="false">
-        select a.* ,b.classChooseNum
+        select a.* ,b.classChooseNum, b.schoolDistrictId
         from course.ClassAll a
         left join course.Course b
         on a.id=b.classAllId

@@ -2130,19 +2130,20 @@ public class ManageController extends Base {
      */
     @RequestMapping("/findAllScore")
     @ResponseBody
-    public Map  findAllScore(@RequestParam(required = false, defaultValue = "88888888") int departId,
+    public Map  findAllScore( @RequestParam("classSemester") String academicYear,
+                              @RequestParam(required = false, defaultValue = "88888888") int departId,
                               @RequestParam(required = false, defaultValue = "88888888") String stuId,
                               @RequestParam(required = false, defaultValue = "1") int currentPage,
                               @RequestParam(required = false, defaultValue = "10") int pageSize,
                               HttpSession session){
         //先更新总成绩
         System.out.println("先更新成绩");
-        manageService.updateSumGrade();
+        manageService.updateSumGrade(academicYear);
         System.out.println("更新完成");
         //查询成绩
         Map<String,Object> res=new HashMap<>();
         Page page = PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> students = manageService.directFindAllScore(departId,stuId);
+        List<Map<String,Object>> students = manageService.directFindAllScore(academicYear,departId,stuId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
         List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
@@ -2205,10 +2206,11 @@ public class ManageController extends Base {
      */
     @RequestMapping("/downloadScorePdf")
     @ResponseBody
-    public ModelAndView downloadScorePdf(@RequestParam(required = false, defaultValue = "88888888") int departId,
+    public ModelAndView downloadScorePdf(@RequestParam("classSemester") String academicYear,
+                                         @RequestParam(required = false, defaultValue = "88888888") int departId,
                                          @RequestParam(required = false, defaultValue = "88888888") String stuId,
                                                      HttpServletResponse response){
-        List<Map<String,Object>> students = manageService.findAllScore(departId,stuId);
+        List<Map<String,Object>> students = manageService.findAllScore(academicYear,departId,stuId);
         response = ResponseWrap.setName(response, "2018-2019学年英语总成绩单", "pdf");
         Map res = new HashMap();
         res.put("data", students);
@@ -2506,10 +2508,11 @@ public class ManageController extends Base {
         try {
             List<Map<String,Object>> li=new ArrayList<>();
             JSONObject obj = new JSONObject(json);
-            String typeId=String.valueOf(obj.getInt("stuType"));
+
             JSONArray stuList=  obj.getJSONArray("stuList");
             for(int i=0;i<stuList.length();i++){
                 JSONObject stu=stuList.getJSONObject(i);
+                String typeId=String.valueOf(stu.get("stuType"));
                 String stuId= (String) stu.get("stuId");
                 manageService.updateStuType(Integer.parseInt(typeId),stuId);
             }
