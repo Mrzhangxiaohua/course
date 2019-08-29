@@ -868,8 +868,8 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public List<Map<String, Object>> findStudentsType(int typeId, int depId, String stuId) {
-        return studentDao.findStudentsType(typeId,depId,stuId);
+    public List<Map<String, Object>> findStudentsType(String academicYear,int typeId, int depId, String stuId) {
+        return studentDao.findStudentsType(academicYear,typeId,depId,stuId);
     }
 
     @Override
