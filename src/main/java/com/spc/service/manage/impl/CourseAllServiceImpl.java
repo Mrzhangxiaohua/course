@@ -318,6 +318,11 @@ public class CourseAllServiceImpl implements CourseAllService {
     }
 
     @Override
+    public List<CourseAll> getCourseAll(String year, Integer departId) {
+        return courseAllDao.selectCourseAllByYearAndDep(year,departId);
+    }
+
+    @Override
     public int modifyCourseAll(CourseAll courseAll, String userId, String username) {
         courseAll.setOperatorId(userId);
         courseAll.setOperatorName(username);
@@ -336,9 +341,7 @@ public class CourseAllServiceImpl implements CourseAllService {
                 ca.setTeachingTeamIds(courseAll.getTeachingTeamIds());
                 ca.setTeachingTeamNames(courseAll.getTeachingTeamNames());
                 classAllDao.updateClass(ca);
-                System.out.println("ca:success"+classAllDao.updateClass(ca));
                 classAllDao.updateCourse(ca.getCourseNameCHS(), ca.getClassHour(), ca.getAcademicYear() + ca.getClassSemester(), ca.getId());
-                System.out.println("course:success" + classAllDao.updateCourse(ca.getCourseNameCHS(), ca.getClassHour(), ca.getAcademicYear() + ca.getClassSemester(), ca.getId()));
             }
         }
         return  1;
