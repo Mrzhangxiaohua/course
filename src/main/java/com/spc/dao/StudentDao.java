@@ -59,7 +59,7 @@ public interface StudentDao {
 
     int finSchoolDistrict(@Param("stuId") String stuId);
 
-    List<Map<String,Object>> findStudentsType(@Param("typeId") int typeId,@Param("depId") int depId,@Param("stuId") String stuId);
+    List<Map<String,Object>> findStudentsType(@Param("academicYear") String academicYear,@Param("typeId") int typeId,@Param("depId") int depId,@Param("stuId") String stuId);
 
     void updateStuType(@Param("typeId") int typeId,@Param("stuId") String stuId);
 }

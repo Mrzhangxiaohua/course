@@ -94,7 +94,7 @@ public interface ManageService {
 
     List<Map<String,Object>> directFindAllScore(int departId,String stuId);
 
-    List<Map<String,Object>> findStudentsType(int typeId,int depId,String stuId);
+    List<Map<String,Object>> findStudentsType(String academicYear,int typeId,int depId,String stuId);
 
     List<Map<String,Object>> findAllScore(int departId,String stuId);
 
