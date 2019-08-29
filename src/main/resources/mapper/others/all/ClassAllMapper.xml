@@ -267,13 +267,9 @@
         limit 1
     </select>
 
-    <update id="'updateCourse" flushCache="true">
+    <update id="'updateCourse" flushCache="false">
         update Course
-        <set>
-            className=#{className}
-            classTime=#{classTime}
-            classSemester=#{classSemester}
-        </set>
+        set className=#{className}, classTime=#{classTime}, classSemester=#{classSemester}
         where classAllId=#{classAllId}
     </update>
     <select id="selectClassAllById" resultType="com.spc.model.ClassAll" useCache="false">
