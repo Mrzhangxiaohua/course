@@ -57,4 +57,6 @@ public interface CourseAllService {
     int existCourseAll(CourseAll courseAll);
 
     int addFormerCourseAll(CourseAll courseAll);
+
+    List<CourseAll> getCourseAll(String year, Integer departId);
 }
