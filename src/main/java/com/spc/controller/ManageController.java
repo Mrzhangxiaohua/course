@@ -2117,7 +2117,7 @@ public class ManageController extends Base {
         }
     }
     /**
-     * 查看学院学生所有成绩
+     * 超级管理员查看学院学生所有成绩
      * @param
      * @param
      * @return
@@ -2137,6 +2137,36 @@ public class ManageController extends Base {
         //查询成绩
         Map<String,Object> res=new HashMap<>();
         Page page = PageHelper.startPage(currentPage, pageSize);
+        List<Map<String,Object>> students = manageService.directFindAllScore(academicYear,departId,stuId);
+        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
+        List<Map<String,Object>> pageList=pageInfo.getList();
+        Map<String, Object> data = new HashMap<>();
+        data.put("total",page.getTotal());
+        data.put("list",pageList);
+        data.put("currentPage",currentPage);
+        data.put("pageSize",pageSize);
+        res.put("data", data);
+        res.put("status", "SUCCESS");
+        return res;
+    }
+
+    /**
+     * 学院管理员查看学院学生所有成绩
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/findDepAllScore")
+    @ResponseBody
+    public Map  findDepAllScore( @RequestParam("classSemester") String academicYear,
+                              @RequestParam(required = false, defaultValue = "88888888") String stuId,
+                              @RequestParam(required = false, defaultValue = "1") int currentPage,
+                              @RequestParam(required = false, defaultValue = "10") int pageSize,
+                              HttpSession session){
+        Map<String,Object> res=new HashMap<>();
+        Page page = PageHelper.startPage(currentPage, pageSize);
+        String teacherId = (String) session.getAttribute("userId");
+        int departId = classService.findDepId(teacherId);
         List<Map<String,Object>> students = manageService.directFindAllScore(academicYear,departId,stuId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
         List<Map<String,Object>> pageList=pageInfo.getList();
