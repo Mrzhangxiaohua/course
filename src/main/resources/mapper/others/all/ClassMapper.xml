@@ -328,8 +328,10 @@
     </select>
 
     <select id="findTeachCourse" resultType="Map">
-        select *
+        select a.*,b.schoolDistrictId
         from course.Course a
+        left join course.ClassAll b
+        on a.classAllId=b.id
         <where>
             <if test="depId!=88888888 ">
                 and a.departId = #{depId}
@@ -338,10 +340,10 @@
                 and a.teaId = #{teacherId}
             </if>
             <if test="academicYear!=null">
-                and classSemester=#{academicYear}
+                and a.classSemester=#{academicYear}
             </if>
         </where>
-
+        order by a.className,a.classNum
     </select>
 
 
@@ -395,9 +397,16 @@
     <select id="findTeachCourse2" resultType="Map">
         select *
         from course.v_t_xk_by_yjsrw
-        where SKJS=#{teacherId}
-        and (KCH='121066' OR KCH='121067' OR KCH='121068' OR KCH='122036')
-        and XNXQDM=#{academicYear}
+        <where>
+            <if test="teacherId!='88888888'">
+                and SKJS=#{teacherId}
+            </if>
+            <if test="academicYear!=null">
+                and XNXQDM=#{academicYear}
+            </if>
+            and (KCH='121066' OR KCH='121067' OR KCH='121068' OR KCH='122036')
+        </where>
+        order by KCH,KXH
     </select>
 
     <select id="findClassIds" resultType="Map">
@@ -447,7 +456,7 @@
 
 
     <select id="findAllXbsjCourse" resultType="Map">
-        select a.classId,b.className as classNum,a.teaName,a.className,a.isGrade as isSubmit,c.departName,b.courseId,a.classSemester as semesterName,a.classChooseNum as chooseNum,c.departName
+        select a.classId,a.classNum,a.teaName,a.className,a.isGrade as isSubmit,c.departName,b.courseId,a.classSemester as semesterName,a.classChooseNum as chooseNum,c.departName,b.schoolDistrictId
         from course.Course a
         left join course.ClassAll b
         on a.classAllId=b.id
@@ -473,6 +482,7 @@
                 and b.className like "%"#{classNum}"%"
             </if>
         </where>
+        ORDER BY b.schoolDistrictId,a.className,a.classNum
     </select>
 
     <select id="findAllKnskCourse" resultType="Map">
@@ -481,18 +491,17 @@
         left join course.XjtuUserInfo b
         on a.SKJS=b.userno
         <where>
-
             <if test="academicYear!=null">
-                and a.XNXQDM=#{academicYear} and (a.KCH='121066' OR a.KCH='121067' OR a.KCH='122036')
+                and a.XNXQDM=#{academicYear}
             </if>
             <if test="teaName!= '88888888' and teaName!=null ">
                 and b.username= #{teaName}
             </if>
             <if test="courseId!= '88888888' and courseId!=null ">
-                and a.JXBID like "%"#{courseId}"%"
+                and a.JXBID=#{courseId}
             </if>
             <if test="classNum!= '88888888' and classNum!=null ">
-                and a.JXBMC like "%"#{classNum}"%"
+                and a.JXBMC=#{classNum}
             </if>
             <if test="className == '学术英语(一)'">
                 and a.KCH='121066'
@@ -506,7 +515,9 @@
             <if test="className == '学术英语写作'">
                 and a.KCH='122036'
             </if>
+            and (a.KCH='121066' OR a.KCH='121067' OR a.KCH='122036')
         </where>
+        ORDER BY a.KCH,a.KXH
     </select>
 
     <update id="updateXbsjChecked">

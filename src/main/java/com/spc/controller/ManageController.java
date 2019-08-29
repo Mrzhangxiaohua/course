@@ -1826,7 +1826,7 @@ public class ManageController extends Base {
                 academicYear=academicYear.substring(0,9)+"-2";
             else
                 academicYear=academicYear.substring(0,9)+"-1";
-            List<Map<String,Object>> classes = classService.findTeachCourse2("88888888",academicYear,depId);
+            List<Map<String,Object>> classes = classService.findTeachCourse2("88888888",academicYear);
             Map<String, Object> data = new HashMap<>();
             data.put("list",classes);
             res.put("data", data);
@@ -1870,7 +1870,7 @@ public class ManageController extends Base {
             academicYear=academicYear.substring(0,9)+"-2";
         else
             academicYear=academicYear.substring(0,9)+"-1";
-        List<Map<String,Object>> classes = classService.findTeachCourse2("88888888",academicYear,88888888);
+        List<Map<String,Object>> classes = classService.findTeachCourse2("88888888",academicYear);
         Map<String, Object> data = new HashMap<>();
         data.put("list",classes);
         res.put("data", data);
@@ -1895,21 +1895,19 @@ public class ManageController extends Base {
                              @RequestParam(required = false, defaultValue = "88888888") String className,
                              @RequestParam(required = false, defaultValue = "88888888") String classNum,
                              @RequestParam(required = false, defaultValue = "88888888") String teaName,
-                             @RequestParam(required = false, defaultValue = "88888888") int  departId,
                              @RequestParam(required = false, defaultValue = "1") int currentPage,
                              @RequestParam(required = false, defaultValue = "10") int pageSize,
                              HttpSession session){
+        int departId=88888888;
         Map<String,Object> res=new HashMap<>();
         Page page=PageHelper.startPage(currentPage, pageSize);
         List<Map<String,Object>> courses=new ArrayList<>();
-        departId = 88888888;
         if (moduleId == 0) {
             courses=classService.findAllXbsjCourse(departId,academicYear,courseId,className,classNum,teaName,curentTab);
         }
         else if (moduleId==1)
         {
-            if(departId!=12){ }
-            else if(academicYear.indexOf("春季")!=-1) {
+            if(academicYear.indexOf("春季")!=-1) {
                 academicYear = academicYear.substring(0, 9) + "-2";
                 courses=classService.findAllKnskCourse(academicYear,courseId,className,classNum,teaName,curentTab);
             }
@@ -1921,9 +1919,7 @@ public class ManageController extends Base {
         else
         {
             List<Map<String,Object>> courses1=classService.findAllXbsjCourse(departId,academicYear,courseId,className,classNum,teaName,curentTab);
-            if(departId!=12){
-                courses=courses1;}
-            else if(academicYear.indexOf("春季")!=-1) {
+            if(academicYear.indexOf("春季")!=-1) {
                 academicYear = academicYear.substring(0, 9) + "-2";
                 List<Map<String, Object>> courses2=classService.findAllKnskCourse(academicYear,courseId,className,classNum,teaName,curentTab);
                 courses1.addAll(courses2);
@@ -1964,29 +1960,27 @@ public class ManageController extends Base {
                            @RequestParam(required = false, defaultValue = "88888888") String className,
                            @RequestParam(required = false, defaultValue = "88888888") String classNum,
                            @RequestParam(required = false, defaultValue = "88888888") String teaName,
-                           @RequestParam(required = false, defaultValue = "88888888") int  departId,
                            @RequestParam(required = false, defaultValue = "1") int currentPage,
                            @RequestParam(required = false, defaultValue = "10") int pageSize,
                            HttpSession session){
         Map<String,Object> res=new HashMap<>();
         Page page=PageHelper.startPage(currentPage, pageSize);
         List<Map<String,Object>> courses=new ArrayList<>();
-        if (departId == 88888888) {
-            departId = (Integer) session.getAttribute("departId");
-        }
+        int departId = (Integer) session.getAttribute("departId");
         if (moduleId == 0) {
             courses=classService.findAllXbsjCourse(departId,academicYear,courseId,className,classNum,teaName,curentTab);
         }
         else if (moduleId==1)
         {
-            if(departId!=12){ }
-            else if(academicYear.indexOf("春季")!=-1) {
+            if(departId==12){
+                if(academicYear.indexOf("春季")!=-1) {
                 academicYear = academicYear.substring(0, 9) + "-2";
                 courses=classService.findAllKnskCourse(academicYear,courseId,className,classNum,teaName,curentTab);
-            }
-            else {
+                }
+                 else {
                 academicYear=academicYear.substring(0,9)+"-1";
                 courses=classService.findAllKnskCourse(academicYear,courseId,className,classNum,teaName,curentTab);
+                 }
             }
         }
         else
