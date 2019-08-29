@@ -40,7 +40,7 @@ public interface ClassService {
 
     List<Map<String,Object>>  findTeachCourse(String teacherId,String academicYear,int depId);
 
-    List<Map<String,Object>>  findTeachCourse2(String teacherId,String academicYear,int depId);
+    List<Map<String,Object>>  findTeachCourse2(String teacherId,String academicYear);
 
     Map findClassInfo(String classStr);
 
