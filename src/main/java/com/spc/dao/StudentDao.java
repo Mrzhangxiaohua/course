@@ -20,9 +20,9 @@ public interface StudentDao {
 
     public int deleteChooseCourse(@Param("stuId") String stuId, @Param("classId") int classId);
 
-    public List findStudent( @Param("classId") int classId);
+    public List findStudent( @Param("classId") int classId, @Param("classSemester") String classSemester);
 
-    public List findStudentByStudentId(@Param("stuId") String stuId);
+    public List findStudentByStudentId(@Param("stuId") String stuId, @Param("classSemester") String classSemester);
 
     public List<Map<String, Object>> getWaiStudyTime(@Param("stuId") String stuId);
 

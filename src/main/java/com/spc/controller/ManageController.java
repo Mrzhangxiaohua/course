@@ -691,6 +691,7 @@ public class ManageController extends Base {
             @RequestParam(required = false, defaultValue = "10") int pageSize,
             @RequestParam(required = false, defaultValue = "") String classId,
             @RequestParam(required = false, defaultValue = "") String stuId,
+            @RequestParam(required = false, defaultValue = "") String classSemester,
             HttpSession session
     ) {
         List students = new ArrayList();
@@ -703,7 +704,7 @@ public class ManageController extends Base {
 //                Integer classNum = Integer.parseInt(strs[1]);
 
 //                students = manageService.findStudentByClassnameAndNum(className, classNum, pageSize, currentPage);
-                students = manageService.findStudentByClassnameAndNum(classId, pageSize, currentPage);
+                students = manageService.findStudentByClassnameAndNum(classId, pageSize, currentPage, classSemester);
 
                 List newStus = zhuanhuan(students);
 
@@ -723,7 +724,7 @@ public class ManageController extends Base {
             }
         }else if (!stuId.equals("")){
                 String studentId = stuId;
-                students = manageService.findStudentByStudentId(pageSize, currentPage, stuId);
+                students = manageService.findStudentByStudentId(pageSize, currentPage, stuId, classSemester);
                 List newStus = zhuanhuan(students);/////
                 //putSession(session,students);
 

@@ -85,8 +85,8 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public List findStudent(int classId) {
-        List s = studentDao.findStudent(classId);
-        return studentDao.findStudent(classId);
+        List s = studentDao.findStudent(classId, "");
+        return studentDao.findStudent(classId,"");
     }
 
     @Override
@@ -227,7 +227,7 @@ public class ClassServiceImpl implements ClassService {
             return courses;
         for(Map course:courses) {
             int classId = (int) course.get("classId");
-            List<Map<String, Object>> students = studentDao.findStudent(classId);
+            List<Map<String, Object>> students = studentDao.findStudent(classId, "");
             int uncheckedNum = 0;
             int checkedNum = 0;
             int recheckedNum = 0;
