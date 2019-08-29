@@ -533,7 +533,7 @@ public class StudentController extends Base{
     @ResponseBody
     public List<Map<String,Object>>  findScore( HttpSession session){
         String stuId= (String) session.getAttribute("userId");
-        List<Map<String,Object>> stu=manageService.findAllScore(88888888,stuId);
+        List<Map<String,Object>> stu=manageService.findAllScore(null,88888888,stuId);
         return stu;
     }
 }

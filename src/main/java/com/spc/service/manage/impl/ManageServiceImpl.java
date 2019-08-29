@@ -828,8 +828,8 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public void updateSumGrade() {
-        List<Map<String,Object>> stuList= gradeDao.findAllScore(88888888,"88888888");
+    public void updateSumGrade(String academicYear) {
+        List<Map<String,Object>> stuList= gradeDao.findAllScore(academicYear,88888888,"88888888");
         for(Map stu:stuList)
         {
             int stuType = gradeDao.findStuType((String) stu.get("stuId"));
@@ -863,8 +863,8 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public List<Map<String, Object>> directFindAllScore(int departId, String stuId) {
-        return gradeDao.findAllScore(departId,stuId);
+    public List<Map<String, Object>> directFindAllScore(String academicYear,int departId, String stuId) {
+        return gradeDao.findAllScore(academicYear,departId,stuId);
     }
 
     @Override
@@ -873,9 +873,9 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public List<Map<String, Object>> findAllScore(int departId, String stuId) {
+    public List<Map<String, Object>> findAllScore(String academicYear,int departId, String stuId) {
         List<Map<String,Object>> stuList=new ArrayList<>();
-        stuList=gradeDao.findAllScore(departId,stuId);
+        stuList=gradeDao.findAllScore(academicYear,departId,stuId);
         for(Map stu:stuList)
         {
             int stuType = gradeDao.findStuType((String) stu.get("stuId"));

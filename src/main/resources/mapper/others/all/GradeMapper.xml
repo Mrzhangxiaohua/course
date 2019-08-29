@@ -167,6 +167,9 @@
             <if test="stuId!='88888888'">
                 and a.stuId=#{stuId}
             </if>
+            <if test="academicYear!=null">
+                and a.semester=#{academicYear}
+            </if>
         </where>
     </select>
 
