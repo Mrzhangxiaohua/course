@@ -1,6 +1,7 @@
 package com.spc.service.manage.impl;
 
 import com.spc.dao.*;
+import com.spc.model.ClassAll;
 import com.spc.model.CourseAll;
 import com.spc.model.CourseApplication;
 import com.spc.model.TeacherInfo;
@@ -321,6 +322,25 @@ public class CourseAllServiceImpl implements CourseAllService {
         courseAll.setOperatorId(userId);
         courseAll.setOperatorName(username);
         courseAll.setOperateDate(new Date());
-        return  courseAllDao.updateCourseAll(courseAll);
+        courseAllDao.updateCourseAll(courseAll);
+        if(courseAll.getFlag()==1) {
+            //更新classAll,course表
+            List<ClassAll> classAllList = classAllDao.selectClassAll(null, null, null, courseAll.getCourseId(), null, null, null, null, null);
+            for (ClassAll ca : classAllList) {
+                ca.setClassHour(courseAll.getClassHour());
+                ca.setCourseNameCHS(courseAll.getCourseNameCHS());
+                ca.setCourseNameEN(courseAll.getCourseNameEN());
+                ca.setClassSemester(courseAll.getClassSemester());
+                ca.setTeacherId(courseAll.getTeacherId());
+                ca.setTeacherName(courseAll.getTeacherName());
+                ca.setTeachingTeamIds(courseAll.getTeachingTeamIds());
+                ca.setTeachingTeamNames(courseAll.getTeachingTeamNames());
+                classAllDao.updateClass(ca);
+                System.out.println("ca:success"+classAllDao.updateClass(ca));
+                classAllDao.updateCourse(ca.getCourseNameCHS(), ca.getClassHour(), ca.getAcademicYear() + ca.getClassSemester(), ca.getId());
+                System.out.println("course:success" + classAllDao.updateCourse(ca.getCourseNameCHS(), ca.getClassHour(), ca.getAcademicYear() + ca.getClassSemester(), ca.getId()));
+            }
+        }
+        return  1;
     }
 }

@@ -1673,14 +1673,6 @@ public class ManageController extends Base {
         return res;
     }
 
-    /**
-     * 超级管理员端：保存或提交免修学生成绩
-     * @param
-     * @param
-     * @return
-     */
-//
-
 
     /**
      * 超级管理员端：保存或提交学生其他模块成绩
@@ -2389,7 +2381,7 @@ public class ManageController extends Base {
      */
 
     /**
-     将名单插入数据库中
+     将免修成绩插入数据库中
      */
 
     @RequestMapping("/insertMianXiuGradeExcel")
@@ -2448,8 +2440,7 @@ public class ManageController extends Base {
     @ResponseBody
     public void downloadExcelModule(@RequestParam("typeId") int typeId,
             @RequestParam("academicYear") String academicYear,
-            @RequestParam(required = false, defaultValue = "88888888") int depId,
-            @RequestParam(required = false, defaultValue = "88888888") String stuId, HttpServletResponse response,
+                                    HttpServletResponse response,
             HttpSession session) throws IOException{
         Map<String,Object> res=new HashMap<>();
         String typeName=null;

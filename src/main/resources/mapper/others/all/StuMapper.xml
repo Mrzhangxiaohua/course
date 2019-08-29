@@ -196,7 +196,7 @@
     </select>
 
     <select id="findStudentsType" resultType="map">
-        SELECT b.username as stuName , a.stuId , b.stutype as stuType ,b.dep as departName,b.speciality , a.knskGrade
+        SELECT b.username as stuName , a.stuId , b.stutype as stuType ,b.dep as departName,b.speciality , a.knskGrade as grade
         FROM course.GradeAll a
         left join course.XjtuUserInfo b
         on a.stuId=b.userno

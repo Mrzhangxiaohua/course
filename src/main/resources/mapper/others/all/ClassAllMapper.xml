@@ -247,12 +247,35 @@
             operatorId = #{classAll.operatorId},
             operatorName = #{classAll.operatorName},
             stuNumUpperLimit = #{classAll.stuNumUpperLimit},
-            classWeeks = #{classAll.classWeeks}
+            classWeeks = #{classAll.classWeeks},
+            courseNameCHS=#{classAll.courseNameCHS},
+            courseNameEN=#{classAll.courseNameEN},
+            classSemester=#{classAll.classSemester},
+            classHour=#{classAll.classHour},
+            teacherId=#{classAll.teacherId},
+            teacherName=#{classAll.teacherName},
+            teachingTeamIds=#{classAll.teachingTeamIds},
+            teachingTeamName=#{classAll.teachingTeamNames}
+
         </set>
         where id = #{classAll.id}
     </update>
 
+    <select id="selectCourse" resultType="map" useCache="false">
+        select * from Course
+        where classAllId=#{classAllId}
+        limit 1
+    </select>
 
+    <update id="'updateCourse" flushCache="true">
+        update Course
+        <set>
+            className=#{className}
+            classTime=#{classTime}
+            classSemester=#{classSemester}
+        </set>
+        where classAllId=#{classAllId}
+    </update>
     <select id="selectClassAllById" resultType="com.spc.model.ClassAll" useCache="false">
         select * from ClassAll
         where id = #{id}
