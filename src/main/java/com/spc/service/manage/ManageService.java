@@ -90,13 +90,13 @@ public interface ManageService {
 
     void updateKnskSubmit(String classId);
 
-    void updateSumGrade();
+    void updateSumGrade(String academicYear);
 
-    List<Map<String,Object>> directFindAllScore(int departId,String stuId);
+    List<Map<String,Object>> directFindAllScore(String academicYear,int departId,String stuId);
 
     List<Map<String,Object>> findStudentsType(String academicYear,int typeId,int depId,String stuId);
 
-    List<Map<String,Object>> findAllScore(int departId,String stuId);
+    List<Map<String,Object>> findAllScore(String academicYear,int departId,String stuId);
 
     void uploadAllGradeOther(String stuId, Float grade, int moduleId);
 
