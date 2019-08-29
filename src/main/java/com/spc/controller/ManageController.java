@@ -2136,6 +2136,7 @@ public class ManageController extends Base {
                               @RequestParam(required = false, defaultValue = "10") int pageSize,
                               HttpSession session){
         //先更新总成绩
+        System.out.println("先更新成绩");
         manageService.updateSumGrade();
         System.out.println("更新完成");
         //查询成绩
@@ -2296,7 +2297,7 @@ public class ManageController extends Base {
      */
     @RequestMapping("/findMianXiuStudents")
     @ResponseBody
-    public Map findMianXiuStudents(
+    public Map findMianXiuStudents(@RequestParam("stuId") String aca,
                                 @RequestParam(required = false, defaultValue = "88888888") int depId,
                                 @RequestParam(required = false, defaultValue = "88888888") String stuId,
                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
@@ -2409,12 +2410,15 @@ public class ManageController extends Base {
      */
     @RequestMapping("/findStudentsType")
     @ResponseBody
-    public Map findStudentsType( @RequestParam(required = false, defaultValue = "88888888")  int typeId,
+    public Map findStudentsType( @RequestParam("academicYear") String academicYear,
+                                 @RequestParam(required = false, defaultValue = "88888888")  int typeId,
                                  @RequestParam(required = false, defaultValue = "88888888") int depId,
                                  @RequestParam(required = false, defaultValue = "88888888") String stuId,
                                  @RequestParam(required = false, defaultValue = "1") int currentPage,
                                  @RequestParam(required = false, defaultValue = "15") int pageSize,
                                  HttpSession session) {
+        System.out.println(depId);
+        System.out.println(stuId);
         Map<String,Object> res=new HashMap<>();
         Page page=PageHelper.startPage(currentPage, pageSize);
         List<Map<String,Object>> students = manageService.findStudentsType(typeId,depId,stuId);
@@ -2491,7 +2495,7 @@ public class ManageController extends Base {
     /**
      更新学生类别
      */
-    @RequestMapping("/updateStuType")
+    @RequestMapping("/")
     @ResponseBody
     public Map updateStuType(HttpServletRequest request,
                            HttpSession session) {
@@ -2500,12 +2504,12 @@ public class ManageController extends Base {
         try {
             List<Map<String,Object>> li=new ArrayList<>();
             JSONObject obj = new JSONObject(json);
-            int typeId=obj.getInt("typeId");
+            String typeId=String.valueOf(obj.getInt("typeId"));
             JSONArray stuList=  obj.getJSONArray("stuList");
             for(int i=0;i<stuList.length();i++){
                 JSONObject stu=stuList.getJSONObject(i);
                 String stuId= (String) stu.get("stuId");
-                manageService.updateStuType(typeId,stuId);
+                manageService.updateStuType(Integer.parseInt(typeId),stuId);
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -833,7 +833,9 @@ public class ManageServiceImpl extends Base implements ManageService {
         for(Map stu:stuList)
         {
             int stuType = gradeDao.findStuType((String) stu.get("stuId"));
+            System.out.println("学生类别"+stuType);
             Map<String,Object> percent = gradeDao.findGradePercent(stuType);
+            System.out.println("成绩比例"+percent);
             int xbsjPercent = (int) percent.get("xbsjGradePercent");
             int knskPercent = (int) percent.get("knskGradePercent");
             int wlzzPercent = (int) percent.get("wlzzGradePercent");
