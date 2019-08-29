@@ -199,5 +199,28 @@
         select XQDM from course.XjtuUserInfo where userno = #{stuId}
     </select>
 
+    <select id="findStudentsType" resultType="map">
+        SELECT b.username as stuName , a.stuId , b.stutype as stuType ,b.dep as departName,b.speciality , a.knskGrade as grade
+        FROM course.GradeAll a
+        left join course.XjtuUserInfo b
+        on a.stuId=b.userno
+        left join course.Department c
+        on b.depid=c.departCode
+        <where>
+            <if test="typeId!=88888888">
+                and b.stutype=#{typeId}
+            </if>
+            <if test="depId!=88888888">
+                and c.departId=#{depId}
+            </if>
+            <if test="stuId!='88888888'">
+                and a.stuId=#{stuId}
+            </if>
+        </where>
+    </select>
 
+    <update id="updateStuType">
+      update course.XjtuUserInfo set course.XjtuUserInfo.stutype=#{typeId}
+      where course.XjtuUserInfo.userno=#{stuId}
+     </update>
 </mapper>

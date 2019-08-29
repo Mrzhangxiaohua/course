@@ -67,19 +67,15 @@ public interface GradeDao {
 
     void uploadAllGradeOther3(@Param("stuId") String stuId,@Param("grade") Float grade);
 
-   int  findXbsjPercent();
-
-    int findKnskPercent();
-
-    int findWlzzPercent();
-
-    int findDektPercent();
-
-    int findNlcsPercent();
+    Map<String, Object> findGradePercent(@Param("stuType") int stuType);
 
     void updateWlzzIsSubmit();
 
     void updateDektIsSubmit();
 
     void updateNlcsIsSubmit();
+
+    int findStuType(@Param("stuId") String stuId);
+
+    void updateSumGrade(@Param("stuId") String stuId,@Param("grade") Float grade);
 }

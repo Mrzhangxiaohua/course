@@ -74,9 +74,9 @@ public interface ClassDao {
     int zzGrade(@Param("className") String className, @Param("classNum") int classNum, @Param("stuId") String stuId,
                 @Param("zzGrade") int zzGrade, @Param("flag") int flag);
 
-    List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId,@Param("academicYear") String academicYear);
+    List<Map<String, Object>> findTeachCourse(@Param("teacherId") String teacherId,@Param("academicYear") String academicYear,@Param("depId") int depId);
 
-    List<Map<String, Object>> findTeachCourse2(@Param("teacherId") String teacherId,@Param("academicYear") String academicYear);
+    List<Map<String, Object>> findTeachCourse2(@Param("teacherId") String teacherId,@Param("academicYear") String academicYear,@Param("depId") int depId);
 
     Map findClassInfo(@Param("classStr") String classStr);
     Map getClassInfo(Integer id);
@@ -125,4 +125,6 @@ public interface ClassDao {
     int findStudentIsChecked(@Param("classId") int classId, @Param("stuId")String stuId);
 
     int findStudentKnskIsChecked(@Param("JXBID") String JXBID, @Param("stuId")String stuId);
+
+    int findDepId(@Param("teacherId") String teacherId);
 }

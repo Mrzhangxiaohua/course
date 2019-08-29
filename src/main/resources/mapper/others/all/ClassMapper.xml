@@ -329,9 +329,18 @@
 
     <select id="findTeachCourse" resultType="Map">
         select *
-        from course.Course
-        where  teaId=#{teacherId}
-        and classSemester=#{academicYear}
+        from course.Course a
+        <where>
+            <if test="depId!=88888888 ">
+                and a.departId = #{depId}
+            </if>
+            <if test="teacherId!='88888888'">
+                and a.teaId = #{teacherId}
+            </if>
+            <if test="academicYear!=null">
+                and classSemester=#{academicYear}
+            </if>
+        </where>
 
     </select>
 
@@ -443,13 +452,13 @@
         left join course.ClassAll b
         on a.classAllId=b.id
         left join course.Department c
-        on b.departId=c.departId
+        on a.departId=c.departId
         <where>
             <if test="academicYear!=null">
                 and a.classSemester=#{academicYear}
             </if>
-            <if test="departId!=null">
-                and b.departId= #{departId}
+            <if test="departId!='88888888'">
+                and a.departId= #{departId}
             </if>
             <if test="teaName!= '88888888' and teaName!=null ">
                 and a.teaName= #{teaName}
@@ -542,4 +551,11 @@
         where c.JXBID=#{JXBID} and c.XH=#{stuId}
     </select>
 
+    <select id="findDepId" resultType="int">
+        select a.departId
+        from course.XjtuUserInfo c
+        left join Department  a
+        on a.departCode = c.depid
+        where c.userno=#{teacherId}
+    </select>
 </mapper>

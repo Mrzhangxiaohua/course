@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Repository
 public interface GradePercentDao {
-   int insertGradePercent(@Param("knsk") int knsk,@Param("xbsj") int xbsj,@Param("zzxx") int zzxx,@Param("dekt") int dekt,@Param("qmnl") int qmnl,@Param("userId") String userId,@Param("date") String date);
+   int updateGradePercent(@Param("knsk") int knsk,@Param("xbsj") int xbsj,@Param("wlzz") int wlzz,@Param("dekt") int dekt,@Param("nlcs") int nlcs,@Param("userId") String userId,@Param("date") String date ,@Param("typeId") int typeId);
 
    int updateFlagZero();
 
