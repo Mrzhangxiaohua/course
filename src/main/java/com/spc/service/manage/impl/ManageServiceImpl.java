@@ -221,17 +221,17 @@ public class ManageServiceImpl extends Base implements ManageService {
 //    }
 
     @Override
-    public List findStudentByClassnameAndNum(String classId, int pageSize, int currentPage) {
+    public List findStudentByClassnameAndNum(String classId, int pageSize, int currentPage, String classSemester) {
 //        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
 
         PageHelper.startPage(currentPage, pageSize);
-        return studentDao.findStudent(Integer.parseInt(classId));
+        return studentDao.findStudent(Integer.parseInt(classId), classSemester);
     }
 
     @Override
-    public List findStudentByStudentId(int pageSize, int currentPage, String stuId) {
+    public List findStudentByStudentId(int pageSize, int currentPage, String stuId, String classSemester) {
         PageHelper.startPage(currentPage, pageSize);
-        return studentDao.findStudentByStudentId(stuId);
+        return studentDao.findStudentByStudentId(stuId, classSemester);
     }
 
     @Override

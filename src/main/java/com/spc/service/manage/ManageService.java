@@ -37,9 +37,9 @@ public interface ManageService {
     int getClassId(String className,int classNum);
 
 
-    List findStudentByClassnameAndNum(String classId,int pageSize,int currentPage);
+    List findStudentByClassnameAndNum(String classId,int pageSize,int currentPage, String classSemester);
 
-    List findStudentByStudentId(int pageSize, int currentPage, String stuId);
+    List findStudentByStudentId(int pageSize, int currentPage, String stuId, String classSemester);
 
     int addTimeSwitch(int timeSwitch);
     int updateTimeSwitch(int timeSwitch);
