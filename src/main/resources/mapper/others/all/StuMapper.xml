@@ -207,6 +207,9 @@
         left join course.Department c
         on b.depid=c.departCode
         <where>
+            <if test="academicYear!=null">
+                and a.semester=#{academicYear}
+            </if>
             <if test="typeId!=88888888">
                 and b.stutype=#{typeId}
             </if>

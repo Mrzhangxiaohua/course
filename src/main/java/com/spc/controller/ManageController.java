@@ -2297,7 +2297,7 @@ public class ManageController extends Base {
      */
     @RequestMapping("/findMianXiuStudents")
     @ResponseBody
-    public Map findMianXiuStudents(@RequestParam("stuId") String aca,
+    public Map findMianXiuStudents(@RequestParam("academicYear") String academicYear,
                                 @RequestParam(required = false, defaultValue = "88888888") int depId,
                                 @RequestParam(required = false, defaultValue = "88888888") String stuId,
                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
@@ -2305,7 +2305,7 @@ public class ManageController extends Base {
                                 HttpSession session) {
         Map<String,Object> res=new HashMap<>();
         Page page=PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> students = manageService.findStudentsType(1,depId,stuId);
+        List<Map<String,Object>> students = manageService.findStudentsType(academicYear,1,depId,stuId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
         List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
@@ -2351,7 +2351,7 @@ public class ManageController extends Base {
                                       @RequestParam(required = false, defaultValue = "88888888") String stuId, HttpServletResponse response,
                                       HttpSession session) throws IOException{
         Map<String,Object> res=new HashMap<>();
-        List<Map<String,Object>> students = manageService.findStudentsType(1,depId,stuId);
+        List<Map<String,Object>> students = manageService.findStudentsType(academicYear,1,depId,stuId);
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet(academicYear+"免修学生"+"成绩表");
         String fileName = academicYear+"免修学生"+"成绩表"  + ".xls";//设置要导出的文件的名字
@@ -2411,17 +2411,19 @@ public class ManageController extends Base {
     @RequestMapping("/findStudentsType")
     @ResponseBody
     public Map findStudentsType( @RequestParam("academicYear") String academicYear,
-                                 @RequestParam(required = false, defaultValue = "88888888")  int typeId,
+                                 @RequestParam(required = false, defaultValue = "88888888")  Integer typeId,
                                  @RequestParam(required = false, defaultValue = "88888888") int depId,
                                  @RequestParam(required = false, defaultValue = "88888888") String stuId,
                                  @RequestParam(required = false, defaultValue = "1") int currentPage,
                                  @RequestParam(required = false, defaultValue = "15") int pageSize,
                                  HttpSession session) {
+        if(typeId==null)
+            typeId=88888888;
         System.out.println(depId);
         System.out.println(stuId);
         Map<String,Object> res=new HashMap<>();
         Page page=PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> students = manageService.findStudentsType(typeId,depId,stuId);
+        List<Map<String,Object>> students = manageService.findStudentsType(academicYear,typeId,depId,stuId);
         PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
         List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
@@ -2495,7 +2497,7 @@ public class ManageController extends Base {
     /**
      更新学生类别
      */
-    @RequestMapping("/")
+    @RequestMapping("/updateStuType")
     @ResponseBody
     public Map updateStuType(HttpServletRequest request,
                            HttpSession session) {
@@ -2504,7 +2506,7 @@ public class ManageController extends Base {
         try {
             List<Map<String,Object>> li=new ArrayList<>();
             JSONObject obj = new JSONObject(json);
-            String typeId=String.valueOf(obj.getInt("typeId"));
+            String typeId=String.valueOf(obj.getInt("stuType"));
             JSONArray stuList=  obj.getJSONArray("stuList");
             for(int i=0;i<stuList.length();i++){
                 JSONObject stu=stuList.getJSONObject(i);
