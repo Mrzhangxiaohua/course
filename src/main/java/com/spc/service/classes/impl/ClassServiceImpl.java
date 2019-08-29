@@ -85,7 +85,6 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public List findStudent(int classId) {
-        List s = studentDao.findStudent(classId, "");
         return studentDao.findStudent(classId,"");
     }
 
