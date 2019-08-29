@@ -24,9 +24,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jasig.cas.client.util.CommonUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
@@ -1356,7 +1358,7 @@ public class ManageController extends Base {
     @RequestMapping(value = "addFormerCourseAllByYear")
     @ResponseBody
     public String addFormerCourseAllByYear(@RequestParam String year) {
-       List<CourseAll> list= courseAllService.findCourseAll(year,"8888","8888",8888);
+        List<CourseAll> list= courseAllService.getCourseAll(year,null);
         int flag=0;
         StringBuilder sb=new StringBuilder();
        for(CourseAll courseAll:list){
@@ -1387,10 +1389,11 @@ public class ManageController extends Base {
     @ResponseBody
     public String addFormerCourseAllByYear2(@RequestParam String year,HttpSession session) {
         int departId = (Integer) session.getAttribute("departId");
-        List<CourseAll> list= courseAllService.findCourseAll(year,"8888","8888",departId);
+        List<CourseAll> list= courseAllService.getCourseAll(year,departId);
         int flag=0;
         StringBuilder sb=new StringBuilder();
         for(CourseAll courseAll:list){
+
             courseAll.setId(null);
             courseAll.setCourseAppId(null);
             Calendar now = Calendar.getInstance();
