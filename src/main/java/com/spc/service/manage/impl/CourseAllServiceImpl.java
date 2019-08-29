@@ -323,19 +323,23 @@ public class CourseAllServiceImpl implements CourseAllService {
         courseAll.setOperatorName(username);
         courseAll.setOperateDate(new Date());
         courseAllDao.updateCourseAll(courseAll);
-        //更新classAll,course表
-        List<ClassAll> classAllList=classAllDao.selectClassAll(null,null,null,courseAll.getCourseId(),null,null,null,null,null);
-        for(ClassAll ca:classAllList){
-            ca.setClassHour(courseAll.getClassHour());
-            ca.setCourseNameCHS(courseAll.getCourseNameCHS());
-            ca.setCourseNameEN(courseAll.getCourseNameEN());
-            ca.setClassSemester(courseAll.getClassSemester());
-            ca.setTeacherId(courseAll.getTeacherId());
-            ca.setTeacherName(courseAll.getTeacherName());
-            ca.setTeachingTeamIds(courseAll.getTeachingTeamIds());
-            ca.setTeachingTeamNames(courseAll.getTeachingTeamNames());
-            classAllDao.updateClass(ca);
-            classAllDao.updateCourse(ca.getCourseNameCHS(),ca.getClassHour(),ca.getAcademicYear()+ca.getClassSemester(),ca.getId());
+        if(courseAll.getFlag()==1) {
+            //更新classAll,course表
+            List<ClassAll> classAllList = classAllDao.selectClassAll(null, null, null, courseAll.getCourseId(), null, null, null, null, null);
+            for (ClassAll ca : classAllList) {
+                ca.setClassHour(courseAll.getClassHour());
+                ca.setCourseNameCHS(courseAll.getCourseNameCHS());
+                ca.setCourseNameEN(courseAll.getCourseNameEN());
+                ca.setClassSemester(courseAll.getClassSemester());
+                ca.setTeacherId(courseAll.getTeacherId());
+                ca.setTeacherName(courseAll.getTeacherName());
+                ca.setTeachingTeamIds(courseAll.getTeachingTeamIds());
+                ca.setTeachingTeamNames(courseAll.getTeachingTeamNames());
+                classAllDao.updateClass(ca);
+                System.out.println("ca:success"+classAllDao.updateClass(ca));
+                classAllDao.updateCourse(ca.getCourseNameCHS(), ca.getClassHour(), ca.getAcademicYear() + ca.getClassSemester(), ca.getId());
+                System.out.println("course:success" + classAllDao.updateCourse(ca.getCourseNameCHS(), ca.getClassHour(), ca.getAcademicYear() + ca.getClassSemester(), ca.getId()));
+            }
         }
         return  1;
     }
