@@ -47,7 +47,7 @@ public class MakeTimeTable extends Base {
         else if (schoolDistrictId == 3) schoolDistrictName = "曲江校区";
         else if (schoolDistrictId == 4) schoolDistrictName = "苏州校区";
         else if (schoolDistrictId == 5) schoolDistrictName = "创新港校区";
-        return "★课程：" + className + ',' + "教室：" + schoolDistrictName + ":" + classPlace + ',' + "授课教师：" + teacherName + ','+ (student==1?"":("主讲教师：" + mainLecturer + ',')) + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
+        return "★课程：" + className + ',' + "教室：" + schoolDistrictName + "-" + classPlace + ',' + "授课教师：" + teacherName + ','+ (student==1?"":("主讲教师：" + mainLecturer + ',')) + "周次：" + startWeek + "-" + endWeek + ',' + "班次：" + classNum;
     }
 
 
