@@ -2384,7 +2384,13 @@ public class ManageController extends Base {
                 JSONObject stu=stuList.getJSONObject(i);
                 String stuId= (String) stu.get("stuId");
                 String grade= String.valueOf(stu.get("grade"));
-                gradeService.uploadAllGradeKnsk(stuId,Float.parseFloat(grade));
+                if(grade == null || grade.equals("") || grade.equals("null")){
+                    grade = null;
+                }
+                if(grade == null)
+                    gradeService.uploadAllGradeKnsk(stuId,null);
+                else
+                    gradeService.uploadAllGradeKnsk(stuId,Float.parseFloat(grade));
             }
         } catch (JSONException e) {
             e.printStackTrace();
