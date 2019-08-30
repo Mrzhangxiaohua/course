@@ -1046,7 +1046,7 @@ public class ManageController extends Base {
         int flag=courseAllService.findFlag();
         List<Map<String,Object>> pageList=new ArrayList<>();
         PageInfo<Map<String,Object>> pageInfo = new PageInfo<>();
-        if(flag!=0) {
+//        if(flag!=0) {
 
             if (academicYear.equals("8888")) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -1059,7 +1059,7 @@ public class ManageController extends Base {
             PageHelper.startPage(currentPage, pageSize);
             List courseAllList = courseAllService.findDepartCourseApp(departId, academicYear, courseId, courseName);
             pageInfo = new PageInfo<>(courseAllList);
-        }
+//        }
         res.put("total", pageInfo.getTotal());
         res.put("flag",flag);
         pageList=pageInfo.getList();
@@ -1384,8 +1384,9 @@ public class ManageController extends Base {
      */
     @RequestMapping(value = "addFormerCourseAllByYear")
     @ResponseBody
-    public String addFormerCourseAllByYear(@RequestParam String year) {
-        List<CourseAll> list= courseAllService.getCourseAll(year,null);
+    public String addFormerCourseAllByYear(@RequestParam String year,
+                                           @RequestParam(required = false,defaultValue = "8888") int departId) {
+        List<CourseAll> list= courseAllService.getCourseAll(year,departId);
         int flag=0;
         StringBuilder sb=new StringBuilder();
        for(CourseAll courseAll:list){
