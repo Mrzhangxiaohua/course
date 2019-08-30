@@ -1048,17 +1048,17 @@ public class ManageController extends Base {
         PageInfo<Map<String,Object>> pageInfo = new PageInfo<>();
 //        if(flag!=0) {
 
-            if (academicYear.equals("8888")) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        if (academicYear.equals("8888")) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 
-                Date date = new Date();
-                int year = Integer.parseInt(sdf.format(date));
-                academicYear = year + "-" + (year + 1);
-            }
-            int departId = (int) request.getSession().getAttribute("departId");
-            PageHelper.startPage(currentPage, pageSize);
-            List courseAllList = courseAllService.findDepartCourseApp(departId, academicYear, courseId, courseName);
-            pageInfo = new PageInfo<>(courseAllList);
+            Date date = new Date();
+            int year = Integer.parseInt(sdf.format(date));
+            academicYear = year + "-" + (year + 1);
+        }
+        int departId = (int) request.getSession().getAttribute("departId");
+        PageHelper.startPage(currentPage, pageSize);
+        List courseAllList = courseAllService.findDepartCourseApp(departId, academicYear, courseId, courseName);
+        pageInfo = new PageInfo<>(courseAllList);
 //        }
         res.put("total", pageInfo.getTotal());
         res.put("flag",flag);
