@@ -16,7 +16,7 @@ public interface GradeService {
 
     List<Map<String, Object>> selectGetTitle();
 
-    void uploadAllGradeKnsk(String stuId,float grade);
+    void uploadAllGradeKnsk(String stuId,Float grade);
 
     void uploadAllGradeXbsj(String stuId,float grade);
 

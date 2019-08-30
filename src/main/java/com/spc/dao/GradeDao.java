@@ -57,7 +57,7 @@ public interface GradeDao {
 
     List<Map<String, Object>> findAllScore(@Param("academicYear") String academicYear,@Param("departId") int departId, @Param("stuId") String stuId);
 
-    void uploadAllGradeKnsk(@Param("stuId") String stuId,@Param("grade") float grade);
+    void uploadAllGradeKnsk(@Param("stuId") String stuId,@Param("grade") Float grade);
 
     void uploadAllGradeXbsj(@Param("stuId") String stuId,@Param("grade") float grade);
 
