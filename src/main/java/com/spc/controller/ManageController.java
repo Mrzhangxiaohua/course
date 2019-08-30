@@ -2226,6 +2226,29 @@ public class ManageController extends Base {
     }
 
     /**
+     * 学院管理员端：导出所有学生总成绩PDF
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping("/depDownloadScorePdf")
+    @ResponseBody
+    public ModelAndView depDownloadScorePdf(@RequestParam("classSemester") String academicYear,
+                                         @RequestParam(required = false, defaultValue = "88888888") String stuId,
+                                         HttpServletResponse response,HttpSession session){
+        String teacherId = (String) session.getAttribute("userId");
+        int departId = classService.findDepId(teacherId);
+        List<Map<String,Object>> students = manageService.findAllScore(academicYear,departId,stuId);
+        response = ResponseWrap.setName(response, "2018-2019学年英语总成绩单", "pdf");
+        Map res = new HashMap();
+        res.put("data", students);
+        Map<String, Object> model = new HashMap<>();
+        model.put("res", res);
+        model.put("style", "higher");
+        return new ModelAndView(new StudentsAllScoreListPdfView(), model);
+    }
+
+    /**
      * 超级管理员端：导出所有学生总成绩PDF
      * @param
      * @param
