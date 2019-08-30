@@ -128,15 +128,7 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public List<Map<String, Object>> findTeachCourse(String teacherId,String academicYear,int depId) {
         List<Map<String, Object>> res = classDao.findTeachCourse(teacherId,academicYear,depId);
-        for(Map course : res){
-            String className = (String) course.get("className");
-            if(course.get("schoolDistrictId")==null) continue;
-            if((Integer)course.get("schoolDistrictId") == 1)  course.put("className", className+"(兴庆)");
-            if((Integer)course.get("schoolDistrictId") == 2)  course.put("className", className+"(雁塔)");
-            if((Integer)course.get("schoolDistrictId") == 3)  course.put("className", className+"(曲江)");
-            if((Integer)course.get("schoolDistrictId") == 4)  course.put("className", className+"(苏州)");
-            if((Integer)course.get("schoolDistrictId") == 5)  course.put("className", className+"(创新港)");
-        }
+
         return res;
     }
 

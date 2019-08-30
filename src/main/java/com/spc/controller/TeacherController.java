@@ -1162,7 +1162,6 @@ public class TeacherController extends Base {
     public void downloadStudentsExcel(HttpServletResponse response,@RequestParam("classId") int classId ,
                                       @RequestParam("className") String className,
                                       @RequestParam("classNum") String classNum) throws IOException {
-
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet(className+classNum+"选课学生名单");
         List<Map<String,Object>> students = classService.findStudent(classId);
@@ -1176,7 +1175,6 @@ public class TeacherController extends Base {
             cell.setCellValue(text);
         }
         int rowNum=1;
-        System.out.print(students);
         for(Map<String,Object> stu:students){
             HSSFRow row=sheet.createRow(rowNum);
             row.createCell(0).setCellValue((String) stu.get("stuName"));
