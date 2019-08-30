@@ -733,6 +733,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     private boolean checkClassName(ClassAll classAll, Map<String, String> res, StringBuilder msgBuilder) {
         int count = classAllDao.countClassAllByClassNameExcludeId(classAll.getAcademicYear(), classAll.getClassSemester(),
                 classAll.getCourseId(), classAll.getSchoolDistrictId(), classAll.getClassName(), classAll.getId());
+
         if (count > 0) {
             msgBuilder.append("在").append(classAll.getAcademicYear()).append(classAll.getClassSemester()).append(",");
             msgBuilder.append(classAll.getClassName()).append("已存在，请修改所属校区或修改班级名称！");

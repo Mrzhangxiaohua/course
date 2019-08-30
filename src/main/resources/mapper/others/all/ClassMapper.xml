@@ -8,7 +8,7 @@
     </sql>
 
     <sql id="Table">
-        classDateDescription,teaName,classPlace,endWeek,startWeek,classNum,className
+        classDateDescription,teaName,classPlace,endWeek,startWeek,classNum,className, schoolDistrictId
     </sql>
 
     <sql id="BASE_COLUMN">

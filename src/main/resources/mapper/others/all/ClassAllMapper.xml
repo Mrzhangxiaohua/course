@@ -200,9 +200,9 @@
             <if test="courseId != null and courseId !=''">
                 and courseId = #{courseId}
             </if>
-            <if test="schoolDistrictId != null">
-                and schoolDistrictId = #{schoolDistrictId}
-            </if>
+            <!--<if test="schoolDistrictId != null">-->
+                <!--and schoolDistrictId = #{schoolDistrictId}-->
+            <!--</if>-->
             <if test="className != null and className !=''">
                 and className = #{className}
             </if>
