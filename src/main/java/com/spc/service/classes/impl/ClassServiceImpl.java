@@ -85,8 +85,7 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public List findStudent(int classId) {
-        List s = studentDao.findStudent(classId);
-        return studentDao.findStudent(classId);
+        return studentDao.findStudent(classId,"");
     }
 
     @Override
@@ -121,15 +120,16 @@ public class ClassServiceImpl implements ClassService {
     public int updateScore3(String className,int classNum, String stuId, int xbsjGrade,int wlzzxxGrade, int knskGrade) {
         return classDao.updateScore3(className,classNum, stuId, xbsjGrade, wlzzxxGrade,  knskGrade);
     }
-
     @Override
     public int zzGrade(String className, int classNum, String stuId, int zzGrade, int flag) {
         return classDao.zzGrade(className, classNum, stuId, zzGrade, flag);
     }
 
     @Override
-    public List<Map<String, Object>> findTeachCourse(String teacherId,String academicYear) {
-        return classDao.findTeachCourse(teacherId,academicYear);
+    public List<Map<String, Object>> findTeachCourse(String teacherId,String academicYear,int depId) {
+        List<Map<String, Object>> res = classDao.findTeachCourse(teacherId,academicYear,depId);
+
+        return res;
     }
 
     @Override
@@ -226,8 +226,15 @@ public class ClassServiceImpl implements ClassService {
         if(courses.size()==0)
             return courses;
         for(Map course:courses) {
+            String cName = (String) course.get("className");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 1)  course.put("className", cName+"(兴庆)");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 2)  course.put("className", cName+"(雁塔)");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 3)  course.put("className", cName+"(曲江)");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 4)  course.put("className", cName+"(苏州)");
+            if(course.get("schoolDistrictId")!=null && (Integer)course.get("schoolDistrictId") == 5)  course.put("className", cName+"(创新港)");
+            course.put("classNum", course.get("classNum")+"班");
             int classId = (int) course.get("classId");
-            List<Map<String, Object>> students = studentDao.findStudent(classId);
+            List<Map<String, Object>> students = studentDao.findStudent(classId, "");
             int uncheckedNum = 0;
             int checkedNum = 0;
             int recheckedNum = 0;
@@ -350,6 +357,11 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public int findStudentKnskIsChecked(String JXBID, String stuId) {
         return classDao.findStudentKnskIsChecked(JXBID,stuId);
+    }
+
+    @Override
+    public int findDepId(String teacherId) {
+        return classDao.findDepId(teacherId);
     }
 
 

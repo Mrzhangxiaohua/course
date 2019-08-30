@@ -117,7 +117,11 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 int i = Integer.parseInt(indexes[0]);
                 if(i>=6){ i=i-2;}
                 int j = Integer.parseInt(indexes[1]);
-
+                String schoolDistrictName = "兴庆校区";
+                if (c.getSchoolDistrictId() == 2) schoolDistrictName = "雁塔校区";
+                else if (c.getSchoolDistrictId() == 3) schoolDistrictName = "曲江校区";
+                else if (c.getSchoolDistrictId() == 4) schoolDistrictName = "苏州校区";
+                else if (c.getSchoolDistrictId() == 5) schoolDistrictName = "创新港校区";
                 StringBuilder sb = new StringBuilder();
                 sb.append("★课程：");
                 if (c.getCourseNameCHS() != null) {
@@ -125,7 +129,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
                 } else {
                     sb.append(c.getCourseNameEN());
                 }
-                sb.append("\n教室：").append(c.getClassPlaceName());
+                sb.append("\n教室：").append(schoolDistrictName + "-" + c.getClassPlaceName());
                 sb.append("\n授课教师：").append(c.getInstructorName());
                 sb.append("\n周次：").append(c.getStartWeek()).append("-").append(c.getEndWeek());
                 sb.append("\n班级：").append(c.getClassName());
@@ -729,6 +733,7 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     private boolean checkClassName(ClassAll classAll, Map<String, String> res, StringBuilder msgBuilder) {
         int count = classAllDao.countClassAllByClassNameExcludeId(classAll.getAcademicYear(), classAll.getClassSemester(),
                 classAll.getCourseId(), classAll.getSchoolDistrictId(), classAll.getClassName(), classAll.getId());
+
         if (count > 0) {
             msgBuilder.append("在").append(classAll.getAcademicYear()).append(classAll.getClassSemester()).append(",");
             msgBuilder.append(classAll.getClassName()).append("已存在，请修改所属校区或修改班级名称！");

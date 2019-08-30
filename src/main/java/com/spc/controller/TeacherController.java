@@ -1101,14 +1101,11 @@ public class TeacherController extends Base {
     @RequestMapping("teach/findCourse")
     @ResponseBody
     public Map findTeachCourse(
-            @RequestParam(required = false, defaultValue = "1") int currentPage,
-            @RequestParam(required = false, defaultValue = "10") int pageSize,
             HttpSession session
     ) {
         String teacherId = (String) session.getAttribute("userId");
         Map<String,Object> res=new HashMap<>();
-        Page page=PageHelper.startPage(currentPage, pageSize);
-        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,CURRENTSEMESTER);
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,CURRENTSEMESTER,88888888);
         for(Map<String,Object> c:classes){
             StringBuilder str=new StringBuilder();
             String[] all=( (String) c.get("classDateDescription")).split(",");
@@ -1124,13 +1121,8 @@ public class TeacherController extends Base {
             str.deleteCharAt(str.length()-1);
             c.put("classDateDescription",str);
         }
-        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(classes);
-        List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
-        data.put("total",page.getTotal());
-        data.put("list",pageList);
-        data.put("currentPage",currentPage);
-        data.put("pageSize",pageSize);
+        data.put("list",classes);
         res.put("data", data);
         res.put("status", "SUCCESS");
         return res;
@@ -1150,7 +1142,7 @@ public class TeacherController extends Base {
     ) {
         String teacherId = (String) session.getAttribute("userId");
         Map<String,Object> res=new HashMap<>();
-        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,academicYear);
+        List<Map<String,Object>> classes = classService.findTeachCourse(teacherId,academicYear,88888888);
         Map<String, Object> data = new HashMap<>();
         data.put("list",classes);
         res.put("data", data);
@@ -1170,12 +1162,11 @@ public class TeacherController extends Base {
     public void downloadStudentsExcel(HttpServletResponse response,@RequestParam("classId") int classId ,
                                       @RequestParam("className") String className,
                                       @RequestParam("classNum") String classNum) throws IOException {
-
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet(className+classNum+"选课学生名单");
         List<Map<String,Object>> students = classService.findStudent(classId);
         String fileName =className+classNum+ "选课学生名单"  + ".xls";//设置要导出的文件的名字
-        String[] headers={"姓名","学号"};
+        String[] headers={"姓名","学号","所属学院","所属专业"};
         HSSFRow headerRow=sheet.createRow(0);
         //添加表头
         for(int i=0;i<headers.length;i++){
@@ -1184,12 +1175,12 @@ public class TeacherController extends Base {
             cell.setCellValue(text);
         }
         int rowNum=1;
-        System.out.print(students);
         for(Map<String,Object> stu:students){
             HSSFRow row=sheet.createRow(rowNum);
-            row.createCell(0).setCellValue((String) stu.get("name"));
+            row.createCell(0).setCellValue((String) stu.get("stuName"));
             row.createCell(1).setCellValue((String) stu.get("stuId"));
-//            row.createCell(2).setCellValue((String) stu.get("className")+stu.get("classNum")+"班");
+            row.createCell(2).setCellValue((String) stu.get("departName"));
+            row.createCell(3).setCellValue((String) stu.get("speciality"));
             rowNum++;
         }
         response.setContentType("application/octet-stream");
@@ -1450,23 +1441,15 @@ public class TeacherController extends Base {
     @RequestMapping("/findStudentsScore")
     @ResponseBody
     public Map findStudentsScore(@RequestParam("classId") int classId,
-                                 @RequestParam(required = false, defaultValue = "1") int currentPage,
-                                 @RequestParam(required = false, defaultValue = "10") int pageSize,
                                  HttpSession session) {
         int isGrade=classService.findIsGrade(classId);
         ClassDomain classes =  classService.findClassById(classId);
         String className=classes.getClassName();
         int classNum=classes.getClassNum();
         Map<String,Object> res=new HashMap<>();
-        Page page=PageHelper.startPage(currentPage, pageSize);
         List<Map<String,Object>> students = classService.findStudent(classId);
-        PageInfo<Map<String,Object>> pageInfo=new PageInfo<>(students);
-        List<Map<String,Object>> pageList=pageInfo.getList();
         Map<String, Object> data = new HashMap<>();
-        data.put("total",page.getTotal());
-        data.put("list",pageList);
-        data.put("currentPage",currentPage);
-        data.put("pageSize",pageSize);
+        data.put("list",students);
         res.put("data", data);
         res.put("className",className);
         res.put("classNum",classNum);

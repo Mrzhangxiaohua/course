@@ -45,6 +45,8 @@ public class StudentServiceImpl extends Base implements StudentService {
     public String[][] findClasses(String stuId) {
 //        int stuId = Integer.parseInt(authMess.userDetails().getUserid());
         List<HashMap<String, Object>> lis = studentDao.findClasses(stuId, CURRENTSEMESTER);
+
+
         System.out.println(lis);
         String[][] res = MakeTimeTable.makeBigTable(lis, 1);
         logger.info("===================run here");

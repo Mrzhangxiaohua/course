@@ -154,7 +154,7 @@
      </update>
 
     <select id="findAllScore" resultType="map">
-        select a.stuId,a.xbsjGrade,a.knskGrade,a.wlzzGrade,a.dektGrade,a.nlcsGrade,b.dep as departName,b.speciality,b.username as stuName
+        select a.stuId,a.xbsjGrade,a.knskGrade,a.wlzzGrade,a.dektGrade,a.nlcsGrade, a.sumGrade ,b.dep as departName,b.speciality,b.username as stuName
         from course.GradeAll a
         left join course.XjtuUserInfo b
         on a.stuId=b.userno
@@ -166,6 +166,9 @@
             </if>
             <if test="stuId!='88888888'">
                 and a.stuId=#{stuId}
+            </if>
+            <if test="academicYear!=null">
+                and a.semester=#{academicYear}
             </if>
         </where>
     </select>
@@ -196,36 +199,6 @@
       where course.GradeAll.stuId=#{stuId}
      </update>
 
-    <select id="findXbsjPercent" resultType="int">
-        select gradePercentage
-        from course.gradePercent
-        where modelEng='xbsjGrade'
-    </select>
-
-    <select id="findKnskPercent" resultType="int">
-        select gradePercentage
-        from course.gradePercent
-        where modelEng='knskGrade'
-    </select>
-
-    <select id="findWlzzPercent" resultType="int">
-        select gradePercentage
-        from course.gradePercent
-        where modelEng='wlzzGrade'
-    </select>
-
-    <select id="findDektPercent" resultType="int">
-        select gradePercentage
-        from course.gradePercent
-        where modelEng='dektGrade'
-    </select>
-
-    <select id="findNlcsPercent" resultType="int">
-        select gradePercentage
-        from course.gradePercent
-        where modelEng='nlcsGrade'
-    </select>
-
     <update id="updateWlzzIsSubmit">
       update course.OtherGrade set course.OtherGrade.wlzzIsSubmit=1
      </update>
@@ -238,5 +211,21 @@
       update course.OtherGrade set course.OtherGrade.nlcsIsSubmit=1
      </update>
 
+    <select id="findGradePercent" resultType="map">
+        select xbsjGradePercent,knskGradePercent,nlcsGradePercent,wlzzGradePercent,dektGradePercent
+        from course.gradePercent
+        where typeId=#{stuType}
+    </select>
+
+    <update id="updateSumGrade">
+      update course.GradeAll set course.GradeAll.sumGrade=#{grade}
+      where course.GradeAll.stuId=#{stuId}
+     </update>
+
+    <select id="findStuType" resultType="int">
+        select stutype
+        from course.XjtuUserInfo
+        where userno=#{stuId}
+    </select>
 
 </mapper>

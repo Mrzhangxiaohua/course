@@ -221,17 +221,17 @@ public class ManageServiceImpl extends Base implements ManageService {
 //    }
 
     @Override
-    public List findStudentByClassnameAndNum(String classId, int pageSize, int currentPage) {
+    public List findStudentByClassnameAndNum(String classId, int pageSize, int currentPage, String classSemester) {
 //        int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
 
         PageHelper.startPage(currentPage, pageSize);
-        return studentDao.findStudent(Integer.parseInt(classId));
+        return studentDao.findStudent(Integer.parseInt(classId), classSemester);
     }
 
     @Override
-    public List findStudentByStudentId(int pageSize, int currentPage, String stuId) {
+    public List findStudentByStudentId(int pageSize, int currentPage, String stuId, String classSemester) {
         PageHelper.startPage(currentPage, pageSize);
-        return studentDao.findStudentByStudentId(stuId);
+        return studentDao.findStudentByStudentId(stuId, classSemester);
     }
 
     @Override
@@ -365,25 +365,18 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public Map getGradePercent() {
+    public Map<String,Object> getGradePercent() {
         List<Map<String,Object>> list = gradePercentDao.getGradePercent();
         Map<String,Object> res = new HashMap<>();
-        for(Map li : list) {
-            System.out.println(String.valueOf(li));
-            if ((int) li.get("id") == 1) {
-                res.put("XBSJ", li.get("gradePercentage"));
+        for(Map li:list){
+            if((int)li.get("typeId") == 0) {
+                res.put("type1",li);
             }
-            if ((int) li.get("id") == 2) {
-                res.put("KNSK", li.get("gradePercentage"));
+            if((int)li.get("typeId") == 1) {
+                res.put("type2",li);
             }
-            if ((int) li.get("id") == 3) {
-                res.put("ZZXX", li.get("gradePercentage"));
-            }
-            if ((int) li.get("id") == 4) {
-                res.put("DEKT", li.get("gradePercentage"));
-            }
-            if ((int) li.get("id") == 5) {
-                res.put("QMNL", li.get("gradePercentage"));
+            if((int)li.get("typeId") == 2) {
+                res.put("type3",li);
             }
         }
         return res;
@@ -391,9 +384,9 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public int addGradePercent(int knsk, int xbsj, int zzxx, int dekt, int qmnl,String userId, String date) {
-        gradePercentDao.updateFlagZero();
-        return gradePercentDao.insertGradePercent(knsk,xbsj,zzxx,dekt,qmnl,userId,date);
+    public int updateGradePercent(int knsk, int xbsj, int wlzz, int dekt, int nlcs,String userId, String date , int typeId) {
+//        gradePercentDao.updateFlagZero();
+        return gradePercentDao.updateGradePercent(knsk,xbsj,wlzz,dekt,nlcs,userId,date,typeId);
     }
 
 
@@ -682,6 +675,114 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
+    public Map insertTypeExcel(int typeId,int fileInfoId) {
+        Map<String,Object> res=new HashMap<>();
+        List<Map<String,Object>> result=new ArrayList<>();
+        Map<String, Object> fileInfo = teacherDao.selectGradeExcel(fileInfoId);
+        String fileName = (String) fileInfo.get("fileName");
+        String path = (String) fileInfo.get("path");
+        File file = new File(path);
+        if (file == null) {
+            res.put("flag",0);
+            return res;
+        }
+        Workbook workbook = null;
+        try (FileInputStream is = new FileInputStream(file)) {
+            if (file.getName().endsWith(".xls")) {
+                workbook = new HSSFWorkbook(is);
+            } else if (file.getName().endsWith(".xlsx")) {
+                workbook = new XSSFWorkbook(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (workbook != null) {
+            int sheetNum = workbook.getNumberOfSheets();
+            for (int i = 0; i < sheetNum; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                for (int j = 1; j <= sheet.getLastRowNum(); j++) {
+                    Row row = sheet.getRow(j);
+                    if (row == null) {
+                        continue;
+                    }
+                    String stuId= null;
+                    switch (row.getCell(1).getCellType()) {
+                        case Cell.CELL_TYPE_NUMERIC:
+                            DecimalFormat df = new DecimalFormat("0");
+                            stuId = df.format(row.getCell(1).getNumericCellValue());
+                            break;
+                        case Cell.CELL_TYPE_STRING:
+                            stuId=row.getCell(1).getStringCellValue();
+                            break;
+                    }
+                    studentDao.updateStuType(typeId, stuId);
+                }
+            }
+        }
+        res.put("flag",1);
+        return res;
+    }
+
+    @Override
+    public Map insertMianXiuGradeExcel(int fileInfoId) {
+        Map<String,Object> res=new HashMap<>();
+        List<Map<String,Object>> result=new ArrayList<>();
+        Map<String, Object> fileInfo = teacherDao.selectGradeExcel(fileInfoId);
+        String fileName = (String) fileInfo.get("fileName");
+        String path = (String) fileInfo.get("path");
+        File file = new File(path);
+        if (file == null) {
+            res.put("flag",0);
+            return res;
+        }
+        Workbook workbook = null;
+        try (FileInputStream is = new FileInputStream(file)) {
+            if (file.getName().endsWith(".xls")) {
+                workbook = new HSSFWorkbook(is);
+            } else if (file.getName().endsWith(".xlsx")) {
+                workbook = new XSSFWorkbook(is);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (workbook != null) {
+            int sheetNum = workbook.getNumberOfSheets();
+            for (int i = 0; i < sheetNum; i++) {
+                Sheet sheet = workbook.getSheetAt(i);
+                for (int j = 1; j <= sheet.getLastRowNum(); j++) {
+                    Row row = sheet.getRow(j);
+                    if (row == null) {
+                        continue;
+                    }
+                    String stuId= null;
+                    switch (row.getCell(1).getCellType()) {
+                        case Cell.CELL_TYPE_NUMERIC:
+                            DecimalFormat df = new DecimalFormat("0");
+                            stuId = df.format(row.getCell(1).getNumericCellValue());
+                            break;
+                        case Cell.CELL_TYPE_STRING:
+                            stuId=row.getCell(1).getStringCellValue();
+                            break;
+                    }
+                    String grade = null;
+                    if(row.getCell(4) == null) {
+                        grade = null;
+                    }
+                    else{
+                        grade = String.valueOf(row.getCell(4).getNumericCellValue());
+                    }
+                    if(grade == null || grade.equals("") || grade.equals("null")){
+                        grade = null;
+                    }
+                    gradeDao.uploadAllGradeKnsk(stuId,Float.parseFloat(grade));
+                }
+            }
+        }
+        res.put("flag",1);
+        return res;
+    }
+
+    @Override
     public int findIsGrade(int moduleId, String academicYear) {
         List<Map<String,Object>> stu=new ArrayList<>();
         if(moduleId==1)
@@ -727,23 +828,81 @@ public class ManageServiceImpl extends Base implements ManageService {
     }
 
     @Override
-    public List<Map<String, Object>> findAllScore(int departId, String stuId) {
-        List<Map<String,Object>> stuList=new ArrayList<>();
-        stuList=gradeDao.findAllScore(departId,stuId);
-        int xbsjPercent=gradeDao.findXbsjPercent();
-        int knskPercent=gradeDao.findKnskPercent();
-        int wlzzPercent=gradeDao.findWlzzPercent();
-        int dektPercent=gradeDao.findDektPercent();
-        int nlcsPercent=gradeDao.findNlcsPercent();
+    public void updateSumGrade(String academicYear) {
+        List<Map<String,Object>> stuList= gradeDao.findAllScore(academicYear,88888888,"88888888");
         for(Map stu:stuList)
         {
-            if(stu.get("xbsjGrade")!=null && stu.get("knskGrade")!=null && stu.get("wlzzGrade")!=null && stu.get("dektGrade")!=null && stu.get("nlcsGrade")!=null) {
-                float grade=(float)stu.get("xbsjGrade")*(float)xbsjPercent/100 + (float)stu.get("knskGrade")*(float)knskPercent/100 + (float)stu.get("wlzzGrade")*(float)wlzzPercent/100 + (float)stu.get("dektGrade")*(float)dektPercent/100 + (float)stu.get("nlcsGrade")*(float)nlcsPercent/100;
-                stu.put("grade",grade);
-            }
-            else
+            int stuType = gradeDao.findStuType((String) stu.get("stuId"));
+            System.out.println("学生类别"+stuType);
+            Map<String,Object> percent = gradeDao.findGradePercent(stuType);
+            System.out.println("成绩比例"+percent);
+            int xbsjPercent = (int) percent.get("xbsjGradePercent");
+            int knskPercent = (int) percent.get("knskGradePercent");
+            int wlzzPercent = (int) percent.get("wlzzGradePercent");
+            int nlcsPercent = (int) percent.get("nlcsGradePercent");
+            int dektPercent = (int) percent.get("dektGradePercent");
+            float grade = 0;
+            if( (xbsjPercent!=0 && stu.get("xbsjGrade")==null)||(knskPercent!=0 && stu.get("knskGrade")==null) || (wlzzPercent!=0 && stu.get("wlzzGrade")==null) || (nlcsPercent!=0 && stu.get("nlcsGrade")==null) || (dektPercent!=0 && stu.get("dektGrade")==null)){
                 stu.put("grade",null);
+            }
+            else{
+                if(xbsjPercent!=0)
+                    grade = grade + (float)stu.get("xbsjGrade")*(float)xbsjPercent/100;
+                if(knskPercent!=0)
+                    grade = grade + (float)stu.get("knskGrade")*(float)knskPercent/100;
+                if(wlzzPercent!=0)
+                    grade = grade + (float)stu.get("wlzzGrade")*(float)wlzzPercent/100;
+                if(nlcsPercent!=0)
+                    grade = grade + (float)stu.get("nlcsGrade")*(float)nlcsPercent/100;
+                if(dektPercent!=0)
+                    grade = grade + (float)stu.get("dektGrade")*(float)dektPercent/100;
+                stu.put("grade",grade);
+                gradeDao.updateSumGrade((String) stu.get("stuId"),grade);
+            }
+        }
+    }
 
+    @Override
+    public List<Map<String, Object>> directFindAllScore(String academicYear,int departId, String stuId) {
+        return gradeDao.findAllScore(academicYear,departId,stuId);
+    }
+
+    @Override
+    public List<Map<String, Object>> findStudentsType(String academicYear,int typeId, int depId, String stuId) {
+        return studentDao.findStudentsType(academicYear,typeId,depId,stuId);
+    }
+
+    @Override
+    public List<Map<String, Object>> findAllScore(String academicYear,int departId, String stuId) {
+        List<Map<String,Object>> stuList=new ArrayList<>();
+        stuList=gradeDao.findAllScore(academicYear,departId,stuId);
+        for(Map stu:stuList)
+        {
+            int stuType = gradeDao.findStuType((String) stu.get("stuId"));
+            Map<String,Object> percent = gradeDao.findGradePercent(stuType);
+            int xbsjPercent = (int) percent.get("xbsjGradePercent");
+            int knskPercent = (int) percent.get("knskGradePercent");
+            int wlzzPercent = (int) percent.get("wlzzGradePercent");
+            int nlcsPercent = (int) percent.get("nlcsGradePercent");
+            int dektPercent = (int) percent.get("dektGradePercent");
+            float grade = 0;
+            if( (xbsjPercent!=0 && stu.get("xbsjGrade")==null)||(knskPercent!=0 && stu.get("knskGrade")==null) || (wlzzPercent!=0 && stu.get("wlzzGrade")==null) || (nlcsPercent!=0 && stu.get("nlcsGrade")==null) || (dektPercent!=0 && stu.get("dektGrade")==null)){
+                stu.put("grade",null);
+            }
+            else{
+                if(xbsjPercent!=0)
+                    grade = grade + (float)stu.get("xbsjGrade")*(float)xbsjPercent/100;
+                if(knskPercent!=0)
+                    grade = grade + (float)stu.get("knskGrade")*(float)knskPercent/100;
+                if(wlzzPercent!=0)
+                    grade = grade + (float)stu.get("wlzzGrade")*(float)wlzzPercent/100;
+                if(nlcsPercent!=0)
+                    grade = grade + (float)stu.get("nlcsGrade")*(float)nlcsPercent/100;
+                if(dektPercent!=0)
+                    grade = grade + (float)stu.get("dektGrade")*(float)dektPercent/100;
+                stu.put("grade",grade);
+                gradeDao.updateSumGrade((String) stu.get("stuId"),grade);
+            }
         }
         return stuList;
     }
@@ -774,6 +933,11 @@ public class ManageServiceImpl extends Base implements ManageService {
     @Override
     public int deleteCourseApp(int id) {
         return courseAllDao.deleteCourseApp(id);
+    }
+
+    @Override
+    public void updateStuType(int typeId,String stuId ) {
+        studentDao.updateStuType(typeId, stuId);
     }
 }
 

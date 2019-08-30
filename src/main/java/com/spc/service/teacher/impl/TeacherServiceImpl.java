@@ -70,7 +70,7 @@ public class TeacherServiceImpl extends Base implements TeacherService {
     @Override
     public List findStudentByClassnameAndNum(String className, int classNum) {
         int classId = (int) studentDao.findClassesByNameAndNum(className, classNum).get("classId");
-        return studentDao.findStudent(classId);
+        return studentDao.findStudent(classId, "");
     }
 
     @Override
@@ -106,7 +106,7 @@ public class TeacherServiceImpl extends Base implements TeacherService {
 
     @Override
     public List<Map<String, Object>> findStudentAndStatus(int classId, String teaId) {
-        List students = studentDao.findStudent(classId);
+        List students = studentDao.findStudent(classId,"");
         List<Map<String, Object>> studentList = new ArrayList<>();
         if (students.size() > 0) {
             for (int i = 0; i < students.size(); i++) {

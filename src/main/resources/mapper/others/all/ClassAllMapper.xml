@@ -80,7 +80,7 @@
         <!--order by id asc-->
     <!--</select>-->
     <select id="selectClassAllChoose" resultType="Map" useCache="false">
-        select a.* ,b.classChooseNum
+        select a.* ,b.classChooseNum, b.schoolDistrictId
         from course.ClassAll a
         left join course.Course b
         on a.id=b.classAllId
@@ -200,9 +200,9 @@
             <if test="courseId != null and courseId !=''">
                 and courseId = #{courseId}
             </if>
-            <if test="schoolDistrictId != null">
-                and schoolDistrictId = #{schoolDistrictId}
-            </if>
+            <!--<if test="schoolDistrictId != null">-->
+                <!--and schoolDistrictId = #{schoolDistrictId}-->
+            <!--</if>-->
             <if test="className != null and className !=''">
                 and className = #{className}
             </if>

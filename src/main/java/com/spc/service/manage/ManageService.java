@@ -37,9 +37,9 @@ public interface ManageService {
     int getClassId(String className,int classNum);
 
 
-    List findStudentByClassnameAndNum(String classId,int pageSize,int currentPage);
+    List findStudentByClassnameAndNum(String classId,int pageSize,int currentPage, String classSemester);
 
-    List findStudentByStudentId(int pageSize, int currentPage, String stuId);
+    List findStudentByStudentId(int pageSize, int currentPage, String stuId, String classSemester);
 
     int addTimeSwitch(int timeSwitch);
     int updateTimeSwitch(int timeSwitch);
@@ -51,9 +51,9 @@ public interface ManageService {
 
     int addTemplateFileInfo(String teaId, String fileName, String path,int type,String dep, String date,int flag);
 
-    Map getGradePercent();
+    Map<String,Object> getGradePercent();
 
-    int addGradePercent(int knsk, int xbsj, int zzxx, int dekt, int qmnl,String userId, String date);
+    int updateGradePercent(int knsk, int xbsj, int wlzz, int dekt, int nlcs,String userId, String date,int typeId);
 
     FileInfo findAppFile(int fileInfoId);
 
@@ -72,6 +72,10 @@ public interface ManageService {
 
     Map insertGradeExcel(int moduleId, int fileInfoId,String academicYear);
 
+    Map insertTypeExcel(int typeId,int fileInfoId);
+
+    Map insertMianXiuGradeExcel(int fileInfoId);
+
     int findIsGrade(int moduleId,String academicYear);
 
     List<Map<String,Object>> findXbsjStudents(int classId);
@@ -86,12 +90,20 @@ public interface ManageService {
 
     void updateKnskSubmit(String classId);
 
-    List<Map<String,Object>> findAllScore(int departId,String stuId);
+    void updateSumGrade(String academicYear);
+
+    List<Map<String,Object>> directFindAllScore(String academicYear,int departId,String stuId);
+
+    List<Map<String,Object>> findStudentsType(String academicYear,int typeId,int depId,String stuId);
+
+    List<Map<String,Object>> findAllScore(String academicYear,int departId,String stuId);
 
     void uploadAllGradeOther(String stuId, Float grade, int moduleId);
 
     void updateIsSubmit(int moduleId);
 
     int deleteCourseApp(int id);
+
+    void updateStuType(int typeId,String stuId);
 }
 

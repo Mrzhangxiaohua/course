@@ -55,9 +55,9 @@ public interface GradeDao {
 
     void updateKnskSubmit(@Param("classId") String classId);
 
-    List<Map<String, Object>> findAllScore(@Param("departId") int departId, @Param("stuId") String stuId);
+    List<Map<String, Object>> findAllScore(@Param("academicYear") String academicYear,@Param("departId") int departId, @Param("stuId") String stuId);
 
-    void uploadAllGradeKnsk(@Param("stuId") String stuId,@Param("grade") float grade);
+    void uploadAllGradeKnsk(@Param("stuId") String stuId,@Param("grade") Float grade);
 
     void uploadAllGradeXbsj(@Param("stuId") String stuId,@Param("grade") float grade);
 
@@ -67,19 +67,15 @@ public interface GradeDao {
 
     void uploadAllGradeOther3(@Param("stuId") String stuId,@Param("grade") Float grade);
 
-   int  findXbsjPercent();
-
-    int findKnskPercent();
-
-    int findWlzzPercent();
-
-    int findDektPercent();
-
-    int findNlcsPercent();
+    Map<String, Object> findGradePercent(@Param("stuType") int stuType);
 
     void updateWlzzIsSubmit();
 
     void updateDektIsSubmit();
 
     void updateNlcsIsSubmit();
+
+    int findStuType(@Param("stuId") String stuId);
+
+    void updateSumGrade(@Param("stuId") String stuId,@Param("grade") Float grade);
 }
