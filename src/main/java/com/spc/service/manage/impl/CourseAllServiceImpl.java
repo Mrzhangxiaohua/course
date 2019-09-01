@@ -258,6 +258,7 @@ public class CourseAllServiceImpl implements CourseAllService {
 
     @Override
     public List findDepartCourseApp(int departId, String academicYear, String courseId, String courseName) {
+        System.out.println("service:"+courseAllDao.selectDepartCourseApp(departId,academicYear, courseId,courseName));
         return courseAllDao.selectDepartCourseApp(departId,academicYear, courseId,courseName);
     }
 

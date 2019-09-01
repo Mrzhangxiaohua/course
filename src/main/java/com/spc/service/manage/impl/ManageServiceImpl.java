@@ -879,19 +879,15 @@ public class ManageServiceImpl extends Base implements ManageService {
         for(Map stu:stuList)
         {
             int stuType = gradeDao.findStuType((String) stu.get("stuId"));
-            System.out.println("学生类别"+stuType);
             Map<String,Object> percent = gradeDao.findGradePercent(stuType);
-            System.out.println(percent);
             int xbsjPercent = (int) percent.get("xbsjGradePercent");
             int knskPercent = (int) percent.get("knskGradePercent");
             int wlzzPercent = (int) percent.get("wlzzGradePercent");
             int nlcsPercent = (int) percent.get("nlcsGradePercent");
             int dektPercent = (int) percent.get("dektGradePercent");
-            System.out.println("第二课堂活动比例"+dektPercent);
             float grade = 0;
             if( (xbsjPercent!=0 && stu.get("xbsjGrade")==null)||(knskPercent!=0 && stu.get("knskGrade")==null) || (wlzzPercent!=0 && stu.get("wlzzGrade")==null) || (nlcsPercent!=0 && stu.get("nlcsGrade")==null) || (dektPercent!=0 && stu.get("dektGrade")==null)){
                 stu.put("grade",null);
-                System.out.println("返回为空");
             }
             else{
                 if(xbsjPercent!=0)

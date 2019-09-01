@@ -52,7 +52,7 @@
             <if test="year!=null and year!=''">
                 and  academicYear=#{year}
             </if>
-            <if test="depId!=null and depId!=''">
+            <if test="depId!=null and depId!='' and depId!=8888 and depId!='8888'">
                 and  departId=#{depId}
             </if>
         </where>
