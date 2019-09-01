@@ -456,7 +456,7 @@
 
 
     <select id="findAllXbsjCourse" resultType="Map">
-        select a.classId,a.classNum,a.teaName,a.className,a.isGrade as isSubmit,c.departName,b.courseId,a.classSemester as semesterName,a.classChooseNum as chooseNum,c.departName,b.schoolDistrictId
+        select a.classId,a.classNum,a.teaName,a.className,a.isGrade as isSubmit,c.departName,b.courseId,a.classSemester as semesterName,a.classChooseNum as chooseNum,c.departName,a.schoolDistrictId
         from course.Course a
         left join course.ClassAll b
         on a.classAllId=b.id
