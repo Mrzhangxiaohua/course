@@ -663,7 +663,7 @@ public class ClassAllController extends Base {
             HSSFSheet sheet = workbook.createSheet(academicYear+classSemester+"研究生课程表---（"+roomName+")");
             sheet.setColumnWidth(0, 4000);
             sheet.setColumnWidth(1, 6500);
-            sheet.setColumnWidth(2, 6500);
+            sheet.setColumnWidth(2, 4000);
             sheet.setColumnWidth(3, 4000);
             sheet.setColumnWidth(4, 4000);
             sheet.setColumnWidth(5, 4000);
