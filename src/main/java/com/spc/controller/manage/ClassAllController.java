@@ -663,11 +663,12 @@ public class ClassAllController extends Base {
             HSSFSheet sheet = workbook.createSheet(academicYear+classSemester+"研究生课程表---（"+roomName+")");
             sheet.setColumnWidth(0, 4000);
             sheet.setColumnWidth(1, 6500);
-            sheet.setColumnWidth(2, 4000);
+            sheet.setColumnWidth(2, 6500);
             sheet.setColumnWidth(3, 4000);
             sheet.setColumnWidth(4, 4000);
             sheet.setColumnWidth(5, 4000);
-            sheet.setColumnWidth(6, 6500);
+            sheet.setColumnWidth(6, 4000);
+            sheet.setColumnWidth(7, 6500);
             HSSFFont headfont = workbook.createFont();
             headfont.setFontName("宋体");
             headfont.setFontHeightInPoints((short) 14);// 字体大小
@@ -696,7 +697,7 @@ public class ClassAllController extends Base {
             textstyle.setBorderRight(HSSFCellStyle.BORDER_THIN);// 右边框
             textstyle.setWrapText(true);
 
-            CellRangeAddress region = new CellRangeAddress(0,0,0,6);//起始行,结束行,起始列,结束列
+            CellRangeAddress region = new CellRangeAddress(0,0,0,7);//起始行,结束行,起始列,结束列
             sheet.addMergedRegion(region);
             RegionUtil.setBorderBottom(HSSFCellStyle.BORDER_THIN,region, sheet, workbook);
             HSSFRow row1 = sheet.createRow(0);
@@ -710,7 +711,7 @@ public class ClassAllController extends Base {
                 cell0.setCellStyle(headstyle); //style为带边框的样式 上面有定义
                 cell0.setCellValue("");
             }
-            String[] headers={"课程标号","课程名称","班级名称","学时","任课教师","人数","上课时间"};
+            String[] headers={"课程标号","课程名称","课程校区","班级名称","学时","任课教师","人数","上课时间"};
             HSSFRow headerRow=sheet.createRow(1);
             headerRow.setHeightInPoints(22);
             for (int i = 0; i < headers.length; i = i + 1) {
@@ -745,18 +746,21 @@ public class ClassAllController extends Base {
                 cell.setCellValue((String) tab.get("courseNameCHS"));
                 cell.setCellStyle(textstyle);
                 cell = row.createCell(2);
-                cell.setCellValue((String) tab.get("className"));
+                cell.setCellValue((String) tab.get("name"));
                 cell.setCellStyle(textstyle);
                 cell = row.createCell(3);
-                cell.setCellValue((int)tab.get("classHour"));
+                cell.setCellValue((String) tab.get("className"));
                 cell.setCellStyle(textstyle);
                 cell = row.createCell(4);
-                cell.setCellValue((String) tab.get("teaName"));
+                cell.setCellValue((int)tab.get("classHour"));
                 cell.setCellStyle(textstyle);
                 cell = row.createCell(5);
-                cell.setCellValue((int)tab.get("classChooseNum"));
+                cell.setCellValue((String) tab.get("teaName"));
                 cell.setCellStyle(textstyle);
                 cell = row.createCell(6);
+                cell.setCellValue((int)tab.get("classChooseNum"));
+                cell.setCellStyle(textstyle);
+                cell = row.createCell(7);
                 cell.setCellValue(classTime);
                 cell.setCellStyle(textstyle);
                 rowNum++;
