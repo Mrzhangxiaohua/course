@@ -469,7 +469,9 @@ public class StudentController extends Base{
         Map<String, Object> res = new HashMap<>();
         // 查询出stuId并返回前端学生校区
         stuId = (String) session.getAttribute("userId");
-        int schoolDistrict = studentService.finSchoolDistrict(stuId);
+        //由于学生校区数据为空，暂时设置为0
+        //int schoolDistrict = studentService.finSchoolDistrict(stuId);
+        int schoolDistrict = 0;
         res.put("status", "SUCCESS");
 
         Map<String, Object> data = new HashMap<>();
