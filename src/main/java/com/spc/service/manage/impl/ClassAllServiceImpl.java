@@ -346,6 +346,10 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
     }
 
     private boolean useTeacherTime(ClassAll classAll, Map<String, String> res, int[] rows, int[] cols, String[] instructorIds, boolean del) {
+        // 若强制排课，则不应该执行webservice
+        if (classAll.getForce() ) {
+            return false;
+        }
         for (int i = 0; i < rows.length; i++) {
             int rowIndex = rows[i];
             int colIndex = cols[i];
@@ -420,6 +424,10 @@ public class ClassAllServiceImpl extends Base implements ClassAllService {
      */
     private boolean useClassroom(ClassAll classAll, Map<String, String> res, int[] rows, int[] cols, boolean del) {
         if (classAll.getClassPlaceId() == null || classAll.getClassPlaceId().isEmpty()) {
+            return false;
+        }
+        // 若强制排课，则不应该执行webservice
+        if (classAll.getForce() ) {
             return false;
         }
         ClassRoomUsed[] classRoomUseds = new ClassRoomUsed[rows.length];
