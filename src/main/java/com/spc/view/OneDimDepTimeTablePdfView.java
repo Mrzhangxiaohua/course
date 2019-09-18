@@ -25,10 +25,10 @@ public class OneDimDepTimeTablePdfView extends AbstractPdfView {
 
         List<Map> students = (List<Map>) map.get("data");
 
-        PdfPTable table = new PdfPTable(7);
+        PdfPTable table = new PdfPTable(8);
 
         table.setWidthPercentage(80);
-        table.setWidths(new int[]{2, 2, 2, 2, 2, 2, 2});
+        table.setWidths(new int[]{2, 2, 2, 2, 2, 2, 2, 2});
 
         //中文字体的显示问题
         BaseFont baseFont1 = BaseFont.createFont("/static/font/STSONG.TTF", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -50,6 +50,10 @@ public class OneDimDepTimeTablePdfView extends AbstractPdfView {
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
         hcell = new PdfPCell(new Phrase("课程名称", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        hcell.setFixedHeight(20f);
+        table.addCell(hcell);
+        hcell = new PdfPCell(new Phrase("校区", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         hcell.setFixedHeight(20f);
         table.addCell(hcell);
@@ -85,6 +89,11 @@ public class OneDimDepTimeTablePdfView extends AbstractPdfView {
             cell.setPaddingBottom(6);
             table.addCell(cell);
             cell = new PdfPCell(new Phrase((String) t.get("courseNameCHS"), textFont));
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPaddingBottom(6);
+            table.addCell(cell);
+            cell = new PdfPCell(new Phrase((String) t.get("name"), textFont));
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setPaddingBottom(6);
