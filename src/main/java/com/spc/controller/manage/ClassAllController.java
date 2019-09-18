@@ -511,12 +511,12 @@ public class ClassAllController extends Base {
             String departName= (String) depart.get("departName");
             List<Map<String,Object>> tables = classAllService.getOneDimDepartTimeTable(departId, academicYear, classSemester);
             HSSFSheet sheet = workbook.createSheet(departName+"总课表");
-            CellRangeAddress region = new CellRangeAddress(0,0,0,6);//起始行,结束行,起始列,结束列
+            CellRangeAddress region = new CellRangeAddress(0,0,0,7);//起始行,结束行,起始列,结束列
             sheet.addMergedRegion(region);
             RegionUtil.setBorderBottom(HSSFCellStyle.BORDER_THIN,region, sheet, workbook);
             HSSFRow row1 = sheet.createRow(0);
             row1.createCell(0).setCellValue(departName+"总课表");
-            String[] headers={"课程标号","课程名称","班级名称","学时","任课教师","人数","上课时间"};
+            String[] headers={"课程标号","课程名称","校区","班级名称","学时","任课教师","人数","上课时间"};
             HSSFRow headerRow=sheet.createRow(1);
             for (int i = 0; i < headers.length; i = i + 1) {
                 HSSFCell cell=headerRow.createCell(i);
@@ -543,11 +543,12 @@ public class ClassAllController extends Base {
                 classTime=classTime+tab.get("name")+"-"+tab.get("classPlace")+"周次:第"+tab.get("startWeek")+"-"+tab.get("endWeek")+"周"+"  连续周"+week;
                 row.createCell(0).setCellValue((String)tab.get("courseId"));
                 row.createCell(1).setCellValue((String) tab.get("courseNameCHS"));
-                row.createCell(2).setCellValue((String) tab.get("className"));
-                row.createCell(3).setCellValue((int)tab.get("classHour"));
-                row.createCell(4).setCellValue((String) tab.get("teaName"));
-                row.createCell(5).setCellValue((int)tab.get("classChooseNum"));
-                row.createCell(6).setCellValue(classTime);
+                row.createCell(2).setCellValue((String) tab.get("name"));
+                row.createCell(3).setCellValue((String) tab.get("className"));
+                row.createCell(4).setCellValue((int)tab.get("classHour"));
+                row.createCell(5).setCellValue((String) tab.get("teaName"));
+                row.createCell(6).setCellValue((int)tab.get("classChooseNum"));
+                row.createCell(7).setCellValue(classTime);
                 rowNum++;
             }
         }
